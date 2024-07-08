@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/bg_main">
+    <TextView
+        android:id="@+id/tv_registration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="작가 등록"
+        android:textSize="90dp"
+        android:fontFamily="@font/ssurround"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.07" />
+    <ImageButton
+        android:id="@+id/ic_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#0000"
+        android:contentDescription="다음"
+        android:src="@drawable/ic_arrow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_registration"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintHorizontal_bias="0.95" />
+    <ImageView
+        android:id="@+id/component"
+        android:layout_width="700dp"
+        android:layout_height="500dp"
+        android:src="@drawable/ic_component"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ic_next"
+        app:layout_constraintVertical_bias="0.72"
+        app:layout_constraintHorizontal_bias="0.89" />
+    <ImageView
+        android:id="@+id/character"
+        android:layout_width="300dp"
+        android:layout_height="500dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/component"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintHorizontal_bias="0.1" />
+</androidx.constraintlayout.widget.ConstraintLayout>
