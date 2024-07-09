@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "933534041843",
+    "project_id": "dongjakso22",
+    "storage_bucket": "dongjakso22.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:933534041843:android:3ca9749366a796250d9986",
+        "android_client_info": {
+          "package_name": "com.example.holymoly"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVfbEd8ryJBQ4lfxNjiUATJy1kznal-PU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
