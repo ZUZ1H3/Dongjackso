@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_main">
-
     <ImageView
         android:id="@+id/iv_container"
         android:layout_width="315dp"
@@ -17,7 +16,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.03"
         app:layout_constraintHorizontal_bias="0.03" />
-
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/mini_profile"
         android:layout_width="85dp"
@@ -29,7 +27,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_container"
         app:layout_constraintVertical_bias="0.018" />
-
     <TextView
         android:id="@+id/mini_level"
         android:layout_width="wrap_content"
@@ -44,7 +41,6 @@
         app:layout_constraintTop_toTopOf="@id/iv_container"
         app:layout_constraintVertical_bias="0.024"
         app:layout_constraintHorizontal_bias="0.115" />
-
     <TextView
         android:id="@+id/mini_name"
         android:layout_width="wrap_content"
@@ -60,8 +56,8 @@
         app:layout_constraintTop_toTopOf="@id/mini_level"
         app:layout_constraintVertical_bias="0.058"
         app:layout_constraintHorizontal_bias="0.11" />
-
     <TextView
+        android:id="@+id/mini_nickname"
         android:layout_width="115dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ssurround"
@@ -73,7 +69,6 @@
         app:layout_constraintStart_toEndOf="@+id/mini_name"
         app:layout_constraintTop_toTopOf="@id/mini_name"
         app:layout_constraintVertical_bias="0.2" />
-
     <ImageButton
         android:id="@+id/ib_trophy"
         android:layout_width="wrap_content"
@@ -87,7 +82,6 @@
         app:layout_constraintTop_toTopOf="@id/iv_container"
         app:layout_constraintVertical_bias="0"
         app:layout_constraintHorizontal_bias="0.91" />
-
     <ImageButton
         android:id="@+id/ib_edit"
         android:layout_width="wrap_content"
@@ -100,9 +94,8 @@
         app:layout_constraintTop_toTopOf="@id/ib_trophy"
         app:layout_constraintVertical_bias="0"
         app:layout_constraintHorizontal_bias="0" />
-
     <ImageView
-        android:id="@+id/selectAlbum"
+        android:id="@+id/iv_selectAlbum"
         android:layout_width="280dp"
         android:layout_height="60dp"
         android:src="@drawable/ic_selectalbum"
@@ -112,38 +105,96 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_bias="0.1"
         app:layout_constraintHorizontal_bias="0.5" />
-
-    <ImageView
-        android:layout_width="360dp"
-        android:layout_height="480dp"
-        android:src="@drawable/bookcover1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <TextView
+        android:id="@+id/tv_album"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ssurround"
+        android:text="동화 앨범"
+        android:textColor="@color/white"
+        android:textSize="25dp"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_selectAlbum"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.7"
-        app:layout_constraintHorizontal_bias="0.15" />
-
-    <ImageView
-        android:layout_width="360dp"
-        android:layout_height="480dp"
-        android:src="@drawable/bookcover2"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.0192"
+        app:layout_constraintHorizontal_bias="0.445" />
+    <TextView
+        android:id="@+id/tv_book"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ssurround"
+        android:text="동화 제작"
+        android:textColor="@color/white"
+        android:textSize="25dp"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_selectAlbum"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.7"
-        app:layout_constraintHorizontal_bias="0.65" />
-
-    <ImageView
-        android:layout_width="360dp"
-        android:layout_height="480dp"
-        android:src="@drawable/bookcover3"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.0192"
+        app:layout_constraintHorizontal_bias="0.552" />
+    <TextView
+        android:id="@+id/tv_none"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="아직 만든 동화가 없어요!"
+        android:fontFamily="@font/ssurround"
+        android:textSize="65dp"
+        android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_selectAlbum"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.7"
-        app:layout_constraintHorizontal_bias="1.125" />
-
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.35"
+        app:layout_constraintHorizontal_bias="0.5" />
+    <TextView
+        android:id="@+id/tv_push"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="동화 제작 버튼을 눌러"
+        android:fontFamily="@font/ssurround"
+        android:textSize="65dp"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.25"
+        app:layout_constraintHorizontal_bias="0.5" />
+    <TextView
+        android:id="@+id/tv_makefirst"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="동화를 완성하고 감상해봐요"
+        android:fontFamily="@font/ssurround"
+        android:textSize="65dp"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_push"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.35"
+        app:layout_constraintHorizontal_bias="0.5" />
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/sv_books"
+        android:layout_width="1000dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_selectAlbum"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintVertical_bias="0.6"
+        app:layout_constraintHorizontal_bias="0.5" >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:nestedScrollingEnabled="false"
+                android:visibility="gone" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

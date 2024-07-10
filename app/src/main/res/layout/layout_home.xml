@@ -93,4 +93,30 @@
         app:layout_constraintTop_toTopOf="@id/ib_trophy"
         app:layout_constraintVertical_bias="0"
         app:layout_constraintHorizontal_bias="0" />
+    <ImageButton
+        android:id="@+id/btn_making"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_making"
+        android:backgroundTint="#0000"
+        android:contentDescription="동화 제작"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.78"
+        app:layout_constraintHorizontal_bias="0.25" />
+    <ImageButton
+        android:id="@+id/btn_album"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_album"
+        android:backgroundTint="#0000"
+        android:contentDescription="동화 앨범"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.78"
+        app:layout_constraintHorizontal_bias="0.75" />
 </androidx.constraintlayout.widget.ConstraintLayout>
