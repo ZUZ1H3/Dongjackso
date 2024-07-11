@@ -1,34 +1,39 @@
 package com.example.holymoly;
 
+import static android.os.Build.VERSION_CODES.R;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-// import com.google.firebase.auth.FirebaseAuth;
-// import com.google.firebase.auth.FirebaseUser;
-// import com.google.firebase.auth.AuthResult;
-// import com.google.android.gms.tasks.OnCompleteListener;
-// import com.google.android.gms.tasks.Task;
+//import com.google.firebase.auth.FirebaseAuth;
+//import com.google.firebase.auth.FirebaseUser;
+//import com.google.firebase.auth.AuthResult;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText etId, etPwd;
     private ImageButton btnLogin, btnJoin;
-    //private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    //private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_login);
+        //setContentView(R.layout.layout_login);
 
-        etId = findViewById(R.id.et_id);
-        etPwd = findViewById(R.id.et_pwd);
-        btnLogin = findViewById(R.id.btn_login);
-        btnJoin = findViewById(R.id.btn_join);
+        //mAuth = FirebaseAuth.getInstance();
+
+        //etId = findViewById(R.id.et_id);
+        //etPwd = findViewById(R.id.et_pwd);
+        //btnLogin = findViewById(R.id.btn_login);
+        //btnJoin = findViewById(R.id.btn_join);
 
         // 로그인 버튼 클릭 시
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -37,12 +42,12 @@ public class LoginActivity extends AppCompatActivity {
                 String email = etId.getText().toString().trim();
                 String password = etPwd.getText().toString().trim();
 
-                if (email.isEmpty() || password.isEmpty()) {
+                if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
                     Toast.makeText(LoginActivity.this, "아이디 또는 비밀번호를 입력하세요.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                // 파이어베이스로 로그인 (걍 인터넷 보고 했는데 너희가 알아서 갈아 엎으삼)
+                // 파이어베이스로 로그인
                 /*
                 mAuth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
