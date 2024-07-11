@@ -9,9 +9,9 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-//import com.google.firebase.auth.FirebaseAuth;
-//import com.google.firebase.auth.FirebaseUser;
-//import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.AuthResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
@@ -19,23 +19,21 @@ public class JoinActivity extends AppCompatActivity {
 
     private EditText etId, etPwd, etPwdChk;
     private ImageButton btnDouble, btnNext;
-    //private FirebaseAuth mAuth;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.layout_join);
+        setContentView(R.layout.layout_join);
 
-        //mAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
 
         // XML 레이아웃의 뷰 객체 연결
-        /*
         etId = findViewById(R.id.et_id);
         etPwd = findViewById(R.id.et_pwd);
         etPwdChk = findViewById(R.id.et_pwdchk);
         btnDouble = findViewById(R.id.btn_double);
         btnNext = findViewById(R.id.btn_next);
-         */
 
         // 회원가입 버튼 클릭 리스너
         btnNext.setOnClickListener(new View.OnClickListener() {
@@ -61,7 +59,6 @@ public class JoinActivity extends AppCompatActivity {
                 }
 
                 // Firebase로 회원가입 시도
-                /*
                 mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(JoinActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
@@ -79,7 +76,6 @@ public class JoinActivity extends AppCompatActivity {
                                 }
                             }
                         });
-                 */
             }
         });
     }
