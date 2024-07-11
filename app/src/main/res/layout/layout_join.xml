@@ -48,7 +48,7 @@
         app:layout_constraintLeft_toRightOf="@id/tv_id"
         app:layout_constraintHorizontal_bias="0.2" />
     <ImageButton
-        android:id="@+id/btn_double"
+        android:id="@+id/btn_mailDuplication"
         android:layout_width="145dp"
         android:layout_height="70dp"
         android:text="중복 확인"
