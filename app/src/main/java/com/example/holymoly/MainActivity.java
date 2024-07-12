@@ -1,11 +1,13 @@
 package com.example.holymoly;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,7 +21,10 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText etId, etPwd;
     private ImageButton btnLogin, btnJoin;
+    private RadioButton auto;
     private FirebaseAuth mAuth;
+    private UserInfo userInfo;
+    private boolean isChecked = false;  // 자동 로그인 체크 변수
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         etPwd = findViewById(R.id.et_pwd);
         btnLogin = findViewById(R.id.btn_login);
         btnJoin = findViewById(R.id.btn_join);
+        auto = findViewById(R.id.rb_auto);
 
         // 로그인 버튼 클릭 시
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -74,5 +80,24 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        // 자동 로그인 버튼 클릭시
+        auto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isChecked = true;
+            }
+        });
     }
+
+    // 자동 로그인
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if(user != null && isChecked) {
+            Intent intent = new Intent(this, StartActivity.class);
+            startActivity(intent);
+        }
+    }
+
 }
