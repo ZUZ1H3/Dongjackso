@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".SelectthemaActivity"
+    android:background="@drawable/bg_bookbackground">
+
+    <!--그만 만들기 버튼-->
+    <ImageButton
+        android:id="@+id/ib_stopMaking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_stopmaking"
+        android:backgroundTint="#0000"
+        android:contentDescription="그만만들기"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.01"
+        app:layout_constraintHorizontal_bias="1.01" />
+
+    <!--글자있는 반투명한 검은 사각형-->
+    <ImageView
+        android:id="@+id/iv_writingZone"
+        android:layout_width="640dp"
+        android:layout_height="800dp"
+        android:src="@drawable/pic_writingzone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintHorizontal_bias="0" />
+
+    <!--n장 만들기 제목있는 책갈피 도형-->
+    <ImageView
+        android:id="@+id/iv_makingstepbg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/bg_makingstep"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.05" />
+
+    <!--n장 만들기 text-->
+    <TextView
+        android:id="@+id/tv_makingsteptext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ssurround"
+        android:gravity="center"
+        android:text="1장 만들기"
+        android:textColor="#6B9FA3"
+        android:textSize="64dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.05" />
+
+    <!--책내용text-->
+    <TextView
+        android:id="@+id/tv_pageText1"
+        android:layout_width="550dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ssurround"
+        android:gravity="left"
+        android:text="책의 내용이 들어가는 곳입니다. 줄이 길어지면 자동으로 줄바꿈이 됩니다."
+        android:textColor="@color/white"
+        android:textSize="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.35"
+        app:layout_constraintHorizontal_bias="0.05" />
+
+    <!--다음장으로 버튼-->
+    <ImageButton
+        android:id="@+id/ib_nextPageButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_nextpagebutton"
+        android:backgroundTint="#0000"
+        android:contentDescription="다음장으로"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1"
+        app:layout_constraintHorizontal_bias="0.35" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
