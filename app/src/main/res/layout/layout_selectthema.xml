@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_main">
 
+    <!--프로필관련-->
     <ImageView
         android:id="@+id/iv_container"
         android:layout_width="315dp"
@@ -87,100 +88,54 @@
         app:layout_constraintHorizontal_bias="0.91" />
 
     <ImageButton
-        android:id="@+id/ib_edit"
+        android:id="@+id/ib_homebutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_homebutton"
         android:backgroundTint="#0000"
         android:contentDescription="홈버튼"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/ib_trophy"
+        app:layout_constraintEnd_toStartOf="@id/ib_trophy"
         app:layout_constraintTop_toTopOf="@id/ib_trophy"
-        app:layout_constraintVertical_bias="0"
-        app:layout_constraintHorizontal_bias="0" />
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintVertical_bias="0" />
 
     <ImageButton
-        android:id="@+id/ib_homebutton"
+        android:id="@+id/ib_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_edit"
         android:backgroundTint="#0000"
         android:contentDescription="환경설정"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/ib_trophy"
+        app:layout_constraintStart_toEndOf="@id/ib_trophy"
         app:layout_constraintTop_toTopOf="@id/ib_trophy"
-        app:layout_constraintVertical_bias="0"
-        app:layout_constraintHorizontal_bias="0" />
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintVertical_bias="0" />
 
-    <!--캐틱터 이미지사진 5개-->
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/characterImage1"
-        android:layout_width="158dp"
-        android:layout_height="158dp"
-        android:src="@drawable/pic_character1"
+    <!--오른쪽 아래 다음 단계 화살표 버튼-->
+    <ImageButton
+        android:id="@+id/ib_nextStep"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_nextstep"
+        android:backgroundTint="#0000"
+        android:contentDescription="환경설정"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.1"
-        app:layout_constraintVertical_bias="0.45" />
+        app:layout_constraintHorizontal_bias="0.98"
+        app:layout_constraintVertical_bias="0.98" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/characterImage2"
-        android:layout_width="158dp"
-        android:layout_height="158dp"
-        android:src="@drawable/pic_character1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.3"
-        app:layout_constraintVertical_bias="0.45" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/characterImage3"
-        android:layout_width="158dp"
-        android:layout_height="158dp"
-        android:src="@drawable/pic_character1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.45" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/characterImage4"
-        android:layout_width="158dp"
-        android:layout_height="158dp"
-        android:src="@drawable/pic_character1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.7"
-        app:layout_constraintVertical_bias="0.45" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/characterImage5"
-        android:layout_width="158dp"
-        android:layout_height="158dp"
-        android:src="@drawable/pic_character1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
-        app:layout_constraintVertical_bias="0.45" />
-
-    <!--등장인물을 선택해 주세요/그외 캐릭터 이름 text-->
+    <!--테마를 선택해주세요+테마 text들-->
     <TextView
         android:id="@+id/tv_chooseChracter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ssurround"
         android:gravity="center"
-        android:text="등장인물을 선택해 주세요"
+        android:text="동화 배경을 선택해 주세요"
         android:textColor="@color/white"
         android:textSize="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -188,7 +143,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.25" />
+        app:layout_constraintVertical_bias="0.3" />
 
     <TextView
         android:id="@+id/tv_characterName1"
@@ -196,12 +151,12 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/ssurround"
         android:gravity="center"
-        android:text="등장인물1"
+        android:text="테마1"
         android:textColor="@color/white"
         android:textSize="40dp"
-        app:layout_constraintTop_toBottomOf="@id/characterImage1"
-        app:layout_constraintStart_toStartOf="@id/characterImage1"
-        app:layout_constraintEnd_toEndOf="@id/characterImage1"
+        app:layout_constraintTop_toBottomOf="@id/themaImage1"
+        app:layout_constraintStart_toStartOf="@id/themaImage1"
+        app:layout_constraintEnd_toEndOf="@id/themaImage1"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintVertical_bias="0.5" />
 
@@ -211,12 +166,12 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/ssurround"
         android:gravity="center"
-        android:text="등장인물2"
+        android:text="테마2"
         android:textColor="@color/white"
         android:textSize="40dp"
-        app:layout_constraintTop_toBottomOf="@id/characterImage2"
-        app:layout_constraintStart_toStartOf="@id/characterImage2"
-        app:layout_constraintEnd_toEndOf="@id/characterImage2"
+        app:layout_constraintTop_toBottomOf="@id/themaImage2"
+        app:layout_constraintStart_toStartOf="@id/themaImage2"
+        app:layout_constraintEnd_toEndOf="@id/themaImage2"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintVertical_bias="0.5" />
 
@@ -226,12 +181,12 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/ssurround"
         android:gravity="center"
-        android:text="등장인물3"
+        android:text="테마3"
         android:textColor="@color/white"
         android:textSize="40dp"
-        app:layout_constraintTop_toBottomOf="@id/characterImage3"
-        app:layout_constraintStart_toStartOf="@id/characterImage3"
-        app:layout_constraintEnd_toEndOf="@id/characterImage3"
+        app:layout_constraintTop_toBottomOf="@id/themaImage3"
+        app:layout_constraintStart_toStartOf="@id/themaImage3"
+        app:layout_constraintEnd_toEndOf="@id/themaImage3"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintVertical_bias="0.5" />
 
@@ -241,12 +196,12 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/ssurround"
         android:gravity="center"
-        android:text="등장인물4"
+        android:text="테마4"
         android:textColor="@color/white"
         android:textSize="40dp"
-        app:layout_constraintTop_toBottomOf="@id/characterImage4"
-        app:layout_constraintStart_toStartOf="@id/characterImage4"
-        app:layout_constraintEnd_toEndOf="@id/characterImage4"
+        app:layout_constraintTop_toBottomOf="@id/themaImage4"
+        app:layout_constraintStart_toStartOf="@id/themaImage4"
+        app:layout_constraintEnd_toEndOf="@id/themaImage4"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintVertical_bias="0.5" />
 
@@ -256,13 +211,74 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/ssurround"
         android:gravity="center"
-        android:text="등장인물5"
+        android:text="테마5"
         android:textColor="@color/white"
         android:textSize="40dp"
-        app:layout_constraintTop_toBottomOf="@id/characterImage5"
-        app:layout_constraintStart_toStartOf="@id/characterImage5"
-        app:layout_constraintEnd_toEndOf="@id/characterImage5"
+        app:layout_constraintTop_toBottomOf="@id/themaImage5"
+        app:layout_constraintStart_toStartOf="@id/themaImage5"
+        app:layout_constraintEnd_toEndOf="@id/themaImage5"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <!--캐틱터 이미지사진 5개-->
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/themaImage1"
+        android:layout_width="158dp"
+        android:layout_height="158dp"
+        android:src="@drawable/pic_thema1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.14"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/themaImage2"
+        android:layout_width="158dp"
+        android:layout_height="158dp"
+        android:src="@drawable/pic_thema1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.32"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/themaImage3"
+        android:layout_width="158dp"
+        android:layout_height="158dp"
+        android:src="@drawable/pic_thema1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/themaImage4"
+        android:layout_width="158dp"
+        android:layout_height="158dp"
+        android:src="@drawable/pic_thema1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.68"
+        app:layout_constraintVertical_bias="0.5" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/themaImage5"
+        android:layout_width="158dp"
+        android:layout_height="158dp"
+        android:src="@drawable/pic_thema1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.86"
         app:layout_constraintVertical_bias="0.5" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
