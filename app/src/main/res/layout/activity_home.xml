@@ -3,7 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/bg_home">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/bg_home"
+    tools:context=".SettingActivity">
 <ImageView
     android:id="@+id/iv_container"
     android:layout_width="315dp"
@@ -81,10 +83,10 @@
         app:layout_constraintVertical_bias="0"
         app:layout_constraintHorizontal_bias="0.91" />
     <ImageButton
-        android:id="@+id/ib_edit"
+        android:id="@+id/ib_setting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_edit"
+        android:src="@drawable/ic_setting"
         android:backgroundTint="#0000"
         android:contentDescription="환경설정"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -92,30 +94,46 @@
         app:layout_constraintTop_toTopOf="@id/ib_trophy"
         app:layout_constraintVertical_bias="0"
         app:layout_constraintHorizontal_bias="0" />
+
     <ImageButton
-        android:id="@+id/btn_making"
+        android:id="@+id/ib_making"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_making"
         android:backgroundTint="#0000"
         android:contentDescription="동화 제작"
+        android:src="@drawable/ic_making"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.162"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.78"
-        app:layout_constraintHorizontal_bias="0.25" />
+        app:layout_constraintVertical_bias="0.754" />
+
     <ImageButton
-        android:id="@+id/btn_album"
+        android:id="@+id/ib_album"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_album"
         android:backgroundTint="#0000"
         android:contentDescription="동화 앨범"
+        android:src="@drawable/ic_album"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.559"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.78"
-        app:layout_constraintHorizontal_bias="0.75" />
+        app:layout_constraintVertical_bias="0.609" />
+
+    <ImageButton
+        android:id="@+id/ib_world"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#0000"
+        android:contentDescription="동화 앨범"
+        android:src="@drawable/ic_world"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.812"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.899" />
 </androidx.constraintlayout.widget.ConstraintLayout>
