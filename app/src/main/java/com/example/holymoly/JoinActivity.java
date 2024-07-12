@@ -33,7 +33,7 @@ public class JoinActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_join);
+        setContentView(R.layout.activity_join);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -135,7 +135,7 @@ public class JoinActivity extends AppCompatActivity {
                                     .set(new User(email))
                                     .addOnSuccessListener(aVoid -> {
                                         Toast.makeText(JoinActivity.this, "회원가입 성공!", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(JoinActivity.this, LoginActivity.class);
+                                        Intent intent = new Intent(JoinActivity.this, MainActivity.class);
                                         startActivity(intent);
                                         finish();
                                     })
