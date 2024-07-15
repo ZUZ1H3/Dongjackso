@@ -163,7 +163,7 @@
         tools:layout_editor_absoluteY="322dp">
 
         <RadioButton
-            android:id="@+id/themaImage1"
+            android:id="@+id/thema_sea"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="21dp"
@@ -176,7 +176,7 @@
             android:textSize="40dp" />
 
         <RadioButton
-            android:id="@+id/themaImage2"
+            android:id="@+id/thema_castle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="21dp"
@@ -189,7 +189,7 @@
             android:textSize="40dp" />
 
         <RadioButton
-            android:id="@+id/themaImage3"
+            android:id="@+id/thema_forest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="21dp"
@@ -202,7 +202,7 @@
             android:textSize="40dp" />
 
         <RadioButton
-            android:id="@+id/themaImage4"
+            android:id="@+id/thema_village"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="21dp"
@@ -215,7 +215,7 @@
             android:textSize="40dp" />
 
         <RadioButton
-            android:id="@+id/themaImage5"
+            android:id="@+id/thema_house"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="21dp"

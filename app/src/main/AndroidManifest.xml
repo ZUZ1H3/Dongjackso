@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.holymoly"> <!-- 패키지 경로 추가 -->
 
     <application
         android:allowBackup="true"
@@ -22,14 +23,11 @@
             android:name=".HomeActivity"
             android:exported="true"/>
         <activity
-            android:name="InfoActivity"
-            android:exported="true"/>
-        <activity
-            android:name="RegistrationActivity"
-            android:exported="true"/>
+            android:name=".InfoActivity"
+        android:exported="true"/>
         <activity
             android:name=".WorldActivity"
-            android:exported="true"/>
+        android:exported="true"/>
         <activity
             android:name=".SettingActivity"
             android:exported="true"/>
@@ -37,18 +35,15 @@
             android:name=".TrophyActivity"
             android:exported="true"/>
         <activity
-            android:name="SelectthemaActivity"
-            android:exported="true" />
-
+            android:name=".SelectthemaActivity"
+            android:exported="true"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
-
 </manifest>
