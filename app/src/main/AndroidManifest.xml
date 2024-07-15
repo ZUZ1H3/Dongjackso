@@ -26,9 +26,6 @@
             android:name=".InfoActivity"
         android:exported="true"/>
         <activity
-            android:name=".RegistrationActivity"
-        android:exported="true"/>
-        <activity
             android:name=".WorldActivity"
         android:exported="true"/>
         <activity
