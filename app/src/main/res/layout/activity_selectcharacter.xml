@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".SelectcharacterActivity"
-    android:background="@drawable/bg_main">
+    android:background="@drawable/bg_main"
+    tools:context=".SelectcharacterActivity">
 
     <ImageView
         android:id="@+id/iv_container"
@@ -14,10 +14,11 @@
         android:src="@drawable/ic_contain"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.03"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.03"
-        app:layout_constraintHorizontal_bias="0.03" />
+        app:layout_constraintVertical_bias="0.03" />
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/mini_profile"
         android:layout_width="85dp"
@@ -29,6 +30,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_container"
         app:layout_constraintVertical_bias="0.018" />
+
     <TextView
         android:id="@+id/mini_level"
         android:layout_width="wrap_content"
@@ -39,25 +41,27 @@
         android:textSize="22dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.115"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_container"
-        app:layout_constraintVertical_bias="0.024"
-        app:layout_constraintHorizontal_bias="0.115" />
+        app:layout_constraintVertical_bias="0.024" />
+
     <TextView
         android:id="@+id/mini_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:fontFamily="@font/ssurround"
+        android:gravity="center"
         android:hint="어린이"
         android:textColor="@color/white"
         android:textSize="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.11"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/mini_level"
-        app:layout_constraintVertical_bias="0.058"
-        app:layout_constraintHorizontal_bias="0.11" />
+        app:layout_constraintVertical_bias="0.058" />
+
     <TextView
         android:id="@+id/mini_nickname"
         android:layout_width="115dp"
@@ -77,40 +81,40 @@
         android:id="@+id/ib_trophy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_trophy"
         android:backgroundTint="#0000"
         android:contentDescription="트로피"
+        android:src="@drawable/ic_trophy"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.91"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_container"
-        app:layout_constraintVertical_bias="0"
-        app:layout_constraintHorizontal_bias="0.91" />
+        app:layout_constraintVertical_bias="0" />
 
     <ImageButton
         android:id="@+id/ib_homebutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_homebutton"
         android:backgroundTint="#0000"
         android:contentDescription="홈버튼"
+        android:src="@drawable/ic_homebutton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/ib_trophy"
-        app:layout_constraintTop_toTopOf="@id/ib_trophy"
         app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintTop_toTopOf="@id/ib_trophy"
         app:layout_constraintVertical_bias="0" />
 
     <ImageButton
         android:id="@+id/ib_setting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_setting"
         android:backgroundTint="#0000"
         android:contentDescription="환경설정"
+        android:src="@drawable/ic_setting"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@id/ib_trophy"
         app:layout_constraintTop_toTopOf="@id/ib_trophy"
-        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintVertical_bias="0" />
 
     <!--오른쪽 아래 다음 단계 화살표 버튼-->
@@ -118,147 +122,24 @@
         android:id="@+id/ib_nextStep"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_nextstep"
         android:backgroundTint="#0000"
         android:contentDescription="환경설정"
-        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ic_nextstep"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.98"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.98" />
 
-    <!--캐틱터 이미지사진 5개-->
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/characterImage1"
-        android:layout_width="158dp"
-        android:layout_height="158dp"
-        android:src="@drawable/pic_character1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.14"
-        app:layout_constraintVertical_bias="0.38" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/characterImage2"
-        android:layout_width="158dp"
-        android:layout_height="158dp"
-        android:src="@drawable/pic_character1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.32"
-        app:layout_constraintVertical_bias="0.38" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/characterImage3"
-        android:layout_width="158dp"
-        android:layout_height="158dp"
-        android:src="@drawable/pic_character1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.38" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/characterImage4"
-        android:layout_width="158dp"
-        android:layout_height="158dp"
-        android:src="@drawable/pic_character1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.68"
-        app:layout_constraintVertical_bias="0.38" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/characterImage5"
-        android:layout_width="158dp"
-        android:layout_height="158dp"
-        android:src="@drawable/pic_character1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.86"
-        app:layout_constraintVertical_bias="0.38" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/characterImage6"
-        android:layout_width="158dp"
-        android:layout_height="158dp"
-        android:src="@drawable/pic_character1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.14"
-        app:layout_constraintVertical_bias="0.75" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/characterImage7"
-        android:layout_width="158dp"
-        android:layout_height="158dp"
-        android:src="@drawable/pic_character1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.32"
-        app:layout_constraintVertical_bias="0.75" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/characterImage8"
-        android:layout_width="158dp"
-        android:layout_height="158dp"
-        android:src="@drawable/pic_character1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.75" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/characterImage9"
-        android:layout_width="158dp"
-        android:layout_height="158dp"
-        android:src="@drawable/pic_character1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.68"
-        app:layout_constraintVertical_bias="0.75" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/characterImage10"
-        android:layout_width="158dp"
-        android:layout_height="158dp"
-        android:src="@drawable/pic_character1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.86"
-        app:layout_constraintVertical_bias="0.75" />
-
-    <!--등장인물을 선택해 주세요/그외 캐릭터 이름 text-->
     <TextView
-        android:id="@+id/tv_chooseChracter"
+        android:id="@+id/choose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="등장인물을 골라주세요"
         android:fontFamily="@font/ssurround"
-        android:gravity="center"
-        android:text="등장인물을 선택해 주세요"
         android:textColor="@color/white"
-        android:textSize="50dp"
+        android:textSize="55dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -266,154 +147,213 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.2" />
 
-    <TextView
-        android:id="@+id/tv_characterName1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ssurround"
-        android:gravity="center"
-        android:text="등장인물1"
-        android:textColor="@color/white"
-        android:textSize="40dp"
-        app:layout_constraintTop_toBottomOf="@id/characterImage1"
-        app:layout_constraintStart_toStartOf="@id/characterImage1"
-        app:layout_constraintEnd_toEndOf="@id/characterImage1"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5" />
+    <LinearLayout
+        android:id="@+id/charlayout"
+        android:layout_width="900dp"
+        android:layout_height="550dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75"
+        app:layout_constraintHorizontal_bias="0.5" >
 
-    <TextView
-        android:id="@+id/tv_characterName2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ssurround"
-        android:gravity="center"
-        android:text="등장인물2"
-        android:textColor="@color/white"
-        android:textSize="40dp"
-        app:layout_constraintTop_toBottomOf="@id/characterImage2"
-        app:layout_constraintStart_toStartOf="@id/characterImage2"
-        app:layout_constraintEnd_toEndOf="@id/characterImage2"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5" />
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
 
-    <TextView
-        android:id="@+id/tv_characterName3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ssurround"
-        android:gravity="center"
-        android:text="등장인물3"
-        android:textColor="@color/white"
-        android:textSize="40dp"
-        app:layout_constraintTop_toBottomOf="@id/characterImage3"
-        app:layout_constraintStart_toStartOf="@id/characterImage3"
-        app:layout_constraintEnd_toEndOf="@id/characterImage3"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5" />
+            <RadioGroup
+                android:id="@+id/rg_charname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.884"
+                app:layout_constraintStart_toStartOf="@id/hairlayout"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.775">
 
-    <TextView
-        android:id="@+id/tv_characterName4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ssurround"
-        android:gravity="center"
-        android:text="등장인물4"
-        android:textColor="@color/white"
-        android:textSize="40dp"
-        app:layout_constraintTop_toBottomOf="@id/characterImage4"
-        app:layout_constraintStart_toStartOf="@id/characterImage4"
-        app:layout_constraintEnd_toEndOf="@id/characterImage4"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5" />
+                <LinearLayout
+                    android:id="@+id/containerlayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/tv_characterName5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ssurround"
-        android:gravity="center"
-        android:text="등장인물5"
-        android:textColor="@color/white"
-        android:textSize="40dp"
-        app:layout_constraintTop_toBottomOf="@id/characterImage5"
-        app:layout_constraintStart_toStartOf="@id/characterImage5"
-        app:layout_constraintEnd_toEndOf="@id/characterImage5"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5" />
+                    <LinearLayout
+                        android:id="@+id/hll_first"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_characterName6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ssurround"
-        android:gravity="center"
-        android:text="등장인물6"
-        android:textColor="@color/white"
-        android:textSize="40dp"
-        app:layout_constraintTop_toBottomOf="@id/characterImage6"
-        app:layout_constraintStart_toStartOf="@id/characterImage6"
-        app:layout_constraintEnd_toEndOf="@id/characterImage6"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5" />
+                        <RadioButton
+                            android:id="@+id/charname1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="20dp"
+                            android:background="@drawable/radio_village"
+                            android:button="@null"
+                            android:fontFamily="@font/ssurround"
+                            android:text="마을"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="40dp" />
 
-    <TextView
-        android:id="@+id/tv_characterName7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ssurround"
-        android:gravity="center"
-        android:text="등장인물7"
-        android:textColor="@color/white"
-        android:textSize="40dp"
-        app:layout_constraintTop_toBottomOf="@id/characterImage7"
-        app:layout_constraintStart_toStartOf="@id/characterImage7"
-        app:layout_constraintEnd_toEndOf="@id/characterImage7"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5" />
+                        <RadioButton
+                            android:id="@+id/charname2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="20dp"
+                            android:background="@drawable/radio_village"
+                            android:button="@null"
+                            android:fontFamily="@font/ssurround"
+                            android:text="마을"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="40dp"/>
+                    </LinearLayout>
 
-    <TextView
-        android:id="@+id/tv_characterName8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ssurround"
-        android:gravity="center"
-        android:text="등장인물8"
-        android:textColor="@color/white"
-        android:textSize="40dp"
-        app:layout_constraintTop_toBottomOf="@id/characterImage8"
-        app:layout_constraintStart_toStartOf="@id/characterImage8"
-        app:layout_constraintEnd_toEndOf="@id/characterImage8"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5" />
+                    <LinearLayout
+                        android:id="@+id/hll_second"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_characterName9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ssurround"
-        android:gravity="center"
-        android:text="등장인물9"
-        android:textColor="@color/white"
-        android:textSize="40dp"
-        app:layout_constraintTop_toBottomOf="@id/characterImage9"
-        app:layout_constraintStart_toStartOf="@id/characterImage9"
-        app:layout_constraintEnd_toEndOf="@id/characterImage9"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5" />
+                        <RadioButton
+                            android:id="@+id/charname3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="20dp"
+                            android:background="@drawable/radio_village"
+                            android:button="@null"
+                            android:fontFamily="@font/ssurround"
+                            android:text="마을"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="40dp" />
 
-    <TextView
-        android:id="@+id/tv_characterName10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ssurround"
-        android:gravity="center"
-        android:text="등장인물10"
-        android:textColor="@color/white"
-        android:textSize="40dp"
-        app:layout_constraintTop_toBottomOf="@id/characterImage10"
-        app:layout_constraintStart_toStartOf="@id/characterImage10"
-        app:layout_constraintEnd_toEndOf="@id/characterImage10"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5" />
+                        <RadioButton
+                            android:id="@+id/charname4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="20dp"
+                            android:background="@drawable/radio_village"
+                            android:button="@null"
+                            android:fontFamily="@font/ssurround"
+                            android:text="마을"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="40dp"/>
+                    </LinearLayout>
 
+                    <LinearLayout
+                        android:id="@+id/hll_third"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <RadioButton
+                            android:id="@+id/charname5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="20dp"
+                            android:background="@drawable/radio_village"
+                            android:button="@null"
+                            android:fontFamily="@font/ssurround"
+                            android:text="마을"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="40dp" />
+
+                        <RadioButton
+                            android:id="@+id/charname6"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="20dp"
+                            android:background="@drawable/radio_village"
+                            android:button="@null"
+                            android:fontFamily="@font/ssurround"
+                            android:text="마을"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="40dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/hll_fourth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <RadioButton
+                            android:id="@+id/charname7"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="20dp"
+                            android:background="@drawable/radio_village"
+                            android:button="@null"
+                            android:fontFamily="@font/ssurround"
+                            android:text="마을"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="40dp" />
+
+                        <RadioButton
+                            android:id="@+id/charname8"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="20dp"
+                            android:background="@drawable/radio_village"
+                            android:button="@null"
+                            android:fontFamily="@font/ssurround"
+                            android:text="마을"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="40dp"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/hll_fifth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <RadioButton
+                            android:id="@+id/charname9"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="20dp"
+                            android:background="@drawable/radio_village"
+                            android:button="@null"
+                            android:fontFamily="@font/ssurround"
+                            android:text="마을"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="40dp" />
+
+                        <RadioButton
+                            android:id="@+id/charname10"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="20dp"
+                            android:background="@drawable/radio_village"
+                            android:button="@null"
+                            android:fontFamily="@font/ssurround"
+                            android:text="마을"
+                            android:textAlignment="center"
+                            android:textColor="@color/white"
+                            android:textSize="40dp"/>
+                    </LinearLayout>
+                </LinearLayout>
+            </RadioGroup>
+        </HorizontalScrollView>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
