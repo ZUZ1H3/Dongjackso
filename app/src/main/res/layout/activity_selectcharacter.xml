@@ -76,7 +76,7 @@
         app:layout_constraintTop_toTopOf="@id/mini_name"
         app:layout_constraintVertical_bias="0.2" />
 
-    <!--오른쪽 상단에 있는 이미지 버튼들.-->
+    <!--오른쪽 상단에 있는 이미지 버튼들-->
     <ImageButton
         android:id="@+id/ib_trophy"
         android:layout_width="wrap_content"
@@ -149,211 +149,165 @@
 
     <LinearLayout
         android:id="@+id/charlayout"
-        android:layout_width="900dp"
-        android:layout_height="550dp"
-        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="500dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.75"
         app:layout_constraintHorizontal_bias="0.5" >
-
-        <HorizontalScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center">
-
-            <RadioGroup
-                android:id="@+id/rg_charname"
+            <LinearLayout
+                android:id="@+id/hll_first"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.884"
-                app:layout_constraintStart_toStartOf="@id/hairlayout"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.775">
+                android:orientation="horizontal">
 
-                <LinearLayout
-                    android:id="@+id/containerlayout"
+                <CheckBox
+                    android:id="@+id/charname1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_margin="20dp"
+                    android:background="@drawable/radio_village"
+                    android:button="@null"
+                    android:fontFamily="@font/ssurround"
+                    android:text="마을"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="40dp" />
 
-                    <LinearLayout
-                        android:id="@+id/hll_first"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                <CheckBox
+                    android:id="@+id/charname2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/radio_village"
+                    android:button="@null"
+                    android:fontFamily="@font/ssurround"
+                    android:text="마을"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="40dp"/>
 
-                        <RadioButton
-                            android:id="@+id/charname1"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="20dp"
-                            android:background="@drawable/radio_village"
-                            android:button="@null"
-                            android:fontFamily="@font/ssurround"
-                            android:text="마을"
-                            android:textAlignment="center"
-                            android:textColor="@color/white"
-                            android:textSize="40dp" />
+                <CheckBox
+                    android:id="@+id/charname3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/radio_village"
+                    android:button="@null"
+                    android:fontFamily="@font/ssurround"
+                    android:text="마을"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="40dp"/>
 
-                        <RadioButton
-                            android:id="@+id/charname2"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_margin="20dp"
-                            android:background="@drawable/radio_village"
-                            android:button="@null"
-                            android:fontFamily="@font/ssurround"
-                            android:text="마을"
-                            android:textAlignment="center"
-                            android:textColor="@color/white"
-                            android:textSize="40dp"/>
-                    </LinearLayout>
+                <CheckBox
+                    android:id="@+id/charname4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/radio_village"
+                    android:button="@null"
+                    android:fontFamily="@font/ssurround"
+                    android:text="마을"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="40dp"/>
 
-                    <LinearLayout
-                        android:id="@+id/hll_second"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                <CheckBox
+                    android:id="@+id/charname5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/radio_village"
+                    android:button="@null"
+                    android:fontFamily="@font/ssurround"
+                    android:text="마을"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="40dp"/>
+            </LinearLayout>
 
-                        <RadioButton
-                            android:id="@+id/charname3"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="20dp"
-                            android:background="@drawable/radio_village"
-                            android:button="@null"
-                            android:fontFamily="@font/ssurround"
-                            android:text="마을"
-                            android:textAlignment="center"
-                            android:textColor="@color/white"
-                            android:textSize="40dp" />
+            <LinearLayout
+                android:id="@+id/hll_second"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-                        <RadioButton
-                            android:id="@+id/charname4"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_margin="20dp"
-                            android:background="@drawable/radio_village"
-                            android:button="@null"
-                            android:fontFamily="@font/ssurround"
-                            android:text="마을"
-                            android:textAlignment="center"
-                            android:textColor="@color/white"
-                            android:textSize="40dp"/>
-                    </LinearLayout>
+                <CheckBox
+                    android:id="@+id/charname6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/radio_village"
+                    android:button="@null"
+                    android:fontFamily="@font/ssurround"
+                    android:text="마을"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="40dp" />
 
-                    <LinearLayout
-                        android:id="@+id/hll_third"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
+                <CheckBox
+                    android:id="@+id/charname7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/radio_village"
+                    android:button="@null"
+                    android:fontFamily="@font/ssurround"
+                    android:text="마을"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="40dp"/>
 
-                        <RadioButton
-                            android:id="@+id/charname5"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="20dp"
-                            android:background="@drawable/radio_village"
-                            android:button="@null"
-                            android:fontFamily="@font/ssurround"
-                            android:text="마을"
-                            android:textAlignment="center"
-                            android:textColor="@color/white"
-                            android:textSize="40dp" />
+                <CheckBox
+                    android:id="@+id/charname8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/radio_village"
+                    android:button="@null"
+                    android:fontFamily="@font/ssurround"
+                    android:text="마을"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="40dp"/>
 
-                        <RadioButton
-                            android:id="@+id/charname6"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_margin="20dp"
-                            android:background="@drawable/radio_village"
-                            android:button="@null"
-                            android:fontFamily="@font/ssurround"
-                            android:text="마을"
-                            android:textAlignment="center"
-                            android:textColor="@color/white"
-                            android:textSize="40dp"/>
-                    </LinearLayout>
+                <CheckBox
+                    android:id="@+id/charname9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/radio_village"
+                    android:button="@null"
+                    android:fontFamily="@font/ssurround"
+                    android:text="마을"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="40dp"/>
 
-                    <LinearLayout
-                        android:id="@+id/hll_fourth"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <RadioButton
-                            android:id="@+id/charname7"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="20dp"
-                            android:background="@drawable/radio_village"
-                            android:button="@null"
-                            android:fontFamily="@font/ssurround"
-                            android:text="마을"
-                            android:textAlignment="center"
-                            android:textColor="@color/white"
-                            android:textSize="40dp" />
-
-                        <RadioButton
-                            android:id="@+id/charname8"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_margin="20dp"
-                            android:background="@drawable/radio_village"
-                            android:button="@null"
-                            android:fontFamily="@font/ssurround"
-                            android:text="마을"
-                            android:textAlignment="center"
-                            android:textColor="@color/white"
-                            android:textSize="40dp"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/hll_fifth"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <RadioButton
-                            android:id="@+id/charname9"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="20dp"
-                            android:background="@drawable/radio_village"
-                            android:button="@null"
-                            android:fontFamily="@font/ssurround"
-                            android:text="마을"
-                            android:textAlignment="center"
-                            android:textColor="@color/white"
-                            android:textSize="40dp" />
-
-                        <RadioButton
-                            android:id="@+id/charname10"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:layout_margin="20dp"
-                            android:background="@drawable/radio_village"
-                            android:button="@null"
-                            android:fontFamily="@font/ssurround"
-                            android:text="마을"
-                            android:textAlignment="center"
-                            android:textColor="@color/white"
-                            android:textSize="40dp"/>
-                    </LinearLayout>
-                </LinearLayout>
-            </RadioGroup>
-        </HorizontalScrollView>
-    </LinearLayout>
+                <CheckBox
+                    android:id="@+id/charname10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/radio_village"
+                    android:button="@null"
+                    android:fontFamily="@font/ssurround"
+                    android:text="마을"
+                    android:textAlignment="center"
+                    android:textColor="@color/white"
+                    android:textSize="40dp"/>
+            </LinearLayout>
+        </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
