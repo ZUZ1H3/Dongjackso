@@ -43,6 +43,9 @@
             android:name=".SelectcharacterActivity"
             android:exported="true"/>
         <activity
+            android:name=".Makepage1Activity"
+            android:exported="true"/>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
