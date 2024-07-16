@@ -1,11 +1,12 @@
 package com.example.holymoly;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +19,6 @@ import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -26,7 +26,6 @@ public class SelectcharacterActivity extends AppCompatActivity {
     private Executor executor = new MainThreadExecutor(); // MainThreadExecutor 사용
     private CheckBox[] checkBoxes = new CheckBox[10]; // 체크박스를 저장할 배열
     private String[] character = new String[10]; // 캐릭터 이름을 저장할 배열
-    private ImageButton nextStepButton; // 다음 버튼
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +44,6 @@ public class SelectcharacterActivity extends AppCompatActivity {
         checkBoxes[8] = findViewById(R.id.charname9);
         checkBoxes[9] = findViewById(R.id.charname10);
 
-        nextStepButton = findViewById(R.id.ib_nextStep); // 다음 버튼 초기화
-
         Intent intent = getIntent();
         String thema = intent.getStringExtra("selectedThema");
         if (thema != null) {
@@ -55,17 +52,10 @@ public class SelectcharacterActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "테마가 없습니다", Toast.LENGTH_SHORT).show();
         }
-
-        nextStepButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleNextStep();
-            }
-        });
     }
 
     private void requestCharacterNames(String thema) {
-        GenerativeModel gm = new GenerativeModel("gemini-1.5-flash", "YOUR_API_KEY_HERE");
+        GenerativeModel gm = new GenerativeModel("gemini-1.5-flash", "AIzaSyB5Vf0Nk67nJOKk4BADvPDQhRGNyYTVxjU");
         GenerativeModelFutures model = GenerativeModelFutures.from(gm);
         // 요청 텍스트 생성
         String requestText = thema + "테마를 주제로 동화를 만들려고 합니다. 동화에 어울릴만한 등장인물의 후보가 10개 필요합니다. 1~5글자로 단답형으로 답해주세요. 후보와 후보 사이에는 ', '로 띄어주세요." +
@@ -123,22 +113,4 @@ public class SelectcharacterActivity extends AppCompatActivity {
             checkBoxes[i].setText(character[i]);
         }
     }
-
-    private void handleNextStep() {
-        List<String> selectedCharacters = new ArrayList<>();
-        for (CheckBox checkBox : checkBoxes) {
-            if (checkBox.isChecked()) {
-                selectedCharacters.add(checkBox.getText().toString());
-            }
-        }
-
-        if (selectedCharacters.size() < 2) {
-            Toast.makeText(this, "최소 2개의 캐릭터를 선택해주세요", Toast.LENGTH_SHORT).show();
-        } else {
-            Intent intent = new Intent(this, Makepage1Activity.class);
-            intent.putStringArrayListExtra("selectedCharacters", new ArrayList<>(selectedCharacters));
-            startActivity(intent);
-        }
-    }
-
 }
