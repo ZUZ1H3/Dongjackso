@@ -128,24 +128,41 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.98"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.98" />
+
+    <!-- 등장인물 RadioGroup -->
 
     <TextView
-        android:id="@+id/choose"
-        android:layout_width="wrap_content"
+        android:id="@+id/tv"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="등장인물을 골라주세요"
         android:fontFamily="@font/ssurround"
+        android:gravity="center"
+        android:text="등장인물"
         android:textColor="@color/white"
-        android:textSize="55dp"
+        android:textSize="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintVertical_bias="0.377" />
+
+    <RadioGroup
+        android:id="@+id/radioGroupCharacters"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/tv_chooseChracter"
+        app:layout_constraintBottom_toTopOf="@id/ib_nextStep"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.5"
+        android:gravity="center"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp">
+
+
+    </RadioGroup>
 
     <LinearLayout
         android:id="@+id/charlayout"
