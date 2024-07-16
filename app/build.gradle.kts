@@ -11,7 +11,7 @@ android {
     defaultConfig {
         applicationId = "com.example.holymoly"
         minSdk = 23
-        targetSdk = 23
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
