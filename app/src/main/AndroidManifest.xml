@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.holymoly"> <!-- 패키지 경로 추가 -->
 
+    <uses-permission android:name="android.permission.ACCEPT_INTERNET"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -36,6 +38,9 @@
             android:exported="true"/>
         <activity
             android:name=".SelectthemaActivity"
+            android:exported="true"/>
+        <activity
+            android:name=".SelectcharacterActivity"
             android:exported="true"/>
         <activity
             android:name=".MainActivity"
