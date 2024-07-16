@@ -18,6 +18,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.auth.User;
 
 import java.util.regex.Pattern;
 
@@ -33,7 +34,7 @@ public class JoinActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_join);
+        setContentView(R.layout.activity_join);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -132,10 +133,10 @@ public class JoinActivity extends AppCompatActivity {
                             // 회원가입 성공 시 Firestore에 사용자 정보 저장
                             FirebaseUser user = mAuth.getCurrentUser();
                             db.collection("users").document(user.getUid())
-                                    .set(new User(email))
+                                    .set(new User(email, password))
                                     .addOnSuccessListener(aVoid -> {
                                         Toast.makeText(JoinActivity.this, "회원가입 성공!", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(JoinActivity.this, LoginActivity.class);
+                                        Intent intent = new Intent(JoinActivity.this, MainActivity.class);
                                         startActivity(intent);
                                         finish();
                                     })
@@ -155,17 +156,22 @@ public class JoinActivity extends AppCompatActivity {
         Pattern pattern = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()_+=<>?{}\\[\\]~-]).{8,}$");
         return pattern.matcher(password).matches();
     }
-
-    // User 클래스 추가
-    public static class User {
+    // firebase User 클래스
+    public class User {
         public String email;
+        public String password;
+        public String name;
+        public Integer age;
+        public String gender;
 
         public User() {
             // 기본 생성자 필요
         }
 
-        public User(String email) {
+        // 이메일과 비밀번호를 받는 생성자
+        public User(String email, String password) {
             this.email = email;
+            this.password = password;
         }
     }
 }
