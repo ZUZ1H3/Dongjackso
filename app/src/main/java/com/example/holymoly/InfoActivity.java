@@ -59,15 +59,15 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
     }
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.btn_boy) {
+        if (v.getId() == R.id.btn_boy) { // 남자 버튼 클릭 시
             selectedGender = "남자";
             btnBoy.setSelected(true);
             btnGirl.setSelected(false);
-        } else if (v.getId() == R.id.btn_girl) {
+        } else if (v.getId() == R.id.btn_girl) { // 여자 버튼 클릭 시
             selectedGender = "여자";
             btnGirl.setSelected(true);
             btnBoy.setSelected(false);
-        } else if (v.getId() == R.id.btn_ok) {
+        } else if (v.getId() == R.id.btn_ok) { // OK 버튼 클릭 시
             if (validateInput()) {
                 saveInfo();
                 Intent intent = new Intent(this, StartActivity.class);
@@ -98,7 +98,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         FirebaseUser user = mAuth.getCurrentUser();
 
         db.collection("users").document(user.getUid())
-                .update("userName", userName, "userAge", userAge, "userGender", selectedGender)
+                .update("name", userName, "age", userAge, "gender", selectedGender)
                 .addOnSuccessListener(documentReference -> {
                     Toast.makeText(this, "정보가 저장되었습니다.", Toast.LENGTH_SHORT).show();
                 })

@@ -3,7 +3,9 @@ package com.example.holymoly;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
@@ -27,12 +29,13 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView findpwd;
     private EditText etId, etPwd;
-    private ImageButton btnLogin, btnJoin;
+    private ImageButton btnLogin, btnJoin, btnToggle;
     private RadioButton auto;
+
     private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
 
     private boolean isChecked = false;  // 자동 로그인 체크 변수
+    private boolean isPasswordVisible = false;   // 비밀번호 표시 및 숨기기
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +43,38 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
 
-        findpwd = (TextView) findViewById(R.id.tv_findpd);
+        findpwd = (TextView) findViewById(R.id.tv_findpwd);
         etId = findViewById(R.id.et_id);
         etPwd = findViewById(R.id.et_pwd);
         btnLogin = findViewById(R.id.btn_login);
         btnJoin = findViewById(R.id.btn_join);
+        btnToggle = findViewById(R.id.btn_hidenshow);
         auto = findViewById(R.id.rb_auto);
+
+        // 비밀번호 숨기기 및 표시
+        btnToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isPasswordVisible) { // 비밀번호 표시
+                    etPwd.setInputType(InputType.TYPE_CLASS_TEXT);
+                    btnToggle.setImageResource(R.drawable.ic_eye);
+                } else { // 비밀번호 숨기기
+                    etPwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    btnToggle.setImageResource(R.drawable.ic_eye2);
+                }
+                etPwd.setSelection(etPwd.length());
+                isPasswordVisible = !isPasswordVisible;
+            }
+        });
+
+        // 자동 로그인 버튼 클릭 시
+        auto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isChecked = true;
+            }
+        });
 
         // 비밀번호 재설정 클릭 시
         findpwd.setOnClickListener(new View.OnClickListener() {
@@ -97,13 +124,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, JoinActivity.class);
                 startActivity(intent);
-            }
-        });
-        // 자동 로그인 버튼 클릭시
-        auto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                isChecked = true;
             }
         });
     }
