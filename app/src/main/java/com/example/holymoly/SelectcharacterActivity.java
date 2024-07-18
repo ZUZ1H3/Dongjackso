@@ -9,8 +9,10 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.ai.client.generativeai.GenerativeModel;
@@ -30,7 +32,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-
 public class SelectcharacterActivity extends AppCompatActivity {
     private Executor executor = Executors.newSingleThreadExecutor(); // 백그라운드 작업을 위한 Executor
     private CheckBox[] checkBoxes = new CheckBox[10]; // 캐릭터를 저장할 체크박스 배열
@@ -129,8 +130,6 @@ public class SelectcharacterActivity extends AppCompatActivity {
         }
     }
 
-    //-------------------------Karlo AI API--------------------------------------------------------
-
     // Karlo API에 이미지 생성을 요청
     private String requestImageFromKarlo(String prompt) throws Exception {
         String apiUrl = "https://api.kakaobrain.com/v2/inference/karlo/t2i";
@@ -167,46 +166,6 @@ public class SelectcharacterActivity extends AppCompatActivity {
         return images.getJSONObject(0).getString("image");
     }
 
-
-
-    // 캐릭터 이름에 대해 이미지를 생성하고 체크박스에 설정
-    private void generateAndSetImage(String characterName, CheckBox checkBox) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    // 1. Gemini AI를 사용하여 characterName을 영어로 번역
-                    String translatedName = translateCharacterName(characterName);
-                    if (translatedName != null) {
-                        // 2. 프롬프트를 더 자세히 작성
-                        String prompt = translatedName + ". Humans are humanized, animals are animalized, cute, bright, simple, illustrated and fairy tale";
-                        String imageUrl = requestImageFromKarlo(prompt);
-                        if (imageUrl != null) {
-                            Bitmap bitmap = getBitmapFromURL(imageUrl);
-                            Bitmap circularBitmap = getCircularBitmap(bitmap);
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    checkBox.setBackground(new BitmapDrawable(getResources(), circularBitmap));
-                                }
-                            });
-                        }
-                    } else {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(SelectcharacterActivity.this, "이름 번역에 실패했습니다.", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-    }
-
-
     // Gemini AI를 사용하여 캐릭터 이름을 번역하는 메서드
     private String translateCharacterName(String characterName) throws Exception {
         GenerativeModel gm = new GenerativeModel("gemini-1.5-flash", GEMINI_API_KEY);
@@ -225,6 +184,8 @@ public class SelectcharacterActivity extends AppCompatActivity {
         GenerateContentResponse result = response.get();
         return result.getText();
     }
+
+    // 이미지를 원형으로 만드는 메서드
     private Bitmap getCircularBitmap(Bitmap bitmap) {
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
@@ -251,8 +212,7 @@ public class SelectcharacterActivity extends AppCompatActivity {
         return output;
     }
 
-
-    // URL에서 Bitmap 객체를 생성
+    // URL에서 Bitmap 객체를 생성하는 메서드
     private Bitmap getBitmapFromURL(String src) {
         try {
             URL url = new URL(src);
@@ -265,5 +225,63 @@ public class SelectcharacterActivity extends AppCompatActivity {
             e.printStackTrace();
             return null;
         }
+    }
+
+    // 체크박스의 배경을 상태에 따라 설정하는 메서드
+    private void setCheckBoxBackgroundWithState(CheckBox checkBox, Bitmap bitmap) {
+        BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
+
+        // 상태에 따라 배경 설정
+        StateListDrawable stateListDrawable = new StateListDrawable();
+        stateListDrawable.addState(new int[]{android.R.attr.state_checked}, bitmapDrawable);
+        stateListDrawable.addState(new int[]{-android.R.attr.state_checked}, bitmapDrawable);
+
+        checkBox.setBackground(stateListDrawable);
+
+        // 체크박스 상태 변경 리스너 추가
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                int alpha = isChecked ? 128 : 255; // 체크되었을 때는 투명도 50%, 체크 해제 시 투명도 100%
+                bitmapDrawable.setAlpha(alpha);
+            }
+        });
+    }
+
+    // 캐릭터 이름에 대해 이미지를 생성하고 체크박스에 설정
+    private void generateAndSetImage(String characterName, CheckBox checkBox) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // 1. Gemini AI를 사용하여 characterName을 영어로 번역
+                    String translatedName = translateCharacterName(characterName);
+                    if (translatedName != null) {
+                        // 2. 프롬프트 작성
+                        String prompt = "Dreamy, cute, fairytale, simple, twinkle " + translatedName + " a sky blue background";
+                        String imageUrl = requestImageFromKarlo(prompt);
+                        if (imageUrl != null) {
+                            Bitmap bitmap = getBitmapFromURL(imageUrl);
+                            Bitmap circularBitmap = getCircularBitmap(bitmap);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setCheckBoxBackgroundWithState(checkBox, circularBitmap);
+                                }
+                            });
+                        }
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(SelectcharacterActivity.this, "이름 번역에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
     }
 }

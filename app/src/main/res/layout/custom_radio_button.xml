@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_margin="21dp"
+    >
+
+    <ImageView
+        android:id="@+id/radio_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/rb_sea" /> <!-- 예시 이미지 -->
+
+    <TextView
+        android:id="@+id/radio_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ssurround"
+        android:text="바다"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="40sp" />
+</LinearLayout>

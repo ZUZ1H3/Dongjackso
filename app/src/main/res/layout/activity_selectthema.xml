@@ -152,81 +152,12 @@
 
     <RadioGroup
         android:id="@+id/radioGroup"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.6" >
+        app:layout_constraintStart_toStartOf="@+id/tv_chooseChracter"
+        app:layout_constraintTop_toBottomOf="@+id/tv_chooseChracter"
+        android:layout_marginTop="21dp"/>
 
-
-        <RadioButton
-            android:id="@+id/thema_sea"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="21dp"
-            android:background="@drawable/radio_sea"
-            android:button="@null"
-            android:fontFamily="@font/ssurround"
-            android:text="바다"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="40dp" />
-
-        <RadioButton
-            android:id="@+id/thema_castle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="21dp"
-            android:background="@drawable/radio_cestle"
-            android:button="@null"
-            android:fontFamily="@font/ssurround"
-            android:text="궁전"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="40dp" />
-
-        <RadioButton
-            android:id="@+id/thema_forest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="21dp"
-            android:background="@drawable/radio_forest"
-            android:button="@null"
-            android:fontFamily="@font/ssurround"
-            android:text="숲"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="40dp" />
-
-        <RadioButton
-            android:id="@+id/thema_village"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="21dp"
-            android:background="@drawable/radio_village"
-            android:button="@null"
-            android:fontFamily="@font/ssurround"
-            android:text="마을"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="40dp" />
-
-        <RadioButton
-            android:id="@+id/thema_house"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="21dp"
-            android:background="@drawable/radio_house"
-            android:button="@null"
-            android:fontFamily="@font/ssurround"
-            android:text="우주"
-            android:textAlignment="center"
-            android:textColor="@color/white"
-            android:textSize="40dp" />
-    </RadioGroup>
 </androidx.constraintlayout.widget.ConstraintLayout>
