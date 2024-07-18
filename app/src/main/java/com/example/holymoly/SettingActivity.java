@@ -1,24 +1,31 @@
 package com.example.holymoly;
 
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 public class SettingActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_setting);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+
+        Spinner genderSpinner = findViewById(R.id.spinner_gender);
+        String[] genderArray = getResources().getStringArray(R.array.gender_array);
+        String[] genderWithPrompt = new String[genderArray.length + 1];
+        genderWithPrompt[0] = "성별";
+        System.arraycopy(genderArray, 0, genderWithPrompt, 1, genderArray.length);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.db_spinner_item, genderWithPrompt) {
+            @Override
+            public boolean isEnabled(int position) {
+                return position != 0; // '성별' 항목을 선택 불가능하도록 설정
+            }
+        };
+        adapter.setDropDownViewResource(R.layout.db_spinner_item);
+        genderSpinner.setAdapter(adapter);
+        genderSpinner.setSelection(0); // 기본 선택 항목을 '성별'로 설정
     }
 }
