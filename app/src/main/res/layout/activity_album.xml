@@ -6,6 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/bg_main"
     tools:context=".AlbumActivity">
+    <!-- 왼쪽 위에 있는 프로필과 이름 -->
     <ImageView
         android:id="@+id/iv_container"
         android:layout_width="315dp"
@@ -70,6 +71,8 @@
         app:layout_constraintStart_toEndOf="@+id/mini_name"
         app:layout_constraintTop_toTopOf="@id/mini_name"
         app:layout_constraintVertical_bias="0.2" />
+
+    <!--오른쪽 위에 버튼3개 / 트로피, 환경설정, 홈버튼 -->
     <ImageButton
         android:id="@+id/ib_trophy"
         android:layout_width="wrap_content"
@@ -84,7 +87,7 @@
         app:layout_constraintVertical_bias="0"
         app:layout_constraintHorizontal_bias="0.91" />
     <ImageButton
-        android:id="@+id/ib_edit"
+        android:id="@+id/ib_setting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_setting"
@@ -95,45 +98,20 @@
         app:layout_constraintTop_toTopOf="@id/ib_trophy"
         app:layout_constraintVertical_bias="0"
         app:layout_constraintHorizontal_bias="0" />
-    <ImageView
-        android:id="@+id/iv_selectAlbum"
-        android:layout_width="280dp"
-        android:layout_height="60dp"
-        android:src="@drawable/ic_selectalbum"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.1"
-        app:layout_constraintHorizontal_bias="0.5" />
-    <TextView
-        android:id="@+id/tv_album"
+    <ImageButton
+        android:id="@+id/ib_homebutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/ssurround"
-        android:text="동화 앨범"
-        android:textColor="@color/white"
-        android:textSize="25dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/iv_selectAlbum"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:backgroundTint="#0000"
+        android:contentDescription="홈버튼"
+        android:src="@drawable/ic_homebutton"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.0192"
-        app:layout_constraintHorizontal_bias="0.445" />
-    <TextView
-        android:id="@+id/tv_book"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ssurround"
-        android:text="동화 제작"
-        android:textColor="@color/white"
-        android:textSize="25dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/iv_selectAlbum"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.0192"
-        app:layout_constraintHorizontal_bias="0.552" />
+        app:layout_constraintEnd_toStartOf="@id/ib_trophy"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintTop_toTopOf="@id/ib_trophy"
+        app:layout_constraintVertical_bias="0" />
+
+    <!--동화가 없을 때 나오는 텍스트뷰-->
     <TextView
         android:id="@+id/tv_none"
         android:layout_width="wrap_content"
@@ -143,7 +121,7 @@
         android:textSize="65dp"
         android:textColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/iv_selectAlbum"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="0.35"
@@ -176,12 +154,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="0.35"
         app:layout_constraintHorizontal_bias="0.5" />
+
     <androidx.core.widget.NestedScrollView
         android:id="@+id/sv_books"
         android:layout_width="1000dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/iv_selectAlbum"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintVertical_bias="0.6"

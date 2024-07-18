@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="작가 등록"
-        android:textSize="90dp"
+        android:textSize="64dp"
         android:fontFamily="@font/ssurround"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -21,8 +21,8 @@
         app:layout_constraintVertical_bias="0.07" />
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/img_profile"
-        android:layout_width="230dp"
-        android:layout_height="230dp"
+        android:layout_width="203dp"
+        android:layout_height="203dp"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_profile"
         app:layout_constraintBottom_toBottomOf="parent"

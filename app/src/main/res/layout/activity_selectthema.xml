@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".SelectthemaActivity"
-    android:background="@drawable/bg_main">
+    android:background="@drawable/bg_main"
+    tools:context=".SelectthemaActivity">
 
     <!--프로필관련-->
     <ImageView
@@ -15,10 +15,11 @@
         android:src="@drawable/ic_contain"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.03"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.03"
-        app:layout_constraintHorizontal_bias="0.03" />
+        app:layout_constraintVertical_bias="0.03" />
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/mini_profile"
         android:layout_width="85dp"
@@ -30,6 +31,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_container"
         app:layout_constraintVertical_bias="0.018" />
+
     <TextView
         android:id="@+id/mini_level"
         android:layout_width="wrap_content"
@@ -40,25 +42,27 @@
         android:textSize="22dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.115"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_container"
-        app:layout_constraintVertical_bias="0.024"
-        app:layout_constraintHorizontal_bias="0.115" />
+        app:layout_constraintVertical_bias="0.024" />
+
     <TextView
         android:id="@+id/mini_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:fontFamily="@font/ssurround"
+        android:gravity="center"
         android:hint="어린이"
         android:textColor="@color/white"
         android:textSize="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.11"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/mini_level"
-        app:layout_constraintVertical_bias="0.058"
-        app:layout_constraintHorizontal_bias="0.11" />
+        app:layout_constraintVertical_bias="0.058" />
+
     <TextView
         android:id="@+id/mini_nickname"
         android:layout_width="115dp"
@@ -78,40 +82,40 @@
         android:id="@+id/ib_trophy"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_trophy"
         android:backgroundTint="#0000"
         android:contentDescription="트로피"
+        android:src="@drawable/ic_trophy"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.91"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_container"
-        app:layout_constraintVertical_bias="0"
-        app:layout_constraintHorizontal_bias="0.91" />
+        app:layout_constraintVertical_bias="0" />
 
     <ImageButton
         android:id="@+id/ib_homebutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_homebutton"
         android:backgroundTint="#0000"
         android:contentDescription="홈버튼"
+        android:src="@drawable/ic_homebutton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/ib_trophy"
-        app:layout_constraintTop_toTopOf="@id/ib_trophy"
         app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintTop_toTopOf="@id/ib_trophy"
         app:layout_constraintVertical_bias="0" />
 
     <ImageButton
-        android:id="@+id/ib_edit"
+        android:id="@+id/ib_setting"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_setting"
         android:backgroundTint="#0000"
         android:contentDescription="환경설정"
+        android:src="@drawable/ic_setting"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@id/ib_trophy"
         app:layout_constraintTop_toTopOf="@id/ib_trophy"
-        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintVertical_bias="0" />
 
     <!--오른쪽 아래 다음 단계 화살표 버튼-->
@@ -119,14 +123,14 @@
         android:id="@+id/ib_nextStep"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_nextstep"
         android:backgroundTint="#0000"
         android:contentDescription="환경설정"
-        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ic_nextstep"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.98"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.98" />
 
     <!--테마를 선택해주세요+테마 text들-->
@@ -146,140 +150,83 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.3" />
 
-    <TextView
-        android:id="@+id/tv_characterName1"
+    <RadioGroup
+        android:id="@+id/radioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/ssurround"
         android:gravity="center"
-        android:text="테마1"
-        android:textColor="@color/white"
-        android:textSize="40dp"
-        app:layout_constraintTop_toBottomOf="@id/themaImage1"
-        app:layout_constraintStart_toStartOf="@id/themaImage1"
-        app:layout_constraintEnd_toEndOf="@id/themaImage1"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5" />
-
-    <TextView
-        android:id="@+id/tv_characterName2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ssurround"
-        android:gravity="center"
-        android:text="테마2"
-        android:textColor="@color/white"
-        android:textSize="40dp"
-        app:layout_constraintTop_toBottomOf="@id/themaImage2"
-        app:layout_constraintStart_toStartOf="@id/themaImage2"
-        app:layout_constraintEnd_toEndOf="@id/themaImage2"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5" />
-
-    <TextView
-        android:id="@+id/tv_characterName3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ssurround"
-        android:gravity="center"
-        android:text="테마3"
-        android:textColor="@color/white"
-        android:textSize="40dp"
-        app:layout_constraintTop_toBottomOf="@id/themaImage3"
-        app:layout_constraintStart_toStartOf="@id/themaImage3"
-        app:layout_constraintEnd_toEndOf="@id/themaImage3"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5" />
-
-    <TextView
-        android:id="@+id/tv_characterName4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ssurround"
-        android:gravity="center"
-        android:text="테마4"
-        android:textColor="@color/white"
-        android:textSize="40dp"
-        app:layout_constraintTop_toBottomOf="@id/themaImage4"
-        app:layout_constraintStart_toStartOf="@id/themaImage4"
-        app:layout_constraintEnd_toEndOf="@id/themaImage4"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5" />
-
-    <TextView
-        android:id="@+id/tv_characterName5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ssurround"
-        android:gravity="center"
-        android:text="테마5"
-        android:textColor="@color/white"
-        android:textSize="40dp"
-        app:layout_constraintTop_toBottomOf="@id/themaImage5"
-        app:layout_constraintStart_toStartOf="@id/themaImage5"
-        app:layout_constraintEnd_toEndOf="@id/themaImage5"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5" />
-
-    <!--캐틱터 이미지사진 5개-->
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/themaImage1"
-        android:layout_width="158dp"
-        android:layout_height="158dp"
-        android:src="@drawable/pic_thema1"
-        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.14"
-        app:layout_constraintVertical_bias="0.5" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/themaImage2"
-        android:layout_width="158dp"
-        android:layout_height="158dp"
-        android:src="@drawable/pic_thema1"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.32"
-        app:layout_constraintVertical_bias="0.5" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/themaImage3"
-        android:layout_width="158dp"
-        android:layout_height="158dp"
-        android:src="@drawable/pic_thema1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintVertical_bias="0.5" />
+        app:layout_constraintVertical_bias="0.6" >
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/themaImage4"
-        android:layout_width="158dp"
-        android:layout_height="158dp"
-        android:src="@drawable/pic_thema1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.68"
-        app:layout_constraintVertical_bias="0.5" />
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/themaImage5"
-        android:layout_width="158dp"
-        android:layout_height="158dp"
-        android:src="@drawable/pic_thema1"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.86"
-        app:layout_constraintVertical_bias="0.5" />
+        <RadioButton
+            android:id="@+id/thema_sea"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="21dp"
+            android:background="@drawable/radio_sea"
+            android:button="@null"
+            android:fontFamily="@font/ssurround"
+            android:text="바다"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="40dp" />
 
+        <RadioButton
+            android:id="@+id/thema_castle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="21dp"
+            android:background="@drawable/radio_cestle"
+            android:button="@null"
+            android:fontFamily="@font/ssurround"
+            android:text="궁전"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="40dp" />
+
+        <RadioButton
+            android:id="@+id/thema_forest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="21dp"
+            android:background="@drawable/radio_forest"
+            android:button="@null"
+            android:fontFamily="@font/ssurround"
+            android:text="숲"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="40dp" />
+
+        <RadioButton
+            android:id="@+id/thema_village"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="21dp"
+            android:background="@drawable/radio_village"
+            android:button="@null"
+            android:fontFamily="@font/ssurround"
+            android:text="마을"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="40dp" />
+
+        <RadioButton
+            android:id="@+id/thema_house"
+            android:layout_width="38dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="21dp"
+            android:background="@drawable/radio_house"
+            android:button="@null"
+            android:fontFamily="@font/ssurround"
+            android:text="우주"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textSize="40dp" />
+    </RadioGroup>
 </androidx.constraintlayout.widget.ConstraintLayout>
