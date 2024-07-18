@@ -166,8 +166,8 @@
 
                 <CheckBox
                     android:id="@+id/charname1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="190dp"
+                    android:layout_height="190dp"
                     android:layout_margin="20dp"
                     android:background="@drawable/radio_village"
                     android:button="@null"
@@ -179,8 +179,8 @@
 
                 <CheckBox
                     android:id="@+id/charname2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="190dp"
+                    android:layout_height="190dp"
                     android:layout_gravity="center"
                     android:layout_margin="20dp"
                     android:background="@drawable/radio_village"
@@ -193,8 +193,8 @@
 
                 <CheckBox
                     android:id="@+id/charname3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="190dp"
+                    android:layout_height="190dp"
                     android:layout_gravity="center"
                     android:layout_margin="20dp"
                     android:background="@drawable/radio_village"
@@ -207,8 +207,8 @@
 
                 <CheckBox
                     android:id="@+id/charname4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="190dp"
+                    android:layout_height="190dp"
                     android:layout_gravity="center"
                     android:layout_margin="20dp"
                     android:background="@drawable/radio_village"
@@ -221,8 +221,8 @@
 
                 <CheckBox
                     android:id="@+id/charname5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="190dp"
+                    android:layout_height="190dp"
                     android:layout_gravity="center"
                     android:layout_margin="20dp"
                     android:background="@drawable/radio_village"
@@ -242,8 +242,8 @@
 
                 <CheckBox
                     android:id="@+id/charname6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="190dp"
+                    android:layout_height="190dp"
                     android:layout_margin="20dp"
                     android:background="@drawable/radio_village"
                     android:button="@null"
@@ -255,8 +255,8 @@
 
                 <CheckBox
                     android:id="@+id/charname7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="190dp"
+                    android:layout_height="190dp"
                     android:layout_gravity="center"
                     android:layout_margin="20dp"
                     android:background="@drawable/radio_village"
@@ -269,8 +269,8 @@
 
                 <CheckBox
                     android:id="@+id/charname8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="190dp"
+                    android:layout_height="190dp"
                     android:layout_gravity="center"
                     android:layout_margin="20dp"
                     android:background="@drawable/radio_village"
@@ -283,8 +283,8 @@
 
                 <CheckBox
                     android:id="@+id/charname9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="190dp"
+                    android:layout_height="190dp"
                     android:layout_gravity="center"
                     android:layout_margin="20dp"
                     android:background="@drawable/radio_village"
@@ -297,8 +297,8 @@
 
                 <CheckBox
                     android:id="@+id/charname10"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="190dp"
+                    android:layout_height="190dp"
                     android:layout_gravity="center"
                     android:layout_margin="20dp"
                     android:background="@drawable/radio_village"
