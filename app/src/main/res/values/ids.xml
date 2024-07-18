@@ -1,0 +1,7 @@
+<resources>
+    <item name="thema_sea" type="id"/>
+    <item name="thema_castle" type="id"/>
+    <item name="thema_forest" type="id"/>
+    <item name="thema_village" type="id"/>
+    <item name="thema_house" type="id"/>
+</resources>

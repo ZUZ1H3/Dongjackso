@@ -257,7 +257,7 @@ public class SelectcharacterActivity extends AppCompatActivity {
                     // 1. Gemini AI를 사용하여 characterName을 영어로 번역
                     String translatedName = translateCharacterName(characterName);
                     if (translatedName != null) {
-                        // 2. 프롬프트를 더 자세히 작성
+                        // 2. 프롬프트 작성
                         String prompt = "Dreamy, cute, fairytale, simple, twinkle " + translatedName + " a sky blue background";
                         String imageUrl = requestImageFromKarlo(prompt);
                         if (imageUrl != null) {

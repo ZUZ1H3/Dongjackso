@@ -2,10 +2,12 @@ package com.example.holymoly;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,6 +24,13 @@ public class SelectthemaActivity extends AppCompatActivity {
 
         radioGroup = findViewById(R.id.radioGroup);
         btnnext = findViewById(R.id.ib_nextStep);
+
+        // 커스텀 라디오 버튼 추가
+        addCustomRadioButton("바다", R.drawable.radio_sea, R.id.thema_sea);
+        addCustomRadioButton("궁전", R.drawable.radio_cestle, R.id.thema_castle);
+        addCustomRadioButton("숲", R.drawable.radio_forest, R.id.thema_forest);
+        addCustomRadioButton("마을", R.drawable.radio_village, R.id.thema_village);
+        addCustomRadioButton("우주", R.drawable.radio_house, R.id.thema_house);
 
         // btnnext 버튼 클릭 리스너 설정
         btnnext.setOnClickListener(new View.OnClickListener() {
@@ -53,4 +62,44 @@ public class SelectthemaActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void addCustomRadioButton(String text, int imageResId, int radioButtonId) {
+        // 레이아웃 인플레이터를 사용하여 커스텀 라디오 버튼 레이아웃 인플레이트
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.custom_radio_button, radioGroup, false);
+
+        // 레이아웃에서 뷰 찾기
+        ImageView imageView = view.findViewById(R.id.radio_image);
+        TextView textView = view.findViewById(R.id.radio_text);
+
+        // 이미지와 텍스트 설정
+        imageView.setImageResource(imageResId);
+        textView.setText(text);
+
+        // View에 ID 설정
+        view.setId(radioButtonId);
+
+        // View에 클릭 리스너 설정
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 선택된 View의 ID를 라디오 그룹의 체크된 항목으로 설정
+                radioGroup.check(v.getId());
+
+                // 모든 라디오 버튼의 이미지 불투명도 초기화 (원래대로)
+                for (int i = 0; i < radioGroup.getChildCount(); i++) {
+                    View childView = radioGroup.getChildAt(i);
+                    ImageView childImageView = childView.findViewById(R.id.radio_image);
+                    childImageView.setAlpha(1.0f); // 원래대로 투명도 설정
+                }
+
+                // 선택된 라디오 버튼의 이미지 불투명도 설정
+                imageView.setAlpha(0.4f);
+            }
+        });
+
+        // 라디오 그룹에 추가
+        radioGroup.addView(view);
+    }
+
 }
