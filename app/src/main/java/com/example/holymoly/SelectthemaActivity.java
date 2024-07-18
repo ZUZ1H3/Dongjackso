@@ -40,7 +40,7 @@ public class SelectthemaActivity extends AppCompatActivity {
                 } else if (selectedId == R.id.thema_village) {
                     selectedThema = "마을";
                 } else if (selectedId == R.id.thema_house) {
-                    selectedThema = "집";
+                    selectedThema = "우주";
                 } else {
                     // 테마가 선택되지 않은 경우
                     Toast.makeText(SelectthemaActivity.this, "테마를 선택하세요!", Toast.LENGTH_SHORT).show();
