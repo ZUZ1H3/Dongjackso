@@ -218,7 +218,7 @@
 
         <RadioButton
             android:id="@+id/thema_house"
-            android:layout_width="38dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="21dp"
             android:background="@drawable/radio_house"
