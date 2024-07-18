@@ -149,7 +149,7 @@
 
     <LinearLayout
         android:id="@+id/charlayout"
-        android:layout_width="900dp"
+        android:layout_width="1200dp"
         android:layout_height="550dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -197,7 +197,7 @@
                             android:background="@drawable/radio_village"
                             android:button="@null"
                             android:fontFamily="@font/ssurround"
-                            android:text="마을"
+                            android:text="인물1"
                             android:textAlignment="center"
                             android:textColor="@color/white"
                             android:textSize="40dp" />
@@ -211,7 +211,7 @@
                             android:background="@drawable/radio_village"
                             android:button="@null"
                             android:fontFamily="@font/ssurround"
-                            android:text="마을"
+                            android:text="인물6"
                             android:textAlignment="center"
                             android:textColor="@color/white"
                             android:textSize="40dp"/>
@@ -231,7 +231,7 @@
                             android:background="@drawable/radio_village"
                             android:button="@null"
                             android:fontFamily="@font/ssurround"
-                            android:text="마을"
+                            android:text="인물2"
                             android:textAlignment="center"
                             android:textColor="@color/white"
                             android:textSize="40dp" />
@@ -245,7 +245,7 @@
                             android:background="@drawable/radio_village"
                             android:button="@null"
                             android:fontFamily="@font/ssurround"
-                            android:text="마을"
+                            android:text="인물7"
                             android:textAlignment="center"
                             android:textColor="@color/white"
                             android:textSize="40dp"/>
@@ -265,7 +265,7 @@
                             android:background="@drawable/radio_village"
                             android:button="@null"
                             android:fontFamily="@font/ssurround"
-                            android:text="마을"
+                            android:text="인물3"
                             android:textAlignment="center"
                             android:textColor="@color/white"
                             android:textSize="40dp" />
@@ -279,7 +279,7 @@
                             android:background="@drawable/radio_village"
                             android:button="@null"
                             android:fontFamily="@font/ssurround"
-                            android:text="마을"
+                            android:text="인물8"
                             android:textAlignment="center"
                             android:textColor="@color/white"
                             android:textSize="40dp"/>
@@ -299,7 +299,7 @@
                             android:background="@drawable/radio_village"
                             android:button="@null"
                             android:fontFamily="@font/ssurround"
-                            android:text="마을"
+                            android:text="인물4"
                             android:textAlignment="center"
                             android:textColor="@color/white"
                             android:textSize="40dp" />
@@ -313,7 +313,7 @@
                             android:background="@drawable/radio_village"
                             android:button="@null"
                             android:fontFamily="@font/ssurround"
-                            android:text="마을"
+                            android:text="인물9"
                             android:textAlignment="center"
                             android:textColor="@color/white"
                             android:textSize="40dp"/>
@@ -333,7 +333,7 @@
                             android:background="@drawable/radio_village"
                             android:button="@null"
                             android:fontFamily="@font/ssurround"
-                            android:text="마을"
+                            android:text="인물5"
                             android:textAlignment="center"
                             android:textColor="@color/white"
                             android:textSize="40dp" />
@@ -347,7 +347,7 @@
                             android:background="@drawable/radio_village"
                             android:button="@null"
                             android:fontFamily="@font/ssurround"
-                            android:text="마을"
+                            android:text="인물10"
                             android:textAlignment="center"
                             android:textColor="@color/white"
                             android:textSize="40dp"/>

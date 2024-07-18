@@ -152,15 +152,17 @@
 
     <RadioGroup
         android:id="@+id/radioGroup"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="@+id/tv_chooseChracter"
-        app:layout_constraintTop_toBottomOf="@+id/tv_chooseChracter"
-        tools:layout_editor_absoluteX="0dp"
-        android:layout_marginTop="21dp"
-        tools:layout_editor_absoluteY="322dp">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintVertical_bias="0.6" >
+
 
         <RadioButton
             android:id="@+id/thema_sea"
@@ -216,10 +218,10 @@
 
         <RadioButton
             android:id="@+id/thema_house"
-            android:layout_width="wrap_content"
+            android:layout_width="38dp"
             android:layout_height="wrap_content"
             android:layout_margin="21dp"
-            android:background="@drawable/radio_house"
+            android:background="@drawable/adio_house"
             android:button="@null"
             android:fontFamily="@font/ssurround"
             android:text="집"
