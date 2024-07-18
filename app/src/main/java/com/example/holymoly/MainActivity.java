@@ -4,26 +4,34 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.AuthResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
+    private TextView findpwd;
     private EditText etId, etPwd;
     private ImageButton btnLogin, btnJoin;
     private RadioButton auto;
     private FirebaseAuth mAuth;
-    private UserInfo userInfo;
+    private FirebaseFirestore db;
+
     private boolean isChecked = false;  // 자동 로그인 체크 변수
 
     @Override
@@ -32,12 +40,23 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
+        findpwd = (TextView) findViewById(R.id.tv_findpd);
         etId = findViewById(R.id.et_id);
         etPwd = findViewById(R.id.et_pwd);
         btnLogin = findViewById(R.id.btn_login);
         btnJoin = findViewById(R.id.btn_join);
         auto = findViewById(R.id.rb_auto);
+
+        // 비밀번호 재설정 클릭 시
+        findpwd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, FindPasswordActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // 로그인 버튼 클릭 시
         btnLogin.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
                                     finish();
                                 } else {
                                     // 로그인 실패 시
-                                    Toast.makeText(MainActivity.this, "로그인 실패, 아이디 또는 비밀번호를 확인하세요.", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(MainActivity.this, "로그인 실패, 아이디 또는 비밀번호를 확인하세요." + task.getException(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -99,5 +118,4 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
-
 }

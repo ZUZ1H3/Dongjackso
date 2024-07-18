@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+
     package="com.example.holymoly"> <!-- 패키지 경로 추가 -->
 
     <uses-permission android:name="android.permission.ACCEPT_INTERNET"/>
@@ -18,28 +19,34 @@
         tools:targetApi="31">
         <activity
             android:name=".JoinActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".StartActivity"
-            android:exported="true"/>
+            android:exported="true" />
+        <activity
+            android:name=".ResetPasswordActivity"
+            android:exported="true" />
+        <activity
+            android:name=".FindPasswordActivity"
+            android:exported="true" />
         <activity
             android:name=".HomeActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".InfoActivity"
-        android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".WorldActivity"
-        android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".SettingActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".TrophyActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".SelectthemaActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".SelectcharacterActivity"
             android:exported="true"/>
