@@ -221,7 +221,7 @@
             android:layout_width="38dp"
             android:layout_height="wrap_content"
             android:layout_margin="21dp"
-            android:background="@drawable/adio_house"
+            android:background="@drawable/radio_house"
             android:button="@null"
             android:fontFamily="@font/ssurround"
             android:text="집"

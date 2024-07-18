@@ -1,0 +1,10 @@
+<!-- res/layout/spinner_item.xml -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/SpinnerItemStyle"
+    android:layout_width="110dp"
+    android:layout_height="85dp"
+    android:gravity="center_vertical"
+    android:padding="10dp"
+    android:backgroundTint="#00FFFFFF"
+    android:textColor="@android:color/white"
+    android:textSize="35dp" />
