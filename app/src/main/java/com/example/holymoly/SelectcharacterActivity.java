@@ -175,16 +175,27 @@ public class SelectcharacterActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    // 프롬프트를 더 자세히 작성
-                    String prompt = "Fairy, cute, simple, illustrated, fairy tale, fairytale";
-                    String imageUrl = requestImageFromKarlo(prompt);
-                    if (imageUrl != null) {
-                        Bitmap bitmap = getBitmapFromURL(imageUrl);
-                        Bitmap circularBitmap = getCircularBitmap(bitmap);
+                    // 1. Gemini AI를 사용하여 characterName을 영어로 번역
+                    String translatedName = translateCharacterName(characterName);
+                    if (translatedName != null) {
+                        // 2. 프롬프트를 더 자세히 작성
+                        String prompt = translatedName + ". Humans are humanized, animals are animalized, cute, bright, simple, illustrated and fairy tale";
+                        String imageUrl = requestImageFromKarlo(prompt);
+                        if (imageUrl != null) {
+                            Bitmap bitmap = getBitmapFromURL(imageUrl);
+                            Bitmap circularBitmap = getCircularBitmap(bitmap);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    checkBox.setBackground(new BitmapDrawable(getResources(), circularBitmap));
+                                }
+                            });
+                        }
+                    } else {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                checkBox.setBackground(new BitmapDrawable(getResources(), circularBitmap));
+                                Toast.makeText(SelectcharacterActivity.this, "이름 번역에 실패했습니다.", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -196,6 +207,24 @@ public class SelectcharacterActivity extends AppCompatActivity {
     }
 
 
+    // Gemini AI를 사용하여 캐릭터 이름을 번역하는 메서드
+    private String translateCharacterName(String characterName) throws Exception {
+        GenerativeModel gm = new GenerativeModel("gemini-1.5-flash", GEMINI_API_KEY);
+        GenerativeModelFutures model = GenerativeModelFutures.from(gm);
+
+        // 요청할 텍스트 생성
+        String requestText = "Translate the following character name to English: " + characterName;
+
+        // Content 객체 생성
+        Content content = new Content.Builder()
+                .addText(requestText)
+                .build();
+
+        // 비동기 요청을 생성하고 응답을 기다림
+        ListenableFuture<GenerateContentResponse> response = model.generateContent(content);
+        GenerateContentResponse result = response.get();
+        return result.getText();
+    }
     private Bitmap getCircularBitmap(Bitmap bitmap) {
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();
