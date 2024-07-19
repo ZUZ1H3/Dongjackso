@@ -28,9 +28,7 @@ import java.security.SecureRandom;
 public class FindPasswordActivity extends AppCompatActivity implements View.OnClickListener {
     EditText etEmail;
     TextView tempPwd;
-    TextView goLogin;
-    ImageButton emailCertification;
-    ImageButton copy;
+    ImageButton emailCertification, copy, goLogin;
 
     private FirebaseAuth auth;
     private FirebaseUser user;
@@ -43,7 +41,7 @@ public class FindPasswordActivity extends AppCompatActivity implements View.OnCl
 
         etEmail = (EditText) findViewById(R.id.et_email);
         tempPwd = (TextView) findViewById(R.id.tv_tempPwd);
-        goLogin = (TextView) findViewById(R.id.goLogin);
+        goLogin = (ImageButton) findViewById(R.id.goLogin);
         emailCertification = (ImageButton) findViewById(R.id.btn_emailCertification);
         copy = (ImageButton) findViewById(R.id.ib_copy);
 
