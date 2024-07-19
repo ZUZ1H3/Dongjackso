@@ -1,12 +1,14 @@
 package com.example.holymoly;
 
-// firebase DB에 접속한 User 정보
+// firebase DB에 등록된 User 정보
 public class UserInfo {
-    public String email;
-    public String password;
-    public String name;
-    public Integer age;
-    public String gender;
+    public String email;    // 이메일
+    public String password; // 비밀번호
+    public String name;     // 이름
+    public String nickname; // 업적 이름
+    public Integer age;     // 나이
+    public String gender;   // 성별
+    // public String
 
     public UserInfo() {
         // 기본 생성자 필요
@@ -22,6 +24,10 @@ public class UserInfo {
     public String getName() { return name; }
 
     public void setName(String name) { this.name = name; }
+
+    public String getNickname() { return nickname; }
+
+    public void setNickName(String nickname) { this.nickname = nickname; }
 
     public int getAge() { return age; }
 
