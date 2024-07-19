@@ -11,8 +11,10 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.ai.client.generativeai.GenerativeModel;
@@ -33,6 +35,7 @@ import java.net.URL;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 public class SelectcharacterActivity extends AppCompatActivity {
+    private ImageButton btnhome, btntrophy, btnsetting;
     private Executor executor = Executors.newSingleThreadExecutor(); // 백그라운드 작업을 위한 Executor
     private CheckBox[] checkBoxes = new CheckBox[10]; // 캐릭터를 저장할 체크박스 배열
     private String[] character = new String[10]; // 캐릭터 이름을 저장할 배열
@@ -43,7 +46,33 @@ public class SelectcharacterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selectcharacter);
+        btnhome = findViewById(R.id.ib_homebutton);
+        btntrophy = findViewById(R.id.ib_trophy);
+        btnsetting = findViewById(R.id.ib_setting);
 
+        btnhome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SelectcharacterActivity.this, HomeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btntrophy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SelectcharacterActivity.this, TrophyActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btnsetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SelectcharacterActivity.this, SettingActivity.class);
+                startActivity(intent);
+            }
+        });
         // 체크박스 초기화
         for (int i = 0; i < 10; i++) {
             int resID = getResources().getIdentifier("charname" + (i + 1), "id", getPackageName());
