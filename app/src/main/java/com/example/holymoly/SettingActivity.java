@@ -1,13 +1,16 @@
 package com.example.holymoly;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -24,7 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SettingActivity extends AppCompatActivity implements View.OnClickListener{
     EditText name, age;
-    RadioButton rb_bgm_on, rb_rgm_off;
+    RadioButton rb_bgm_on, rb_bgm_off, rb_sound_on, rb_sound_off;
     ImageButton custom, logout;
 
     private FirebaseAuth auth;
@@ -33,7 +36,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     private Spinner genderSpinner;
     private ArrayAdapter<String> adapter;
-    private UserInfo userInfo;
 
     private MediaPlayer bgmPlayer; // 배경 음악을 재생할 MediaPlayer
     private boolean isBgmOn = true; // 배경 음악 상태 변수
@@ -44,10 +46,10 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-        name = (EditText) findViewById(R.id.et_name);
-        age = (EditText) findViewById(R.id.et_age);
-        custom = (ImageButton) findViewById(R.id.ib_custom);
-        logout = (ImageButton) findViewById(R.id.ib_logout);
+        name = findViewById(R.id.et_name);
+        age = findViewById(R.id.et_age);
+        custom = findViewById(R.id.ib_custom);
+        logout = findViewById(R.id.ib_logout);
 
         custom.setOnClickListener(this);
         logout.setOnClickListener(this);
@@ -72,46 +74,44 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         adapter.setDropDownViewResource(R.layout.db_spinner_item);
         genderSpinner.setAdapter(adapter);
         genderSpinner.setSelection(0); // 기본 선택 항목을 '성별'로 설정
-      
+
         // 나이 입력 설정
         EditText ageEditText = findViewById(R.id.et_age);
         ageEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         // 배경 음악 라디오 그룹 설정
         RadioGroup rgBgm = findViewById(R.id.rg_bgm);
-        RadioButton rbBgmOn = findViewById(R.id.rb_bgm_on);
-        RadioButton rbBgmOff = findViewById(R.id.rb_bgm_off);
+        rb_bgm_on = findViewById(R.id.rb_bgm_on);
+        rb_bgm_off = findViewById(R.id.rb_bgm_off);
 
-        rgBgm.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.rb_bgm_on) {
-                    isBgmOn = true;
-                    startBackgroundMusic();
-                } else if (checkedId == R.id.rb_bgm_off) {
-                    isBgmOn = false;
-                    stopBackgroundMusic();
-                }
+        rgBgm.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.rb_bgm_on) {
+                isBgmOn = true;
+                startBackgroundMusic();
+            } else if (checkedId == R.id.rb_bgm_off) {
+                isBgmOn = false;
+                stopBackgroundMusic();
             }
         });
 
         // 효과음 라디오 그룹 설정
         RadioGroup rgSound = findViewById(R.id.rg_sound);
-        RadioButton rbSoundOn = findViewById(R.id.rb_sound_on);
-        RadioButton rbSoundOff = findViewById(R.id.rb_sound_off);
+        rb_sound_on = findViewById(R.id.rb_sound_on);
+        rb_sound_off = findViewById(R.id.rb_sound_off);
 
-        rgSound.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.rb_sound_on) {
-                    isSoundOn = true;
-                    Toast.makeText(SettingActivity.this, "효과음 켜짐", Toast.LENGTH_SHORT).show();
-                } else if (checkedId == R.id.rb_sound_off) {
-                    isSoundOn = false;
-                    Toast.makeText(SettingActivity.this, "효과음 꺼짐", Toast.LENGTH_SHORT).show();
-                }
+        rgSound.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.rb_sound_on) {
+                isSoundOn = true;
+                Toast.makeText(SettingActivity.this, "효과음 켜짐", Toast.LENGTH_SHORT).show();
+            } else if (checkedId == R.id.rb_sound_off) {
+                isSoundOn = false;
+                Toast.makeText(SettingActivity.this, "효과음 꺼짐", Toast.LENGTH_SHORT).show();
             }
         });
+
+        // 라디오 버튼 기본 선택값 설정
+        rb_bgm_on.setChecked(true);
+        rb_sound_on.setChecked(true);
 
         // 배경 음악 재생을 위한 MediaPlayer 초기화
         bgmPlayer = MediaPlayer.create(this, R.raw.bgm_sea);
@@ -142,10 +142,8 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         if (bgmPlayer != null && bgmPlayer.isPlaying()) {
             bgmPlayer.pause();
         }
-        // Firestore에서 사용자 정보 가져오기
-       // if(user != null) loadUserInfo();
-
     }
+
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.ib_custom) { updateUser(); }
