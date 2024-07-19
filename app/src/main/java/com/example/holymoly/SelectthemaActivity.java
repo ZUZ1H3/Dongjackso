@@ -14,16 +14,43 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class SelectthemaActivity extends AppCompatActivity {
 
+    private ImageButton btnhome, btntrophy, btnsetting, btnnext;
     private RadioGroup radioGroup;
-    private ImageButton btnnext;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selectthema);
 
+        btnhome = findViewById(R.id.ib_homebutton);
+        btntrophy = findViewById(R.id.ib_trophy);
+        btnsetting = findViewById(R.id.ib_setting);
+
         radioGroup = findViewById(R.id.radioGroup);
         btnnext = findViewById(R.id.ib_nextStep);
+
+        btnhome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SelectthemaActivity.this, HomeActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btntrophy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SelectthemaActivity.this, TrophyActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btnsetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SelectthemaActivity.this, SettingActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // 커스텀 라디오 버튼 추가
         addCustomRadioButton("바다", R.drawable.radio_sea, R.id.thema_sea);
