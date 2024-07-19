@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ssurround"
-        android:text="바다"
+        android:text=""
         android:textAlignment="center"
         android:textColor="@color/white"
         android:textSize="40sp" />

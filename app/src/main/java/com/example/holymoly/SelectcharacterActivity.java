@@ -38,11 +38,12 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class SelectcharacterActivity extends AppCompatActivity {
-    private ImageButton btnhome, btntrophy, btnsetting;
+    private ImageButton btnhome, btntrophy, btnsetting, btnnext;
     private Executor executor = Executors.newSingleThreadExecutor(); // 백그라운드 작업을 위한 Executor
     private View[] customCheckBoxes = new View[10]; // 캐릭터를 저장할 체크박스 배열
     private String[] character = new String[10]; // 캐릭터 이름을 저장할 배열
@@ -54,9 +55,20 @@ public class SelectcharacterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selectcharacter);
+
+        // Intent에서 테마를 가져옴
+        Intent intent = getIntent();
+        String thema = intent.getStringExtra("selectedThema");
+        if (thema != null) {
+            // 테마에 따른 캐릭터 이름 요청
+            requestCharacterNames(thema);
+        } else {
+            Toast.makeText(this, "테마가 없습니다", Toast.LENGTH_SHORT).show();
+        }
         btnhome = findViewById(R.id.ib_homebutton);
         btntrophy = findViewById(R.id.ib_trophy);
         btnsetting = findViewById(R.id.ib_setting);
+        btnnext = findViewById(R.id.ib_nextStep);
 
         btnhome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +94,26 @@ public class SelectcharacterActivity extends AppCompatActivity {
             }
         });
 
+        btnnext.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                ArrayList<String> selectedCharacters = new ArrayList<>();
+                for (int i = 0; i < isChecked.length; i++) {
+                    if (isChecked[i]) {
+                        selectedCharacters.add(character[i]);
+                    }
+                }
+
+                if (selectedCharacters.isEmpty()) {
+                    Toast.makeText(SelectcharacterActivity.this, "캐릭터를 선택해주세요", Toast.LENGTH_SHORT).show();
+                } else {
+                    Intent intent = new Intent(SelectcharacterActivity.this, Makepage1Activity.class);
+                    intent.putStringArrayListExtra("selectedCharacters", selectedCharacters);
+                    intent.putExtra("selectedTheme", thema);
+                    startActivity(intent);
+                }
+            }
+        });
+
         LinearLayout hllFirst = findViewById(R.id.hll_first);
         LinearLayout hllSecond = findViewById(R.id.hll_second);
         LayoutInflater inflater = getLayoutInflater();
@@ -104,15 +136,6 @@ public class SelectcharacterActivity extends AppCompatActivity {
             }
         }
 
-        // Intent에서 테마를 가져옴
-        Intent intent = getIntent();
-        String thema = intent.getStringExtra("selectedThema");
-        if (thema != null) {
-            // 테마에 따른 캐릭터 이름 요청
-            requestCharacterNames(thema);
-        } else {
-            Toast.makeText(this, "테마가 없습니다", Toast.LENGTH_SHORT).show();
-        }
     }
 
     // 선택한 테마에 따라 AI 모델에서 등장인물 후보 요청
