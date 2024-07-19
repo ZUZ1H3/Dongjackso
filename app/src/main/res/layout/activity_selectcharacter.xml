@@ -139,24 +139,24 @@
         android:text="등장인물을 골라주세요"
         android:fontFamily="@font/ssurround"
         android:textColor="@color/white"
-        android:textSize="55dp"
+        android:textSize="53dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintVertical_bias="0.13" />
 
     <LinearLayout
         android:id="@+id/charlayout"
         android:layout_width="wrap_content"
-        android:layout_height="500dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.75"
+        app:layout_constraintVertical_bias="0.68"
         app:layout_constraintHorizontal_bias="0.5" >
             <LinearLayout
                 android:id="@+id/hll_first"
@@ -164,74 +164,137 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <CheckBox
-                    android:id="@+id/charname1"
-                    android:layout_width="190dp"
-                    android:layout_height="190dp"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/ic_bluecircle"
-                    android:button="@null"
-                    android:fontFamily="@font/ssurround"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="40dp" />
+                <LinearLayout
+                    android:id="@+id/ll_char1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+                    <CheckBox
+                        android:id="@+id/charimage1"
+                        android:layout_width="190dp"
+                        android:layout_height="190dp"
+                        android:layout_margin="15dp"
+                        android:background="@drawable/ic_bluecircle"
+                        android:button="@null" />
+                    <TextView
+                        android:id="@+id/charname1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ssurround"
+                        android:hint="등장인물1"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="40dp"
+                        android:layout_gravity="center" />
+                </LinearLayout>
 
-                <CheckBox
-                    android:id="@+id/charname2"
-                    android:layout_width="190dp"
-                    android:layout_height="190dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/ic_bluecircle"
-                    android:button="@null"
-                    android:fontFamily="@font/ssurround"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="40dp"/>
+                <LinearLayout
+                    android:id="@+id/ll_char2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                <CheckBox
-                    android:id="@+id/charname3"
-                    android:layout_width="190dp"
-                    android:layout_height="190dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/ic_bluecircle"
-                    android:button="@null"
-                    android:fontFamily="@font/ssurround"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="40dp"/>
+                    <CheckBox
+                        android:id="@+id/charimage2"
+                        android:layout_width="190dp"
+                        android:layout_height="190dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="15dp"
+                        android:background="@drawable/ic_bluecircle"
+                        android:button="@null" />
 
-                <CheckBox
-                    android:id="@+id/charname4"
-                    android:layout_width="190dp"
-                    android:layout_height="190dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/ic_bluecircle"
-                    android:button="@null"
-                    android:fontFamily="@font/ssurround"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="40dp"/>
+                    <TextView
+                        android:id="@+id/charname2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ssurround"
+                        android:hint="등장인물2"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="40dp"
+                        android:layout_gravity="center" />
+                </LinearLayout>
 
-                <CheckBox
-                    android:id="@+id/charname5"
-                    android:layout_width="190dp"
-                    android:layout_height="190dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/ic_bluecircle"
-                    android:button="@null"
-                    android:fontFamily="@font/ssurround"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="40dp"/>
+                <LinearLayout
+                    android:id="@+id/ll_char3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/charimage3"
+                        android:layout_width="190dp"
+                        android:layout_height="190dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="15dp"
+                        android:background="@drawable/ic_bluecircle"
+                        android:button="@null" />
+
+                    <TextView
+                        android:id="@+id/charname3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ssurround"
+                        android:hint="등장인물3"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="40dp"
+                        android:layout_gravity="center" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_char4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/charimage4"
+                        android:layout_width="190dp"
+                        android:layout_height="190dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="15dp"
+                        android:background="@drawable/ic_bluecircle"
+                        android:button="@null" />
+
+                    <TextView
+                        android:id="@+id/charname4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ssurround"
+                        android:hint="등장인물4"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="40dp"
+                        android:layout_gravity="center" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_char5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/charimage5"
+                        android:layout_width="190dp"
+                        android:layout_height="190dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="15dp"
+                        android:background="@drawable/ic_bluecircle"
+                        android:button="@null" />
+
+                    <TextView
+                        android:id="@+id/charname5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ssurround"
+                        android:hint="등장인물5"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="40dp"
+                        android:layout_gravity="center" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -240,74 +303,140 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <CheckBox
-                    android:id="@+id/charname6"
-                    android:layout_width="190dp"
-                    android:layout_height="190dp"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/ic_bluecircle"
-                    android:button="@null"
-                    android:fontFamily="@font/ssurround"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="40dp" />
+                <LinearLayout
+                    android:id="@+id/ll_char6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                <CheckBox
-                    android:id="@+id/charname7"
-                    android:layout_width="190dp"
-                    android:layout_height="190dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/ic_bluecircle"
-                    android:button="@null"
-                    android:fontFamily="@font/ssurround"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="40dp"/>
+                    <CheckBox
+                        android:id="@+id/charimage6"
+                        android:layout_width="190dp"
+                        android:layout_height="190dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="15dp"
+                        android:background="@drawable/ic_bluecircle"
+                        android:button="@null" />
 
-                <CheckBox
-                    android:id="@+id/charname8"
-                    android:layout_width="190dp"
-                    android:layout_height="190dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/ic_bluecircle"
-                    android:button="@null"
-                    android:fontFamily="@font/ssurround"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="40dp"/>
+                    <TextView
+                        android:id="@+id/charname6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ssurround"
+                        android:hint="등장인물6"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="40dp"
+                        android:layout_gravity="center" />
+                </LinearLayout>
 
-                <CheckBox
-                    android:id="@+id/charname9"
-                    android:layout_width="190dp"
-                    android:layout_height="190dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/ic_bluecircle"
-                    android:button="@null"
-                    android:fontFamily="@font/ssurround"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="40dp"/>
+                <LinearLayout
+                    android:id="@+id/ll_char7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                <CheckBox
-                    android:id="@+id/charname10"
-                    android:layout_width="190dp"
-                    android:layout_height="190dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/ic_bluecircle"
-                    android:button="@null"
-                    android:fontFamily="@font/ssurround"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="40dp"/>
+                    <CheckBox
+                        android:id="@+id/charimage7"
+                        android:layout_width="190dp"
+                        android:layout_height="190dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="15dp"
+                        android:background="@drawable/ic_bluecircle"
+                        android:button="@null" />
+
+                    <TextView
+                        android:id="@+id/charname7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ssurround"
+                        android:hint="등장인물7"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="40dp"
+                        android:layout_gravity="center" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_char8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/charimage8"
+                        android:layout_width="190dp"
+                        android:layout_height="190dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="15dp"
+                        android:background="@drawable/ic_bluecircle"
+                        android:button="@null" />
+
+                    <TextView
+                        android:id="@+id/charname8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ssurround"
+                        android:hint="등장인물8"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="40dp"
+                        android:layout_gravity="center" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_char9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/charimage9"
+                        android:layout_width="190dp"
+                        android:layout_height="190dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="15dp"
+                        android:background="@drawable/ic_bluecircle"
+                        android:button="@null" />
+
+                    <TextView
+                        android:id="@+id/charname9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ssurround"
+                        android:hint="등장인물9"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="40dp"
+                        android:layout_gravity="center" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ll_char10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/charimage10"
+                        android:layout_width="190dp"
+                        android:layout_height="190dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="15dp"
+                        android:background="@drawable/ic_bluecircle"
+                        android:button="@null" />
+
+                    <TextView
+                        android:id="@+id/charname10"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/ssurround"
+                        android:hint="등장인물10"
+                        android:textAlignment="center"
+                        android:textColor="@color/white"
+                        android:textSize="40dp"
+                        android:layout_gravity="center" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
