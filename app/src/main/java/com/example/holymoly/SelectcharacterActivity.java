@@ -11,12 +11,16 @@ import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.ai.client.generativeai.GenerativeModel;
 import com.google.ai.client.generativeai.java.GenerativeModelFutures;
 import com.google.ai.client.generativeai.type.Content;
@@ -24,8 +28,10 @@ import com.google.ai.client.generativeai.type.GenerateContentResponse;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -34,13 +40,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+
 public class SelectcharacterActivity extends AppCompatActivity {
     private ImageButton btnhome, btntrophy, btnsetting;
     private Executor executor = Executors.newSingleThreadExecutor(); // 백그라운드 작업을 위한 Executor
-    private CheckBox[] checkBoxes = new CheckBox[10]; // 캐릭터를 저장할 체크박스 배열
+    private View[] customCheckBoxes = new View[10]; // 캐릭터를 저장할 체크박스 배열
     private String[] character = new String[10]; // 캐릭터 이름을 저장할 배열
     private static final String KARLO_API_KEY = "6191d7ae7edbee42dba70ef2ce2d7643"; // Karlo API 키
     private static final String GEMINI_API_KEY = "AIzaSyB5Vf0Nk67nJOKk4BADvPDQhRGNyYTVxjU"; // Gemini API 키
+    private boolean[] isChecked = new boolean[10]; // 체크 상태를 저장할 배열
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,10 +81,27 @@ public class SelectcharacterActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        // 체크박스 초기화
+
+        LinearLayout hllFirst = findViewById(R.id.hll_first);
+        LinearLayout hllSecond = findViewById(R.id.hll_second);
+        LayoutInflater inflater = getLayoutInflater();
+
+        // 커스텀 체크박스 초기화
         for (int i = 0; i < 10; i++) {
-            int resID = getResources().getIdentifier("charname" + (i + 1), "id", getPackageName());
-            checkBoxes[i] = findViewById(resID);
+            customCheckBoxes[i] = inflater.inflate(R.layout.custom_checkbox, null);
+            final int index = i; // 인덱스를 final로 설정
+            customCheckBoxes[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    isChecked[index] = !isChecked[index]; // 상태 변경
+                    updateCheckBoxBackground(customCheckBoxes[index], isChecked[index]); // 배경 업데이트
+                }
+            });
+            if (i < 5) {
+                hllFirst.addView(customCheckBoxes[i]);
+            } else {
+                hllSecond.addView(customCheckBoxes[i]);
+            }
         }
 
         // Intent에서 테마를 가져옴
@@ -117,9 +142,9 @@ public class SelectcharacterActivity extends AppCompatActivity {
                         // 체크박스에 이름 설정
                         setCheckBoxNames();
                         // 각 캐릭터 이름에 대해 이미지를 생성하고 설정
-                        for (int i = 0; i < checkBoxes.length; i++) {
+                        for (int i = 0; i < customCheckBoxes.length; i++) {
                             if (character[i] != null) {
-                                generateAndSetImage(character[i], checkBoxes[i]);
+                                generateAndSetImage(character[i], customCheckBoxes[i]);
                             }
                         }
                     }
@@ -154,8 +179,9 @@ public class SelectcharacterActivity extends AppCompatActivity {
 
     // 체크박스에 캐릭터 이름을 설정
     private void setCheckBoxNames() {
-        for (int i = 0; i < checkBoxes.length; i++) {
-            checkBoxes[i].setText(character[i]);
+        for (int i = 0; i < customCheckBoxes.length; i++) {
+            TextView textView = customCheckBoxes[i].findViewById(R.id.checkbox_text);
+            textView.setText(character[i]);
         }
     }
 
@@ -257,28 +283,17 @@ public class SelectcharacterActivity extends AppCompatActivity {
     }
 
     // 체크박스의 배경을 상태에 따라 설정하는 메서드
-    private void setCheckBoxBackgroundWithState(CheckBox checkBox, Bitmap bitmap) {
-        BitmapDrawable bitmapDrawable = new BitmapDrawable(getResources(), bitmap);
-
-        // 상태에 따라 배경 설정
-        StateListDrawable stateListDrawable = new StateListDrawable();
-        stateListDrawable.addState(new int[]{android.R.attr.state_checked}, bitmapDrawable);
-        stateListDrawable.addState(new int[]{-android.R.attr.state_checked}, bitmapDrawable);
-
-        checkBox.setBackground(stateListDrawable);
-
-        // 체크박스 상태 변경 리스너 추가
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                int alpha = isChecked ? 128 : 255; // 체크되었을 때는 투명도 50%, 체크 해제 시 투명도 100%
-                bitmapDrawable.setAlpha(alpha);
-            }
-        });
+    private void updateCheckBoxBackground(View customCheckBox, boolean isChecked) {
+        ImageView imageView = customCheckBox.findViewById(R.id.checkbox_image);
+        BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
+        if (drawable != null) {
+            int alpha = isChecked ? 128 : 255; // 체크되었을 때는 투명도 50%, 체크 해제 시 투명도 100%
+            drawable.setAlpha(alpha);
+        }
     }
 
     // 캐릭터 이름에 대해 이미지를 생성하고 체크박스에 설정
-    private void generateAndSetImage(String characterName, CheckBox checkBox) {
+    private void generateAndSetImage(String characterName, View customCheckBox) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -295,7 +310,8 @@ public class SelectcharacterActivity extends AppCompatActivity {
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    setCheckBoxBackgroundWithState(checkBox, circularBitmap);
+                                    ImageView imageView = customCheckBox.findViewById(R.id.checkbox_image);
+                                    imageView.setImageBitmap(circularBitmap);
                                 }
                             });
                         }

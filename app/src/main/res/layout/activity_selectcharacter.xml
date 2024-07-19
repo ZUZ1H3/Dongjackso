@@ -136,8 +136,8 @@
         android:id="@+id/choose"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="등장인물을 골라주세요"
         android:fontFamily="@font/ssurround"
+        android:text="등장인물을 골라주세요"
         android:textColor="@color/white"
         android:textSize="55dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -148,166 +148,21 @@
         app:layout_constraintVertical_bias="0.2" />
 
     <LinearLayout
-        android:id="@+id/charlayout"
-        android:layout_width="wrap_content"
-        android:layout_height="500dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.75"
-        app:layout_constraintHorizontal_bias="0.5" >
-            <LinearLayout
-                android:id="@+id/hll_first"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+        android:id="@+id/hll_first"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="21dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="@+id/choose"
+        app:layout_constraintTop_toBottomOf="@+id/choose" />
 
-                <CheckBox
-                    android:id="@+id/charname1"
-                    android:layout_width="190dp"
-                    android:layout_height="190dp"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/ic_bluecircle"
-                    android:button="@null"
-                    android:fontFamily="@font/ssurround"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="40dp" />
-
-                <CheckBox
-                    android:id="@+id/charname2"
-                    android:layout_width="190dp"
-                    android:layout_height="190dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/ic_bluecircle"
-                    android:button="@null"
-                    android:fontFamily="@font/ssurround"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="40dp"/>
-
-                <CheckBox
-                    android:id="@+id/charname3"
-                    android:layout_width="190dp"
-                    android:layout_height="190dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/ic_bluecircle"
-                    android:button="@null"
-                    android:fontFamily="@font/ssurround"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="40dp"/>
-
-                <CheckBox
-                    android:id="@+id/charname4"
-                    android:layout_width="190dp"
-                    android:layout_height="190dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/ic_bluecircle"
-                    android:button="@null"
-                    android:fontFamily="@font/ssurround"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="40dp"/>
-
-                <CheckBox
-                    android:id="@+id/charname5"
-                    android:layout_width="190dp"
-                    android:layout_height="190dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/ic_bluecircle"
-                    android:button="@null"
-                    android:fontFamily="@font/ssurround"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="40dp"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/hll_second"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <CheckBox
-                    android:id="@+id/charname6"
-                    android:layout_width="190dp"
-                    android:layout_height="190dp"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/ic_bluecircle"
-                    android:button="@null"
-                    android:fontFamily="@font/ssurround"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="40dp" />
-
-                <CheckBox
-                    android:id="@+id/charname7"
-                    android:layout_width="190dp"
-                    android:layout_height="190dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/ic_bluecircle"
-                    android:button="@null"
-                    android:fontFamily="@font/ssurround"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="40dp"/>
-
-                <CheckBox
-                    android:id="@+id/charname8"
-                    android:layout_width="190dp"
-                    android:layout_height="190dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/ic_bluecircle"
-                    android:button="@null"
-                    android:fontFamily="@font/ssurround"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="40dp"/>
-
-                <CheckBox
-                    android:id="@+id/charname9"
-                    android:layout_width="190dp"
-                    android:layout_height="190dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/ic_bluecircle"
-                    android:button="@null"
-                    android:fontFamily="@font/ssurround"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="40dp"/>
-
-                <CheckBox
-                    android:id="@+id/charname10"
-                    android:layout_width="190dp"
-                    android:layout_height="190dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="20dp"
-                    android:background="@drawable/ic_bluecircle"
-                    android:button="@null"
-                    android:fontFamily="@font/ssurround"
-                    android:text=""
-                    android:textAlignment="center"
-                    android:textColor="@color/white"
-                    android:textSize="40dp"/>
-            </LinearLayout>
-        </LinearLayout>
+    <LinearLayout
+        android:id="@+id/hll_second"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="@+id/hll_first"
+        app:layout_constraintTop_toBottomOf="@+id/hll_first" />
 </androidx.constraintlayout.widget.ConstraintLayout>
