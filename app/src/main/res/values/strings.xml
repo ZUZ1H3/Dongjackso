@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">HolyMoly</string>
+    <string name="background_image_description">Background image for the story</string>
 </resources>

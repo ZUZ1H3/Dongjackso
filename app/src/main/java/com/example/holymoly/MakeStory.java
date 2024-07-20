@@ -1,19 +1,7 @@
 package com.example.holymoly;
 
-import com.google.ai.client.generativeai.GenerativeModel;
-import com.google.ai.client.generativeai.java.GenerativeModelFutures;
-import com.google.ai.client.generativeai.type.Content;
-import com.google.ai.client.generativeai.type.GenerateContentResponse;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
-
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
 public class MakeStory {
-    private Executor executor = Executors.newSingleThreadExecutor(); // 백그라운드 작업을 위한 Executor
-    private static final String GEMINI_API_KEY = "AIzaSyB5Vf0Nk67nJOKk4BADvPDQhRGNyYTVxjU"; // Gemini API 키
+    private Gemini gemini;
     private String theme;
     private String characters;
     private String storySoFar = "";
@@ -23,6 +11,7 @@ public class MakeStory {
         this.makepage1Activity = activity;
         this.theme = theme;
         this.characters = characters;
+        this.gemini = new Gemini(); // Gemini 인스턴스 생성
     }
 
     // 동화의 도입부 프롬프트
@@ -62,31 +51,33 @@ public class MakeStory {
     public void generateInitialStory() {
         String prompt = buildInitialPrompt();
 
-        GenerativeModel gm = new GenerativeModel("gemini-1.5-flash", GEMINI_API_KEY);
-        GenerativeModelFutures model = GenerativeModelFutures.from(gm);
-
-        Content content = new Content.Builder()
-                .addText(prompt)
-                .build();
-
-        ListenableFuture<GenerateContentResponse> response = model.generateContent(content);
-        Futures.addCallback(response, new FutureCallback<GenerateContentResponse>() {
+        gemini.generateText(prompt, new Gemini.Callback() {
             @Override
-            public void onSuccess(GenerateContentResponse result) {
-                handleInitialStorySuccess(result);
+            public void onSuccess(String text) {
+                handleInitialStorySuccess(text);
             }
 
             @Override
             public void onFailure(Throwable t) {
-                // 실패 시 처리 (여기서는 생략)
+                // 실패 시 처리
             }
-        }, executor);
+        });
     }
 
-    private void handleInitialStorySuccess(GenerateContentResponse result) {
-        final String resultText = result.getText();
+    private void handleInitialStorySuccess(String resultText) {
         makepage1Activity.updateStoryTextView(resultText); // TextView 업데이트
         storySoFar = resultText;
-        // generateChoices(); // 초기 이야기 후 선택지 생성 (선택적으로 호출)
+
+        // 동화 생성 완료 후 onStoryGenerated 호출
+        if (makepage1Activity != null) {
+            makepage1Activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    makepage1Activity.onStoryGenerated(resultText);
+                }
+            });
+        }
     }
+
+    // 동화의 나머지 부분을 생성하는 메서드들 (예: generateMoreStory, generateIncident, generateChoices 등) 추가 가능
 }
