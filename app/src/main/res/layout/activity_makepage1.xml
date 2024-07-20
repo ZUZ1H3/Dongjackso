@@ -1,26 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".SelectthemaActivity"
-    android:background="@drawable/bg_bookbackground">
-
+    tools:context=".Makepage1Activity">
+    <!-- 배경 이미지를 표시할 ImageView -->
     <!--그만 만들기 버튼-->
+
+    <ImageView
+        android:id="@+id/background_image_view"
+        android:layout_width="1280dp"
+        android:layout_height="800dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:contentDescription="@string/background_image_description"
+        android:foregroundGravity=""
+        android:scaleType="centerCrop"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
     <ImageButton
         android:id="@+id/ib_stopMaking"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_stopmaking"
         android:backgroundTint="#0000"
         android:contentDescription="그만만들기"
+        android:src="@drawable/ic_stopmaking"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.01"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.01"
-        app:layout_constraintHorizontal_bias="1.01" />
+        app:layout_constraintVertical_bias="0.01" />
 
     <!--글자있는 반투명한 검은 사각형-->
     <ImageView
@@ -30,10 +49,10 @@
         android:src="@drawable/pic_writingzone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0"
-        app:layout_constraintHorizontal_bias="0" />
+        app:layout_constraintVertical_bias="0" />
 
     <!--n장 만들기 제목있는 책갈피 도형-->
     <ImageView
@@ -60,10 +79,10 @@
         android:textSize="64dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.05"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.1"
-        app:layout_constraintHorizontal_bias="0.05" />
+        app:layout_constraintVertical_bias="0.1" />
 
     <!--책내용text-->
 
@@ -86,7 +105,7 @@
 
     <ImageButton
         android:id="@+id/ib_nextPageButton"
-        android:layout_width="200dp"
+        android:layout_width="wrap_content"
         android:layout_height="100dp"
         android:backgroundTint="#0000"
         android:contentDescription="다음장으로"
