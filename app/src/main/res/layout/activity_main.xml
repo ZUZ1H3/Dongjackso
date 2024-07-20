@@ -44,6 +44,7 @@
         android:fontFamily="@font/kopub"
         android:background="@drawable/shape_box"
         android:hint="비밀번호"
+        android:inputType="textPassword"
         android:textSize="20dp"
         android:padding="20dp"
         android:textColor="@color/white"
@@ -53,11 +54,11 @@
         app:layout_constraintTop_toTopOf="@id/et_id"
         app:layout_constraintVertical_bias="0.21" />
     <ImageButton
-        android:id="@+id/btn_show"
+        android:id="@+id/btn_hidenshow"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:hint="show"
-        android:src="@drawable/ic_eye"
+        android:src="@drawable/ic_eye2"
         android:backgroundTint="#0000"
         android:contentDescription="숨김/나타냄"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -66,6 +67,7 @@
         app:layout_constraintHorizontal_bias="0.68"
         app:layout_constraintTop_toTopOf="@id/et_id"
         app:layout_constraintVertical_bias="0.22" />
+
     <RadioButton
         android:id="@+id/rb_auto"
         android:layout_width="50dp"
@@ -93,7 +95,7 @@
         app:layout_constraintTop_toTopOf="@id/rb_auto"
         app:layout_constraintVertical_bias="0.031" />
     <TextView
-        android:id="@+id/tv_findpd"
+        android:id="@+id/tv_findpwd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="비밀번호를 잊으셨나요?"

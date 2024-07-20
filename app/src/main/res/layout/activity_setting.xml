@@ -89,7 +89,7 @@
         android:layout_width="110dp"
         android:layout_height="85dp"
         android:background="@drawable/db_spinner_background"
-        android:padding="10dp"
+        android:padding="15dp"
         android:spinnerMode="dropdown"
         android:dropDownWidth="wrap_content"
         android:dropDownHorizontalOffset="10dp"
@@ -254,7 +254,6 @@
             app:layout_constraintVertical_bias="0" />
     </RadioGroup>
 
-
     <ImageButton
         android:id="@+id/ib_custom"
         android:layout_width="229dp"
@@ -265,10 +264,25 @@
         android:contentDescription="캐릭터 수정"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.38"
+        app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/rg_bgm"
         app:layout_constraintVertical_bias="1.3" />
+
+    <ImageButton
+        android:id="@+id/ib_pwdedit"
+        android:layout_width="289dp"
+        android:layout_height="71dp"
+        android:layout_marginBottom="108dp"
+        android:backgroundTint="#0000"
+        android:src="@drawable/ic_pwdedit"
+        android:contentDescription="캐릭터 수정"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.512"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ib_custom"
+        app:layout_constraintVertical_bias="0" />
 
     <ImageButton
         android:id="@+id/ib_logout"
@@ -280,9 +294,9 @@
         android:contentDescription="로그아웃"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.62"
+        app:layout_constraintHorizontal_bias="0.75"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/rg_sound"
-        app:layout_constraintVertical_bias="1.3"  />
+        app:layout_constraintTop_toTopOf="@id/ib_pwdedit"
+        app:layout_constraintVertical_bias="0"  />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

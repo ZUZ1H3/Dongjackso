@@ -139,13 +139,13 @@
         android:fontFamily="@font/ssurround"
         android:text="등장인물을 골라주세요"
         android:textColor="@color/white"
-        android:textSize="55dp"
+        android:textSize="53dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintVertical_bias="0.13" />
 
     <LinearLayout
         android:id="@+id/hll_first"
@@ -165,4 +165,5 @@
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="@+id/hll_first"
         app:layout_constraintTop_toBottomOf="@+id/hll_first" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
