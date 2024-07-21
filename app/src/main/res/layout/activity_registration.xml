@@ -71,6 +71,7 @@
         app:layout_constraintTop_toTopOf="@id/ib_clothes"
         app:layout_constraintVertical_bias="0"
         app:layout_constraintHorizontal_bias="0.953" />
+
     <!--그림자/캐릭터 이미지뷰-->
     <ImageView
         android:id="@+id/scaffolding"
@@ -83,6 +84,8 @@
         app:layout_constraintTop_toTopOf="@id/tv_registration"
         app:layout_constraintVertical_bias="0.85"
         app:layout_constraintHorizontal_bias="0.15" />
+
+    <!--캐릭터 전체 몸+얼굴+눈동자 하나의 이미지
     <ImageView
         android:id="@+id/character"
         android:layout_width="wrap_content"
@@ -90,10 +93,12 @@
         android:src="@drawable/ic_nakedchar"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.098"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/tv_registration"
-        app:layout_constraintVertical_bias="0.6"
-        app:layout_constraintHorizontal_bias="0.1" />
+        app:layout_constraintVertical_bias="0.598" />-->
+
+    <!--헤어 레이아웃-->
     <LinearLayout
         android:id="@+id/hairlayout"
         android:layout_width="700dp"
@@ -244,6 +249,75 @@
             </RadioGroup>
         </HorizontalScrollView>
     </LinearLayout>
+
+    <!--헤어 레이아웃을 만들어서 입혀진 부분 헤어만 모아놓기-->
+    <!--헤어 (입혀진 버전 이미지뷰들) 위치기억..-->
+    <!--
+    <ImageView
+        android:id="@+id/iv_hair_long"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/iv_hair_girl_long"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_registration"
+        app:layout_constraintVertical_bias="0.36"
+        app:layout_constraintHorizontal_bias="0.08"/>
+
+    <ImageView
+        android:id="@+id/iv_hair_hook"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/iv_hair_girl_long"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_registration"
+        app:layout_constraintVertical_bias="0.36"
+        app:layout_constraintHorizontal_bias="0.085"/>-->
+
+    <!--캐릭터 얼굴 이미지뷰-->
+    <ImageView
+        android:id="@+id/iv_character_face"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/iv_character_face"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_registration"
+        app:layout_constraintVertical_bias="0.39"
+        app:layout_constraintHorizontal_bias="0.099"/>
+
+    <!--캐릭터 몸 이미지뷰/가장 마지막에 놓아야 머리가 몸뒤로 갈 수 있음 옷 선택 전,
+    머리를 선택할 때 계속 있어야함-->
+    <ImageView
+        android:id="@+id/iv_character_body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/iv_character_body"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.76"
+        app:layout_constraintHorizontal_bias="0.143"/>
+
+    <!--캐릭터 눈동자 이미지뷰 위치 기억.. 계속 있어야함-->
+    <ImageView
+        android:id="@+id/iv_character_eyes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/iv_character_eyes"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_registration"
+        app:layout_constraintVertical_bias="0.48"
+        app:layout_constraintHorizontal_bias="0.17"/>
+
+
     <LinearLayout
         android:id="@+id/clothlayout"
         android:layout_width="700dp"

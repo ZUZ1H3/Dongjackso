@@ -77,45 +77,12 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
 
-        //rgHair가 선택되면 나오도록 하는 함수
-        rgHair.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton rb = findViewById(checkedId);
-                if (rb != null) {
-                    Toast.makeText(RegistrationActivity.this, "선택된 머리: " + rb.getContentDescription(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        //이 다음 해야할 일
+        //xml에 머리랑 옷들 피그마에서 이미지 따와서 하나하나 추가
+        //이미지들 위치 조정해서 배치
+        //선택되면 선택된 이미지만 남겨두고 visible gone으로 설정
+        //선택된 거만 visible 설정
+        //선택된 거 저장?
 
-        //rgClothes가 선택되면 나오도록 하는 함수
-        rgClothes.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton rb = findViewById(checkedId);
-                if (rb != null) {
-                    Toast.makeText(RegistrationActivity.this, "선택된 옷: " + rb.getContentDescription(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        //rgColor가 선택되면 나오도록 하는 함수
-        rgColor.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton rb = findViewById(checkedId);
-                if (rb != null) {
-                    Toast.makeText(RegistrationActivity.this, "선택된 색깔: " + rb.getContentDescription(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
     }
-
-    //이 다음 해야할 일
-    //xml에 머리랑 옷들 피그마에서 이미지 따와서 하나하나 추가
-    //이미지들 위치 조정해서 배치
-    //선택되면 선택된 이미지만 남겨두고 visible gone으로 설정
-    //선택된 거만 visible 설정
-    //선택된 거 저장?
-
 }
