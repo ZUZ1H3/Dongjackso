@@ -31,6 +31,7 @@
         app:layout_constraintTop_toTopOf="@id/tv_registration"
         app:layout_constraintVertical_bias="0"
         app:layout_constraintHorizontal_bias="0.95" />
+    <!--머리/옷/염색 카테고리 이미지 버튼-->
     <ImageButton
         android:id="@+id/ib_hair"
         android:layout_width="wrap_content"
@@ -70,6 +71,7 @@
         app:layout_constraintTop_toTopOf="@id/ib_clothes"
         app:layout_constraintVertical_bias="0"
         app:layout_constraintHorizontal_bias="0.953" />
+    <!--그림자/캐릭터 이미지뷰-->
     <ImageView
         android:id="@+id/scaffolding"
         android:layout_width="wrap_content"
