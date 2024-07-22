@@ -19,7 +19,7 @@ public class MakeStory {
         return "동화 배경: " + theme + "\n" +
                 "등장인물: " + characters + "\n" +
                 "어린이가 대상인 동화의 도입부를 작성해 주세요. 이야기는 즐겁고, 긍정적이고, 흥미롭게 시작되어야 합니다." +
-                "배경은 더 구체적으로 설정하면 좋습니다. 2문장 정도로 작성해주세요." +
+                "배경은 더 구체적으로 설정하면 좋습니다. 2문장 정도로 작성해주세요. 문장이 끝나면 줄바꿈을 해주세요." +
                 "다음 내용이 포함되어야 합니다: 구체적인 배경 설명, 등장인물 소개, 이야기를 이끌어갈 서사적 요소.";
     }
 
@@ -65,9 +65,6 @@ public class MakeStory {
     }
 
     private void handleInitialStorySuccess(String resultText) {
-        makepage1Activity.updateStoryTextView(resultText); // TextView 업데이트
-        storySoFar = resultText;
-
         // 동화 생성 완료 후 onStoryGenerated 호출
         if (makepage1Activity != null) {
             makepage1Activity.runOnUiThread(new Runnable() {

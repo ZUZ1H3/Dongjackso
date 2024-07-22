@@ -57,6 +57,9 @@
             android:name=".AlbumActivity"
             android:exported="true"/>
         <activity
+            android:name=".RegistrationActivity"
+            android:exported="true"/>
+        <activity
             android:name=".MainActivity"
             android:exported="true">
 

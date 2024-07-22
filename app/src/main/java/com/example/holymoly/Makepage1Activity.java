@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,7 @@ public class Makepage1Activity extends AppCompatActivity {
     private MakeStory makeStory;
     private String theme; // 테마를 저장할 변수
     private String characters; // 캐릭터 목록을 문자열로 저장할 변수
+    private Handler handler = new Handler(); // UI 업데이트를 위한 Handler
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,13 +61,37 @@ public class Makepage1Activity extends AppCompatActivity {
         makeStory.generateInitialStory();
     }
 
+    /* 동화 텍스트를 한번에 표시
     public void updateStoryTextView(final String newText) {
-        runOnUiThread(new Runnable() {
+        handler.post(new Runnable() {
             @Override
             public void run() {
                 // 현재 동화 내용을 업데이트
-                String existingText = storyTextView.getText().toString();
-                storyTextView.setText(existingText + " " + newText);
+                storyTextView.setText(newText);
+            }
+        });
+    }
+    */
+
+    // 동화 생성 완료 후 한 글자씩 표시
+    public void displayStoryText(final String storyText) {
+        handler.post(new Runnable() {
+            @Override
+            public void run() {
+                final int delay = 120; // 글자 출력 간격 (밀리초)
+                final int length = storyText.length();
+                storyTextView.setText(""); // TextView 초기화
+
+                for (int i = 0; i <= length; i++) {
+                    final int index = i;
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            // 한 글자씩 텍스트 설정
+                            storyTextView.setText(storyText.substring(0, index));
+                        }
+                    }, delay * i); // 각 글자마다 딜레이 적용
+                }
             }
         });
     }
@@ -73,12 +99,12 @@ public class Makepage1Activity extends AppCompatActivity {
     public void onStoryGenerated(final String storyText) {
         // 동화가 생성된 후 이미지 생성 및 설정
         generateBackgroundImage(storyText);
+        // 동화가 생성된 후 텍스트를 한 글자씩 표시]
+        displayStoryText(storyText);
+
     }
 
     private void generateBackgroundImage(String storyText) {
-        // 프롬프트 작성
-        //String prompt = "Create a dreamy, fairytale-like background image based on the following story: " + storyText;
-
         String prompt = "Dreamy, fairytale, cute, characteristic, fancy, twinkle, super bright, sea, A Little Mermaid, a tropical fish, a shark.";
 
         // KarloImageGenerator를 사용하여 이미지 요청
