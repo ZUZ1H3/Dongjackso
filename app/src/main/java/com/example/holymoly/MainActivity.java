@@ -2,6 +2,7 @@ package com.example.holymoly;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -51,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
         btnJoin = findViewById(R.id.btn_join);
         btnToggle = findViewById(R.id.btn_hidenshow);
         auto = findViewById(R.id.rb_auto);
+
+        //배경음악 시작
+        startService(new Intent(getApplicationContext(), MusicService.class));
 
         // 비밀번호 숨기기 및 표시
         btnToggle.setOnClickListener(new View.OnClickListener() {
@@ -137,5 +141,19 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, StartActivity.class);
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopService(new Intent(getApplicationContext(), MusicService.class));
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+        //이벤트 작성
+        //System.exit(0);
+        stopService(new Intent(getApplicationContext(), MusicService.class));
     }
 }
