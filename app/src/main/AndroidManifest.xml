@@ -59,6 +59,7 @@
         <activity
             android:name=".AlbumActivity"
             android:exported="true"/>
+        <!--registration 액티비티 추가 -->
         <activity
             android:name=".RegistrationActivity"
             android:exported="true"/>

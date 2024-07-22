@@ -12,21 +12,38 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class SelectthemaActivity extends AppCompatActivity {
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+public class SelectthemaActivity extends AppCompatActivity implements UserInfoLoader{
     private ImageButton btnhome, btntrophy, btnsetting, btnnext;
     private RadioGroup radioGroup;
+    private TextView name;
+
+    private FirebaseAuth auth;
+    private FirebaseUser user;
+    private FirebaseFirestore db;
+    private UserInfo userInfo = new UserInfo();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selectthema);
 
+        name = findViewById(R.id.mini_name);
         btnhome = findViewById(R.id.ib_homebutton);
         btntrophy = findViewById(R.id.ib_trophy);
         btnsetting = findViewById(R.id.ib_setting);
 
         radioGroup = findViewById(R.id.radioGroup);
         btnnext = findViewById(R.id.ib_nextStep);
+
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        db = FirebaseFirestore.getInstance();
+
+        loadUserInfo(name);
 
         btnhome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,6 +144,10 @@ public class SelectthemaActivity extends AppCompatActivity {
 
         // 라디오 그룹에 추가
         radioGroup.addView(view);
+    }
+    @Override
+    public void loadUserInfo(TextView name) {
+        userInfo.loadUserInfo(name);
     }
 
 }
