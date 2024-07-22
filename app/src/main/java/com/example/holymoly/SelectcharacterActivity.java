@@ -27,6 +27,9 @@ import com.google.ai.client.generativeai.type.GenerateContentResponse;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -34,11 +37,17 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-public class SelectcharacterActivity extends AppCompatActivity {
+public class SelectcharacterActivity extends AppCompatActivity implements UserInfoLoader{
     private ImageButton btnhome, btntrophy, btnsetting, btnnext;
     private View[] customCheckBoxes = new View[10]; // 캐릭터를 저장할 체크박스 배열
     private String[] character = new String[10]; // 캐릭터 이름을 저장할 배열
     private boolean[] isChecked = new boolean[10]; // 체크 상태를 저장할 배열
+    private TextView name;
+
+    private FirebaseAuth auth;
+    private FirebaseUser user;
+    private FirebaseFirestore db;
+    private UserInfo userInfo = new UserInfo();
 
     private Karlo karlo;
     private Gemini gemini;
@@ -61,10 +70,17 @@ public class SelectcharacterActivity extends AppCompatActivity {
             Toast.makeText(this, "테마가 없습니다", Toast.LENGTH_SHORT).show();
         }
 
+        name = findViewById(R.id.mini_name);
         btnhome = findViewById(R.id.ib_homebutton);
         btntrophy = findViewById(R.id.ib_trophy);
         btnsetting = findViewById(R.id.ib_setting);
         btnnext = findViewById(R.id.ib_nextStep);
+
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        db = FirebaseFirestore.getInstance();
+
+        loadUserInfo(name);
 
         btnhome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -287,5 +303,10 @@ public class SelectcharacterActivity extends AppCompatActivity {
                 callback.onFailure(t);
             }
         });
+    }
+
+    @Override
+    public void loadUserInfo(TextView name) {
+        userInfo.loadUserInfo(name);
     }
 }

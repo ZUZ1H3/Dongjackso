@@ -8,10 +8,18 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class StartActivity extends AppCompatActivity implements View.OnClickListener {
     private ImageButton start, nope; // 좋아, 안 할래 버튼
     private TextView name;
-    private UserInfo userInfo = new UserInfo();
+
+    private FirebaseAuth auth;
+    private FirebaseUser user;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +33,22 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         start.setOnClickListener(this);
         nope.setOnClickListener(this);
 
-        // 작가 이름 설정
-        name.setText(userInfo.getName());
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        db = FirebaseFirestore.getInstance();
+
+        // Firestore에서 사용자 이름 가져오기
+        db.collection("users").document(user.getUid())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            String userName = document.getString("name");
+                            name.setText(userName);
+                        }
+                    }
+                });
     }
     @Override
     public void onClick(View v) {
