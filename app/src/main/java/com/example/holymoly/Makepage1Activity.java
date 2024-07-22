@@ -100,8 +100,6 @@ public class Makepage1Activity extends AppCompatActivity {
         // 동화가 생성된 후 이미지 생성 및 설정
         generateBackgroundImage(storyText);
         // 동화가 생성된 후 텍스트를 한 글자씩 표시]
-        displayStoryText(storyText);
-
     }
 
     private void generateBackgroundImage(String storyText) {
@@ -121,7 +119,10 @@ public class Makepage1Activity extends AppCompatActivity {
                             public void run() {
                                 if (bitmap != null) {
                                     // 배경 이미지로 설정
+
                                     backgroundImageView.setImageBitmap(bitmap);
+                                    displayStoryText(storyText);
+
                                 } else {
                                     Toast.makeText(Makepage1Activity.this, "이미지 로드 실패", Toast.LENGTH_SHORT).show();
                                 }
