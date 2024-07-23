@@ -4,12 +4,14 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 public class HomeActivity extends AppCompatActivity {
 
     private ImageButton btntrophy, btnsetting, btnmaking, btnalbum, btnworld;
+    private ImageView ivMiniProfile;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +22,15 @@ public class HomeActivity extends AppCompatActivity {
         btnmaking = findViewById(R.id.ib_making);
         btnalbum = findViewById(R.id.ib_album);
         btnworld = findViewById(R.id.ib_world);
+        ivMiniProfile = findViewById(R.id.mini_profile);
+
+        ivMiniProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, RegistrationActivity.class);
+                startActivity(intent);
+            }
+        });
 
         btntrophy.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -136,7 +136,7 @@ public class JoinActivity extends AppCompatActivity {
                                     .set(new User(email, password))
                                     .addOnSuccessListener(aVoid -> {
                                         Toast.makeText(JoinActivity.this, "회원가입 성공!", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(JoinActivity.this, MainActivity.class);
+                                        Intent intent = new Intent(JoinActivity.this, RegistrationActivity.class);
                                         startActivity(intent);
                                         finish();
                                     })

@@ -61,12 +61,8 @@
             android:exported="true"/>
         <activity
             android:name=".MainActivity"
-            android:exported="true"/>
-
-        <!--registration 액티비티 추가 -->
-        <activity
-            android:name=".RegistrationActivity"
             android:exported="true">
+
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
