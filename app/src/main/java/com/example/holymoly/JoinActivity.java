@@ -163,6 +163,7 @@ public class JoinActivity extends AppCompatActivity {
         public String name;
         public Integer age;
         public String gender;
+        public String nickname = "꼬마 작가";
 
         public User() {
             // 기본 생성자 필요

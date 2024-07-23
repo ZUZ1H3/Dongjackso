@@ -2,12 +2,15 @@ package com.example.holymoly;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
@@ -33,8 +36,11 @@ public class MainActivity extends AppCompatActivity {
     private RadioButton auto;
 
     private FirebaseAuth mAuth;
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
-    private boolean isChecked = false;  // 자동 로그인 체크 변수
+    private int checked = 0; // 자동 로그인 상태를 위한 변수
+    private boolean autoLogin; // 라디오 버튼 상태
     private boolean isPasswordVisible = false;   // 비밀번호 표시 및 숨기기
 
     @Override
@@ -43,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
+        // "r_state"라는 이름으로 파일생성, MODE_PRIVATE는 자기 앱에서만 사용하도록 설정하는 기본값
+        sharedPreferences = getSharedPreferences("r_state", MODE_PRIVATE);
+        editor = sharedPreferences.edit();
 
         findpwd = (TextView) findViewById(R.id.tv_findpwd);
         etId = findViewById(R.id.et_id);
@@ -51,6 +60,13 @@ public class MainActivity extends AppCompatActivity {
         btnJoin = findViewById(R.id.btn_join);
         btnToggle = findViewById(R.id.btn_hidenshow);
         auto = findViewById(R.id.rb_auto);
+
+        //배경음악 시작
+        startService(new Intent(getApplicationContext(), MusicService.class));
+      
+        // 자동 로그인 라디오 버튼 상태 설정
+        auto.setChecked(sharedPreferences.getBoolean("autoLogin", false));
+        checked = autoLogin ? 1 : 0;
 
         // 비밀번호 숨기기 및 표시
         btnToggle.setOnClickListener(new View.OnClickListener() {
@@ -67,14 +83,37 @@ public class MainActivity extends AppCompatActivity {
                 isPasswordVisible = !isPasswordVisible;
             }
         });
-
-        // 자동 로그인 버튼 클릭 시
         auto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                isChecked = true;
+                boolean isChecked = auto.isChecked();
+                editor.putBoolean("autoLogin", isChecked);
+                editor.apply();
             }
         });
+        /*
+        // 자동 로그인 라디오 버튼 클릭 시
+        auto.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) { // 체크 상태가 활성화된 경우
+                    buttonView.setSelected(true);
+                    if (checked == 0) {
+                        editor.putBoolean("autoLogin", isChecked);
+                        editor.apply();
+                        checked = 1;
+                    }
+                } else { // 체크 상태가 비활성화된 경우
+                    buttonView.setSelected(false);
+                    /*if (checked == 1) {
+                        editor.putBoolean("autoLogin", isChecked);
+                        editor.apply();
+                        checked = 0;
+                    }
+                }
+            }
+        });
+        */
 
         // 비밀번호 재설정 클릭 시
         findpwd.setOnClickListener(new View.OnClickListener() {
@@ -133,9 +172,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();
-        if(user != null && !isChecked) {
+        autoLogin = sharedPreferences.getBoolean("autoLogin", false);
+
+        if(user != null && autoLogin) {
             Intent intent = new Intent(this, StartActivity.class);
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        stopService(new Intent(getApplicationContext(), MusicService.class));
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+        //이벤트 작성
+        //System.exit(0);
+        stopService(new Intent(getApplicationContext(), MusicService.class));
     }
 }

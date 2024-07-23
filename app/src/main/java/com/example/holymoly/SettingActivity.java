@@ -28,7 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class SettingActivity extends AppCompatActivity implements View.OnClickListener{
     EditText name, age;
     RadioButton rb_bgm_on, rb_bgm_off, rb_sound_on, rb_sound_off;
-    ImageButton custom, logout;
+    ImageButton custom, logout, pwdEdit;
 
     private FirebaseAuth auth;
     private FirebaseUser user;
@@ -37,28 +37,28 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private Spinner genderSpinner;
     private ArrayAdapter<String> adapter;
 
-    private MediaPlayer bgmPlayer; // 배경 음악을 재생할 MediaPlayer
-    private boolean isBgmOn = true; // 배경 음악 상태 변수
-    private boolean isSoundOn = true; // 효과음 상태 변수
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-        name = findViewById(R.id.et_name);
-        age = findViewById(R.id.et_age);
-        custom = findViewById(R.id.ib_custom);
-        logout = findViewById(R.id.ib_logout);
+        name = (EditText)findViewById(R.id.et_name);
+        age = (EditText)findViewById(R.id.et_age);
+        custom = (ImageButton)findViewById(R.id.ib_custom);
+        logout = (ImageButton)findViewById(R.id.ib_logout);
+        pwdEdit = (ImageButton)findViewById(R.id.ib_pwdedit);
+        genderSpinner = findViewById(R.id.spinner_gender);
 
         custom.setOnClickListener(this);
         logout.setOnClickListener(this);
+        pwdEdit.setOnClickListener(this);
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
 
-        genderSpinner = findViewById(R.id.spinner_gender);
+        // 사용자 기존 정보 로딩
+        loadUserInfo();
 
         String[] genderArray = getResources().getStringArray(R.array.gender_array);
         String[] genderWithPrompt = new String[genderArray.length + 1];
@@ -75,78 +75,28 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         genderSpinner.setAdapter(adapter);
         genderSpinner.setSelection(0); // 기본 선택 항목을 '성별'로 설정
 
-        // 나이 입력 설정
-        EditText ageEditText = findViewById(R.id.et_age);
-        ageEditText.setInputType(InputType.TYPE_CLASS_NUMBER);
-
         // 배경 음악 라디오 그룹 설정
         RadioGroup rgBgm = findViewById(R.id.rg_bgm);
         rb_bgm_on = findViewById(R.id.rb_bgm_on);
         rb_bgm_off = findViewById(R.id.rb_bgm_off);
-
-        rgBgm.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.rb_bgm_on) {
-                isBgmOn = true;
-                startBackgroundMusic();
-            } else if (checkedId == R.id.rb_bgm_off) {
-                isBgmOn = false;
-                stopBackgroundMusic();
-            }
-        });
 
         // 효과음 라디오 그룹 설정
         RadioGroup rgSound = findViewById(R.id.rg_sound);
         rb_sound_on = findViewById(R.id.rb_sound_on);
         rb_sound_off = findViewById(R.id.rb_sound_off);
 
-        rgSound.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.rb_sound_on) {
-                isSoundOn = true;
-                Toast.makeText(SettingActivity.this, "효과음 켜짐", Toast.LENGTH_SHORT).show();
-            } else if (checkedId == R.id.rb_sound_off) {
-                isSoundOn = false;
-                Toast.makeText(SettingActivity.this, "효과음 꺼짐", Toast.LENGTH_SHORT).show();
-            }
-        });
-
         // 라디오 버튼 기본 선택값 설정
         rb_bgm_on.setChecked(true);
         rb_sound_on.setChecked(true);
-
-        // 배경 음악 재생을 위한 MediaPlayer 초기화
-        bgmPlayer = MediaPlayer.create(this, R.raw.bgm_sea);
-        bgmPlayer.setLooping(true);
-
-        // 기본적으로 배경 음악이 켜져 있으면 재생 시작
-        if (isBgmOn) {
-            startBackgroundMusic();
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        if (bgmPlayer != null) {
-            bgmPlayer.release();
-            bgmPlayer = null;
-        }
-    }
-
-    private void startBackgroundMusic() {
-        if (bgmPlayer != null && !bgmPlayer.isPlaying()) {
-            bgmPlayer.start();
-        }
-    }
-
-    private void stopBackgroundMusic() {
-        if (bgmPlayer != null && bgmPlayer.isPlaying()) {
-            bgmPlayer.pause();
-        }
     }
 
     @Override
     public void onClick(View v) {
         if(v.getId() == R.id.ib_custom) { updateUser(); }
+        if(v.getId() == R.id.ib_pwdedit) {
+            Intent intent = new Intent(this, ResetPasswordActivity.class);
+            startActivity(intent);
+        }
         if(v.getId() == R.id.ib_logout) {
             auth.signOut();
             Toast.makeText(this, "로그아웃되었습니다..", Toast.LENGTH_SHORT).show();
@@ -169,31 +119,28 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                     Toast.makeText(this, "정보 수정에 실패했습니다: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
-    /*
     // Firestore에서 사용자 정보 가져오기
     private void loadUserInfo() {
-        DocumentReference docRef = db.collection("users").document(user.getUid());
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if(document.exists()) {
-                        UserInfo userInfo = document.toObject(UserInfo.class);
-                        String userName = userInfo.getName();
-                        Integer userAge = userInfo.getAge();
-                        //String userGender = userInfo.getGender();
+        db.collection("users").document(user.getUid())
+                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if(document.exists()) {
+                                String userName = document.getString("name");
+                                String userAge = String.valueOf(document.getLong("age"));
+                                String userGender = document.getString("gender");
 
-                        name.setText(userName);
-                        age.setText(String.valueOf(userAge));
-
-                        // int spinnerPosition = adapter.getPosition(userGender);
-                        // genderSpinner.setSelection(spinnerPosition);
+                                name.setText(userName);
+                                age.setText(userAge);
+                                int spinnerPosition = adapter.getPosition(userGender);
+                                genderSpinner.setSelection(spinnerPosition);
+                            }
+                        }
                     }
-                }
-            }
-        });
+                });
     }
-
      */
+}
 }
