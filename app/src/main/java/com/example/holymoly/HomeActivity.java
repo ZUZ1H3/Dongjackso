@@ -4,10 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -15,8 +14,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class HomeActivity extends AppCompatActivity implements UserInfoLoader {
     private ImageButton btntrophy, btnsetting, btnmaking, btnalbum, btnworld;
+    private ImageView ivMiniProfile;
     private TextView name;
-
     private FirebaseAuth auth;
     private FirebaseUser user;
     private FirebaseFirestore db;
@@ -32,6 +31,15 @@ public class HomeActivity extends AppCompatActivity implements UserInfoLoader {
         btnmaking = findViewById(R.id.ib_making);
         btnalbum = findViewById(R.id.ib_album);
         btnworld = findViewById(R.id.ib_world);
+        ivMiniProfile = findViewById(R.id.mini_profile);
+
+        ivMiniProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, RegistrationActivity.class);
+                startActivity(intent);
+            }
+        });
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
