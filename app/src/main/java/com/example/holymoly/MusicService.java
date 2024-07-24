@@ -5,41 +5,35 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 
-import androidx.annotation.Nullable;
-
 public class MusicService extends Service {
-    MediaPlayer mediaPlayer;
-
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+    private MediaPlayer mediaPlayer;
 
     @Override
     public void onCreate() {
         super.onCreate();
-
-        mediaPlayer = MediaPlayer.create(this, R.raw.bgm_sea);
-        mediaPlayer.setLooping(true); // 무한 루프
+        mediaPlayer = MediaPlayer.create(this, R.raw.bgm_sea); // 배경 음악 파일
+        mediaPlayer.setLooping(true);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
+        if (!mediaPlayer.isPlaying()) {
             mediaPlayer.start();
         }
-
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        if (mediaPlayer != null) {
+        if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
-            mediaPlayer.release();
-            mediaPlayer = null;
         }
+        mediaPlayer.release();
         super.onDestroy();
+    }
+
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 }

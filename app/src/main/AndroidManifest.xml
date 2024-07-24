@@ -18,7 +18,7 @@
         android:theme="@style/Theme.HolyMoly"
         tools:targetApi="31">
 
-        <service android:name=".MusicService"></service>
+        <service android:name=".MusicService" android:exported="false" />
 
         <activity
             android:name=".JoinActivity"

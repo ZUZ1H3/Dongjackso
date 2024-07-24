@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
 
         //배경음악 시작
         startService(new Intent(getApplicationContext(), MusicService.class));
-      
+
         // 자동 로그인 라디오 버튼 상태 설정
         auto.setChecked(sharedPreferences.getBoolean("autoLogin", false));
         checked = autoLogin ? 1 : 0;
