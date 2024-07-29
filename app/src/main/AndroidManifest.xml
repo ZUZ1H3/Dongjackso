@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-
-    package="com.example.holymoly"> <!-- 패키지 경로 추가 -->
-
-    <uses-permission android:name="android.permission.ACCEPT_INTERNET"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    package="com.example.holymoly">
+    <!-- 패키지 경로 추가 -->
+    <uses-permission android:name="android.permission.ACCEPT_INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -48,30 +47,32 @@
             android:name=".TrophyActivity"
             android:exported="true" />
         <activity
+            android:name=".AchieveActivity"
+            android:exported="true" />
+        <activity
             android:name=".SelectthemaActivity"
             android:exported="true" />
         <activity
             android:name=".SelectcharacterActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".Makepage1Activity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".AlbumActivity"
-            android:exported="true"/>
-        <!--registration 액티비티 추가 -->
+            android:exported="true" /> <!-- registration 액티비티 추가 -->
         <activity
             android:name=".RegistrationActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
-
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
+
 </manifest>

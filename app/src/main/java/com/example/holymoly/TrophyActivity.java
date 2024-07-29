@@ -1,6 +1,10 @@
 package com.example.holymoly;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -13,8 +17,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class TrophyActivity extends AppCompatActivity implements UserInfoLoader{
+public class TrophyActivity extends AppCompatActivity implements View.OnClickListener, UserInfoLoader{
     private TextView name;
+    private ImageButton trophy, home, edit;
 
     private FirebaseAuth auth;
     private FirebaseUser user;
@@ -24,8 +29,12 @@ public class TrophyActivity extends AppCompatActivity implements UserInfoLoader{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_trophy);
 
         name = findViewById(R.id.mini_name);
+        trophy = findViewById(R.id.ib_bictrophy);
+        home = findViewById(R.id.ib_homebutton);
+        edit = findViewById(R.id.ib_edit);
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -33,13 +42,23 @@ public class TrophyActivity extends AppCompatActivity implements UserInfoLoader{
 
         loadUserInfo(name);
 
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_trophy);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        trophy.setOnClickListener(this);
+        home.setOnClickListener(this);
+        edit.setOnClickListener(this);
+    }
+    public void onClick(View v) {
+        if(v.getId() == R.id.ib_bictrophy) {
+            Intent intent = new Intent(this, AchieveActivity.class);
+            startActivity(intent);
+        }
+        else if(v.getId() == R.id.ib_homebutton) {
+            Intent intent = new Intent(this, HomeActivity.class);
+            startActivity(intent);
+        }
+        else if(v.getId() == R.id.ib_edit) {
+            Intent intent = new Intent(this, SettingActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override
