@@ -1,8 +1,10 @@
 package com.example.holymoly;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -23,7 +25,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
+public class SettingActivity extends AppCompatActivity implements View.OnClickListener{
     EditText name, age;
     RadioButton rb_bgm_on, rb_bgm_off, rb_sound_on, rb_sound_off;
     ImageButton custom, logout, pwdEdit;
@@ -34,9 +36,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     private Spinner genderSpinner;
     private ArrayAdapter<String> adapter;
-
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +56,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
-
-        sharedPreferences = getSharedPreferences("settings", MODE_PRIVATE);
-        editor = sharedPreferences.edit();
 
         // 사용자 기존 정보 로딩
         loadUserInfo();
@@ -90,24 +86,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         rb_sound_off = findViewById(R.id.rb_sound_off);
 
         // 라디오 버튼 기본 선택값 설정
-        boolean bgmEnabled = sharedPreferences.getBoolean("bgmEnabled", true);
-        rb_bgm_on.setChecked(bgmEnabled);
-        rb_bgm_off.setChecked(!bgmEnabled);
-
-        rgBgm.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if (checkedId == R.id.rb_bgm_on) {
-                    editor.putBoolean("bgmEnabled", true);
-                    startService(new Intent(SettingActivity.this, MusicService.class));
-                } else if (checkedId == R.id.rb_bgm_off) {
-                    editor.putBoolean("bgmEnabled", false);
-                    stopService(new Intent(SettingActivity.this, MusicService.class));
-                }
-                editor.apply();
-            }
-        });
-
+        rb_bgm_on.setChecked(true);
         rb_sound_on.setChecked(true);
     }
 
@@ -125,7 +104,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(intent);
         }
     }
-
     // 캐릭터 수정 db 업데이트
     private void updateUser() {
         String userName = name.getText().toString();
@@ -141,7 +119,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                     Toast.makeText(this, "정보 수정에 실패했습니다: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
-
     // Firestore에서 사용자 정보 가져오기
     private void loadUserInfo() {
         db.collection("users").document(user.getUid())
