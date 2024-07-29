@@ -61,9 +61,6 @@ public class MainActivity extends AppCompatActivity {
         btnToggle = findViewById(R.id.btn_hidenshow);
         auto = findViewById(R.id.rb_auto);
 
-        //배경음악 시작
-        startService(new Intent(getApplicationContext(), MusicService.class));
-      
         // 자동 로그인 라디오 버튼 상태 설정
         auto.setChecked(sharedPreferences.getBoolean("autoLogin", false));
         checked = autoLogin ? 1 : 0;
@@ -178,19 +175,5 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, StartActivity.class);
             startActivity(intent);
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        stopService(new Intent(getApplicationContext(), MusicService.class));
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onUserLeaveHint() {
-        super.onUserLeaveHint();
-        //이벤트 작성
-        //System.exit(0);
-        stopService(new Intent(getApplicationContext(), MusicService.class));
     }
 }
