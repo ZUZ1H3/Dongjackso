@@ -34,10 +34,10 @@ public class Karlo {
         this.height = height;
     }
 
-    public void requestImage(String prompt, Callback callback) {
+    public void requestImage(String prompt, String negative_prompt, Callback callback) {
         new Thread(() -> {
             try {
-                String imageUrl = requestImageFromKarlo(prompt);
+                String imageUrl = requestImageFromKarlo(prompt, negative_prompt);
                 callback.onSuccess(imageUrl);
             } catch (Exception e) {
                 callback.onFailure(e);
@@ -45,11 +45,11 @@ public class Karlo {
         }).start();
     }
 
-    private String requestImageFromKarlo(String prompt) throws Exception {
+    private String requestImageFromKarlo(String prompt, String negative_prompt) throws Exception {
         JSONObject json = new JSONObject();
         json.put("version", "v2.1");
         json.put("prompt", prompt);
-        json.put("negative_prompt", "");
+        json.put("negative_prompt", negative_prompt);
         json.put("height", height);
         json.put("width", width);
         json.put("image_quality", 100);

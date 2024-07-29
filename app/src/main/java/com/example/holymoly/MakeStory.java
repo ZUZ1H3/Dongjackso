@@ -19,7 +19,7 @@ public class MakeStory {
         return "동화 배경: " + theme + "\n" +
                 "등장인물: " + characters + "\n" +
                 "어린이가 대상인 동화의 도입부를 작성해 주세요. 이야기는 즐겁고, 긍정적이고, 흥미롭게 시작되어야 합니다." +
-                "배경은 더 구체적으로 설정하면 좋습니다. 2문장으로 작성해주세요. 문장이 끝나면 줄바꿈을 해주세요.";
+                "배경은 더 구체적으로 설정하면 좋습니다. 등장인물도 소개되어야 합니다. 2~3문장으로 작성해주세요. 문장이 끝나면 줄바꿈을 해주세요.";
     }
 
     // 동화의 나머지 부분을 위한 프롬프트 빌드
@@ -47,9 +47,11 @@ public class MakeStory {
                 "어린이인 사용자에게 선택지를 제공하기 위해 두 가지 가능한 이야기를 생성해 주세요. 각각 1문장으로 작성해주세요.";
     }
 
+
+
+    //동화 도입부 생성
     public void generateInitialStory() {
         String prompt = buildInitialPrompt();
-
         gemini.generateText(prompt, new Gemini.Callback() {
             @Override
             public void onSuccess(String text) {
@@ -63,13 +65,17 @@ public class MakeStory {
         });
     }
 
-    private void handleInitialStorySuccess(String resultText) {
-        // 동화 생성 완료 후 onStoryGenerated 호출
+
+
+
+
+    //생성된 동화 도입부를 들고 makepage1Activity로 이동한다.
+    private void handleInitialStorySuccess(String text) {
         if (makepage1Activity != null) {
             makepage1Activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    makepage1Activity.onStoryGenerated(resultText);
+                    makepage1Activity.onStoryGenerated(text);
                 }
             });
         }
