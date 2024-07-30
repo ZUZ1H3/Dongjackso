@@ -152,8 +152,8 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
     // 선택한 테마에 따라 AI 모델에서 등장인물 후보 요청
     private void requestCharacterNames(String thema) {
         String requestText = thema + "테마를 주제로 동화를 만들려고 합니다. 동화에 어울릴만한 등장인물의 후보가 10개 필요합니다." +
-                "1~5글자로 단답형으로 답해주세요. 장소, 날씨가 등장인물이 될 수는 없으니 제외해주세요." +
-                "중복은 없어야 하며 비슷한 개념도 제외해주세요. 예를 들어, '용'과 '드래곤'은 같은 개념입니다." +
+                "1~5글자로 단답형으로 답해주세요. 장소, 날씨, 건물, 자연, 물건이 등장인물이 될 수는 없으니 제외해주세요." +
+                "중복은 없어야 하며 비슷한 개념도 제외해주세요. 예를 들어, '용'과 '드래곤', '요정'과 '숲속요정'은 같은 개념입니다." +
                 "후보와 후보 사이에는 ', '로 띄어주세요. 그러면 저희는 당신이 정해준 후보들 중 몇 개를 선택하여 동화를 만들 것입니다." +
                 "당신이 답변 할 형식의 예시는 이렇습니다. '공주, 왕자, 물고기, 나무, 토끼, 거북이, 호랑이, 나비, 엄마, 동생'.";
 
@@ -251,7 +251,7 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
             drawable.setAlpha(alpha);
         }
     }
-    // Character Name 번역 및 이미지 요청 메서드
+    // Character Name 이미지 요청 메서드
     private void generateAndSetImage(String characterName, View customCheckBox) {
         translateCharacterName(characterName, new Gemini.Callback() {
             @Override
@@ -259,7 +259,8 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
                 if (translatedName != null) {
                     // 프롬프트 작성 및 이미지 요청
                     String prompt = "Dreamy, cute, fairytale, simple, twinkle " + translatedName + " a sky blue background";
-                    karlo.requestImage(prompt, new Karlo.Callback() {
+                    String negative_prompt = "";
+                    karlo.requestImage(prompt, negative_prompt, new Karlo.Callback() {
                         @Override
                         public void onSuccess(String imageUrl) {
                             Bitmap bitmap = getBitmapFromURL(imageUrl);
