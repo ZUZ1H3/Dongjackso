@@ -54,7 +54,7 @@
             android:name=".SelectcharacterActivity"
             android:exported="true"/>
         <activity
-            android:name=".Makepage1Activity"
+            android:name=".MakeStoryActivity"
             android:exported="true"/>
         <activity
             android:name=".AlbumActivity"

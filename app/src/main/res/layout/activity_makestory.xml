@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Makepage1Activity">
+    tools:context=".MakeStoryActivity"
+    android:background="">
 
     <ImageView
         android:id="@+id/background_image_view"
@@ -25,6 +26,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
 
+    <!--글자있는 반투명한 검은 사각형-->
     <ImageButton
         android:id="@+id/ib_stopMaking"
         android:layout_width="wrap_content"
@@ -34,12 +36,11 @@
         android:src="@drawable/ic_stopmaking"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.01"
+        app:layout_constraintHorizontal_bias="0.986"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.01" />
+        app:layout_constraintVertical_bias="0.036" />
 
-    <!--글자있는 반투명한 검은 사각형-->
     <ImageView
         android:id="@+id/iv_writingZone"
         android:layout_width="640dp"
@@ -52,55 +53,23 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0" />
 
-    <!--n장 만들기 제목있는 책갈피 도형-->
-    <ImageView
-        android:id="@+id/iv_makingstepbg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/bg_makingstep"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.05" />
-
-    <!--n장 만들기 text-->
-    <TextView
-        android:id="@+id/tv_makingsteptext"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ssurround"
-        android:gravity="center"
-        android:text="1장 만들기"
-        android:textColor="#6B9FA3"
-        android:textSize="64dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.1" />
-
-    <!--책내용text-->
-
     <!--다음장으로 버튼-->
 
     <TextView
         android:id="@+id/tv_pageText1"
         android:layout_width="550dp"
-        android:layout_height="500dp"
+        android:layout_height="480dp"
         android:fontFamily="@font/ssurround"
         android:gravity="left"
-        android:text=""
+        android:text="이야기를 만드는 중입니다..."
         android:textColor="@color/white"
         android:textSize="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.061"
+        app:layout_constraintHorizontal_bias="0.073"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.666" />
+        app:layout_constraintVertical_bias="0.618" />
 
     <ImageButton
         android:id="@+id/ib_nextPageButton"
@@ -115,5 +84,33 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/btn_choice1"
+        android:layout_width="560dp"
+        android:layout_height="120dp"
+        android:fontFamily="@font/ssurround"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.961"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.422"
+        android:visibility="invisible"/>
+
+    <Button
+        android:id="@+id/btn_choice2"
+        android:layout_width="560dp"
+        android:layout_height="120dp"
+        android:fontFamily="@font/ssurround"
+        android:textSize="32sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.961"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.677"
+        android:visibility="invisible"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
