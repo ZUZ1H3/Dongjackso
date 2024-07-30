@@ -56,8 +56,9 @@
             android:name=".SelectcharacterActivity"
             android:exported="true" />
         <activity
-            android:name=".Makepage1Activity"
-            android:exported="true" />
+            android:name=".MakeStoryActivity"
+            android:exported="true"/>
+
         <activity
             android:name=".AlbumActivity"
             android:exported="true" /> <!-- registration 액티비티 추가 -->

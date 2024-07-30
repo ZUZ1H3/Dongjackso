@@ -20,13 +20,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.ai.client.generativeai.GenerativeModel;
-import com.google.ai.client.generativeai.java.GenerativeModelFutures;
-import com.google.ai.client.generativeai.type.Content;
-import com.google.ai.client.generativeai.type.GenerateContentResponse;
-import com.google.common.util.concurrent.FutureCallback;
-import com.google.common.util.concurrent.Futures;
-import com.google.common.util.concurrent.ListenableFuture;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,8 +28,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
+
 public class SelectcharacterActivity extends AppCompatActivity implements UserInfoLoader{
     private ImageButton btnhome, btntrophy, btnsetting, btnnext;
     private View[] customCheckBoxes = new View[10]; // 캐릭터를 저장할 체크박스 배열
@@ -118,7 +110,7 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
                 if (selectedCharacters.isEmpty()) {
                     Toast.makeText(SelectcharacterActivity.this, "캐릭터를 선택해주세요", Toast.LENGTH_SHORT).show();
                 } else {
-                    Intent intent = new Intent(SelectcharacterActivity.this, Makepage1Activity.class);
+                    Intent intent = new Intent(SelectcharacterActivity.this, MakeStoryActivity.class);
                     intent.putStringArrayListExtra("selectedCharacters", selectedCharacters);
                     intent.putExtra("selectedTheme", thema);
                     startActivity(intent);
