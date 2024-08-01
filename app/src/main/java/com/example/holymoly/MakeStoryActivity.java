@@ -57,6 +57,8 @@ public class MakeStoryActivity extends AppCompatActivity {
         choice1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                choice1.setVisibility(View.INVISIBLE);
+                choice2.setVisibility(View.INVISIBLE);
                 if(num<=5) {
                     makeStory.generateNextStoryPart(choice1.getText().toString());
                 }
@@ -67,10 +69,13 @@ public class MakeStoryActivity extends AppCompatActivity {
         choice2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                choice1.setVisibility(View.INVISIBLE);
+                choice2.setVisibility(View.INVISIBLE);
                 if(num<=5) {
                     makeStory.generateNextStoryPart(choice2.getText().toString());
                 }
                 ++num;
+
             }
         });
     }
