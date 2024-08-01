@@ -6,10 +6,13 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,15 +21,22 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InfoActivity extends AppCompatActivity implements View.OnClickListener {
+    private static final String TAG = "InfoActivity"; // 로그 태그 추가
+
     private EditText name, age;  // 이름, 나이
-    private ImageButton btnBoy, btnGirl, go; // 남자, 여자, ok 버튼
+    private ImageButton go; // 남자, 여자, ok 버튼
     private ImageView profile;
+    private RadioButton btnBoy, btnGirl;
+    private RadioGroup rgGender;
 
     private String selectedGender = ""; // 성별 선택
 
@@ -44,8 +54,9 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
 
         name = (EditText) findViewById(R.id.et_name);
         age = (EditText) findViewById(R.id.et_age);
-        btnBoy = (ImageButton) findViewById(R.id.btn_boy);
-        btnGirl = (ImageButton) findViewById(R.id.btn_girl);
+        rgGender = (RadioGroup) findViewById(R.id.rg_gender);
+        btnBoy = (RadioButton) findViewById(R.id.rb_boy);
+        btnGirl = (RadioButton) findViewById(R.id.rb_girl);
         go = (ImageButton) findViewById(R.id.btn_ok);
         profile = (ImageView) findViewById(R.id.img_profile);
 
@@ -63,28 +74,20 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         loadImage(); // 캐릭터 이미지 가져오기
 
         // 나이 숫자만 가능하게 설정
-        age.setFilters(new InputFilter[] { new InputFilter() {
+        age.setFilters(new InputFilter[]{new InputFilter() {
             @Override
             public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
                 for (int i = start; i < end; i++) {
                     if (!Character.isDigit(source.charAt(i))) return "";
                 }
                 return null;
-                }
             }
-        });
+        }});
     }
+
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.btn_boy) { // 남자 버튼 클릭 시
-            selectedGender = "남자";
-            btnBoy.setSelected(true);
-            btnGirl.setSelected(false);
-        } else if (v.getId() == R.id.btn_girl) { // 여자 버튼 클릭 시
-            selectedGender = "여자";
-            btnGirl.setSelected(true);
-            btnBoy.setSelected(false);
-        } else if (v.getId() == R.id.btn_ok) { // OK 버튼 클릭 시
+        if (v.getId() == R.id.btn_ok) { // OK 버튼 클릭 시
             if (validateInput()) {
                 saveInfo();
                 Intent intent = new Intent(this, StartActivity.class);
@@ -92,37 +95,56 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
+
     // 빈칸 유효성 검사
     private boolean validateInput() {
         if (name.getText().toString().isEmpty()) {
             Toast.makeText(this, "이름을 입력하세요.", Toast.LENGTH_SHORT).show();
             return false;
-            }
+        }
         if (age.getText().toString().isEmpty()) {
             Toast.makeText(this, "나이를 입력하세요.", Toast.LENGTH_SHORT).show();
             return false;
-            }
-        if (selectedGender.isEmpty()) {
+        }
+        if (rgGender.getCheckedRadioButtonId() == -1) {
             Toast.makeText(this, "성별을 선택하세요.", Toast.LENGTH_SHORT).show();
             return false;
         }
+
+        int selectedId = rgGender.getCheckedRadioButtonId();
+        RadioButton selectedRadioButton = findViewById(selectedId);
+        selectedGender = selectedRadioButton.getText().toString();
+
         return true;
     }
+
     // 정보 firestore DB에 저장
     private void saveInfo() {
         String userName = name.getText().toString();
         Integer userAge = Integer.parseInt(age.getText().toString());
-        FirebaseUser user = mAuth.getCurrentUser();
 
-        db.collection("users").document(user.getUid())
-                .update("name", userName, "age", userAge, "gender", selectedGender)
-                .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(this, "정보가 저장되었습니다.", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "정보 저장에 실패했습니다: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+        Map<String, Object> userInfo = new HashMap<>();
+        userInfo.put("name", userName);
+        userInfo.put("age", userAge);
+        userInfo.put("gender", selectedGender);
+
+        if (user != null) {
+            db.collection("users").document(user.getUid())
+                    .set(userInfo, SetOptions.merge())
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(this, "정보가 저장되었습니다.", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "정보가 성공적으로 저장되었습니다.");
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "정보 저장에 실패했습니다: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, "정보 저장에 실패했습니다.", e);
+                    });
+        } else {
+            Toast.makeText(this, "사용자가 로그인되어 있지 않습니다.", Toast.LENGTH_SHORT).show();
+            Log.w(TAG, "사용자가 로그인되어 있지 않습니다.");
+        }
     }
+
     // 이미지 가져오기
     private void loadImage() {
         charcterRef.listAll().addOnSuccessListener(listResult -> {
@@ -144,6 +166,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
     }
+
     // 이미지 확대
     private Bitmap cropImage(Bitmap bm) {
         int cropW = 25;
