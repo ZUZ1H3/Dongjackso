@@ -60,17 +60,17 @@
         android:layout_height="480dp"
         android:fontFamily="@font/ssurround"
         android:gravity="left"
+        android:lineSpacingExtra="16dp"
         android:text="이야기를 만드는 중입니다..."
         android:textColor="@color/white"
         android:textSize="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.073"
+        app:layout_constraintHorizontal_bias="0.054"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.618" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
+    <!-- <ImageButton
         android:id="@+id/ib_nextPageButton"
         android:layout_width="wrap_content"
         android:layout_height="100dp"
@@ -83,13 +83,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
+        -->
 
     <Button
         android:id="@+id/btn_choice1"
         android:layout_width="560dp"
         android:layout_height="120dp"
         android:fontFamily="@font/ssurround"
-        android:textSize="32sp"
+        android:textSize="28sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.961"
@@ -103,7 +104,7 @@
         android:layout_width="560dp"
         android:layout_height="120dp"
         android:fontFamily="@font/ssurround"
-        android:textSize="32sp"
+        android:textSize="28sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.961"

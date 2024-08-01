@@ -26,10 +26,10 @@ public class MakeStoryActivity extends AppCompatActivity {
     private String selectedTheme;
     private ArrayList<String> selectedCharacters;
     private Handler handler = new Handler();
-
     private Karlo karlo;
     private Gemini gemini;
     private MakeStory makeStory;
+    private int num = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +53,27 @@ public class MakeStoryActivity extends AppCompatActivity {
         makeStory = new MakeStory(this, selectedTheme, selectedCharacters, gemini);
 
         makeStory.generateInitialStory();
-    }
 
+        choice1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(num<=5) {
+                    makeStory.generateNextStoryPart(choice1.getText().toString());
+                }
+                ++num;
+            }
+        });
+
+        choice2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(num<=5) {
+                    makeStory.generateNextStoryPart(choice2.getText().toString());
+                }
+                ++num;
+            }
+        });
+    }
 
     public void translate(final String storyText) {
         //선택한 테마 번역
