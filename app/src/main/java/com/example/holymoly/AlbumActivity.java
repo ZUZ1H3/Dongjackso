@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,11 +15,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
     private TextView name;
+    private ImageView profile;
     private ImageButton btnhome, btntrophy, btnsetting;
 
-    private FirebaseAuth auth;
-    private FirebaseUser user;
-    private FirebaseFirestore db;
     private UserInfo userInfo = new UserInfo();
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,15 +25,12 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
         setContentView(R.layout.activity_album);
 
         name = findViewById(R.id.mini_name);
+        profile = findViewById(R.id.mini_profile);
         btnhome = findViewById(R.id.ib_homebutton);
         btntrophy = findViewById(R.id.ib_trophy);
         btnsetting = findViewById(R.id.ib_setting);
 
-        auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
-        db = FirebaseFirestore.getInstance();
-
-        loadUserInfo(name);
+        loadUserInfo(profile, name);
 
         btnhome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +58,7 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
 
     }
     @Override
-    public void loadUserInfo(TextView name) {
-        userInfo.loadUserInfo(name);
+    public void loadUserInfo(ImageView profile, TextView name) {
+        userInfo.loadUserInfo(profile, name);
     }
 }

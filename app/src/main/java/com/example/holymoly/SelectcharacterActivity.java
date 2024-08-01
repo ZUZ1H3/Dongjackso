@@ -43,10 +43,8 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
     private String[] character = new String[10]; // 캐릭터 이름을 저장할 배열
     private boolean[] isChecked = new boolean[10]; // 체크 상태를 저장할 배열
     private TextView name;
+    private ImageView profile;
 
-    private FirebaseAuth auth;
-    private FirebaseUser user;
-    private FirebaseFirestore db;
     private UserInfo userInfo = new UserInfo();
 
     private Karlo karlo;
@@ -70,17 +68,14 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
             Toast.makeText(this, "테마가 없습니다", Toast.LENGTH_SHORT).show();
         }
 
+        profile = findViewById(R.id.mini_profile);
         name = findViewById(R.id.mini_name);
         btnhome = findViewById(R.id.ib_homebutton);
         btntrophy = findViewById(R.id.ib_trophy);
         btnsetting = findViewById(R.id.ib_setting);
         btnnext = findViewById(R.id.ib_nextStep);
 
-        auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
-        db = FirebaseFirestore.getInstance();
-
-        loadUserInfo(name);
+        loadUserInfo(profile, name);
 
         btnhome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -306,7 +301,7 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
     }
 
     @Override
-    public void loadUserInfo(TextView name) {
-        userInfo.loadUserInfo(name);
+    public void loadUserInfo(ImageView profile, TextView name) {
+        userInfo.loadUserInfo(profile, name);
     }
 }

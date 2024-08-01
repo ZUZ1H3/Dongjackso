@@ -6,22 +6,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/bg_home"
     tools:context=".SettingActivity">
-<ImageView
-    android:id="@+id/iv_container"
-    android:layout_width="315dp"
-    android:layout_height="110dp"
-    android:src="@drawable/ic_contain"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintVertical_bias="0.03"
-    app:layout_constraintHorizontal_bias="0.03"/>
+    <ImageView
+        android:id="@+id/iv_container"
+        android:layout_width="315dp"
+        android:layout_height="110dp"
+        android:src="@drawable/ic_contain"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.03"
+        app:layout_constraintHorizontal_bias="0.03"/>
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/mini_profile"
         android:layout_width="85dp"
         android:layout_height="85dp"
-        android:src="@drawable/ic_profile"
+        android:src="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.031"
@@ -57,6 +57,7 @@
         app:layout_constraintVertical_bias="0.06"
         app:layout_constraintHorizontal_bias="0.11" />
     <TextView
+        android:id="@+id/mini_nickname"
         android:layout_width="115dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ssurround"
