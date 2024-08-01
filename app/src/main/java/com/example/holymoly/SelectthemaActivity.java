@@ -20,10 +20,8 @@ public class SelectthemaActivity extends AppCompatActivity implements UserInfoLo
     private ImageButton btnhome, btntrophy, btnsetting, btnnext;
     private RadioGroup radioGroup;
     private TextView name;
+    private ImageView profile;
 
-    private FirebaseAuth auth;
-    private FirebaseUser user;
-    private FirebaseFirestore db;
     private UserInfo userInfo = new UserInfo();
 
     @Override
@@ -32,6 +30,7 @@ public class SelectthemaActivity extends AppCompatActivity implements UserInfoLo
         setContentView(R.layout.activity_selectthema);
 
         name = findViewById(R.id.mini_name);
+        profile = findViewById(R.id.mini_profile);
         btnhome = findViewById(R.id.ib_homebutton);
         btntrophy = findViewById(R.id.ib_trophy);
         btnsetting = findViewById(R.id.ib_setting);
@@ -39,11 +38,7 @@ public class SelectthemaActivity extends AppCompatActivity implements UserInfoLo
         radioGroup = findViewById(R.id.radioGroup);
         btnnext = findViewById(R.id.ib_nextStep);
 
-        auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
-        db = FirebaseFirestore.getInstance();
-
-        loadUserInfo(name);
+        loadUserInfo(profile, name);
 
         btnhome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,8 +141,7 @@ public class SelectthemaActivity extends AppCompatActivity implements UserInfoLo
         radioGroup.addView(view);
     }
     @Override
-    public void loadUserInfo(TextView name) {
-        userInfo.loadUserInfo(name);
+    public void loadUserInfo(ImageView profile, TextView name) {
+        userInfo.loadUserInfo(profile, name);
     }
-
 }

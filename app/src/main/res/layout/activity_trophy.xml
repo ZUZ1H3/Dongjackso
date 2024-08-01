@@ -23,7 +23,7 @@
         android:id="@+id/mini_profile"
         android:layout_width="85dp"
         android:layout_height="85dp"
-        android:src="@drawable/ic_profile"
+        android:src="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.031"

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -20,10 +21,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class TrophyActivity extends AppCompatActivity implements View.OnClickListener, UserInfoLoader{
     private TextView name;
     private ImageButton trophy, home, edit;
+    private ImageView profile;
 
-    private FirebaseAuth auth;
-    private FirebaseUser user;
-    private FirebaseFirestore db;
     private UserInfo userInfo = new UserInfo();
 
     @Override
@@ -32,15 +31,12 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_trophy);
 
         name = findViewById(R.id.mini_name);
+        profile = findViewById(R.id.mini_profile);
         trophy = findViewById(R.id.ib_bictrophy);
         home = findViewById(R.id.ib_homebutton);
         edit = findViewById(R.id.ib_edit);
 
-        auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
-        db = FirebaseFirestore.getInstance();
-
-        loadUserInfo(name);
+        loadUserInfo(profile, name);
 
         trophy.setOnClickListener(this);
         home.setOnClickListener(this);
@@ -62,7 +58,7 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
-    public void loadUserInfo(TextView name) {
-        userInfo.loadUserInfo(name);
+    public void loadUserInfo(ImageView profile, TextView name) {
+        userInfo.loadUserInfo(profile, name);
     }
 }

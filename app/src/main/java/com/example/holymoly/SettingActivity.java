@@ -1,10 +1,9 @@
 package com.example.holymoly;
 
 import android.content.Intent;
-import android.media.MediaPlayer;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -18,21 +17,31 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
-public class SettingActivity extends AppCompatActivity implements View.OnClickListener{
+import java.util.List;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
     EditText name, age;
     RadioButton rb_bgm_on, rb_bgm_off, rb_sound_on, rb_sound_off;
-    ImageButton custom, logout, pwdEdit;
+    CircleImageView profile;
+    ImageButton logout, pwdEdit, ok;
 
     private FirebaseAuth auth;
     private FirebaseUser user;
     private FirebaseFirestore db;
+    private FirebaseStorage storage;
+    private StorageReference storageRef;
+    private StorageReference charcterRef;
 
     private Spinner genderSpinner;
     private ArrayAdapter<String> adapter;
@@ -42,20 +51,25 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
-        name = (EditText)findViewById(R.id.et_name);
-        age = (EditText)findViewById(R.id.et_age);
-        custom = (ImageButton)findViewById(R.id.ib_custom);
-        logout = (ImageButton)findViewById(R.id.ib_logout);
-        pwdEdit = (ImageButton)findViewById(R.id.ib_pwdedit);
+        name = (EditText) findViewById(R.id.et_name);
+        age = (EditText) findViewById(R.id.et_age);
+        profile = (CircleImageView) findViewById(R.id.img_profile);
+        logout = (ImageButton) findViewById(R.id.ib_logout);
+        pwdEdit = (ImageButton) findViewById(R.id.ib_pwdedit);
+        ok = (ImageButton) findViewById(R.id.ib_ok);
         genderSpinner = findViewById(R.id.spinner_gender);
 
-        custom.setOnClickListener(this);
+        profile.setOnClickListener(this);
         logout.setOnClickListener(this);
         pwdEdit.setOnClickListener(this);
+        ok.setOnClickListener(this);
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
+        charcterRef = storageRef.child("characters/");
 
         // 사용자 기존 정보 로딩
         loadUserInfo();
@@ -92,18 +106,24 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.ib_custom) { updateUser(); }
-        if(v.getId() == R.id.ib_pwdedit) {
+        if (v.getId() == R.id.img_profile) {
+            Intent intent = new Intent(this, RegistrationActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.ib_pwdedit) {
             Intent intent = new Intent(this, ResetPasswordActivity.class);
             startActivity(intent);
-        }
-        if(v.getId() == R.id.ib_logout) {
+        } else if (v.getId() == R.id.ib_logout) {
             auth.signOut();
-            Toast.makeText(this, "로그아웃되었습니다..", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "로그아웃되었습니다.", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        } else if (v.getId() == R.id.ib_ok) {
+            updateUser();
+            Intent intent = new Intent(this, HomeActivity.class);
             startActivity(intent);
         }
     }
+
     // 캐릭터 수정 db 업데이트
     private void updateUser() {
         String userName = name.getText().toString();
@@ -119,15 +139,17 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                     Toast.makeText(this, "정보 수정에 실패했습니다: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
+
     // Firestore에서 사용자 정보 가져오기
     private void loadUserInfo() {
+        // 이름, 성별, 나이
         db.collection("users").document(user.getUid())
                 .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if(task.isSuccessful()) {
+                        if (task.isSuccessful()) {
                             DocumentSnapshot document = task.getResult();
-                            if(document.exists()) {
+                            if (document.exists()) {
                                 String userName = document.getString("name");
                                 String userAge = String.valueOf(document.getLong("age"));
                                 String userGender = document.getString("gender");
@@ -140,5 +162,33 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                         }
                     }
                 });
+        // 이미지 가져오기
+        charcterRef.listAll().addOnSuccessListener(listResult -> {
+            List<StorageReference> items = listResult.getItems();
+            for (StorageReference item : items) {
+                String img = item.getName();
+                // 파일 이름이 현재 사용자의 ID로 시작하는 경우
+                if (img.startsWith(user.getUid())) {
+                    final long MEGABYTE = 1024 * 1024; // 1MB
+                    item.getBytes(MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] bytes) {
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            Bitmap cBitmap = cropImage(bitmap);
+                            profile.setImageBitmap(cBitmap);
+                        }
+                    });
+                }
+            }
+        });
+    }
+    // 이미지 확대
+    private Bitmap cropImage(Bitmap bm) {
+        int cropW = 25;
+        int cropH = 5;
+        int newWidth = 452;
+        int newHeight = 440;
+
+        return Bitmap.createBitmap(bm, cropW, cropH, newWidth, newHeight);
     }
 }

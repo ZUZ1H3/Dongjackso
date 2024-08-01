@@ -1,31 +1,41 @@
 package com.example.holymoly;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.List;
 
 public class InfoActivity extends AppCompatActivity implements View.OnClickListener {
-    private EditText name;  // 이름
-    private EditText age;   // 나이
-    private ImageButton btnBoy;     // 남자 버튼
-    private ImageButton btnGirl;    // 여자 버튼
-    private ImageButton go;         // OK 버튼
+    private EditText name, age;  // 이름, 나이
+    private ImageButton btnBoy, btnGirl, go; // 남자, 여자, ok 버튼
+    private ImageView profile;
 
     private String selectedGender = ""; // 성별 선택
 
-    private FirebaseAuth mAuth;     // firebase 인증
+    private FirebaseAuth mAuth;     // firebase 사용자 인증
     private FirebaseFirestore db;   // firestore DB
+    private FirebaseUser user;      // firebase 사용자
+    private FirebaseStorage storage; // firebase Storage
+    private StorageReference storageRef;
+    private StorageReference charcterRef; // Storage 캐릭터 이미지 참조
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +47,20 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         btnBoy = (ImageButton) findViewById(R.id.btn_boy);
         btnGirl = (ImageButton) findViewById(R.id.btn_girl);
         go = (ImageButton) findViewById(R.id.btn_ok);
+        profile = (ImageView) findViewById(R.id.img_profile);
 
-        db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+        user = mAuth.getCurrentUser();  // 현재 접속한 사용자
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
+        charcterRef = storageRef.child("characters/"); // Storage의 characters 경로
 
         btnBoy.setOnClickListener(this);
         btnGirl.setOnClickListener(this);
         go.setOnClickListener(this);
+
+        loadImage(); // 캐릭터 이미지 가져오기
 
         // 나이 숫자만 가능하게 설정
         age.setFilters(new InputFilter[] { new InputFilter() {
@@ -105,5 +122,35 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "정보 저장에 실패했습니다: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
+    }
+    // 이미지 가져오기
+    private void loadImage() {
+        charcterRef.listAll().addOnSuccessListener(listResult -> {
+            List<StorageReference> items = listResult.getItems();
+            for (StorageReference item : items) {
+                String img = item.getName();
+                // 파일 이름이 현재 사용자의 ID로 시작하는 경우
+                if (img.startsWith(user.getUid())) {
+                    final long MEGABYTE = 1024 * 1024; // 1MB
+                    item.getBytes(MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                        @Override
+                        public void onSuccess(byte[] bytes) {
+                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                            Bitmap cBitmap = cropImage(bitmap);
+                            profile.setImageBitmap(cBitmap);
+                        }
+                    });
+                }
+            }
+        });
+    }
+    // 이미지 확대
+    private Bitmap cropImage(Bitmap bm) {
+        int cropW = 25;
+        int cropH = 5;
+        int newWidth = 452;
+        int newHeight = 440;
+
+        return Bitmap.createBitmap(bm, cropW, cropH, newWidth, newHeight);
     }
 }

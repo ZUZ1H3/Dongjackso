@@ -54,6 +54,8 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     // firebase auth
     implementation("com.google.firebase:firebase-auth:23.0.0")
+    // firebase storage - 파이어베이스 이미지 저장 공간
+    implementation("com.google.firebase:firebase-storage:21.0.0")
 
     // Gemini API 관련
     implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
