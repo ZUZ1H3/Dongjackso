@@ -152,21 +152,6 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
         }
     }
 
-    // URL에서 Bitmap 객체를 생성하는 메서드
-    private Bitmap getBitmapFromURL(String src) {
-        try {
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            return BitmapFactory.decodeStream(input);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     // 체크박스 배경 업데이트 메서드
     private void updateCheckBoxBackground(View customCheckBox, boolean isChecked) {
         ImageView imageView = customCheckBox.findViewById(R.id.checkbox_image);

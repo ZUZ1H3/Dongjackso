@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.method.ScrollingMovementMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 
 public class MakeStoryActivity extends AppCompatActivity {
     private boolean isImageLoaded = false; // 이미지 로드 상태를 추적하는 변수
-    private TextView storyTextView;
+    private TextView storyTextView, pageTextView;
     private Button choice1, choice2;
     private ImageView backgroundImageView;
     private String selectedTheme;
@@ -29,7 +30,7 @@ public class MakeStoryActivity extends AppCompatActivity {
     private Karlo karlo;
     private Gemini gemini;
     private MakeStory makeStory;
-    private int num = 0;
+    private int num = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +38,12 @@ public class MakeStoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_makestory);
 
         // UI 요소 초기화
-        storyTextView = findViewById(R.id.tv_pageText1);
+        storyTextView = findViewById(R.id.tv_pageText);
+        pageTextView = findViewById(R.id.tv_page);
         backgroundImageView = findViewById(R.id.background_image_view);
         choice1 = findViewById(R.id.btn_choice1);
         choice2 = findViewById(R.id.btn_choice2);
+        storyTextView.setMovementMethod(new ScrollingMovementMethod());
 
         // Intent로부터 데이터 가져오기
         Intent intent = getIntent();
@@ -54,15 +57,21 @@ public class MakeStoryActivity extends AppCompatActivity {
 
         makeStory.generateInitialStory();
 
+
         choice1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 choice1.setVisibility(View.INVISIBLE);
                 choice2.setVisibility(View.INVISIBLE);
-                if(num<=5) {
+                if (num < 5) {
                     makeStory.generateNextStoryPart(choice1.getText().toString());
+                    ++num;
+                    pageTextView.setText(num + " / 6");
+                } else {
+                    makeStory.generateEndStoryPart(choice1.getText().toString());
+                    ++num;
+                    pageTextView.setText(num + " / 6");
                 }
-                ++num;
             }
         });
 
@@ -71,10 +80,15 @@ public class MakeStoryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 choice1.setVisibility(View.INVISIBLE);
                 choice2.setVisibility(View.INVISIBLE);
-                if(num<=5) {
+                if (num < 5) {
                     makeStory.generateNextStoryPart(choice2.getText().toString());
+                    ++num;
+                    pageTextView.setText(num + " / 6");
+                } else {
+                    makeStory.generateEndStoryPart(choice2.getText().toString());
+                    ++num;
+                    pageTextView.setText(num + " / 6");
                 }
-                ++num;
 
             }
         });
@@ -121,7 +135,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                                 if (bitmap != null) { //이미지가 업로드 된 경우
                                     backgroundImageView.setImageBitmap(bitmap);
                                     isImageLoaded = true;
-                                    showToast(prompt);
+                                    //showToast(prompt);
                                     displayStoryText(storyText); //동화 출력
                                 } else {
                                     showToast("이미지 로드 실패");
@@ -148,7 +162,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                final int delay = 120;
+                final int delay = 60;
                 final int length = storyText.length();
                 storyTextView.setText("");
 
@@ -159,7 +173,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                         public void run() {
                             storyTextView.setText(storyText.substring(0, index));
                             if (index == length) {
-                                if (isImageLoaded) {
+                                if (isImageLoaded && num <=5) {
                                     makeStory.generateChoices(); // 이미지가 로드된 후에 선택지 생성
                                 }
                             }

@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MakeStoryActivity"
-    android:background="@color/white">
+    android:background="@color/white"
+    tools:context=".MakeStoryActivity">
+
     <ImageView
         android:id="@+id/background_image_view"
         android:layout_width="1280dp"
@@ -54,22 +55,6 @@
 
     <!--다음장으로 버튼-->
 
-    <TextView
-        android:id="@+id/tv_pageText1"
-        android:layout_width="550dp"
-        android:layout_height="480dp"
-        android:fontFamily="@font/ssurround"
-        android:gravity="left"
-        android:lineSpacingExtra="16dp"
-        android:text="이야기를 만드는 중입니다..."
-        android:textColor="@color/white"
-        android:textSize="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.054"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <!-- <ImageButton
         android:id="@+id/ib_nextPageButton"
         android:layout_width="wrap_content"
@@ -85,19 +70,55 @@
         app:layout_constraintVertical_bias="1.0" />
         -->
 
+    <TextView
+        android:id="@+id/tv_page"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:fontFamily="@font/ssurround"
+        android:gravity="left"
+        android:lineSpacingExtra="16dp"
+        android:scrollbars="vertical"
+        android:text=""
+        android:textColor="@color/white"
+        android:textSize="34dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.032"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.08" />
+
+    <TextView
+        android:id="@+id/tv_pageText"
+        android:layout_width="550dp"
+        android:layout_height="550dp"
+        android:fontFamily="@font/ssurround"
+        android:gravity="left"
+        android:lineSpacingExtra="16dp"
+        android:scrollbars="vertical"
+        android:text="이야기를 만드는 중입니다..."
+        android:textColor="@color/white"
+        android:textSize="30dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.052"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.724" />
+
     <Button
         android:id="@+id/btn_choice1"
         android:layout_width="560dp"
         android:layout_height="120dp"
         android:fontFamily="@font/ssurround"
         android:textSize="28sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.961"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.422"
-        android:visibility="invisible"/>
+        app:layout_constraintVertical_bias="0.422" />
 
     <Button
         android:id="@+id/btn_choice2"
@@ -105,12 +126,12 @@
         android:layout_height="120dp"
         android:fontFamily="@font/ssurround"
         android:textSize="28sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.961"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.677"
-        android:visibility="invisible"/>
+        app:layout_constraintVertical_bias="0.677" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
