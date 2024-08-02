@@ -65,6 +65,10 @@ public class MainActivity extends AppCompatActivity {
         auto.setChecked(sharedPreferences.getBoolean("autoLogin", false));
         checked = autoLogin ? 1 : 0;
 
+        // 액티비티가 시작될 때 MusicService를 시작
+        Intent startIntent = new Intent(this, MusicService.class);
+        startService(startIntent);
+
         // 비밀번호 숨기기 및 표시
         btnToggle.setOnClickListener(new View.OnClickListener() {
             @Override

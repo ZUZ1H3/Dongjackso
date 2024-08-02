@@ -6,42 +6,31 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/bg_main"
     tools:context=".AlbumActivity">
-    <!-- 왼쪽 위에 있는 프로필과 이름 -->
+    <!-- 상단 프로필 -->
     <ImageView
         android:id="@+id/iv_container"
-        android:layout_width="315dp"
-        android:layout_height="110dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:src="@drawable/ic_contain"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.03"
-        app:layout_constraintHorizontal_bias="0.03" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.022"
+        app:layout_constraintVertical_bias="0.03" />
+
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/mini_profile"
         android:layout_width="85dp"
         android:layout_height="85dp"
-        android:src="@drawable/ic_profile"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.031"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/iv_container"
-        app:layout_constraintVertical_bias="0.018" />
-    <TextView
-        android:id="@+id/mini_level"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ssurround"
-        android:textColor="@color/white"
-        android:textSize="22dp"
+        android:src="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_container"
-        app:layout_constraintVertical_bias="0.024"
-        app:layout_constraintHorizontal_bias="0.115" />
+        app:layout_constraintHorizontal_bias="0.023"
+        app:layout_constraintVertical_bias="0.011" />
+
     <TextView
         android:id="@+id/mini_name"
         android:layout_width="wrap_content"
@@ -54,22 +43,20 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/mini_level"
-        app:layout_constraintVertical_bias="0.06"
+        app:layout_constraintTop_toTopOf="@id/iv_container"
+        app:layout_constraintVertical_bias="0.078"
         app:layout_constraintHorizontal_bias="0.11" />
+
     <TextView
         android:id="@+id/mini_nickname"
-        android:layout_width="115dp"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ssurround"
-        android:gravity="center"
-        android:text="꼬마 작가"
+        android:text=" 꼬마 작가"
         android:textColor="@color/white"
         android:textSize="24dp"
-        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toEndOf="@+id/mini_name"
-        app:layout_constraintTop_toTopOf="@id/mini_name"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintTop_toTopOf="@id/mini_name" />
 
     <!--오른쪽 위에 버튼3개 / 트로피, 환경설정, 홈버튼 -->
     <ImageButton
