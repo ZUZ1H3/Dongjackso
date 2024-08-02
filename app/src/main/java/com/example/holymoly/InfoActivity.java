@@ -128,21 +128,14 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         userInfo.put("age", userAge);
         userInfo.put("gender", selectedGender);
 
-        if (user != null) {
-            db.collection("users").document(user.getUid())
-                    .set(userInfo, SetOptions.merge())
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(this, "정보가 저장되었습니다.", Toast.LENGTH_SHORT).show();
-                        Log.d(TAG, "정보가 성공적으로 저장되었습니다.");
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(this, "정보 저장에 실패했습니다: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.e(TAG, "정보 저장에 실패했습니다.", e);
-                    });
-        } else {
-            Toast.makeText(this, "사용자가 로그인되어 있지 않습니다.", Toast.LENGTH_SHORT).show();
-            Log.w(TAG, "사용자가 로그인되어 있지 않습니다.");
-        }
+        db.collection("users").document(user.getUid())
+                .set(userInfo, SetOptions.merge())
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "정보가 저장되었습니다.", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "정보 저장에 실패했습니다: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
     // 이미지 가져오기

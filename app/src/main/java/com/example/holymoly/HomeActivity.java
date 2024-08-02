@@ -34,8 +34,6 @@ public class HomeActivity extends AppCompatActivity implements UserInfoLoader {
         btnalbum = findViewById(R.id.ib_album);
         btnworld = findViewById(R.id.ib_world);
 
-        //loadUserInfo(profile, name);
-
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
