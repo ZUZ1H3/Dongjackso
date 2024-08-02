@@ -12,10 +12,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-
 public class SelectthemaActivity extends AppCompatActivity implements UserInfoLoader{
     private ImageButton btnhome, btntrophy, btnsetting, btnnext;
     private RadioGroup radioGroup;
@@ -66,10 +62,10 @@ public class SelectthemaActivity extends AppCompatActivity implements UserInfoLo
 
         // 커스텀 라디오 버튼 추가
         addCustomRadioButton("바다", R.drawable.radio_sea, R.id.thema_sea);
-        addCustomRadioButton("궁전", R.drawable.radio_cestle, R.id.thema_castle);
+        addCustomRadioButton("궁전", R.drawable.radio_castle, R.id.thema_castle);
         addCustomRadioButton("숲", R.drawable.radio_forest, R.id.thema_forest);
         addCustomRadioButton("마을", R.drawable.radio_village, R.id.thema_village);
-        addCustomRadioButton("우주", R.drawable.radio_house, R.id.thema_house);
+        addCustomRadioButton("우주", R.drawable.radio_space, R.id.thema_house);
 
         // btnnext 버튼 클릭 리스너 설정
         btnnext.setOnClickListener(new View.OnClickListener() {

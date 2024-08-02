@@ -60,6 +60,19 @@ public class CharacterData {
                 new CharacterInfo("?", R.drawable.ic_customcharacter)
         });
 
+        themeCharacterMap.put("우주", new CharacterInfo[]{
+                new CharacterInfo("별", R.drawable.ic_space1),
+                new CharacterInfo("우주인", R.drawable.ic_space2),
+                new CharacterInfo("우주괴물", R.drawable.ic_space3),
+                new CharacterInfo("외계인", R.drawable.ic_space4),
+                new CharacterInfo("달토끼", R.drawable.ic_space5),
+                new CharacterInfo("별의 요정", R.drawable.ic_space6),
+                new CharacterInfo("혜성", R.drawable.ic_space7),
+                new CharacterInfo("시간여행자", R.drawable.ic_space8),
+                new CharacterInfo("탐험가", R.drawable.ic_space9),
+                new CharacterInfo("?", R.drawable.ic_customcharacter)
+        });
+
     }
 
     // 캐릭터 정보 클래스
