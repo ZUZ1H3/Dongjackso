@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_main"
-    tools:context=".SelectthemaActivity">
+    tools:context=".CustomThemeActivity">
 
     <!--프로필관련-->
     <ImageView
@@ -45,6 +45,20 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_container"
         app:layout_constraintVertical_bias="0.024" />
+
+    <EditText
+        android:id="@+id/customTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ssurround"
+        android:hint="여기에 작성해주세요"
+        android:textColor="@color/white"
+        android:textSize="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_container"
+        app:layout_constraintVertical_bias="0.504" />
 
     <TextView
         android:id="@+id/mini_name"
@@ -132,14 +146,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.98" />
 
-    <!--테마를 선택해주세요+테마 text들-->
     <TextView
         android:id="@+id/tv_chooseChracter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ssurround"
         android:gravity="center"
-        android:text="동화 배경을 선택해 주세요"
+        android:text="원하는 테마를 작성해주세요"
         android:textColor="@color/white"
         android:textSize="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -150,22 +163,4 @@
         app:layout_constraintVertical_bias="0.3" />
 
 
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="21dp"
-        android:layout_marginLeft="80dp"
-        android:layout_marginRight="80dp"
-        android:scrollbars="none"
-        app:layout_constraintStart_toStartOf="@+id/tv_chooseChracter"
-        app:layout_constraintTop_toBottomOf="@+id/tv_chooseChracter">
-
-        <RadioGroup
-            android:id="@+id/radioGroup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="21dp"
-            android:gravity="center"
-            android:orientation="horizontal" />
-    </HorizontalScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
