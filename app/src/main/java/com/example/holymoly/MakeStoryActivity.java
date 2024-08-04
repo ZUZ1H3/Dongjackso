@@ -7,7 +7,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +26,8 @@ public class MakeStoryActivity extends AppCompatActivity {
     private boolean isImageLoaded = false; // 이미지 로드 상태를 추적하는 변수
     private TextView storyTextView, pageTextView;
     private Button choice1, choice2;
-    private ImageView backgroundImageView;
+    private ImageButton stopMakingBtn;
+    private ImageView backgroundImageView, loading;
     private String selectedTheme;
     private ArrayList<String> selectedCharacters;
     private Handler handler = new Handler();
@@ -31,6 +35,7 @@ public class MakeStoryActivity extends AppCompatActivity {
     private Gemini gemini;
     private MakeStory makeStory;
     private int num = 1;
+    private long backPressedTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +46,21 @@ public class MakeStoryActivity extends AppCompatActivity {
         storyTextView = findViewById(R.id.tv_pageText);
         pageTextView = findViewById(R.id.tv_page);
         backgroundImageView = findViewById(R.id.background_image_view);
+        loading = findViewById(R.id.ib_loading);
         choice1 = findViewById(R.id.btn_choice1);
         choice2 = findViewById(R.id.btn_choice2);
+        stopMakingBtn = findViewById(R.id.ib_stopMaking);
         storyTextView.setMovementMethod(new ScrollingMovementMethod());
+
+        MainActivity mainActivity = new MainActivity();
+
+        //지금까지 ArrayList에 저장한 액티비티 전부를 for문을 돌려서 finish한다.
+        for (int i = 0; i < mainActivity.actList().size(); i++) {
+            mainActivity.actList().get(i).finish();
+        }
+
+        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
+        loading.setAnimation(animation);
 
         // Intent로부터 데이터 가져오기
         Intent intent = getIntent();
@@ -92,7 +109,20 @@ public class MakeStoryActivity extends AppCompatActivity {
 
             }
         });
+
+        stopMakingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (System.currentTimeMillis() - backPressedTime >= 2000) {
+                    backPressedTime = System.currentTimeMillis();
+                    Toast.makeText(MakeStoryActivity.this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+                } else {
+                    finish();
+                }
+            }
+        });
     }
+
 
     public void translate(final String storyText) {
         //선택한 테마 번역
@@ -134,6 +164,9 @@ public class MakeStoryActivity extends AppCompatActivity {
                             public void run() {
                                 if (bitmap != null) { //이미지가 업로드 된 경우
                                     backgroundImageView.setImageBitmap(bitmap);
+                                    loading.getAnimation().cancel();
+                                    loading.clearAnimation();
+                                    loading.setVisibility(View.INVISIBLE);
                                     isImageLoaded = true;
                                     //showToast(prompt);
                                     displayStoryText(storyText); //동화 출력
@@ -173,7 +206,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                         public void run() {
                             storyTextView.setText(storyText.substring(0, index));
                             if (index == length) {
-                                if (isImageLoaded && num <=5) {
+                                if (isImageLoaded && num <= 5) {
                                     makeStory.generateChoices(); // 이미지가 로드된 후에 선택지 생성
                                 }
                             }

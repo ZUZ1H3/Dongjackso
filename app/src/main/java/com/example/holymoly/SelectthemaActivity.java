@@ -36,6 +36,9 @@ public class SelectthemaActivity extends AppCompatActivity implements UserInfoLo
 
         loadUserInfo(profile, name);
 
+        MainActivity mainActivity = new MainActivity();
+        mainActivity.actList().add(this);
+
         btnhome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -40,6 +40,9 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selectcharacter);
 
+        MainActivity mainActivity = new MainActivity();
+        mainActivity.actList().add(this);
+
         // Intent에서 테마를 가져옴
         Intent intent = getIntent();
         thema = intent.getStringExtra("selectedThema");
@@ -91,8 +94,8 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
             }
         });
 
-        btnnext.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
+        btnnext.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
                 ArrayList<String> selectedCharacters = new ArrayList<>();
                 for (int i = 0; i < isChecked.length; i++) {
                     if (isChecked[i]) {
