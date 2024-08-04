@@ -4,4 +4,6 @@
     <item name="thema_forest" type="id"/>
     <item name="thema_village" type="id"/>
     <item name="thema_house" type="id"/>
+    <item name="thema_desert" type="id"/>
+    <item name="thema_custom" type="id"/>
 </resources>

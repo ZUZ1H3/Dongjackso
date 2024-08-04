@@ -73,6 +73,19 @@ public class CharacterData {
                 new CharacterInfo("?", R.drawable.ic_customcharacter)
         });
 
+        themeCharacterMap.put("사막", new CharacterInfo[]{
+                new CharacterInfo("카멜레온", R.drawable.ic_desert1),
+                new CharacterInfo("사막여우", R.drawable.ic_desert2),
+                new CharacterInfo("미어캣", R.drawable.ic_desert3),
+                new CharacterInfo("탐험가", R.drawable.ic_desert4),
+                new CharacterInfo("낙타", R.drawable.ic_desert5),
+                new CharacterInfo("독수리", R.drawable.ic_desert6),
+                new CharacterInfo("상인", R.drawable.ic_desert7),
+                new CharacterInfo("스핑크스", R.drawable.ic_desert8),
+                new CharacterInfo("코브라", R.drawable.ic_desert9),
+                new CharacterInfo("?", R.drawable.ic_customcharacter)
+        });
+
     }
 
     // 캐릭터 정보 클래스
