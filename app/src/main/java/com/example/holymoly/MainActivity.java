@@ -28,6 +28,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     private TextView findpwd;
@@ -42,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
     private int checked = 0; // 자동 로그인 상태를 위한 변수
     private boolean autoLogin; // 라디오 버튼 상태
     private boolean isPasswordVisible = false;   // 비밀번호 표시 및 숨기기
+
+    public static ArrayList<Activity> actList = new ArrayList<Activity>(); //    스택에 쌓인 액티비티들 중 제거할 액티비티 리스트
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -179,5 +183,10 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, StartActivity.class);
             startActivity(intent);
         }
+    }
+
+    //제거할 액티비티를 리스트에 저장하기 위함
+    public ArrayList<Activity> actList(){
+        return actList;
     }
 }
