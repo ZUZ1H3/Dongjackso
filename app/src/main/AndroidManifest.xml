@@ -19,6 +19,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HolyMoly"
         tools:targetApi="31">
+        <activity
+            android:name=".CustomThemeActivity"
+            android:exported="false" />
+
         <service
             android:name=".MusicService"
             android:enabled="true"
