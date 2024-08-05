@@ -68,17 +68,19 @@
         app:layout_constraintTop_toTopOf="@id/et_id"
         app:layout_constraintVertical_bias="0.22" />
 
-    <RadioButton
-        android:id="@+id/rb_auto"
+    <CheckBox
+        android:id="@+id/cb_auto"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:gravity="center"
+        android:buttonTint="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.31"
+        app:layout_constraintHorizontal_bias="0.305"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/et_pwd"
         app:layout_constraintVertical_bias="0.21" />
+
     <TextView
         android:id="@+id/tv_auto"
         android:layout_width="wrap_content"
@@ -92,7 +94,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintHorizontal_bias="0.35"
-        app:layout_constraintTop_toTopOf="@id/rb_auto"
+        app:layout_constraintTop_toTopOf="@id/cb_auto"
         app:layout_constraintVertical_bias="0.031" />
     <TextView
         android:id="@+id/tv_findpwd"

@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView findpwd;
     private EditText etId, etPwd;
     private ImageButton btnLogin, btnJoin, btnToggle;
-    private RadioButton auto;
+    private CheckBox auto;
 
     private FirebaseAuth mAuth;
     private SharedPreferences sharedPreferences;
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btn_login);
         btnJoin = findViewById(R.id.btn_join);
         btnToggle = findViewById(R.id.btn_hidenshow);
-        auto = findViewById(R.id.rb_auto);
+        auto = findViewById(R.id.cb_auto);
 
         //배경음악 시작
         startService(new Intent(getApplicationContext(), MusicService.class));
