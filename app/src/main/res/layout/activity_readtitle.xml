@@ -8,19 +8,6 @@
     android:background="@drawable/bg_bookbackground">
 
     <!--나가기 버튼-->
-    <ImageButton
-        android:id="@+id/ib_outThisPage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_outthispage"
-        android:backgroundTint="#0000"
-        android:contentDescription="나가기"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.01"
-        app:layout_constraintHorizontal_bias="1.01" />
 
     <!--글자있는 반투명한 검은 사각형-->
     <ImageView
@@ -34,6 +21,21 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0"
         app:layout_constraintHorizontal_bias="0" />
+
+
+    <ImageButton
+        android:id="@+id/ib_stopMaking"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#0000"
+        android:contentDescription="그만만들기"
+        android:src="@drawable/ic_stopmaking"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.986"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.036" />
 
     <!--제목과 지은이 text-->
     <TextView
@@ -69,19 +71,6 @@
         app:layout_constraintHorizontal_bias="0.05" />
 
     <!--다음장으로 버튼-->
-    <ImageButton
-        android:id="@+id/ib_nextPageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_nextpagebutton"
-        android:backgroundTint="#0000"
-        android:contentDescription="다음장으로"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1"
-        app:layout_constraintHorizontal_bias="0.35" />
 
     <!--책 오른쪽 하단에 넘기는 모양-->
     <ImageButton
