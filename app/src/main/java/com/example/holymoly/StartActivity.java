@@ -40,13 +40,10 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         // Firestore에서 사용자 이름 가져오기
         db.collection("users").document(user.getUid())
                 .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            String userName = document.getString("name");
-                            name.setText(userName);
-                        }
+                .addOnSuccessListener(document -> {
+                    if (document.exists()) {
+                        String userName = document.getString("name");
+                        name.setText(userName);
                     }
                 });
     }
@@ -58,6 +55,9 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
             startActivity(intent);
         }
         // 안 할래 클릭 시
-        if(v.getId() == R.id.nope) finishAffinity();
+        if(v.getId() == R.id.nope) {
+            stopService(new Intent(this, MusicService.class));
+            finishAffinity();
+        }
     }
 }

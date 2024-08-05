@@ -1,6 +1,7 @@
 package com.example.holymoly;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -13,15 +14,11 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -45,6 +42,9 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     private Spinner genderSpinner;
     private ArrayAdapter<String> adapter;
+
+    private SharedPreferences pref;
+    private boolean isBgmOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +70,9 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
         charcterRef = storageRef.child("characters/");
+
+        pref = getSharedPreferences("music", MODE_PRIVATE);
+        isBgmOn = pref.getBoolean("on&off", true); // 기본값 켜짐
 
         // 사용자 기존 정보 로딩
         loadUserInfo();
@@ -100,8 +103,25 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         rb_sound_off = findViewById(R.id.rb_sound_off);
 
         // 라디오 버튼 기본 선택값 설정
-        rb_bgm_on.setChecked(true);
+        rb_bgm_on.setChecked(isBgmOn);
+        rb_bgm_off.setChecked(!isBgmOn);
         rb_sound_on.setChecked(true);
+
+        // 배경 음악 라디오 그룹 리스너 설정
+        rgBgm.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checked) {
+                if (checked == R.id.rb_bgm_on) {
+                    startService(new Intent(SettingActivity.this, MusicService.class));
+                } else if (checked == R.id.rb_bgm_off) {
+                    stopService(new Intent(SettingActivity.this, MusicService.class));
+                }
+            }
+        });
+        // 상태에 따라 음악 서비스 제어
+        if (isBgmOn) {
+            startService(new Intent(this, MusicService.class));
+        }
     }
 
     @Override
@@ -138,27 +158,35 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "정보 수정에 실패했습니다: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
+
+        // 설정 저장
+        SharedPreferences.Editor editor = getSharedPreferences("music", MODE_PRIVATE).edit();
+        boolean isBgmOn = rb_bgm_on.isChecked();
+        editor.putBoolean("on&off", isBgmOn);
+        editor.apply();
     }
 
     // Firestore에서 사용자 정보 가져오기
     private void loadUserInfo() {
-        // 이름, 성별, 나이
+        // 이름, 성별, 나이 가져오기
         db.collection("users").document(user.getUid())
-                .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            DocumentSnapshot document = task.getResult();
-                            if (document.exists()) {
-                                String userName = document.getString("name");
-                                String userAge = String.valueOf(document.getLong("age"));
-                                String userGender = document.getString("gender");
+                .get()
+                .addOnSuccessListener(document -> {
+                    if (document.exists()) {
+                        String userName = document.getString("name");
+                        String userAge = String.valueOf(document.getLong("age"));
+                        String userGender = document.getString("gender");
 
-                                name.setText(userName);
-                                age.setText(userAge);
-                                int spinnerPosition = adapter.getPosition(userGender);
-                                genderSpinner.setSelection(spinnerPosition);
-                            }
+                        name.setText(userName);
+                        age.setText(userAge);
+                        int spinnerPosition; // spinner 위치 지정 변수
+                        if(userGender.equals("남자")) {
+                            spinnerPosition = 1;
+                            genderSpinner.setSelection(spinnerPosition);
+                        }
+                        else {
+                            spinnerPosition = 2;
+                                    genderSpinner.setSelection(spinnerPosition);
                         }
                     }
                 });
@@ -184,7 +212,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     }
     // 이미지 확대
     private Bitmap cropImage(Bitmap bm) {
-        int cropW = 25;
+        int cropW = 30;
         int cropH = 5;
         int newWidth = 452;
         int newHeight = 440;
