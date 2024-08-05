@@ -152,7 +152,8 @@
         <HorizontalScrollView
             android:layout_gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
 
             <RadioGroup
                 android:id="@+id/rg_hair"
@@ -326,7 +327,8 @@
         <HorizontalScrollView
             android:layout_gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
             <RadioGroup
                 android:id="@+id/rg_clothes"
                 android:layout_width="wrap_content"
@@ -454,7 +456,8 @@
         <!-- 색상 선택 라디오 버튼 그룹 -->
         <HorizontalScrollView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
 
             <RadioGroup
                 android:id="@+id/rg_hairColor"
@@ -543,7 +546,8 @@
         <!-- 색상 선택 라디오 버튼 그룹 -->
         <HorizontalScrollView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
 
             <RadioGroup
                 android:id="@+id/rg_eyesColor"
