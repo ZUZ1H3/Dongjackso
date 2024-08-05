@@ -122,19 +122,6 @@
         app:layout_constraintVertical_bias="0.39"
         app:layout_constraintHorizontal_bias="0.092"/>
 
-    <!--캐릭터 눈동자 이미지뷰-->
-    <ImageView
-        android:id="@+id/iv_character_eyes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/iv_character_eyes"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_registration"
-        app:layout_constraintVertical_bias="0.48"
-        app:layout_constraintHorizontal_bias="0.164"/>
-
     <!--헤어레이아웃-->
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -284,6 +271,32 @@
         app:layout_constraintVertical_bias="0.33"
         app:layout_constraintHorizontal_bias="0"/>
 
+    <!--캐릭터 옷+몸 이미지뷰 위치수정XXXXXXX 여기선 이상해도 AVD에선 다르게나옴-->
+    <ImageView
+        android:id="@+id/iv_character_clothes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/iv_clothes_princessdress"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.805"
+        app:layout_constraintHorizontal_bias="0.113"/>
+
+    <!--캐릭터 눈동자 이미지뷰-->
+    <ImageView
+        android:id="@+id/iv_character_eyes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/iv_character_eyes"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_registration"
+        app:layout_constraintVertical_bias="0.48"
+        app:layout_constraintHorizontal_bias="0.164"/>
+
     <!--캐릭터 몸 이미지뷰-->
     <!--
     <ImageView
@@ -298,19 +311,6 @@
         app:layout_constraintVertical_bias="0.81"
         app:layout_constraintHorizontal_bias="0.113"/>
         -->
-
-    <!--캐릭터 옷+몸 이미지뷰 위치수정XXXXXXX 여기선 이상해도 AVD에선 다르게나옴-->
-    <ImageView
-        android:id="@+id/iv_character_clothes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/iv_clothes_princessdress"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.805"
-        app:layout_constraintHorizontal_bias="0.113"/>
 
     <!--옷 레이아웃-->
     <LinearLayout
