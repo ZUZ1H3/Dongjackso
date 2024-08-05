@@ -50,21 +50,16 @@ public class UserInfo implements UserInfoLoader {
         // 이름 가져오기
         db.collection("users").document(user.getUid())
                 .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            String userName = document.getString("name");
-
-                            name.setText(userName);
-                        }
+                .addOnSuccessListener(document -> {
+                    if (document.exists()) {
+                        String userName = document.getString("name");
+                        name.setText(userName);
                     }
                 });
-
     }
     // 이미지 확대
     private Bitmap cropImage(Bitmap bm) {
-        int cropW = 25;
+        int cropW = 30;
         int cropH = 5;
         int newWidth = 452;
         int newHeight = 440;

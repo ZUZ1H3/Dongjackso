@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -28,12 +29,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     private TextView findpwd;
     private EditText etId, etPwd;
     private ImageButton btnLogin, btnJoin, btnToggle;
-    private RadioButton auto;
+    private CheckBox auto;
 
     private FirebaseAuth mAuth;
     private SharedPreferences sharedPreferences;
@@ -42,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
     private int checked = 0; // 자동 로그인 상태를 위한 변수
     private boolean autoLogin; // 라디오 버튼 상태
     private boolean isPasswordVisible = false;   // 비밀번호 표시 및 숨기기
+
+    public static ArrayList<Activity> actList = new ArrayList<Activity>(); //    스택에 쌓인 액티비티들 중 제거할 액티비티 리스트
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,11 +64,15 @@ public class MainActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btn_login);
         btnJoin = findViewById(R.id.btn_join);
         btnToggle = findViewById(R.id.btn_hidenshow);
-        auto = findViewById(R.id.rb_auto);
+        auto = findViewById(R.id.cb_auto);
 
         // 자동 로그인 라디오 버튼 상태 설정
         auto.setChecked(sharedPreferences.getBoolean("autoLogin", false));
         checked = autoLogin ? 1 : 0;
+
+        // 액티비티가 시작될 때 MusicService를 시작
+        Intent startIntent = new Intent(this, MusicService.class);
+        startService(startIntent);
 
         // 비밀번호 숨기기 및 표시
         btnToggle.setOnClickListener(new View.OnClickListener() {
@@ -175,5 +184,10 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, StartActivity.class);
             startActivity(intent);
         }
+    }
+
+    //제거할 액티비티를 리스트에 저장하기 위함
+    public ArrayList<Activity> actList(){
+        return actList;
     }
 }
