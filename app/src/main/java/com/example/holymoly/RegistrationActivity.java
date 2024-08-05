@@ -3,6 +3,7 @@ package com.example.holymoly;
 import static java.lang.Thread.sleep;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -28,6 +29,12 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class RegistrationActivity extends AppCompatActivity {
+    //추가
+    private static final String PREFS_NAME = "CharacterPrefs";
+    private static final String KEY_HAIR = "selectedHair";
+    private static final String KEY_CLOTHES = "selectedClothes";
+    private static final String KEY_EYES = "selectedEyes";
+    private static final String KEY_HAIR_COLOR = "hairColor";
 
     private ImageButton ibNext;
     private RadioGroup rgCategory, rgHair, rgClothes, rgHairColor, rgEyesColor;
@@ -40,6 +47,9 @@ public class RegistrationActivity extends AppCompatActivity {
     private FirebaseStorage storage;
     private StorageReference storageRef;
 
+    //추가
+    private SharedPreferences sharedPreferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +60,9 @@ public class RegistrationActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
+
+        //추가
+        sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
         //카테고리 라디오 그룹
         rgCategory = findViewById(R.id.rg_category);
@@ -73,7 +86,6 @@ public class RegistrationActivity extends AppCompatActivity {
         ivHair = findViewById(R.id.iv_hair);
         ivEyesColor = findViewById(R.id.iv_character_eyes);
         ivClothes = findViewById(R.id.iv_character_clothes);
-
         ivFace = findViewById(R.id.iv_character_face);
 
         rgCategory.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -138,6 +150,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 } else if (checkedId == R.id.rb_hair_b_twohooks) {
                     ivHair.setImageResource(R.drawable.iv_hair_twohooks);
                 }
+                saveSelection(KEY_HAIR, checkedId);
             }
         });
 
@@ -159,6 +172,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 } else if (checkedId == R.id.rb_ec_blue) {
                     ivEyesColor.setImageResource(R.drawable.iv_eyes_blue);
                 }
+                saveSelection(KEY_EYES, checkedId);
             }
         });
 
@@ -179,8 +193,8 @@ public class RegistrationActivity extends AppCompatActivity {
             } else if (checkedId == R.id.rb_hc_blue) {
                 colorFilter = Color.parseColor("#7E8DB1"); // 파란색
             }
-
             ivHair.setColorFilter(colorFilter, PorterDuff.Mode.SRC_ATOP);
+            saveColorFilter(colorFilter);
         });
 
         //옷 버튼을 누르면 옷을 입혀주는 체크체인지리스너
@@ -209,8 +223,46 @@ public class RegistrationActivity extends AppCompatActivity {
                 } else if (checkedId == R.id.rb_clothes_cherry) {
                     ivClothes.setImageResource(R.drawable.iv_clothes_cherry);
                 }
+                saveSelection(KEY_CLOTHES, checkedId);
             }
         });
+
+        restoreSelection();
+    }
+
+    //추가
+    private void saveSelection(String key, int checkedId) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(key, checkedId);
+        editor.apply();
+    }
+
+    private void saveColorFilter(int colorFilter) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(KEY_HAIR_COLOR, colorFilter);
+        editor.apply();
+    }
+
+    private void restoreSelection() {
+        int savedHairId = sharedPreferences.getInt(KEY_HAIR, -1);
+        if (savedHairId != -1) {
+            rgHair.check(savedHairId);
+        }
+
+        int savedClothesId = sharedPreferences.getInt(KEY_CLOTHES, -1);
+        if (savedClothesId != -1) {
+            rgClothes.check(savedClothesId);
+        }
+
+        int savedEyesId = sharedPreferences.getInt(KEY_EYES, -1);
+        if (savedEyesId != -1) {
+            rgEyesColor.check(savedEyesId);
+        }
+
+        int savedHairColor = sharedPreferences.getInt(KEY_HAIR_COLOR, Color.TRANSPARENT);
+        if (savedHairColor != Color.TRANSPARENT) {
+            ivHair.setColorFilter(savedHairColor, PorterDuff.Mode.SRC_ATOP);
+        }
     }
 
     // 캐릭터 생성 및 Storage에 업로드
