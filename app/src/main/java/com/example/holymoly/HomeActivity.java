@@ -16,7 +16,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 public class HomeActivity extends AppCompatActivity implements UserInfoLoader {
-    private ImageButton btntrophy, btnsetting, btnmaking, btnalbum, btnworld;
+    private ImageButton btntrophy, btnsetting, btnmaking, btnalbum, btnworld, btndiary;
     private ImageView profile;
     private TextView name;
 
@@ -33,6 +33,7 @@ public class HomeActivity extends AppCompatActivity implements UserInfoLoader {
         btnmaking = findViewById(R.id.ib_making);
         btnalbum = findViewById(R.id.ib_album);
         btnworld = findViewById(R.id.ib_world);
+        btndiary = findViewById(R.id.ib_diaryHome);
 
         //loadUserInfo(profile, name);
 
@@ -80,6 +81,14 @@ public class HomeActivity extends AppCompatActivity implements UserInfoLoader {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, WorldActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        btndiary.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, Home2Activity.class);
                 startActivity(intent);
             }
         });

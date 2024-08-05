@@ -22,7 +22,8 @@ public class MakeStoryActivity extends AppCompatActivity {
     private boolean isImageLoaded = false; // 이미지 로드 상태를 추적하는 변수
     private TextView storyTextView;
     private Button choice1, choice2;
-    private ImageView backgroundImageView;
+    private TextView selectText1, selectText2;
+    private ImageView backgroundImageView, selectView1, selectView2;
     private String selectedTheme;
     private ArrayList<String> selectedCharacters;
     private Handler handler = new Handler();
@@ -39,8 +40,8 @@ public class MakeStoryActivity extends AppCompatActivity {
         // UI 요소 초기화
         storyTextView = findViewById(R.id.tv_pageText1);
         backgroundImageView = findViewById(R.id.background_image_view);
-        choice1 = findViewById(R.id.btn_choice1);
-        choice2 = findViewById(R.id.btn_choice2);
+        selectView1 = findViewById(R.id.iv_select1);
+        selectView2 = findViewById(R.id.iv_select2);
 
         // Intent로부터 데이터 가져오기
         Intent intent = getIntent();
@@ -150,13 +151,16 @@ public class MakeStoryActivity extends AppCompatActivity {
     public void showChoices(String choicesText) {
         String[] choices = choicesText.split("/");
         if (choices.length >= 2) {
-            choice1.setText(choices[0].trim());
-            choice2.setText(choices[1].trim());
+            selectText1.setText(choices[0].trim());
+            selectText2.setText(choices[1].trim());
         } else {
             showToast("선택지가 부족합니다.");
         }
-        choice1.setVisibility(View.VISIBLE);
-        choice2.setVisibility(View.VISIBLE);
+        selectView1.setVisibility(View.VISIBLE);
+        selectView2.setVisibility(View.VISIBLE);
+        selectText1.setVisibility(View.VISIBLE);
+        selectText2.setVisibility(View.VISIBLE);
+
     }
 
     // URL에서 Bitmap 객체를 생성하는 함수
