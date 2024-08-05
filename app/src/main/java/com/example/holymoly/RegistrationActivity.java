@@ -47,7 +47,6 @@ public class RegistrationActivity extends AppCompatActivity {
     private FirebaseStorage storage;
     private StorageReference storageRef;
 
-    //추가
     private SharedPreferences sharedPreferences;
 
     @Override
@@ -61,7 +60,7 @@ public class RegistrationActivity extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
 
-        //추가
+        //저장 sharedPreferences
         sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
 
         //카테고리 라디오 그룹
@@ -226,7 +225,6 @@ public class RegistrationActivity extends AppCompatActivity {
                 saveSelection(KEY_CLOTHES, checkedId);
             }
         });
-
         restoreSelection();
     }
 
