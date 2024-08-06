@@ -22,15 +22,14 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/mini_profile"
-        android:layout_width="85dp"
-        android:layout_height="85dp"
-        android:src="@color/white"
+        android:layout_width="86dp"
+        android:layout_height="86dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_container"
-        app:layout_constraintHorizontal_bias="0.023"
-        app:layout_constraintVertical_bias="0.011" />
+        app:layout_constraintHorizontal_bias="0.0225"
+        app:layout_constraintVertical_bias="0.0094" />
 
     <TextView
         android:id="@+id/mini_name"
@@ -45,7 +44,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_container"
-        app:layout_constraintVertical_bias="0.078"
+        app:layout_constraintVertical_bias="0.08"
         app:layout_constraintHorizontal_bias="0.11" />
 
     <TextView
@@ -89,15 +88,37 @@
 
     <ImageButton
         android:id="@+id/ib_bictrophy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="140dp"
+        android:layout_height="150dp"
         android:backgroundTint="#0000"
         android:contentDescription="트로피"
-        android:src="@drawable/ic_bictrophy"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.945"
+        app:layout_constraintHorizontal_bias="0.89"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.354" />
+        app:layout_constraintVertical_bias="0.4" />
+
+    <ImageView
+        android:id="@+id/iv_stroke1"
+        android:layout_width="230dp"
+        android:layout_height="300dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.43"
+        app:layout_constraintVertical_bias="0.88" />
+    <ImageView
+        android:id="@+id/iv_spot1"
+        android:layout_width="230dp"
+        android:layout_height="300dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.43"
+        app:layout_constraintVertical_bias="0.85" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

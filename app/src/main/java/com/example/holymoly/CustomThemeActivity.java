@@ -5,13 +5,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
-public class CustomThemeActivity extends AppCompatActivity {
+public class CustomThemeActivity extends AppCompatActivity implements UserInfoLoader{
 
     private EditText editTextTheme;
     private ImageButton btnOk;
+    private ImageView profile;
+    private TextView name;
+
+    private UserInfo userInfo = new UserInfo();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +26,10 @@ public class CustomThemeActivity extends AppCompatActivity {
 
         editTextTheme = findViewById(R.id.customTheme);
         btnOk = findViewById(R.id.ib_nextStep);
+        name = findViewById(R.id.mini_name);
+        profile = findViewById(R.id.mini_profile);
+
+        loadUserInfo(profile, name);
 
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -36,5 +46,10 @@ public class CustomThemeActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    public void loadUserInfo(ImageView profile, TextView name) {
+        userInfo.loadUserInfo(profile, name);
     }
 }

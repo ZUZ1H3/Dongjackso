@@ -249,10 +249,10 @@ public class RegistrationActivity extends AppCompatActivity {
         Bitmap finalBitmap = Bitmap.createBitmap(600, 600, Bitmap.Config.ARGB_8888);
 
         Canvas canvas = new Canvas(finalBitmap);
-        canvas.drawBitmap(cFaceBitmap, 86, 124, null);
-        canvas.drawBitmap(cHairBitmap, 0, -7, null);
-        canvas.drawBitmap(cClothesBitmap, 112, 292, null);
-        canvas.drawBitmap(cEyesBitmap, 188, 265, null);
+        canvas.drawBitmap(cFaceBitmap, 136, 124, null);
+        canvas.drawBitmap(cHairBitmap, 50, -7, null);
+        canvas.drawBitmap(cClothesBitmap, 162, 292, null);
+        canvas.drawBitmap(cEyesBitmap, 238, 265, null);
 
         return finalBitmap;
     }
