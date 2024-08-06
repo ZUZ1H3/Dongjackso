@@ -21,15 +21,14 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/mini_profile"
-        android:layout_width="85dp"
-        android:layout_height="85dp"
-        android:src="@color/white"
+        android:layout_width="86dp"
+        android:layout_height="86dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_container"
-        app:layout_constraintHorizontal_bias="0.023"
-        app:layout_constraintVertical_bias="0.011" />
+        app:layout_constraintHorizontal_bias="0.0225"
+        app:layout_constraintVertical_bias="0.0094" />
 
     <TextView
         android:id="@+id/mini_name"
@@ -44,7 +43,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_container"
-        app:layout_constraintVertical_bias="0.078"
+        app:layout_constraintVertical_bias="0.08"
         app:layout_constraintHorizontal_bias="0.11" />
 
     <TextView

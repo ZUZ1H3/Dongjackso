@@ -164,8 +164,8 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
     private Bitmap cropImage(Bitmap bm) {
         int cropW = 25;
         int cropH = 5;
-        int newWidth = 452;
-        int newHeight = 440;
+        int newWidth = 550;
+        int newHeight = 450;
 
         return Bitmap.createBitmap(bm, cropW, cropH, newWidth, newHeight);
     }
