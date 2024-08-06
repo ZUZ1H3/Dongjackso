@@ -23,15 +23,14 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/mini_profile"
-        android:layout_width="85dp"
-        android:layout_height="85dp"
-        android:src="@color/white"
+        android:layout_width="86dp"
+        android:layout_height="86dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_container"
-        app:layout_constraintHorizontal_bias="0.023"
-        app:layout_constraintVertical_bias="0.011" />
+        app:layout_constraintHorizontal_bias="0.0225"
+        app:layout_constraintVertical_bias="0.0094" />
 
     <TextView
         android:id="@+id/mini_name"
@@ -46,7 +45,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_container"
-        app:layout_constraintVertical_bias="0.078"
+        app:layout_constraintVertical_bias="0.08"
         app:layout_constraintHorizontal_bias="0.11" />
 
     <TextView
@@ -104,8 +103,8 @@
 
             <ImageView
                 android:id="@+id/iv_abox"
-                android:layout_width="860dp"
-                android:layout_height="560dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:src="@drawable/iv_abox"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -177,22 +176,21 @@
             </LinearLayout>
 
             <LinearLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/fairytaleAchievementLayout"
                 android:layout_width="830dp"
                 android:layout_height="400dp"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.7"
-                app:layout_constraintHorizontal_bias="0.5">
+                app:layout_constraintVertical_bias="0.7">
 
                 <ScrollView
-                    android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:scrollbars="none">
 
                     <LinearLayout
@@ -209,7 +207,7 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_trophy_achievement_background"/>
+                                android:src="@drawable/ic_trophy_achievement_background" />
 
                             <TextView
                                 android:id="@+id/tv_seaTrophy"
@@ -217,34 +215,34 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="left"
                                 android:layout_marginLeft="40dp"
-                                android:layout_marginTop="15dp"
+                                android:layout_marginTop="25dp"
+                                android:fontFamily="@font/ssurround"
                                 android:text="바다 동화 1개 만들기"
                                 android:textColor="#000000"
-                                android:textSize="35sp"
-                                android:fontFamily="@font/ssurround"/>
+                                android:textSize="35sp" />
 
                             <ImageButton
                                 android:id="@+id/ib_seaTrophy"
                                 android:layout_width="wrap_content"
                                 android:layout_height="48dp"
-                                android:src="@drawable/ic_btn_rewardbutton"
-                                android:background="@null"
                                 android:layout_gravity="right"
-                                android:layout_marginRight="110dp"
                                 android:layout_marginTop="15dp"
-                                android:contentDescription="바다 동화 보상 버튼"/>
+                                android:layout_marginRight="110dp"
+                                android:background="@null"
+                                android:contentDescription="바다 동화 보상 버튼"
+                                android:src="@drawable/ic_btn_rewardbutton" />
 
                             <TextView
                                 android:id="@+id/tv_seaTrophyPercent"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="right"
+                                android:layout_marginTop="27dp"
                                 android:layout_marginRight="155dp"
-                                android:layout_marginTop="21dp"
+                                android:fontFamily="@font/ssurround"
                                 android:text="0%"
                                 android:textColor="#000000"
-                                android:textSize="25sp"
-                                android:fontFamily="@font/ssurround"/>
+                                android:textSize="27sp" />
                         </FrameLayout>
 
                         <FrameLayout
@@ -256,7 +254,7 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_trophy_achievement_background"/>
+                                android:src="@drawable/ic_trophy_achievement_background" />
 
                             <TextView
                                 android:id="@+id/tv_forestTrophy"
@@ -264,34 +262,34 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="left"
                                 android:layout_marginLeft="40dp"
-                                android:layout_marginTop="15dp"
+                                android:layout_marginTop="25dp"
+                                android:fontFamily="@font/ssurround"
                                 android:text="숲 동화 1개 만들기"
                                 android:textColor="#000000"
-                                android:textSize="35sp"
-                                android:fontFamily="@font/ssurround"/>
+                                android:textSize="35sp" />
 
                             <ImageButton
                                 android:id="@+id/ib_forestTrophy"
                                 android:layout_width="wrap_content"
                                 android:layout_height="48dp"
-                                android:src="@drawable/ic_btn_rewardbutton"
-                                android:background="@null"
                                 android:layout_gravity="right"
-                                android:layout_marginRight="110dp"
                                 android:layout_marginTop="15dp"
-                                android:contentDescription="숲 동화 보상 버튼"/>
+                                android:layout_marginRight="110dp"
+                                android:background="@null"
+                                android:contentDescription="숲 동화 보상 버튼"
+                                android:src="@drawable/ic_btn_rewardbutton" />
 
                             <TextView
                                 android:id="@+id/tv_forestTrophyPercent"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="right"
+                                android:layout_marginTop="27dp"
                                 android:layout_marginRight="155dp"
-                                android:layout_marginTop="21dp"
+                                android:fontFamily="@font/ssurround"
                                 android:text="0%"
                                 android:textColor="#000000"
-                                android:textSize="25sp"
-                                android:fontFamily="@font/ssurround"/>
+                                android:textSize="25sp" />
                         </FrameLayout>
 
                         <FrameLayout
@@ -303,7 +301,7 @@
                             <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_trophy_achievement_background"/>
+                                android:src="@drawable/ic_trophy_achievement_background" />
 
                             <TextView
                                 android:id="@+id/tv_castleTrophy"
@@ -311,34 +309,34 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="left"
                                 android:layout_marginLeft="40dp"
-                                android:layout_marginTop="15dp"
+                                android:layout_marginTop="25dp"
+                                android:fontFamily="@font/ssurround"
                                 android:text="궁전 동화 1개 만들기"
                                 android:textColor="#000000"
-                                android:textSize="35sp"
-                                android:fontFamily="@font/ssurround"/>
+                                android:textSize="35sp" />
 
                             <ImageButton
                                 android:id="@+id/ib_castleTrophy"
                                 android:layout_width="wrap_content"
                                 android:layout_height="48dp"
-                                android:src="@drawable/ic_btn_rewardbutton"
-                                android:background="@null"
                                 android:layout_gravity="right"
-                                android:layout_marginRight="110dp"
                                 android:layout_marginTop="15dp"
-                                android:contentDescription="궁전 동화 보상 버튼"/>
+                                android:layout_marginRight="110dp"
+                                android:background="@null"
+                                android:contentDescription="궁전 동화 보상 버튼"
+                                android:src="@drawable/ic_btn_rewardbutton" />
 
                             <TextView
                                 android:id="@+id/tv_castleTrophyPercent"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="right"
+                                android:layout_marginTop="27dp"
                                 android:layout_marginRight="155dp"
-                                android:layout_marginTop="21dp"
+                                android:fontFamily="@font/ssurround"
                                 android:text="0%"
                                 android:textColor="#000000"
-                                android:textSize="25sp"
-                                android:fontFamily="@font/ssurround"/>
+                                android:textSize="25sp" />
                         </FrameLayout>
 
                         <FrameLayout
@@ -351,7 +349,7 @@
                                 android:id="@+id/iv_villageTrophy"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_trophy_achievement_background"/>
+                                android:src="@drawable/ic_trophy_achievement_background" />
 
                             <TextView
                                 android:id="@+id/tv_villageTrophy"
@@ -359,34 +357,34 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="left"
                                 android:layout_marginLeft="40dp"
-                                android:layout_marginTop="15dp"
+                                android:layout_marginTop="25dp"
+                                android:fontFamily="@font/ssurround"
                                 android:text="마을 동화 1개 만들기"
                                 android:textColor="#000000"
-                                android:textSize="35sp"
-                                android:fontFamily="@font/ssurround"/>
+                                android:textSize="35sp" />
 
                             <ImageButton
                                 android:id="@+id/ib_villageTrophy"
                                 android:layout_width="wrap_content"
                                 android:layout_height="48dp"
-                                android:src="@drawable/ic_btn_rewardbutton"
-                                android:background="@null"
                                 android:layout_gravity="right"
-                                android:layout_marginRight="110dp"
                                 android:layout_marginTop="15dp"
-                                android:contentDescription="마을 동화 보상 버튼"/>
+                                android:layout_marginRight="110dp"
+                                android:background="@null"
+                                android:contentDescription="마을 동화 보상 버튼"
+                                android:src="@drawable/ic_btn_rewardbutton" />
 
                             <TextView
                                 android:id="@+id/tv_villageTrophyPercent"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="right"
+                                android:layout_marginTop="27dp"
                                 android:layout_marginRight="155dp"
-                                android:layout_marginTop="21dp"
+                                android:fontFamily="@font/ssurround"
                                 android:text="0%"
                                 android:textColor="#000000"
-                                android:textSize="25sp"
-                                android:fontFamily="@font/ssurround"/>
+                                android:textSize="25sp" />
                         </FrameLayout>
 
                         <FrameLayout
@@ -400,7 +398,7 @@
                                 android:id="@+id/iv_universeTrophy"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:src="@drawable/ic_trophy_achievement_background"/>
+                                android:src="@drawable/ic_trophy_achievement_background" />
 
                             <TextView
                                 android:id="@+id/tv_universeTrophy"
@@ -408,34 +406,83 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="left"
                                 android:layout_marginLeft="40dp"
-                                android:layout_marginTop="15dp"
+                                android:layout_marginTop="25dp"
+                                android:fontFamily="@font/ssurround"
                                 android:text="우주 동화 1개 만들기"
                                 android:textColor="#000000"
-                                android:textSize="35sp"
-                                android:fontFamily="@font/ssurround"/>
+                                android:textSize="35sp" />
 
                             <ImageButton
                                 android:id="@+id/ib_universeTrophy"
                                 android:layout_width="wrap_content"
                                 android:layout_height="48dp"
-                                android:src="@drawable/ic_btn_rewardbutton"
-                                android:background="@null"
                                 android:layout_gravity="right"
-                                android:layout_marginRight="110dp"
                                 android:layout_marginTop="15dp"
-                                android:contentDescription="우주 동화 보상 버튼"/>
+                                android:layout_marginRight="110dp"
+                                android:background="@null"
+                                android:contentDescription="우주 동화 보상 버튼"
+                                android:src="@drawable/ic_btn_rewardbutton" />
 
                             <TextView
                                 android:id="@+id/tv_universeTrophyPercent"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="right"
+                                android:layout_marginTop="27dp"
                                 android:layout_marginRight="155dp"
-                                android:layout_marginTop="21dp"
+                                android:fontFamily="@font/ssurround"
                                 android:text="0%"
                                 android:textColor="#000000"
-                                android:textSize="25sp"
-                                android:fontFamily="@font/ssurround"/>
+                                android:textSize="25sp" />
+                        </FrameLayout>
+
+                        <FrameLayout
+                            android:id="@+id/desertTrophyLayout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginBottom="20dp">
+
+                            <ImageView
+                                android:id="@+id/iv_desertTrophy"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_trophy_achievement_background" />
+
+                            <TextView
+                                android:id="@+id/tv_desertTrophy"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:layout_marginLeft="40dp"
+                                android:layout_marginTop="25dp"
+                                android:fontFamily="@font/ssurround"
+                                android:text="사막 동화 1개 만들기"
+                                android:textColor="#000000"
+                                android:textSize="35sp" />
+
+                            <ImageButton
+                                android:id="@+id/ib_desertTrophy"
+                                android:layout_width="wrap_content"
+                                android:layout_height="48dp"
+                                android:layout_gravity="right"
+                                android:layout_marginTop="15dp"
+                                android:layout_marginRight="110dp"
+                                android:background="@null"
+                                android:contentDescription="사막 동화 보상 버튼"
+                                android:src="@drawable/ic_btn_rewardbutton" />
+
+                            <TextView
+                                android:id="@+id/tv_desertTrophyPercent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right"
+                                android:layout_marginTop="27dp"
+                                android:layout_marginRight="155dp"
+                                android:fontFamily="@font/ssurround"
+                                android:text="0%"
+                                android:textColor="#000000"
+                                android:textSize="25sp" />
                         </FrameLayout>
                     </LinearLayout>
                 </ScrollView>
@@ -452,7 +499,6 @@
                 android:layout_width="830dp"
                 android:layout_height="400dp"
                 android:orientation="vertical"
-                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
@@ -498,7 +544,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="140dp"
-                                android:layout_marginTop="25dp"
+                                android:layout_marginTop="27dp"
                                 android:fontFamily="@font/ssurround"
                                 android:text="트로피 0 / 1"
                                 android:textColor="#000000"
@@ -509,7 +555,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="right"
-                                android:layout_marginTop="15dp"
+                                android:layout_marginTop="24dp"
                                 android:layout_marginRight="210dp"
                                 android:fontFamily="@font/ssurround"
                                 android:text="꼬마 작가"
@@ -555,7 +601,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="140dp"
-                                android:layout_marginTop="25dp"
+                                android:layout_marginTop="27dp"
                                 android:fontFamily="@font/ssurround"
                                 android:text="트로피 0 / 5"
                                 android:textColor="#000000"
@@ -566,7 +612,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="right"
-                                android:layout_marginTop="15dp"
+                                android:layout_marginTop="24dp"
                                 android:layout_marginRight="190dp"
                                 android:fontFamily="@font/ssurround"
                                 android:text="새내기 작가"
@@ -612,7 +658,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="140dp"
-                                android:layout_marginTop="25dp"
+                                android:layout_marginTop="27dp"
                                 android:fontFamily="@font/ssurround"
                                 android:text="트로피 0 / 10"
                                 android:textColor="#000000"
@@ -623,7 +669,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="right"
-                                android:layout_marginTop="15dp"
+                                android:layout_marginTop="24dp"
                                 android:layout_marginRight="190dp"
                                 android:fontFamily="@font/ssurround"
                                 android:text="베테랑 작가"
@@ -670,7 +716,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="140dp"
-                                android:layout_marginTop="25dp"
+                                android:layout_marginTop="27dp"
                                 android:fontFamily="@font/ssurround"
                                 android:text="트로피 0 / 50"
                                 android:textColor="#000000"
@@ -681,7 +727,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="right"
-                                android:layout_marginTop="15dp"
+                                android:layout_marginTop="24dp"
                                 android:layout_marginRight="190dp"
                                 android:fontFamily="@font/ssurround"
                                 android:text="마스터 작가"

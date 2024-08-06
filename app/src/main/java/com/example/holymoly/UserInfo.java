@@ -59,9 +59,9 @@ public class UserInfo implements UserInfoLoader {
     }
     // 이미지 확대
     private Bitmap cropImage(Bitmap bm) {
-        int cropW = 30;
+        int cropW = 25;
         int cropH = 5;
-        int newWidth = 452;
+        int newWidth = 555;
         int newHeight = 440;
 
         return Bitmap.createBitmap(bm, cropW, cropH, newWidth, newHeight);
