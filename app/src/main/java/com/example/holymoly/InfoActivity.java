@@ -45,7 +45,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
     private FirebaseUser user;      // firebase 사용자
     private FirebaseStorage storage; // firebase Storage
     private StorageReference storageRef;
-    private StorageReference charcterRef; // Storage 캐릭터 이미지 참조
+    private StorageReference characterRef; // Storage 캐릭터 이미지 참조
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +65,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         user = mAuth.getCurrentUser();  // 현재 접속한 사용자
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
-        charcterRef = storageRef.child("characters/"); // Storage의 characters 경로
+        characterRef = storageRef.child("characters/"); // Storage의 characters 경로
 
         btnBoy.setOnClickListener(this);
         btnGirl.setOnClickListener(this);
@@ -140,7 +140,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
 
     // 이미지 가져오기
     private void loadImage() {
-        charcterRef.listAll().addOnSuccessListener(listResult -> {
+        characterRef.listAll().addOnSuccessListener(listResult -> {
             List<StorageReference> items = listResult.getItems();
             for (StorageReference item : items) {
                 String img = item.getName();
