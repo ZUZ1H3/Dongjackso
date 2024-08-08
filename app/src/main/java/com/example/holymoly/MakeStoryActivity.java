@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -26,7 +27,7 @@ public class MakeStoryActivity extends AppCompatActivity {
     private boolean isImageLoaded = false; // 이미지 로드 상태를 추적하는 변수
     private TextView storyTextView, pageTextView;
     private Button choice1, choice2;
-    private ImageButton stopMakingBtn;
+    private ImageButton stopMakingBtn, nextBtn;
     private ImageView backgroundImageView, loading;
     private String selectedTheme;
     private ArrayList<String> selectedCharacters;
@@ -50,6 +51,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         choice1 = findViewById(R.id.btn_choice1);
         choice2 = findViewById(R.id.btn_choice2);
         stopMakingBtn = findViewById(R.id.ib_stopMaking);
+        nextBtn = findViewById(R.id.ib_nextStep);
         storyTextView.setMovementMethod(new ScrollingMovementMethod());
 
         MainActivity mainActivity = new MainActivity();
@@ -88,6 +90,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                     makeStory.generateEndStoryPart(choice1.getText().toString());
                     ++num;
                     pageTextView.setText(num + " / 6");
+                    //nextBtn.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -105,6 +108,8 @@ public class MakeStoryActivity extends AppCompatActivity {
                     makeStory.generateEndStoryPart(choice2.getText().toString());
                     ++num;
                     pageTextView.setText(num + " / 6");
+                    //nextBtn.setVisibility(View.VISIBLE);
+
                 }
 
             }
@@ -121,6 +126,21 @@ public class MakeStoryActivity extends AppCompatActivity {
                 }
             }
         });
+
+        nextBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isImageLoaded) {
+                    byte[] imageBytes = (byte[]) nextBtn.getTag();
+                    Intent intent = new Intent(MakeStoryActivity.this, ReadtitleActivity.class);
+                    intent.putExtra("backgroundImageBytes", imageBytes);
+                    startActivity(intent);
+                } else {
+                    showToast("이미지가 로드되지 않았습니다.");
+                }
+            }
+        });
+
     }
 
 
@@ -152,9 +172,9 @@ public class MakeStoryActivity extends AppCompatActivity {
 
     private void generateBackgroundImage(String prompt, String storyText) {
         String negativePrompt = "ugly, worst quality, low quality, normal quality, watermark, distorted face, poorly drawn face, framework";
-        karlo.requestImage(prompt, negativePrompt, new Karlo.Callback() { //karlo로 이미지 생성
+        karlo.requestImage(prompt, negativePrompt, new Karlo.Callback() {
             @Override
-            public void onSuccess(String imageUrl) { //성공한 경우
+            public void onSuccess(String imageUrl) {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -162,14 +182,18 @@ public class MakeStoryActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (bitmap != null) { //이미지가 업로드 된 경우
+                                if (bitmap != null) {
                                     backgroundImageView.setImageBitmap(bitmap);
                                     loading.getAnimation().cancel();
                                     loading.clearAnimation();
                                     loading.setVisibility(View.INVISIBLE);
                                     isImageLoaded = true;
-                                    //showToast(prompt);
-                                    displayStoryText(storyText); //동화 출력
+
+                                    // 비트맵을 ByteArray로 변환하여 인텐트에 저장
+                                    byte[] imageBytes = convertBitmapToByteArray(bitmap);
+                                    nextBtn.setTag(imageBytes);
+
+                                    displayStoryText(storyText);
                                 } else {
                                     showToast("이미지 로드 실패");
                                 }
@@ -190,6 +214,7 @@ public class MakeStoryActivity extends AppCompatActivity {
             }
         });
     }
+
 
     public void displayStoryText(final String storyText) {
         handler.post(new Runnable() {
@@ -238,14 +263,59 @@ public class MakeStoryActivity extends AppCompatActivity {
             connection.setDoInput(true);
             connection.connect();
             InputStream input = connection.getInputStream();
-            return BitmapFactory.decodeStream(input);
+
+            // 비트맵의 크기를 조절하기 위해 비트맵을 먼저 Decode 해보기
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            BitmapFactory.decodeStream(input, null, options);
+            input.close();
+
+            // 비트맵의 크기를 조절하기 위한 샘플링 비율을 계산
+            options.inSampleSize = calculateInSampleSize(options, 1280, 800);
+            options.inJustDecodeBounds = false;
+
+            // 크기를 조절하여 비트맵을 Decode
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            input = connection.getInputStream();
+            return BitmapFactory.decodeStream(input, null, options);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
     }
 
+    // 비트맵 샘플링 비율을 계산하는 메서드
+    public int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // 원본 이미지의 크기
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // 이미지의 크기를 절반으로 줄이면서 요청된 크기와 비교
+            while ((halfHeight / inSampleSize) >= reqHeight && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
+    }
+
+
     private void showToast(String message) {
         Toast.makeText(MakeStoryActivity.this, message, Toast.LENGTH_SHORT).show();
     }
+
+    private byte[] convertBitmapToByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos); // JPEG 포맷으로 압축, 압축 비율 80%
+        return baos.toByteArray();
+    }
+
+
 }

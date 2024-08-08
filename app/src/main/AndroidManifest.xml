@@ -74,6 +74,9 @@
             android:name=".RegistrationActivity"
             android:exported="true" />
         <activity
+            android:name=".ReadtitleActivity"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
