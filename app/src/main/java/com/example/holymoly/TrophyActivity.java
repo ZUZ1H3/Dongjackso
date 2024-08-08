@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -29,14 +30,8 @@ import java.util.List;
 public class TrophyActivity extends AppCompatActivity implements View.OnClickListener, UserInfoLoader{
     private TextView name;
     private ImageButton trophy, home, edit;
-    private ImageView profile, spot1, high1;
-
-    private FirebaseAuth auth = FirebaseAuth.getInstance();
-    private FirebaseUser user = auth.getCurrentUser();
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseStorage storage = FirebaseStorage.getInstance();
-    private StorageReference storageRef = storage.getReference();
-    StorageReference charcterRef = storageRef.child("characters/");
+    private ImageView profile;
+    private CustomImageView spot1, spot2, spot3, spot4;
 
     private UserInfo userInfo = new UserInfo();
 
@@ -50,11 +45,18 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
         home = findViewById(R.id.ib_homebutton);
         edit = findViewById(R.id.ib_edit);
         profile = findViewById(R.id.mini_profile);
-        spot1 = findViewById(R.id.iv_spot1);
-       // high1 = findViewById(R.id.iv_high);
 
-        loadUserInfo(profile, name);
-        loadCharImage();
+        spot1 = findViewById(R.id.iv_spot1);
+        spot2 = findViewById(R.id.iv_spot2);
+        spot3 = findViewById(R.id.iv_spot3);
+        spot4 = findViewById(R.id.iv_spot4);
+
+        loadUserInfo(profile, name); // 미니 프로필 불러오기
+
+        spot1.loadImage(); // 첫 번째 위치에 캐릭터 생성
+        spot2.loadImage(); // 두 번째 위치에 캐릭터 생성
+        spot3.loadImage(); // 세 번째 위치에 캐릭터 생성
+        spot4.loadImage(); // 네 번째 위치에 캐릭터 생성
 
         trophy.setOnClickListener(this);
         home.setOnClickListener(this);
@@ -78,26 +80,5 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void loadUserInfo(ImageView profile, TextView name) {
         userInfo.loadUserInfo(profile, name);
-    }
-
-    public void loadCharImage() {
-        // 이미지 가져오기
-        charcterRef.listAll().addOnSuccessListener(listResult -> {
-            List<StorageReference> items = listResult.getItems();
-            for (StorageReference item : items) {
-                String img = item.getName();
-                // 파일 이름이 현재 사용자의 ID로 시작하는 경우
-                if (img.startsWith(user.getUid())) {
-                    final long MEGABYTE = 1024 * 1024; // 1MB
-                    item.getBytes(MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                        @Override
-                        public void onSuccess(byte[] bytes) {
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                            spot1.setImageBitmap(bitmap);
-                        }
-                    });
-                }
-            }
-        });
     }
 }
