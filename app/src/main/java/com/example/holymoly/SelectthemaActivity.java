@@ -210,6 +210,7 @@ public class SelectthemaActivity extends AppCompatActivity implements UserInfoLo
             }
         });
     }
+
     private void generateImage(String prompt) {
         karlo.requestImage(prompt, "", new Karlo.Callback() {
             @Override

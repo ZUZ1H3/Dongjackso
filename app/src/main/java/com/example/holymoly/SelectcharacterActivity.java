@@ -105,7 +105,7 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
                                 String customCharacter = data.getStringExtra("customCharacter");
                                 if (customCharacter != null) {
                                     updateCustomCheckBoxText(customCharacter);
-                                    //translateTheme(customCharacter); // 테마를 번역하고 이미지를 생성
+                                    translateCharacter(customCharacter); // 테마를 번역하고 이미지를 생성
                                 }
                             }
                         }
@@ -318,7 +318,45 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
             }
         });
     }
+    private void translateCharacter(String characterName){
+        String prompt = "Translate the following theme to English: " + characterName + ". Please provide a concise, single-word or short-phrase answer.";
+        gemini.generateText(prompt, new Gemini.Callback() {
+            @Override
+            public void onSuccess(String theme) {
+                String prompt = "Dreamy, fairytale, cute, smooth, fancy, twinkle, bright, cartoon style " + theme;
+                generateImage(prompt);
+            }
 
+            @Override
+            public void onFailure(Throwable t) {
+                Toast.makeText(SelectcharacterActivity.this, "테마 번역 실패: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void generateImage(String prompt) {
+        karlo.requestImage(prompt, "", new Karlo.Callback() {
+            @Override
+            public void onSuccess(String imageUrl) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadBitmapFromUrl(imageUrl);
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(SelectcharacterActivity.this, "이미지 생성 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
 
     // URL에서 Bitmap 객체를 생성하는 메서드
     private Bitmap getBitmapFromURL(String src) {
@@ -334,6 +372,42 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
             return null;
         }
     }
+
+    private void loadBitmapFromUrl(String imageUrl) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL(imageUrl);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setDoInput(true);
+                    connection.connect();
+                    InputStream input = connection.getInputStream();
+                    Bitmap bitmap = BitmapFactory.decodeStream(input);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateCustomCheckBoxImage(bitmap);
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(SelectcharacterActivity.this, "이미지 로드 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+        }).start();
+    }
+
+    private void updateCustomCheckBoxImage(Bitmap bitmap) {
+        ImageView imageView = customCheckBoxes[9].findViewById(R.id.checkbox_image);
+            Bitmap circularBitmap = getCircularBitmap(bitmap);
+            imageView.setImageBitmap(circularBitmap);
+        }
 
     // 이미지를 원형으로 만드는 메서드
     private Bitmap getCircularBitmap(Bitmap bitmap) {
