@@ -19,6 +19,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,6 +48,7 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
     private String[] character = new String[10]; // 캐릭터 이름을 저장할 배열
     private Gemini gemini;
     private Karlo karlo;
+    private ActivityResultLauncher<Intent> customCharacterLauncher;// ActivityResultLauncher 선언 (커스텀 캐릭터 액티비티에서 결과를 받기 위함)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,32 +57,9 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
 
         MainActivity mainActivity = new MainActivity();
         mainActivity.actList().add(this);
+
         gemini = new Gemini();
         karlo = new Karlo();
-
-        // Intent에서 테마를 가져옴
-        Intent intent = getIntent();
-        thema = intent.getStringExtra("selectedThema");
-        if (thema != null) {
-            // 테마에 따른 캐릭터 이름 요청
-            characters = CharacterData.themeCharacterMap.get(thema);
-        } else {
-            Toast.makeText(this, "테마가 없습니다", Toast.LENGTH_SHORT).show();
-            finish();
-            return;
-        }
-
-        if (characters == null) {
-            randomCharacters(thema);
-            //Toast.makeText(this, "해당 테마에 대한 캐릭터가 없습니다", Toast.LENGTH_SHORT).show();
-            //finish();
-            return;
-        } else {
-            initializeUI();
-        }
-    }
-
-    private void initializeUI() {
         profile = findViewById(R.id.mini_profile);
         name = findViewById(R.id.mini_name);
         btnhome = findViewById(R.id.ib_homebutton);
@@ -110,6 +92,47 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
                 startActivity(intent);
             }
         });
+
+        // ActivityResultLauncher 초기화
+        customCharacterLauncher = registerForActivityResult( // ActivityResultLauncher 초기화
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == RESULT_OK) {
+                            Intent data = result.getData();
+                            if (data != null) {
+                                String customCharacter = data.getStringExtra("customCharacter");
+                                if (customCharacter != null) {
+                                    updateCustomCheckBoxText(customCharacter);
+                                    //translateTheme(customCharacter); // 테마를 번역하고 이미지를 생성
+                                }
+                            }
+                        }
+                    }
+                });
+
+        // Intent에서 테마를 가져옴
+        Intent intent = getIntent();
+        thema = intent.getStringExtra("selectedThema");
+        if (thema != null) {
+            // 테마에 따른 캐릭터 이름 요청
+            characters = CharacterData.themeCharacterMap.get(thema);
+        } else {
+            Toast.makeText(this, "테마가 없습니다", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        if (characters == null) {
+            randomCharacters(thema);
+
+        } else {
+            initializeUI();
+        }
+    }
+
+    private void initializeUI() {
 
         btnnext.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -146,6 +169,12 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
             customCheckBoxes[i].setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    TextView textView = customCheckBoxes[index].findViewById(R.id.checkbox_text);
+                    if ("?".equals(textView.getText().toString())) {
+                        Intent intent = new Intent(SelectcharacterActivity.this, CustomCharacterActivity.class);
+                        customCharacterLauncher.launch(intent);
+                    }
+
                     isChecked[index] = !isChecked[index]; // 상태 변경
                     updateCheckBoxBackground(customCheckBoxes[index], isChecked[index]); // 배경 업데이트
                 }
@@ -176,9 +205,17 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
     private void updateCheckBoxBackground(View customCheckBox, boolean isChecked) {
         ImageView imageView = customCheckBox.findViewById(R.id.checkbox_image);
         BitmapDrawable drawable = (BitmapDrawable) imageView.getDrawable();
+
         if (drawable != null) {
             int alpha = isChecked ? 128 : 255; // 체크되었을 때는 투명도 50%, 체크 해제 시 투명도 100%
             drawable.setAlpha(alpha);
+        }
+    }
+
+    private void updateCustomCheckBoxText(String newText) {
+        TextView textView = customCheckBoxes[9].findViewById(R.id.checkbox_text);
+        if ("?".equals(textView.getText().toString())) {
+            textView.setText(newText);
         }
     }
 
@@ -228,6 +265,7 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
         });
     }
 
+    // 커스텀 테마의 등장인물 이미지를 생성
     private void generateImage(String characterName, View customCheckBox) {
         translateCharacter(characterName, new Gemini.Callback() {
             @Override
@@ -316,6 +354,4 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
         canvas.drawCircle(minEdge / 2f, minEdge / 2f, minEdge / 2f, paint);
         return output;
     }
-
-
 }

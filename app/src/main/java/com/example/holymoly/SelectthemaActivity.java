@@ -273,7 +273,6 @@ public class SelectthemaActivity extends AppCompatActivity implements UserInfoLo
         }
     }
 
-
     private Bitmap getCircularBitmap(Bitmap bitmap) {
         int width = bitmap.getWidth();
         int height = bitmap.getHeight();

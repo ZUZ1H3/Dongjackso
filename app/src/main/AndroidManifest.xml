@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.holymoly">
-
     <!-- 패키지 경로 추가 -->
     <uses-permission android:name="android.permission.ACCEPT_INTERNET" />
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 외부 저장소 허용 -->
@@ -20,13 +19,16 @@
         android:theme="@style/Theme.HolyMoly"
         tools:targetApi="31">
         <activity
+            android:name=".CustomCharacterActivity"
+            android:exported="false" />
+        <activity
             android:name=".CustomThemeActivity"
             android:exported="false" />
 
         <service
             android:name=".MusicService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity
             android:name=".JoinActivity"
@@ -75,6 +77,9 @@
             android:exported="true" />
         <activity
             android:name=".ReadtitleActivity"
+            android:exported="true" />
+        <activity
+            android:name=".MakeBookcoverActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"
