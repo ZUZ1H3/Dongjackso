@@ -3,10 +3,16 @@ package com.example.holymoly;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,6 +41,10 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
 
     private UserInfo userInfo = new UserInfo();
 
+    private String[] character = new String[10]; // 캐릭터 이름을 저장할 배열
+    private Gemini gemini;
+    private Karlo karlo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +52,8 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
 
         MainActivity mainActivity = new MainActivity();
         mainActivity.actList().add(this);
+        gemini = new Gemini();
+        karlo = new Karlo();
 
         // Intent에서 테마를 가져옴
         Intent intent = getIntent();
@@ -56,11 +68,16 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
         }
 
         if (characters == null) {
-            Toast.makeText(this, "해당 테마에 대한 캐릭터가 없습니다", Toast.LENGTH_SHORT).show();
-            finish();
+            randomCharacters(thema);
+            //Toast.makeText(this, "해당 테마에 대한 캐릭터가 없습니다", Toast.LENGTH_SHORT).show();
+            //finish();
             return;
+        } else {
+            initializeUI();
         }
+    }
 
+    private void initializeUI() {
         profile = findViewById(R.id.mini_profile);
         name = findViewById(R.id.mini_name);
         btnhome = findViewById(R.id.ib_homebutton);
@@ -169,4 +186,136 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
     public void loadUserInfo(ImageView profile, TextView name) {
         userInfo.loadUserInfo(profile, name);
     }
+
+    private void randomCharacters(String thema) {
+        String prompt = thema + "테마를 주제로 동화를 만들려고 합니다." +
+                "동화에 어울릴만한 등장인물의 후보가 10개 필요합니다. 1~5글자로 단답형으로 답해주세요." +
+                "장소, 날씨가 등장인물이 될 수는 없으니 제외해주세요. 중복은 없어야 하며 비슷한 개념도 제외해주세요." +
+                "예를 들어, '용'과 '드래곤'은 같은 개념입니다. '사탕'과 '캔디'도 뜻이 일치하기 때문에 같은 개념입니다." +
+                "후보와 후보 사이에는 ', '로 띄어주세요." +
+                "그러면 저희는 당신이 정해준 후보들 중 몇 개를 선택하여 동화를 만들 것입니다." +
+                "당신이 답변 할 형식의 예시는 이렇습니다. '공주, 왕자, 물고기, 나무, 토끼, 거북이, 호랑이, 나비, 엄마, 동생";
+        gemini.generateText(prompt, new Gemini.Callback() {
+            @Override
+            public void onSuccess(String text) {
+                String[] characterNamesArray = text.split(", ");
+                characters = new CharacterData.CharacterInfo[characterNamesArray.length];
+
+                // 캐릭터 생성 완료 후에 한 번만 Toast 메시지 표시
+                runOnUiThread(() -> Toast.makeText(SelectcharacterActivity.this, "캐릭터 생성 완료.", Toast.LENGTH_SHORT).show());
+
+                for (int i = 0; i < characterNamesArray.length; i++) {
+                    characters[i] = new CharacterData.CharacterInfo(characterNamesArray[i], R.drawable.ic_customcharacter);
+                }
+
+                runOnUiThread(() -> {
+                    initializeUI();
+                    for (int i = 0; i < characterNamesArray.length; i++) {
+                        if (characters[i] != null) {
+                            generateImage(characterNamesArray[i], customCheckBoxes[i]);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                runOnUiThread(() -> {
+                    Toast.makeText(SelectcharacterActivity.this, "캐릭터를 생성하는데 실패했습니다.", Toast.LENGTH_SHORT).show();
+                    finish();
+                });
+            }
+        });
+    }
+
+    private void generateImage(String characterName, View customCheckBox) {
+        translateCharacter(characterName, new Gemini.Callback() {
+            @Override
+            public void onSuccess(String translatedName) {
+                if (translatedName != null) {
+                    String prompt = "Dreamy, cute, fairytale, simple, twinkle " + translatedName + " a sky blue background";
+                    String negative_prompt = "";
+                    karlo.requestImage(prompt, negative_prompt, new Karlo.Callback() {
+                        @Override
+                        public void onSuccess(String imageUrl) {
+                            Bitmap bitmap = getBitmapFromURL(imageUrl);
+                            Bitmap circularBitmap = getCircularBitmap(bitmap);
+                            runOnUiThread(() -> {
+                                ImageView imageView = customCheckBox.findViewById(R.id.checkbox_image);
+                                imageView.setImageBitmap(circularBitmap);
+                            });
+                        }
+
+                        @Override
+                        public void onFailure(Exception e) {
+                            runOnUiThread(() -> {
+                                Toast.makeText(SelectcharacterActivity.this, "이미지 요청 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            });
+                        }
+                    });
+                } else {
+                    runOnUiThread(() -> Toast.makeText(SelectcharacterActivity.this, "이름 번역에 실패했습니다.", Toast.LENGTH_SHORT).show());
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                runOnUiThread(() -> Toast.makeText(SelectcharacterActivity.this, "번역 요청 실패: " + t.getMessage(), Toast.LENGTH_SHORT).show());
+            }
+        });
+    }
+
+    // 번역 결과를 저장하고 콜백을 통해 결과를 반환하는 메서드
+    private void translateCharacter(String characterName, Gemini.Callback callback) {
+        String prompt = "Translate the following character name to English: " + characterName;
+        gemini.generateText(prompt, new Gemini.Callback() {
+            @Override
+            public void onSuccess(String text) {
+                callback.onSuccess(text.trim());
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                callback.onFailure(t);
+            }
+        });
+    }
+
+
+    // URL에서 Bitmap 객체를 생성하는 메서드
+    private Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            return BitmapFactory.decodeStream(input);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // 이미지를 원형으로 만드는 메서드
+    private Bitmap getCircularBitmap(Bitmap bitmap) {
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int minEdge = Math.min(width, height);
+        Bitmap output = Bitmap.createBitmap(minEdge, minEdge, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+        Paint paint = new Paint();
+        paint.setAntiAlias(true);
+        RectF rect = new RectF(0, 0, minEdge, minEdge);
+        float radius = minEdge / 2f;
+        canvas.drawRoundRect(rect, radius, radius, paint);
+        BitmapShader shader = new BitmapShader(bitmap, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
+        paint.setShader(shader);
+        float centerX = (width - minEdge) / 2f;
+        float centerY = (height - minEdge) / 2f;
+        canvas.drawCircle(minEdge / 2f, minEdge / 2f, minEdge / 2f, paint);
+        return output;
+    }
+
+
 }
