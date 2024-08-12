@@ -3,6 +3,7 @@ package com.example.holymoly;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -12,12 +13,14 @@ import java.util.Map;
 public class MakeBookcoverActivity extends AppCompatActivity {
 
     private CustomView drawView;
-    private ImageButton pen, erase, paint;
+    private ImageButton pen, erase, paint, undo;
     private ImageButton selectedColorButton, selectedToolButton;
     private Map<ImageButton, Integer> colorButtonMap = new HashMap<>();
     private Map<ImageButton, Integer> colorCheckMap = new HashMap<>();
     private Map<Integer, String> colorCodeMap = new HashMap<>();
     private String selectedColorCode = "#000000"; // 기본 색상 코드 (검정색)
+    private SeekBar penSeekBar; // 추가된 SeekBar
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +32,9 @@ public class MakeBookcoverActivity extends AppCompatActivity {
         erase = findViewById(R.id.ib_erase);
         paint = findViewById(R.id.ib_paint);
         drawView = findViewById(R.id.drawing);
+        penSeekBar = findViewById(R.id.pen_seekbar); // SeekBar 초기화
+        undo = findViewById(R.id.ib_back); // Undo 버튼 초기화
+
 
         // 색상 버튼과 리소스 매핑
         int[] colorButtonIds = {
@@ -105,6 +111,34 @@ public class MakeBookcoverActivity extends AppCompatActivity {
             }
         });
 
+        // SeekBar의 값을 펜 굵기에 설정하는 리스너 설정
+        penSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                // 예: progress가 0일 때 15, 1일때 23... 7씩 증가함
+                float penWidth = 15 + (progress * 7);
+                drawView.setPenWidth(penWidth);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                // 터치가 시작될 때 호출됩니다.
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // 터치가 끝날 때 호출됩니다.
+            }
+        });
+
+        // Undo 버튼 클릭 리스너 설정
+        undo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawView.undo(); // Undo 기능 호출
+            }
+        });
+
         // 앱 실행 시 기본 선택된 도구와 색상 설정
         selectDefaultToolAndColor();
     }
@@ -112,8 +146,6 @@ public class MakeBookcoverActivity extends AppCompatActivity {
     private void selectDefaultToolAndColor() {
         // 기본 도구로 '펜' 버튼 선택
         handleToolButtonClick(pen);
-
-        // 기본 색상으로 검정색 설정 (이전 버튼 클릭 처리로 색상 변경)
         ImageButton defaultColorButton = findViewById(R.id.ib_black); // 기본 색상 버튼
         handleColorButtonClick(defaultColorButton);
     }
