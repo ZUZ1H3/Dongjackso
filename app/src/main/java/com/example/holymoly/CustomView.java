@@ -20,7 +20,7 @@ public class CustomView extends View {
     public CustomView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        paint.setAntiAlias(true); // 페인트의 품질 설정 (안티앨리어싱)
+        paint.setAntiAlias(true); // 페인트의 품질 설정 (그림이 부드러워짐)
         paint.setStrokeWidth(10f); // 펜 크기 설정
         paint.setColor(Color.BLACK); // 기본 색상 (검정색)
         paint.setStyle(Paint.Style.STROKE); // 선 스타일
@@ -41,6 +41,7 @@ public class CustomView extends View {
         canvas.drawPath(path, paint); // 현재 경로 그리기
     }
 
+    //사용자의 터치 동작에 따라 Path를 업데이트하고, 그 경로를 Canvas에 그림
     @Override
     public boolean onTouchEvent(android.view.MotionEvent event) {
         touchX = event.getX();
