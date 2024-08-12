@@ -45,7 +45,6 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
 
     private UserInfo userInfo = new UserInfo();
 
-    private String[] character = new String[10]; // 캐릭터 이름을 저장할 배열
     private Gemini gemini;
     private Karlo karlo;
     private ActivityResultLauncher<Intent> customCharacterLauncher;// ActivityResultLauncher 선언 (커스텀 캐릭터 액티비티에서 결과를 받기 위함)
@@ -319,7 +318,7 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
         });
     }
     private void translateCharacter(String characterName){
-        String prompt = "Translate the following theme to English: " + characterName + ". Please provide a concise, single-word or short-phrase answer.";
+        String prompt = "Translate the following character to English: " + characterName + ". Please provide a concise, single-word or short-phrase answer.";
         gemini.generateText(prompt, new Gemini.Callback() {
             @Override
             public void onSuccess(String theme) {
