@@ -365,5 +365,4 @@ public class MakeStoryActivity extends AppCompatActivity {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos); // JPEG 포맷으로 압축, 압축 비율 80%
         return baos.toByteArray();
     }
-
 }
