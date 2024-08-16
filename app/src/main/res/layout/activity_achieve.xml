@@ -391,8 +391,7 @@
                             android:id="@+id/universeTrophyLayout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="15dp"
-                            android:layout_marginBottom="20dp">
+                            android:layout_marginTop="15dp">
 
                             <ImageView
                                 android:id="@+id/iv_universeTrophy"
@@ -440,8 +439,7 @@
                             android:id="@+id/desertTrophyLayout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="15dp"
-                            android:layout_marginBottom="20dp">
+                            android:layout_marginTop="15dp">
 
                             <ImageView
                                 android:id="@+id/iv_desertTrophy"
@@ -484,6 +482,55 @@
                                 android:textColor="#000000"
                                 android:textSize="25sp" />
                         </FrameLayout>
+
+                        <FrameLayout
+                            android:id="@+id/customTrophyLayout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:layout_marginBottom="20dp">
+
+                            <ImageView
+                                android:id="@+id/iv_customTrophy"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_trophy_achievement_background" />
+
+                            <TextView
+                                android:id="@+id/tv_customTrophy"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:layout_marginLeft="40dp"
+                                android:layout_marginTop="25dp"
+                                android:fontFamily="@font/ssurround"
+                                android:text="커스텀 동화 1개 만들기"
+                                android:textColor="#000000"
+                                android:textSize="35sp" />
+
+                            <ImageButton
+                                android:id="@+id/ib_customTrophy"
+                                android:layout_width="wrap_content"
+                                android:layout_height="48dp"
+                                android:layout_gravity="right"
+                                android:layout_marginTop="15dp"
+                                android:layout_marginRight="110dp"
+                                android:background="@null"
+                                android:contentDescription="커스텀 동화 보상 버튼"
+                                android:src="@drawable/ic_btn_rewardbutton" />
+
+                            <TextView
+                                android:id="@+id/tv_customTrophyPercent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right"
+                                android:layout_marginTop="27dp"
+                                android:layout_marginRight="155dp"
+                                android:fontFamily="@font/ssurround"
+                                android:text="0%"
+                                android:textColor="#000000"
+                                android:textSize="25sp" />
+                        </FrameLayout>
                     </LinearLayout>
                 </ScrollView>
             </LinearLayout>
@@ -499,6 +546,7 @@
                 android:layout_width="830dp"
                 android:layout_height="400dp"
                 android:orientation="vertical"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
