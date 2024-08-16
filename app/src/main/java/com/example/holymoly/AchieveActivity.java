@@ -25,14 +25,24 @@ public class AchieveActivity extends AppCompatActivity {
     private ImageButton ibCloseWindow;
 
     //완료된 동화 테마 개수 세기
-    private int seaTrophyCount, forestTrophyCount, castleTrophyCount, villageTrophyCount, universeTrophyCount;
+    private int seaTrophyCount, forestTrophyCount,
+                castleTrophyCount, villageTrophyCount,
+                universeTrophyCount, desertTrophyCount,
+                customTrophyCount;
+
+    //동화 테마 목표 개수
+    private int goalSeaTrophyCount, goalForestTrophyCount, goalcastleTrophyCount,
+                goalVillageTrophyCount, goalUniverseTrophyCount, goalDesertTrophyCount,
+                goalCustomTrophyCount;
 
     //동화 업적 텍스트뷰
     private TextView tvSeaTrophy, tvSeaTrophyPercent,
             tvForestTrophy, tvForestTrophyPercent,
             tvCastleTrophy, tvCastleTrophyPercent,
             tvVillageTrophy, tvVillageTrophyPercent,
-            tvUniverseTrophy, tvUniverseTrophyPercent;
+            tvUniverseTrophy, tvUniverseTrophyPercent,
+            tvDesertTrophy, tvDesertTrophyPercent,
+            tvCustomTrophy, tvCustomTrophyPercent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +94,7 @@ public class AchieveActivity extends AppCompatActivity {
         });
 
         //동화업적창 알고리즘
-
+        
         //완료된 바다 숲 궁전 마을 우주 동화 개수 세기
 
         //만들어질때마다 업데이트 + 그에 맞도록 퍼센트 업데이트 textView.setText("New Text from Java Code");
