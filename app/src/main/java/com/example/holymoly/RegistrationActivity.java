@@ -23,6 +23,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.MutableLiveData;
 
 import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
@@ -35,6 +36,9 @@ public class RegistrationActivity extends AppCompatActivity {
     private static final String KEY_CLOTHES = "selectedClothes";
     private static final String KEY_EYES = "selectedEyes";
     private static final String KEY_HAIR_COLOR = "hairColor";
+
+    //라디오두줄
+    public final MutableLiveData<Integer> radioChecked = new MutableLiveData<>();
 
     private ImageButton ibNext;
     private RadioGroup rgCategory, rgHair, rgClothes, rgHairColor, rgEyesColor;
