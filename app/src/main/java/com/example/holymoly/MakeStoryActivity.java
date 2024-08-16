@@ -3,6 +3,7 @@ package com.example.holymoly;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
@@ -17,10 +18,22 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 
 public class MakeStoryActivity extends AppCompatActivity {
     private boolean isImageLoaded = false; // 이미지 로드 상태를 추적하는 변수
@@ -36,6 +49,12 @@ public class MakeStoryActivity extends AppCompatActivity {
     private MakeStory makeStory;
     private int num = 1;
     private long backPressedTime = 0;
+
+    // firebase 초기화
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseUser user = auth.getCurrentUser();
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private StorageReference storageRef = storage.getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,6 +187,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                                     loading.clearAnimation();
                                     loading.setVisibility(View.INVISIBLE);
                                     isImageLoaded = true;
+                                    uploadImage(bitmap); // Storage에 배경 업로드
                                     //showToast(prompt);
                                     displayStoryText(storyText); //동화 출력
                                 } else {
@@ -247,5 +267,32 @@ public class MakeStoryActivity extends AppCompatActivity {
 
     private void showToast(String message) {
         Toast.makeText(MakeStoryActivity.this, message, Toast.LENGTH_SHORT).show();
+    }
+
+
+    private void uploadImage(Bitmap bitmap) {
+        // background/theme 별로 저장된 경로
+        StorageReference themeRef = storageRef.child("background/" + selectedTheme);
+        // 경로에 있는 파일 목록 가져오기
+        themeRef.listAll().addOnSuccessListener(listResult -> {
+            int index = listResult.getItems().size() + 1;
+            String fileName = user.getUid() + "_" + index + ".png";
+
+            // 이미지가 저장될 경로 설정
+            StorageReference imageRef = themeRef.child(fileName);
+
+            // bitmap을 png로 압축 및 저장
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+            // 업로드 시작
+            UploadTask uploadTask = imageRef.putBytes(data);
+            uploadTask.addOnSuccessListener(taskSnapshot -> {
+                Toast.makeText(this, "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
+            }).addOnFailureListener(e -> {
+                Toast.makeText(this, "업로드 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            });
+        });
     }
 }

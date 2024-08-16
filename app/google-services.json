@@ -1,14 +1,13 @@
 {
   "project_info": {
-    "project_number": "933534041843",
-    "firebase_url": "https://dongjakso22-default-rtdb.asia-southeast1.firebasedatabase.app",
-    "project_id": "dongjakso22",
-    "storage_bucket": "dongjakso22.appspot.com"
+    "project_number": "308677235895",
+    "project_id": "dongjakso2",
+    "storage_bucket": "dongjakso2.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:933534041843:android:3ca9749366a796250d9986",
+        "mobilesdk_app_id": "1:308677235895:android:96a3adabcc606edfc92932",
         "android_client_info": {
           "package_name": "com.example.holymoly"
         }
@@ -16,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyCVfbEd8ryJBQ4lfxNjiUATJy1kznal-PU"
+          "current_key": "AIzaSyDxp0aqCiUlH061g7haMEmAq9V-hfrUgnA"
         }
       ],
       "services": {
