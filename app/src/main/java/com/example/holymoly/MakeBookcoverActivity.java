@@ -1,5 +1,7 @@
 package com.example.holymoly;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -10,27 +12,34 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.HashMap;
 import java.util.Map;
 
+import yuku.ambilwarna.AmbilWarnaDialog;
+
 public class MakeBookcoverActivity extends AppCompatActivity {
 
     private CustomView drawView;
-    private ImageButton pen, erase, paint, undo;
+    private ImageButton pen, erase, undo, rainbow, remove;
     private ImageButton selectedColorButton, selectedToolButton;
     private Map<ImageButton, Integer> colorButtonMap = new HashMap<>();
     private Map<ImageButton, Integer> colorCheckMap = new HashMap<>();
     private Map<Integer, String> colorCodeMap = new HashMap<>();
-    private String selectedColorCode = "#000000"; // 기본 색상 코드 (검정색)
+    private String selectedColorCode = "#303030"; // 기본 색상 코드 (검정색)
     private SeekBar penSeekBar; // 추가된 SeekBar
-
+    private String bookTitle = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_bookcover);
 
+        // Intent에서 테마를 가져옴
+        Intent intent = getIntent();
+        bookTitle = intent.getStringExtra("bookTitle");
+
         // 버튼 초기화
         pen = findViewById(R.id.ib_pen);
         erase = findViewById(R.id.ib_erase);
-        paint = findViewById(R.id.ib_paint);
+        rainbow = findViewById(R.id.ib_rainbow); // rainbow 버튼 초기화
+        remove = findViewById(R.id.ib_remove); // remove 버튼 초기화
         drawView = findViewById(R.id.drawing);
         penSeekBar = findViewById(R.id.pen_seekbar); // SeekBar 초기화
         undo = findViewById(R.id.ib_back); // Undo 버튼 초기화
@@ -64,7 +73,7 @@ public class MakeBookcoverActivity extends AppCompatActivity {
                 R.drawable.color_blue_check, R.drawable.color_rainbow_check
         };
 
-        // 색상 버튼과 리소스 매핑
+        // 색상 버튼과 리소스 매핑u
         for (int i = 0; i < colorButtonIds.length; i++) {
             ImageButton button = findViewById(colorButtonIds[i]);
             colorButtonMap.put(button, colorImages[i]);
@@ -78,6 +87,7 @@ public class MakeBookcoverActivity extends AppCompatActivity {
                 }
             });
         }
+
 
         // 도구 버튼 클릭 리스너 설정
         pen.setOnClickListener(new View.OnClickListener() {
@@ -100,23 +110,13 @@ public class MakeBookcoverActivity extends AppCompatActivity {
             }
         });
 
-        paint.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleToolButtonClick(paint);
-                // 도구 변경 시 현재 선택된 색상으로 설정
-                if (selectedColorButton != null) {
-                    drawView.setColor(selectedColorCode);
-                }
-            }
-        });
 
         // SeekBar의 값을 펜 굵기에 설정하는 리스너 설정
         penSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                // 예: progress가 0일 때 15, 1일때 23... 7씩 증가함
-                float penWidth = 15 + (progress * 7);
+                // 예: progress가 0일 때 15
+                float penWidth = 15 + (progress * 9);
                 drawView.setPenWidth(penWidth);
             }
 
@@ -131,6 +131,15 @@ public class MakeBookcoverActivity extends AppCompatActivity {
             }
         });
 
+        // Remove 버튼 클릭 리스너 설정
+        remove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawView.clearCanvas(); // 그림을 모두 지움
+            }
+        });
+
+
         // Undo 버튼 클릭 리스너 설정
         undo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,9 +148,11 @@ public class MakeBookcoverActivity extends AppCompatActivity {
             }
         });
 
+
         // 앱 실행 시 기본 선택된 도구와 색상 설정
         selectDefaultToolAndColor();
     }
+
 
     private void selectDefaultToolAndColor() {
         // 기본 도구로 '펜' 버튼 선택
@@ -151,18 +162,43 @@ public class MakeBookcoverActivity extends AppCompatActivity {
     }
 
     private void handleColorButtonClick(ImageButton button) {
-        // 현재 선택된 색상 버튼의 이미지 리소스를 원래 상태로 복원
-        if (selectedColorButton != null) {
-            selectedColorButton.setImageResource(colorButtonMap.get(selectedColorButton));
+        // Rainbow 버튼 클릭 시 AmbilWarnaDialog 호출
+        if (button.getId() == R.id.ib_rainbow) {
+            AmbilWarnaDialog colorPicker = new AmbilWarnaDialog(this,
+                    Color.parseColor(selectedColorCode), new AmbilWarnaDialog.OnAmbilWarnaListener() {
+                @Override
+                public void onOk(AmbilWarnaDialog dialog, int color) {
+                    selectedColorCode = String.format("#%06X", (0xFFFFFF & color));
+                    drawView.setColor(selectedColorCode);
+
+                    // Rainbow 버튼의 이미지 업데이트
+                    if (selectedColorButton != null) {
+                        selectedColorButton.setImageResource(colorButtonMap.get(selectedColorButton));
+                    }
+                    selectedColorButton = rainbow;
+                    selectedColorButton.setImageResource(colorCheckMap.get(rainbow));
+                }
+
+                @Override
+                public void onCancel(AmbilWarnaDialog dialog) {
+                    // 취소 버튼을 누른 경우 처리할 작업
+                }
+            });
+
+            colorPicker.show();
+        } else {
+            // 기존 색상 버튼 클릭 시 처리
+            if (selectedColorButton != null) {
+                selectedColorButton.setImageResource(colorButtonMap.get(selectedColorButton));
+            }
+            selectedColorButton = button;
+            selectedColorButton.setImageResource(colorCheckMap.get(button));
+            selectedColorCode = colorCodeMap.get(button.getId());
+            drawView.setColor(selectedColorCode);
         }
-        // 선택된 색상 버튼을 체크된 이미지로 변경
-        selectedColorButton = button;
-        selectedColorButton.setImageResource(colorCheckMap.get(button));
-        // 색상 코드 업데이트
-        selectedColorCode = colorCodeMap.get(button.getId());
-        // 현재 선택된 색상으로 설정
-        drawView.setColor(selectedColorCode);
     }
+
+
 
     private void handleToolButtonClick(ImageButton button) {
         // 현재 선택된 도구 버튼의 이미지 리소스를 원래 상태로 복원
@@ -183,6 +219,8 @@ public class MakeBookcoverActivity extends AppCompatActivity {
             button.setImageResource(R.drawable.ic_erase);
         } else if (buttonId == R.id.ib_paint) {
             button.setImageResource(R.drawable.ic_paint);
+        } else if (buttonId == R.id.ib_rainbow) {
+            button.setImageResource(R.drawable.color_rainbow); // rainbow 기본 이미지
         }
     }
 
@@ -195,6 +233,8 @@ public class MakeBookcoverActivity extends AppCompatActivity {
             button.setImageResource(R.drawable.ic_erase_check);
         } else if (buttonId == R.id.ib_paint) {
             button.setImageResource(R.drawable.ic_paint_check);
+        } else if (buttonId == R.id.ib_rainbow) {
+            button.setImageResource(R.drawable.color_rainbow_check); // rainbow 체크 이미지
         }
     }
 }

@@ -66,4 +66,7 @@ dependencies {
 
     implementation ("org.json:json:20210307")
     implementation ("com.squareup.okhttp3:okhttp:4.9.3")
+
+    //color picker
+    implementation ("com.github.yukuku:ambilwarna:2.0.1")
 }

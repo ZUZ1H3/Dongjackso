@@ -1,4 +1,5 @@
 package com.example.holymoly;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -11,26 +12,29 @@ import android.view.View;
 import java.util.Stack;
 
 public class CustomView extends View {
-    private Paint paint = new Paint();
-    private Path path = new Path();
+    private Paint paint;
+    private Path path;
     private Paint canvasPaint;
     private Canvas drawCanvas;
     private Bitmap canvasBitmap;
     private float touchX, touchY;
-    private float penWidth = 20f; // 기본 펜 굵기
-    private Stack<Path> paths = new Stack<>(); // 모든 경로를 저장하는 스택
-    private Stack<Path> undonePaths = new Stack<>(); // 지운 경로를 저장하는 스택
+    private float penWidth = 15f; // 기본 펜 굵기
+    private int currentColor = Color.BLACK; // 기본 색상
+    private Stack<DrawCommand> paths = new Stack<>(); // 모든 경로를 저장하는 스택
+    private Stack<DrawCommand> undonePaths = new Stack<>(); // 지운 경로를 저장하는 스택
+    private String bookTitle = "";
 
     public CustomView(Context context, AttributeSet attrs) {
         super(context, attrs);
-
+        paint = new Paint();
         paint.setAntiAlias(true);
         paint.setStrokeWidth(penWidth);
-        paint.setColor(Color.BLACK);
+        paint.setColor(currentColor);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeCap(Paint.Cap.ROUND);
         canvasPaint = new Paint(Paint.DITHER_FLAG);
+        path = new Path();
     }
 
     @Override
@@ -60,7 +64,7 @@ public class CustomView extends View {
                 break;
             case android.view.MotionEvent.ACTION_UP:
                 drawCanvas.drawPath(path, paint);
-                paths.push(new Path(path)); // 현재 경로를 저장
+                paths.push(new DrawCommand(new Path(path), currentColor, penWidth)); // 현재 경로를 저장
                 path.reset();
                 break;
             default:
@@ -71,7 +75,8 @@ public class CustomView extends View {
     }
 
     public void setColor(String newColor) {
-        paint.setColor(Color.parseColor(newColor));
+        currentColor = Color.parseColor(newColor);
+        paint.setColor(currentColor);
         invalidate();
     }
 
@@ -88,13 +93,34 @@ public class CustomView extends View {
             redraw();
         }
     }
-
+    // 그림 전체 지우기
+    public void clearCanvas() {
+        paths.clear();
+        undonePaths.clear();
+        drawCanvas.drawColor(Color.TRANSPARENT, android.graphics.PorterDuff.Mode.CLEAR); // 캔버스를 지움
+        invalidate();
+    }
+    
     // Redraw all paths
     private void redraw() {
         drawCanvas.drawColor(Color.TRANSPARENT, android.graphics.PorterDuff.Mode.CLEAR); // Clear the canvas
-        for (Path p : paths) {
-            drawCanvas.drawPath(p, paint); // 재드로잉
+        for (DrawCommand command : paths) {
+            paint.setColor(command.color);
+            paint.setStrokeWidth(command.width);
+            drawCanvas.drawPath(command.path, paint); // 재드로잉
         }
         invalidate();
+    }
+
+    private class DrawCommand {
+        Path path;
+        int color;
+        float width;
+
+        DrawCommand(Path path, int color, float width) {
+            this.path = path;
+            this.color = color;
+            this.width = width;
+        }
     }
 }

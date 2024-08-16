@@ -29,6 +29,7 @@ public class ReadtitleActivity extends AppCompatActivity {
         Intent intent = getIntent();
         byte[] imageBytes = intent.getByteArrayExtra("backgroundImageBytes");
 
+
         if (imageBytes != null) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
             if (bitmap != null) {
