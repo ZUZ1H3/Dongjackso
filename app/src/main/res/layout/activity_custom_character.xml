@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_main"
-    tools:context=".CustomThemeActivity">
+    tools:context=".CustomCharacterActivity">
     <!-- 상단 프로필 -->
     <ImageView
         android:id="@+id/iv_container"
@@ -113,12 +113,11 @@
         app:layout_constraintVertical_bias="0.98" />
 
     <TextView
-        android:id="@+id/tv_chooseTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ssurround"
         android:gravity="center"
-        android:text="원하는 테마를 작성해주세요"
+        android:text="원하는 캐릭터를 작성해주세요"
         android:textColor="@color/white"
         android:textSize="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -129,12 +128,13 @@
         app:layout_constraintVertical_bias="0.3" />
 
     <EditText
-        android:id="@+id/customTheme"
+        android:id="@+id/customCharacter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ssurround"
         android:hint="여기에 작성해주세요"
         android:textColor="@color/white"
+        android:textAlignment="center"
         android:textSize="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
