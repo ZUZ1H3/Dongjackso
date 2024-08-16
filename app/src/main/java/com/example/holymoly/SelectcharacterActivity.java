@@ -137,8 +137,12 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
             public void onClick(View v) {
                 ArrayList<String> selectedCharacters = new ArrayList<>();
                 for (int i = 0; i < isChecked.length; i++) {
+                    TextView textView = customCheckBoxes[i].findViewById(R.id.checkbox_text);
                     if (isChecked[i]) {
-                        selectedCharacters.add(characters[i].name);
+                        String characterName = textView.getText().toString();
+                        if (characterName != null && !characterName.isEmpty() && !"?".equals(characterName)) {
+                            selectedCharacters.add(characterName);
+                        }
                     }
                 }
 
