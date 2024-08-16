@@ -76,7 +76,7 @@
             android:name=".RegistrationActivity"
             android:exported="true" />
         <activity
-            android:name=".ReadtitleActivity"
+            android:name=".MaketitleActivity"
             android:exported="true" />
         <activity
             android:name=".MakeBookcoverActivity"

@@ -3,7 +3,6 @@ package com.example.holymoly;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
@@ -18,8 +17,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
@@ -31,10 +28,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 
 public class MakeStoryActivity extends AppCompatActivity {
     private boolean isImageLoaded = false; // 이미지 로드 상태를 추적하는 변수
@@ -151,7 +145,9 @@ public class MakeStoryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (isImageLoaded) {
                     byte[] imageBytes = (byte[]) nextBtn.getTag();
-                    Intent intent = new Intent(MakeStoryActivity.this, ReadtitleActivity.class);
+                    Intent intent = new Intent(MakeStoryActivity.this, MaketitleActivity.class);
+                    intent.putStringArrayListExtra("selectedCharacters", selectedCharacters);
+                    intent.putExtra("selectedTheme", selectedTheme);
                     intent.putExtra("backgroundImageBytes", imageBytes);
                     startActivity(intent);
                 } else {
@@ -325,7 +321,6 @@ public class MakeStoryActivity extends AppCompatActivity {
                 inSampleSize *= 2;
             }
         }
-
         return inSampleSize;
     }
 

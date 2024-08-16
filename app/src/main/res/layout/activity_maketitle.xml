@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ReadtitleActivity">
+    tools:context=".MaketitleActivity">
 
     <ImageView
         android:id="@+id/background_image_view"
@@ -28,6 +28,8 @@
     <!--나가기 버튼-->
 
     <!--글자있는 반투명한 검은 사각형-->
+
+
     <ImageView
         android:id="@+id/iv_writingZone"
         android:layout_width="match_parent"
@@ -35,11 +37,10 @@
         android:src="@drawable/pic_writingzone_big"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0" />
-
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageButton
         android:id="@+id/ib_stopMaking"
@@ -90,23 +91,55 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.445" />
 
+    <!--오른쪽 아래 다음 단계 화살표 버튼-->
+
+    <TextView
+        android:id="@+id/tv_writer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ssurround"
+        android:gravity="center"
+        android:text="지은이"
+        android:textColor="@color/white"
+        android:textSize="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.075"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.851" />
+
     <TextView
         android:id="@+id/tv_writername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ssurround"
         android:gravity="center"
-        android:text="지은이 : oo 꼬마 작가"
+        android:text="어린이"
         android:textColor="@color/white"
         android:textSize="40dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
+        app:layout_constraintHorizontal_bias="0.133"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.87" />
+        app:layout_constraintVertical_bias="0.922" />
 
-    <!--오른쪽 아래 다음 단계 화살표 버튼-->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ssurround"
+        android:gravity="center"
+        android:text="꼬마 작가"
+        android:textColor="@color/white"
+        android:textSize="40dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.254"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.922" />
+
     <ImageButton
         android:id="@+id/ib_nextStep"
         android:layout_width="wrap_content"
