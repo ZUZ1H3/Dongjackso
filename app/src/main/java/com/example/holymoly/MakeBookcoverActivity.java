@@ -1,14 +1,25 @@
 package com.example.holymoly;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +28,7 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 public class MakeBookcoverActivity extends AppCompatActivity {
 
     private CustomView drawView;
-    private ImageButton pen, erase, undo, rainbow, remove;
+    private ImageButton pen, erase, undo, rainbow, remove, ok;
     private ImageButton selectedColorButton, selectedToolButton;
     private Map<ImageButton, Integer> colorButtonMap = new HashMap<>();
     private Map<ImageButton, Integer> colorCheckMap = new HashMap<>();
@@ -25,6 +36,13 @@ public class MakeBookcoverActivity extends AppCompatActivity {
     private String selectedColorCode = "#303030"; // 기본 색상 코드 (검정색)
     private SeekBar penSeekBar; // 추가된 SeekBar
     private String bookTitle = "";
+
+    /* firebase 초기화 */
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseUser user = auth.getCurrentUser();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private StorageReference storageRef = storage.getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +61,7 @@ public class MakeBookcoverActivity extends AppCompatActivity {
         drawView = findViewById(R.id.drawing);
         penSeekBar = findViewById(R.id.pen_seekbar); // SeekBar 초기화
         undo = findViewById(R.id.ib_back); // Undo 버튼 초기화
-
+        ok = findViewById(R.id.ib_ok);
 
         // 색상 버튼과 리소스 매핑
         int[] colorButtonIds = {
@@ -108,6 +126,11 @@ public class MakeBookcoverActivity extends AppCompatActivity {
                 // 도구 변경 시 흰색으로 설정
                 drawView.setColor("#FFFFFFFF");
             }
+        });
+
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { uploadImage(); }
         });
 
 
@@ -236,5 +259,48 @@ public class MakeBookcoverActivity extends AppCompatActivity {
         } else if (buttonId == R.id.ib_rainbow) {
             button.setImageResource(R.drawable.color_rainbow_check); // rainbow 체크 이미지
         }
+    }
+
+    private void uploadImage() {
+        // CustomView에서 Bitmap 생성
+        Bitmap bitmap = Bitmap.createBitmap(drawView.getWidth(), drawView.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawView.draw(canvas);
+
+        // Intent로부터 데이터 가져오기
+        Intent intent = getIntent();
+        String theme = intent.getStringExtra("selectedTheme");
+        // cover 별로 저장된 경로
+        StorageReference coverRef = storageRef.child("covers/");
+
+        // 경로에 있는 파일 목록 가져오기
+        coverRef.listAll().addOnSuccessListener(listResult -> {
+            // 테마별 index 증가 처리
+            int themeCount = 0;
+            for (StorageReference item : listResult.getItems()) {
+                // 파일 이름에서 테마를 추출하여 비교
+                String itemName = item.getName();
+                String[] parts = itemName.split("_");
+                if (parts.length > 2 && parts[1].equals(theme)) themeCount++;
+            }
+            int index = themeCount + 1;
+            String fileName = user.getUid() + "_" + theme + "_" + index + ".png";
+
+            // 이미지가 저장될 경로 설정
+            StorageReference imageRef = coverRef.child(fileName);
+
+            // bitmap을 png로 압축 및 저장
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+            // 업로드 시작
+            UploadTask uploadTask = imageRef.putBytes(data);
+            uploadTask.addOnSuccessListener(taskSnapshot -> {
+                Toast.makeText(this, "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
+                Intent intent2 = new Intent(MakeBookcoverActivity.this, AlbumActivity.class);
+                startActivity(intent2);
+            });
+        });
     }
 }

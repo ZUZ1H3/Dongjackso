@@ -29,6 +29,7 @@ public class ReadtitleActivity extends AppCompatActivity {
         Intent intent = getIntent();
         byte[] imageBytes = intent.getByteArrayExtra("backgroundImageBytes");
 
+        String selectedTheme = intent.getStringExtra("selectedTheme");
 
         if (imageBytes != null) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
@@ -45,6 +46,7 @@ public class ReadtitleActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(ReadtitleActivity.this, MakeBookcoverActivity.class);
                 intent.putExtra("booktitle", bookTitle);
+                intent.putExtra("selectedTheme", selectedTheme); // 작업이 완료되었을 때 MakeBookcoverActivity로 이동
                 startActivity(intent);
             }
         });

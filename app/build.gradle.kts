@@ -69,4 +69,8 @@ dependencies {
 
     //color picker
     implementation ("com.github.yukuku:ambilwarna:2.0.1")
+
+    // Glide
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 }

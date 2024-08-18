@@ -21,7 +21,9 @@ public class MusicService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // 음악 재생 시작
         mediaPlayer.start();
-        return START_STICKY;
+
+        // START_NOT_STICKY를 반환하면 시스템이 서비스가 강제 종료된 경우 재생성하지 않음
+        return START_NOT_STICKY;
     }
 
     @Override
@@ -32,6 +34,9 @@ public class MusicService extends Service {
             mediaPlayer.stop();
             mediaPlayer.release();
         }
+        // 서비스가 더 이상 필요하지 않으면 종료
+        Intent intent = new Intent(this, MusicService.class);
+        stopService(intent);
     }
 
     @Override
