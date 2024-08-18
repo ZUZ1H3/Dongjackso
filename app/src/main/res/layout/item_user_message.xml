@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="30dp">
+
+    <TextView
+        android:id="@+id/messageTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="냐하하하하하"
+        android:background="@drawable/message_background"
+        android:fontFamily="@font/ssurround"
+        android:textColor="#000000"
+        android:textSize="24sp"/>
+</LinearLayout>

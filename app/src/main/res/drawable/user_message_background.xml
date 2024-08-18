@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#e0f7fa"/> <!-- 말풍선 배경색 -->
+    <corners android:radius="16dp"/> <!-- 모서리 둥글기 -->
+    <padding
+        android:left="10dp"
+        android:top="10dp"
+        android:right="10dp"
+        android:bottom="10dp"/> <!-- 내부 여백 -->
+    <!--라 추가적인 속성이나 테두리 등을 설정할 수 있습니다. -->
+</shape>
