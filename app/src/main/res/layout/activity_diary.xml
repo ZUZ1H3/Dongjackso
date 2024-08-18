@@ -21,7 +21,10 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.036" />
 
+    <!-- 대화 내용을 표시할 RecyclerView -->
+
     <ImageView
+        android:id="@+id/rectangles"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/pic_rect"
@@ -30,47 +33,27 @@
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.941" />
+        app:layout_constraintVertical_bias="0.957" />
 
-
-    <TextView
-        android:id="@+id/userMessages"
-        android:layout_width="600dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:fontFamily="@font/ssurround"
-        android:text="사용자 메시지가 여기에 표시됩니다."
-        android:textColor="#ffffff"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="58dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginRight="100dp"
+        app:layout_constraintBottom_toTopOf="@+id/rectangles"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.023"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.319" />
-
-    <TextView
-        android:id="@+id/chatBotResponses"
-        android:layout_width="600dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:fontFamily="@font/ssurround"
-        android:gravity="right"
-        android:text="챗봇의 응답이 여기에 표시됩니다."
-        android:textColor="#ffffff"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.88"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.463" />
+        app:layout_constraintTop_toBottomOf="@+id/ib_stopMaking" />
 
     <EditText
         android:id="@+id/userInput"
         android:layout_width="800dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:fontFamily="@font/ssurround"
         android:hint="메시지를 입력하세요."
         android:textColor="#303030"
@@ -78,10 +61,10 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.468"
+        app:layout_constraintHorizontal_bias="0.475"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.904" />
+        app:layout_constraintTop_toBottomOf="@+id/recyclerView"
+        app:layout_constraintVertical_bias="0.613" />
 
     <ImageButton
         android:id="@+id/sendButton"
@@ -92,8 +75,8 @@
         android:src="@drawable/ic_send"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.903"
+        app:layout_constraintHorizontal_bias="0.901"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.925" />
+        app:layout_constraintVertical_bias="0.94" />
 </androidx.constraintlayout.widget.ConstraintLayout>

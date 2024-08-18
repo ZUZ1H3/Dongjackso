@@ -239,6 +239,10 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
             @Override
             public void onSuccess(String text) {
                 String[] characterNamesArray = text.split(", ");
+                for (int i = 0; i < characterNamesArray.length; i++) {
+                    characterNamesArray[i] = characterNamesArray[i].replace("\n", "").trim();
+                }
+
                 characters = new CharacterData.CharacterInfo[characterNamesArray.length];
 
                 // 캐릭터 생성 완료 후에 한 번만 Toast 메시지 표시
