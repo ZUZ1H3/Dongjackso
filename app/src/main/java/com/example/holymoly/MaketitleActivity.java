@@ -8,15 +8,28 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
 
 public class MaketitleActivity extends AppCompatActivity {
     private ImageView backgroundImageView;
     private ImageButton nextBtn;
     private EditText title;
     private String bookTitle;
+    private TextView name;
+    private String selectedTheme;
+    private ArrayList<String> selectedCharacters;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseUser user = auth.getCurrentUser();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,11 +38,12 @@ public class MaketitleActivity extends AppCompatActivity {
         backgroundImageView = findViewById(R.id.background_image_view);
         nextBtn = findViewById(R.id.ib_nextStep);
         title = findViewById(R.id.tv_booktitle);
+        name = findViewById(R.id.tv_writername);
 
         Intent intent = getIntent();
         byte[] imageBytes = intent.getByteArrayExtra("backgroundImageBytes");
-
-        String selectedTheme = intent.getStringExtra("selectedTheme");
+        selectedTheme = intent.getStringExtra("selectedTheme");
+        selectedCharacters = intent.getStringArrayListExtra("selectedCharacters");
 
         if (imageBytes != null) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
@@ -50,6 +64,14 @@ public class MaketitleActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        db.collection("users").document(user.getUid())
+                .get()
+                .addOnSuccessListener(document -> {
+                    if (document.exists()) {
+                        String userName = document.getString("name");
+                        name.setText(userName);
+                    }
+                });
     }
 }
 

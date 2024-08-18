@@ -182,7 +182,7 @@ public class MakeStoryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (isImageLoaded) {
                     byte[] imageBytes = (byte[]) nextBtn.getTag();
-                    Intent intent = new Intent(MakeStoryActivity.this, ReadtitleActivity.class);
+                    Intent intent = new Intent(MakeStoryActivity.this, MaketitleActivity.class);
                     intent.putExtra("backgroundImageBytes", imageBytes);
                     // 표지 제작할 때 테마 별로 구분하기 위한 용도
                     intent.putExtra("selectedTheme", finalSelectedTheme);
@@ -392,7 +392,15 @@ public class MakeStoryActivity extends AppCompatActivity {
 
         // 경로에 있는 파일 목록 가져오기
         themeRef.listAll().addOnSuccessListener(listResult -> {
-            int index = listResult.getItems().size() + 1;
+            // 유저별 index 증가 처리
+            int userCount = 0;
+            for (StorageReference item : listResult.getItems()) {
+                // 파일 이름에서 유저를 추출하여 비교
+                String userId = item.getName();
+                if (userId.startsWith(user.getUid())) userCount++;
+            }
+            int index = userCount + 1;
+
             String fileName = user.getUid() + "_" + index + ".png";
 
             // 이미지가 저장될 경로 설정
