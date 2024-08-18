@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class ReadtitleActivity extends AppCompatActivity {
+public class MaketitleActivity extends AppCompatActivity {
     private ImageView backgroundImageView;
     private ImageButton nextBtn;
     private EditText title;
@@ -20,7 +20,7 @@ public class ReadtitleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_readtitle);
+        setContentView(R.layout.activity_maketitle);
 
         backgroundImageView = findViewById(R.id.background_image_view);
         nextBtn = findViewById(R.id.ib_nextStep);
@@ -44,7 +44,7 @@ public class ReadtitleActivity extends AppCompatActivity {
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ReadtitleActivity.this, MakeBookcoverActivity.class);
+                Intent intent = new Intent(MaketitleActivity.this, MakeBookcoverActivity.class);
                 intent.putExtra("booktitle", bookTitle);
                 intent.putExtra("selectedTheme", selectedTheme); // 작업이 완료되었을 때 MakeBookcoverActivity로 이동
                 startActivity(intent);
