@@ -49,6 +49,9 @@
             android:name=".HomeActivity"
             android:exported="true" />
         <activity
+            android:name=".Home2Activity"
+            android:exported="true" />
+        <activity
             android:name=".InfoActivity"
             android:exported="true" />
         <activity
