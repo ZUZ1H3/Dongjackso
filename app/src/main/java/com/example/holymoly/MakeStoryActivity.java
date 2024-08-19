@@ -186,6 +186,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                     intent.putExtra("backgroundImageBytes", imageBytes);
                     // 표지 제작할 때 테마 별로 구분하기 위한 용도
                     intent.putExtra("selectedTheme", finalSelectedTheme);
+                    intent.putStringArrayListExtra("selectedCharacters", selectedCharacters);
                     saveStory(); // 내용 저장
                     startActivity(intent);
                 } else {

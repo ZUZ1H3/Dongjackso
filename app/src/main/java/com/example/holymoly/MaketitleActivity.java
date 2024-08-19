@@ -61,6 +61,7 @@ public class MaketitleActivity extends AppCompatActivity {
                 Intent intent = new Intent(MaketitleActivity.this, MakeBookcoverActivity.class);
                 intent.putExtra("booktitle", bookTitle);
                 intent.putExtra("selectedTheme", selectedTheme); // 작업이 완료되었을 때 MakeBookcoverActivity로 이동
+                intent.putStringArrayListExtra("selectedCharacters", selectedCharacters);
                 startActivity(intent);
             }
         });

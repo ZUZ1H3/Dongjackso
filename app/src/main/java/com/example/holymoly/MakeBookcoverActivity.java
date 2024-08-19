@@ -2,8 +2,10 @@ package com.example.holymoly;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -20,6 +22,10 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +34,7 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 public class MakeBookcoverActivity extends AppCompatActivity {
 
     private CustomView drawView;
-    private ImageButton pen, erase, undo, rainbow, remove, ok;
+    private ImageButton pen, erase, undo, rainbow, remove, ok, AI;
     private ImageButton selectedColorButton, selectedToolButton;
     private Map<ImageButton, Integer> colorButtonMap = new HashMap<>();
     private Map<ImageButton, Integer> colorCheckMap = new HashMap<>();
@@ -36,6 +42,10 @@ public class MakeBookcoverActivity extends AppCompatActivity {
     private String selectedColorCode = "#303030"; // 기본 색상 코드 (검정색)
     private SeekBar penSeekBar; // 추가된 SeekBar
     private String bookTitle = "";
+    private String selectedTheme;
+    private ArrayList<String> selectedCharacters;
+    private Karlo karlo;
+    private Gemini gemini;
 
     /* firebase 초기화 */
     private FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -52,6 +62,10 @@ public class MakeBookcoverActivity extends AppCompatActivity {
         // Intent에서 테마를 가져옴
         Intent intent = getIntent();
         bookTitle = intent.getStringExtra("bookTitle");
+        karlo = new Karlo(768, 960);
+        gemini = new Gemini();
+        selectedTheme = intent.getStringExtra("selectedTheme");
+        selectedCharacters = intent.getStringArrayListExtra("selectedCharacters");
 
         // 버튼 초기화
         pen = findViewById(R.id.ib_pen);
@@ -62,6 +76,8 @@ public class MakeBookcoverActivity extends AppCompatActivity {
         penSeekBar = findViewById(R.id.pen_seekbar); // SeekBar 초기화
         undo = findViewById(R.id.ib_back); // Undo 버튼 초기화
         ok = findViewById(R.id.ib_ok);
+        AI = findViewById(R.id.ib_AI);
+
 
         // 색상 버튼과 리소스 매핑
         int[] colorButtonIds = {
@@ -133,6 +149,12 @@ public class MakeBookcoverActivity extends AppCompatActivity {
             public void onClick(View v) { uploadImage(); }
         });
 
+        AI.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                generateImageFromThemeAndCharacters(selectedTheme, selectedCharacters);
+            }
+        });
 
         // SeekBar의 값을 펜 굵기에 설정하는 리스너 설정
         penSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -303,4 +325,123 @@ public class MakeBookcoverActivity extends AppCompatActivity {
             });
         });
     }
+
+    private void generateImage(String prompt) {
+        karlo.requestImage(prompt, "", new Karlo.Callback() {
+            @Override
+            public void onSuccess(String imageUrl) {
+                new LoadImageTask().execute(imageUrl);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MakeBookcoverActivity.this, "이미지 생성 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
+
+    private class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
+        @Override
+        protected Bitmap doInBackground(String... urls) {
+            String url = urls[0];
+            return getBitmapFromURL(url);
+        }
+
+        @Override
+        protected void onPostExecute(Bitmap result) {
+            if (result != null) {
+                drawView.drawBitmapOnCanvas(result);
+            } else {
+                Toast.makeText(MakeBookcoverActivity.this, "이미지 로드 실패", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
+    // URL에서 Bitmap 객체를 생성하는 메서드
+    private Bitmap getBitmapFromURL(String src) {
+        try {
+            URL url = new URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            return BitmapFactory.decodeStream(input);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    //선택한 테마를 영어로 번역
+    public void translateTheme(String theme, TranslationCallback callback) {
+        String prompt = "Translate the following theme to English: " + theme + ". Please provide a concise, single-word or short-phrase answer.";
+        gemini.generateText(prompt, new Gemini.Callback() {
+            @Override
+            public void onSuccess(String text) {
+                callback.onSuccess(text.trim());
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                callback.onFailure(t);
+            }
+        });
+    }
+
+    //선택한 캐릭터를 영어로 번역
+    public void translateCharacters(ArrayList<String> characters, TranslationCallback callback) {
+        StringBuilder promptBuilder = new StringBuilder("Translate the following character names to English and prepend 'a cute ' before each noun. Separate the nouns with commas: ");
+        for (int i = 0; i < characters.size(); i++) {
+            promptBuilder.append(characters.get(i));
+            if (i < characters.size() - 1) {
+                promptBuilder.append(", ");
+            }
+        }
+        String prompt = promptBuilder.toString();
+
+        gemini.generateText(prompt, new Gemini.Callback() {
+            @Override
+            public void onSuccess(String text) {
+                callback.onSuccess(text.trim());
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                callback.onFailure(t);
+            }
+        });
+    }
+
+    private void generateImageFromThemeAndCharacters(String theme, ArrayList<String> characters) {
+        translateTheme(theme, new TranslationCallback() {
+            @Override
+            public void onSuccess(String translatedTheme) {
+                translateCharacters(characters, new TranslationCallback() {
+                    @Override
+                    public void onSuccess(String translatedCharacters) {
+                        String prompt = "Dreamy, fairytale, cute, smooth, fancy, twinkle, super bright, cartoon style. " + translatedCharacters + " are together. the background of a " + translatedTheme;
+                        generateImage(prompt);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable t) {
+                        Toast.makeText(MakeBookcoverActivity.this, "캐릭터 번역 실패: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Toast.makeText(MakeBookcoverActivity.this, "테마 번역 실패: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
 }
