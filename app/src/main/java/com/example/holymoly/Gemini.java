@@ -1,5 +1,7 @@
 package com.example.holymoly;
 
+import android.util.Log;
+
 import com.google.ai.client.generativeai.GenerativeModel;
 import com.google.ai.client.generativeai.java.GenerativeModelFutures;
 import com.google.ai.client.generativeai.type.Content;
@@ -33,11 +35,15 @@ public class Gemini {
             @Override
             public void onSuccess(GenerateContentResponse result) {
                 String resultText = result.getText();
+                // Log 결과 출력
+                Log.d("GeminiResponse", "AI 분석 결과: " + resultText);
                 callback.onSuccess(resultText);
             }
 
             @Override
             public void onFailure(Throwable t) {
+                // Log 오류 출력
+                Log.e("GeminiError", "AI 분석 실패", t);
                 callback.onFailure(t);
             }
         }, executor);
