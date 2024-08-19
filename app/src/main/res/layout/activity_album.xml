@@ -96,6 +96,20 @@
         app:layout_constraintTop_toTopOf="@id/ib_trophy"
         app:layout_constraintVertical_bias="0" />
 
+    <Spinner
+        android:id="@+id/theme_spinner"
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="130dp"
+        android:layout_marginLeft="72dp"
+        android:background="@drawable/theme_spinner"
+        android:dropDownWidth="wrap_content"
+        android:spinnerMode="dropdown"
+        android:textAlignment="center"
+        android:popupBackground="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_container" />
+
     <!--동화가 없을 때 나오는 텍스트뷰-->
     <TextView
         android:id="@+id/tv_none"
@@ -141,14 +155,14 @@
         app:layout_constraintHorizontal_bias="0.5" />
 
     <androidx.core.widget.NestedScrollView
-        android:id="@+id/sv_books"
-        android:layout_width="1000dp"
+        android:layout_width="1080dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginLeft="80dp"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/theme_spinner"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.6"
-        app:layout_constraintHorizontal_bias="0.4" >
+        app:layout_constraintBottom_toBottomOf="parent">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -157,7 +171,6 @@
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="480dp"
-                android:layout_marginBottom="80dp"
                 android:nestedScrollingEnabled="false"
                 android:visibility="gone" />
         </LinearLayout>
