@@ -301,11 +301,14 @@ public class MakeBookcoverActivity extends AppCompatActivity {
             int themeCount = 0;
             for (StorageReference item : listResult.getItems()) {
                 // 파일 이름에서 테마를 추출하여 비교
+                String userId = item.getName();
                 String itemName = item.getName();
                 String[] parts = itemName.split("_");
-                if (parts.length > 2 && parts[1].equals(theme)) themeCount++;
+                if (userId.startsWith(user.getUid()) && parts.length > 2 && parts[1].equals(theme))
+                    themeCount++;
             }
             int index = themeCount + 1;
+            // index가 아니라 책 표지 제목으로 변경할 것.
             String fileName = user.getUid() + "_" + theme + "_" + index + ".png";
 
             // 이미지가 저장될 경로 설정
@@ -321,6 +324,7 @@ public class MakeBookcoverActivity extends AppCompatActivity {
             uploadTask.addOnSuccessListener(taskSnapshot -> {
                 Toast.makeText(this, "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
                 Intent intent2 = new Intent(MakeBookcoverActivity.this, AlbumActivity.class);
+                intent2.putExtra("booktitle", bookTitle);
                 startActivity(intent2);
             });
         });

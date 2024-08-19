@@ -22,6 +22,9 @@
             android:name=".DiaryActivity"
             android:exported="true" />
         <activity
+            android:name=".ReadBookActivity"
+            android:exported="false" />
+        <activity
             android:name=".CustomCharacterActivity"
             android:exported="false" />
         <activity
