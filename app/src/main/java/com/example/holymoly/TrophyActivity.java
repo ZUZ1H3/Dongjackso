@@ -54,9 +54,9 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
         loadUserInfo(profile, name); // 미니 프로필 불러오기
 
         spot1.loadImage(); // 첫 번째 위치에 캐릭터 생성
-        spot2.loadImage(); // 두 번째 위치에 캐릭터 생성
-        spot3.loadImage(); // 세 번째 위치에 캐릭터 생성
-        spot4.loadImage(); // 네 번째 위치에 캐릭터 생성
+        // spot2.loadImage(); // 두 번째 위치에 캐릭터 생성
+        // spot3.loadImage(); // 세 번째 위치에 캐릭터 생성
+        // spot4.loadImage(); // 네 번째 위치에 캐릭터 생성
 
         trophy.setOnClickListener(this);
         home.setOnClickListener(this);

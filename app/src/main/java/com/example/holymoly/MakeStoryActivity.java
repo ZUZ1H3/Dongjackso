@@ -129,11 +129,6 @@ public class MakeStoryActivity extends AppCompatActivity {
                     ++num;
                     pageTextView.setText(num + " / 6");
                 }
-
-                if (num == 6) {
-                    pageContents.set(5, storyTextView.getText().toString());
-                    nextBtn.setVisibility(View.VISIBLE);
-                }
             }
         });
 
@@ -156,12 +151,6 @@ public class MakeStoryActivity extends AppCompatActivity {
                     ++num;
                     pageTextView.setText(num + " / 6");
                 }
-
-                if (num == 6) {
-                    pageContents.set(5, storyTextView.getText().toString());
-                    nextBtn.setVisibility(View.VISIBLE);
-                }
-
             }
         });
 
@@ -180,6 +169,10 @@ public class MakeStoryActivity extends AppCompatActivity {
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (num == 6) {
+                    pageContents.set(num -1, storyTextView.getText().toString());
+                    nextBtn.setVisibility(View.VISIBLE);
+                }
                 if (isImageLoaded) {
                     byte[] imageBytes = (byte[]) nextBtn.getTag();
                     Intent intent = new Intent(MakeStoryActivity.this, MaketitleActivity.class);
@@ -436,9 +429,11 @@ public class MakeStoryActivity extends AppCompatActivity {
             int themeCount = 0;
             for (StorageReference item : listResult.getItems()) {
                 // 파일 이름에서 테마를 추출하여 비교
+                String userId = item.getName();
                 String itemName = item.getName();
                 String[] parts = itemName.split("_");
-                if (parts.length > 2 && parts[1].equals(finalSelectedTheme)) themeCount++;
+                if (userId.startsWith(user.getUid()) && parts.length > 2 && parts[1].equals(finalSelectedTheme))
+                    themeCount++;
             }
 
             int index = themeCount + 1;

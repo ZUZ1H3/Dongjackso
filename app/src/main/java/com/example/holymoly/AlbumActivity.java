@@ -87,6 +87,13 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
             }
         });
         loadImages();
+
+        bookAdapter.setOnItemClickListener((position, imageUrl) -> {
+            // 클릭된 이미지의 URL을 이용해 작업 수행
+            Intent intent = new Intent(AlbumActivity.this, ReadBookActivity.class);
+            intent.putExtra("imageUrl", imageUrl);
+            startActivity(intent);
+        });
     }
     // 이미지 가져옴
     private void loadImages() {
