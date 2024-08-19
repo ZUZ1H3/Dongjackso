@@ -3,9 +3,12 @@ package com.example.holymoly;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +30,7 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
     private TextView name;
     private ImageView profile;
     private ImageButton btnhome, btntrophy, btnsetting;
+    private Spinner spinnerNav;
 
     private UserInfo userInfo = new UserInfo();
 
@@ -47,6 +51,7 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
         btnhome = findViewById(R.id.ib_homebutton);
         btntrophy = findViewById(R.id.ib_trophy);
         btnsetting = findViewById(R.id.ib_setting);
+        spinnerNav = findViewById(R.id.theme_spinner);
 
         loadUserInfo(profile, name);
 
@@ -62,6 +67,8 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
         imageUrls = new ArrayList<>();
         bookAdapter = new BookAdapter(this, imageUrls);
         recyclerView.setAdapter(bookAdapter);
+
+        loadImages();
 
         btnhome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,13 +93,30 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
                 startActivity(intent);
             }
         });
-        loadImages();
 
         bookAdapter.setOnItemClickListener((position, imageUrl) -> {
             // 클릭된 이미지의 URL을 이용해 작업 수행
             Intent intent = new Intent(AlbumActivity.this, ReadBookActivity.class);
             intent.putExtra("imageUrl", imageUrl);
             startActivity(intent);
+        });
+
+        // 스피너 설정
+        String[] items = { "전체", "바다", "궁전", "숲", "마을", "우주", "사막", "커스텀" };
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.thema_text, items);
+        adapter.setDropDownViewResource(R.layout.thema_text);
+        spinnerNav.setAdapter(adapter);
+
+        spinnerNav.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // 아무것도 선택되지 않았을 때의 행동
+            }
         });
     }
     // 이미지 가져옴

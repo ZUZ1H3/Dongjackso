@@ -1,4 +1,15 @@
 <resources>
     <string name="app_name">HolyMoly</string>
     <string name="background_image_description">Background image for the story</string>
+
+    <string-array name="theme_array">
+        <item>전체</item>
+        <item>바다</item>
+        <item>궁전</item>
+        <item>숲</item>
+        <item>마을</item>
+        <item>우주</item>
+        <item>사막</item>
+        <item>커스텀</item>
+    </string-array>
 </resources>
