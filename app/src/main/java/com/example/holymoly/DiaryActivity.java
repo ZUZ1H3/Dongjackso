@@ -38,20 +38,29 @@ public class DiaryActivity extends AppCompatActivity {
         // GenerativeModel 초기화
         model = new GenerativeModel("gemini-1.5-flash", "AIzaSyB5Vf0Nk67nJOKk4BADvPDQhRGNyYTVxjU");
         GenerativeModelFutures modelFutures = GenerativeModelFutures.from(model);
+
         // 이전 채팅 기록 생성
         Content.Builder userContentBuilder = new Content.Builder();
         userContentBuilder.setRole("user");
-        userContentBuilder.addText("Hello, I have 2 dogs in my house.");
+        userContentBuilder.addText("당신이 대화할 대상은 어린이입니다. 다정하고 즐겁고 친근한 반말 말투로 말해주세요. 당신의 대화 대상은 오늘 있었던 일에 대해 이야기 할 것입니다. 그 내용에 맞는 구체적 질문이나 감정에 대해 물어봐주세요.");
         Content userContent = userContentBuilder.build();
 
         Content.Builder modelContentBuilder = new Content.Builder();
         modelContentBuilder.setRole("model");
-        modelContentBuilder.addText("Great to meet you. What would you like to know?");
+        modelContentBuilder.addText("응, 알겠어.");
         Content modelContent = modelContentBuilder.build();
 
         List<Content> history = Arrays.asList(userContent, modelContent);
         // 채팅 초기화
         chat = modelFutures.startChat(history);
+
+        // AI의 첫 메시지 추가
+        String firstBotMessageText = "안녕! 오늘 어떤 일이 있었는지 이야기해줄래?";
+        Message firstBotMessage = new Message(firstBotMessageText, Message.TYPE_BOT);
+        messageList.add(firstBotMessage);
+        messageAdapter.notifyItemInserted(messageList.size() - 1);
+        recyclerView.scrollToPosition(messageList.size() - 1);
+
         // 버튼 클릭 리스너 설정
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +69,7 @@ public class DiaryActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void sendMessage() {
         String userMessageText = userInput.getText().toString();

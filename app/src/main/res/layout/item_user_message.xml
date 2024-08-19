@@ -4,19 +4,21 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="30dp"
     android:orientation="horizontal">
+
     <View
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_weight="1" />
 
-
     <TextView
         android:id="@+id/messageTextView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="냐하하하하하"
-        android:background="@drawable/message_background"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/message_background2"
         android:fontFamily="@font/ssurround"
-        android:textColor="#000000"
-        android:textSize="24sp"/>
+        android:maxWidth="550dp"
+        android:text="냐하하하하하"
+        android:textColor="#ffffff"
+        android:textSize="24sp" />
 </LinearLayout>
