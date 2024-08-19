@@ -2,6 +2,7 @@ package com.example.holymoly;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
@@ -25,11 +26,13 @@ import java.util.regex.Pattern;
 public class JoinActivity extends AppCompatActivity {
 
     private EditText etId, etPwd, etPwdChk;
-    private ImageButton btnJoin, btnDouble;
+    private ImageButton btnJoin, btnDouble, btnToggle, btnToggle2;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
     private boolean isEmailUnique = false;
+    private boolean isPasswordVisible = false;   // 비밀번호 표시 및 숨기기
+    private boolean isChkPasswordVisible = false;   // 비밀번호 확인 표시 및 숨기기
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,12 @@ public class JoinActivity extends AppCompatActivity {
         etPwdChk = findViewById(R.id.et_pwdchk);
         btnJoin = findViewById(R.id.btn_next);
         btnDouble = findViewById(R.id.btn_mailDuplication);
+        btnToggle = findViewById(R.id.btn_hidenshow);
+        btnToggle2 = findViewById(R.id.btn_hidenshow2);
+
+        // 비밀번호 입력란 초기 설정 (비밀번호가 보이지 않게 함)
+        etPwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        etPwdChk.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
         btnDouble.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +69,36 @@ public class JoinActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(JoinActivity.this, "이메일 중복 확인을 해주세요.", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+        // 비밀번호 숨기기 및 표시
+        btnToggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isPasswordVisible) { // 비밀번호 표시
+                    etPwd.setInputType(InputType.TYPE_CLASS_TEXT);
+                    btnToggle.setImageResource(R.drawable.ic_eye);
+                } else { // 비밀번호 숨기기
+                    etPwd.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    btnToggle.setImageResource(R.drawable.ic_eye2);
+                }
+                etPwd.setSelection(etPwd.length());
+                isPasswordVisible = !isPasswordVisible;
+            }
+        });
+        // 비밀번호 확인 숨기기 및 표시
+        btnToggle2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!isChkPasswordVisible) { // 비밀번호 표시
+                    etPwdChk.setInputType(InputType.TYPE_CLASS_TEXT);
+                    btnToggle2.setImageResource(R.drawable.ic_eye);
+                } else { // 비밀번호 숨기기
+                    etPwdChk.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    btnToggle2.setImageResource(R.drawable.ic_eye2);
+                }
+                etPwdChk.setSelection(etPwdChk.length());
+                isChkPasswordVisible = !isChkPasswordVisible;
             }
         });
     }

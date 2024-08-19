@@ -30,8 +30,6 @@ public class MaketitleActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,18 +54,16 @@ public class MaketitleActivity extends AppCompatActivity {
             }
         }
 
+        bookTitle = title.getText().toString();
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                bookTitle = title.getText().toString(); // 클릭 시점에 가져오기
                 Intent intent = new Intent(MaketitleActivity.this, MakeBookcoverActivity.class);
-                intent.putExtra("bookTitle", bookTitle); // bookTitle 키를 사용해야 함
-                intent.putStringArrayListExtra("selectedCharacters", selectedCharacters);
-                intent.putExtra("selectedTheme", selectedTheme);
+                intent.putExtra("booktitle", bookTitle);
+                intent.putExtra("selectedTheme", selectedTheme); // 작업이 완료되었을 때 MakeBookcoverActivity로 이동
                 startActivity(intent);
             }
         });
-
         db.collection("users").document(user.getUid())
                 .get()
                 .addOnSuccessListener(document -> {
@@ -78,3 +74,4 @@ public class MaketitleActivity extends AppCompatActivity {
                 });
     }
 }
+

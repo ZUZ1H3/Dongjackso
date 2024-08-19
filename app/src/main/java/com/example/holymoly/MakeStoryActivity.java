@@ -3,6 +3,7 @@ package com.example.holymoly;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
@@ -25,10 +28,18 @@ import com.google.firebase.storage.UploadTask;
 
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class MakeStoryActivity extends AppCompatActivity {
     private boolean isImageLoaded = false; // 이미지 로드 상태를 추적하는 변수
@@ -44,6 +55,11 @@ public class MakeStoryActivity extends AppCompatActivity {
     private MakeStory makeStory;
     private int num = 1;
     private long backPressedTime = 0;
+
+    // 테마 경로 및 최종적으로 선택된 테마
+    private String themePath, finalSelectedTheme;
+    // 페이지 내용과 선택지를 추적하기 위한 변수 추가
+    private ArrayList<String> pageContents = new ArrayList<>();
 
     // firebase 초기화
     private FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -82,6 +98,11 @@ public class MakeStoryActivity extends AppCompatActivity {
         selectedTheme = intent.getStringExtra("selectedTheme");
         selectedCharacters = intent.getStringArrayListExtra("selectedCharacters");
 
+        // 페이지 초기화
+        for (int i = 0; i < 6; i++) {
+            pageContents.add(""); // 페이지 내용 초기화
+        }
+
         // 동화 생성 시작
         gemini = new Gemini();
         karlo = new Karlo(1280, 800);
@@ -89,21 +110,29 @@ public class MakeStoryActivity extends AppCompatActivity {
 
         makeStory.generateInitialStory();
 
-
         choice1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 choice1.setVisibility(View.INVISIBLE);
                 choice2.setVisibility(View.INVISIBLE);
-                if (num < 5) {
-                    makeStory.generateNextStoryPart(choice1.getText().toString());
+                String selectedChoice = choice1.getText().toString(); // 선택지1 가져오기
+
+                if (num < 6) {
+                    // 현재 페이지 내용, 선택지 저장
+                    pageContents.set(num - 1, storyTextView.getText().toString() + "\n선택: " + selectedChoice);
+
+                    if (num < 5) {
+                        makeStory.generateNextStoryPart(selectedChoice);
+                    } else if (num == 5) {
+                        makeStory.generateEndStoryPart(selectedChoice);
+                    }
                     ++num;
                     pageTextView.setText(num + " / 6");
-                } else {
-                    makeStory.generateEndStoryPart(choice1.getText().toString());
-                    ++num;
-                    pageTextView.setText(num + " / 6");
-                    //nextBtn.setVisibility(View.VISIBLE);
+                }
+
+                if (num == 6) {
+                    pageContents.set(5, storyTextView.getText().toString());
+                    nextBtn.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -113,16 +142,24 @@ public class MakeStoryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 choice1.setVisibility(View.INVISIBLE);
                 choice2.setVisibility(View.INVISIBLE);
-                if (num < 5) {
-                    makeStory.generateNextStoryPart(choice2.getText().toString());
-                    ++num;
-                    pageTextView.setText(num + " / 6");
-                } else {
-                    makeStory.generateEndStoryPart(choice2.getText().toString());
-                    ++num;
-                    pageTextView.setText(num + " / 6");
-                    //nextBtn.setVisibility(View.VISIBLE);
+                String selectedChoice = choice2.getText().toString(); // 선택지2 가져오기
 
+                if (num < 6) {
+                    // 현재 페이지 내용, 선택지 저장
+                    pageContents.set(num - 1, storyTextView.getText().toString() + "\n선택: " + selectedChoice);
+
+                    if (num < 5) {
+                        makeStory.generateNextStoryPart(selectedChoice);
+                    } else if (num == 5) {
+                        makeStory.generateEndStoryPart(selectedChoice);
+                    }
+                    ++num;
+                    pageTextView.setText(num + " / 6");
+                }
+
+                if (num == 6) {
+                    pageContents.set(5, storyTextView.getText().toString());
+                    nextBtn.setVisibility(View.VISIBLE);
                 }
 
             }
@@ -146,9 +183,10 @@ public class MakeStoryActivity extends AppCompatActivity {
                 if (isImageLoaded) {
                     byte[] imageBytes = (byte[]) nextBtn.getTag();
                     Intent intent = new Intent(MakeStoryActivity.this, MaketitleActivity.class);
-                    intent.putStringArrayListExtra("selectedCharacters", selectedCharacters);
-                    intent.putExtra("selectedTheme", selectedTheme);
                     intent.putExtra("backgroundImageBytes", imageBytes);
+                    // 표지 제작할 때 테마 별로 구분하기 위한 용도
+                    intent.putExtra("selectedTheme", finalSelectedTheme);
+                    saveStory(); // 내용 저장
                     startActivity(intent);
                 } else {
                     showToast("이미지가 로드되지 않았습니다.");
@@ -321,6 +359,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                 inSampleSize *= 2;
             }
         }
+
         return inSampleSize;
     }
 
@@ -329,13 +368,39 @@ public class MakeStoryActivity extends AppCompatActivity {
         Toast.makeText(MakeStoryActivity.this, message, Toast.LENGTH_SHORT).show();
     }
 
+    private byte[] convertBitmapToByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos); // JPEG 포맷으로 압축, 압축 비율 80%
+        return baos.toByteArray();
+    }
 
     private void uploadImage(Bitmap bitmap) {
+        // 일반 테마 목록
+        List<String> commonThemes = Arrays.asList("바다", "궁전", "숲", "마을", "우주", "사막");
+        if (commonThemes.contains(selectedTheme)) {
+            // 표준 테마일 경우
+            themePath = "background/" + selectedTheme;
+            finalSelectedTheme = selectedTheme;
+        } else {
+            // 커스텀 테마일 경우
+            themePath = "background/커스텀/";
+            finalSelectedTheme = "커스텀";
+        }
+
         // background/theme 별로 저장된 경로
-        StorageReference themeRef = storageRef.child("background/" + selectedTheme);
+        StorageReference themeRef = storageRef.child(themePath);
+
         // 경로에 있는 파일 목록 가져오기
         themeRef.listAll().addOnSuccessListener(listResult -> {
-            int index = listResult.getItems().size() + 1;
+            // 유저별 index 증가 처리
+            int userCount = 0;
+            for (StorageReference item : listResult.getItems()) {
+                // 파일 이름에서 유저를 추출하여 비교
+                String userId = item.getName();
+                if (userId.startsWith(user.getUid())) userCount++;
+            }
+            int index = userCount + 1;
+
             String fileName = user.getUid() + "_" + index + ".png";
 
             // 이미지가 저장될 경로 설정
@@ -350,14 +415,65 @@ public class MakeStoryActivity extends AppCompatActivity {
             UploadTask uploadTask = imageRef.putBytes(data);
             uploadTask.addOnSuccessListener(taskSnapshot -> {
                 Toast.makeText(this, "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
-            }).addOnFailureListener(e -> {
-                Toast.makeText(this, "업로드 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             });
         });
     }
-    private byte[] convertBitmapToByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos); // JPEG 포맷으로 압축, 압축 비율 80%
-        return baos.toByteArray();
+
+    private void saveStory() {
+        // 모든 페이지 내용을 하나의 StringBuilder에 저장
+        StringBuilder fileContent = new StringBuilder();
+        StorageReference fileRef = storageRef.child("stories/");
+
+        for (int i = 0; i < pageContents.size(); i++) {
+            String pageContent = pageContents.get(i); // 페이지 내용 가져오기
+            fileContent.append("페이지 ").append(i + 1).append("\n");
+            fileContent.append(pageContent).append("\n\n");
+        }
+
+        fileRef.listAll().addOnSuccessListener(listResult -> {
+            // 테마별 index 증가 처리
+            int themeCount = 0;
+            for (StorageReference item : listResult.getItems()) {
+                // 파일 이름에서 테마를 추출하여 비교
+                String itemName = item.getName();
+                String[] parts = itemName.split("_");
+                if (parts.length > 2 && parts[1].equals(finalSelectedTheme)) themeCount++;
+            }
+
+            int index = themeCount + 1;
+            String fileName = user.getUid() + "_" + finalSelectedTheme + "_" + index + ".txt";
+
+            // 파일 저장
+            try {
+                FileOutputStream fos = openFileOutput(fileName, MODE_PRIVATE);
+                fos.write(fileContent.toString().getBytes("UTF-8"));  // 한글 인코딩을 위해 UTF-8 사용
+                fos.close();
+                uploadFile(fileName);
+            } catch (IOException e) {
+                showToast("파일 저장 실패: " + e.getMessage());
+            }
+        });
+    }
+
+    // Firebase Storage에 파일 업로드
+    private void uploadFile(String fileName) {
+        // Firebase Storage 참조 생성
+        StorageReference fileRef = storageRef.child("stories/" + fileName);
+
+        // 저장된 파일 읽기
+        try {
+            FileInputStream fis = openFileInput(fileName);
+            byte[] data = new byte[fis.available()];
+            fis.read(data);
+            fis.close();
+
+            // 파일 업로드
+            UploadTask uploadTask = fileRef.putBytes(data);
+            uploadTask.addOnSuccessListener(taskSnapshot -> {
+                showToast("파일 업로드 성공");
+            });
+        } catch (IOException e) {
+            showToast("파일 읽기 실패: " + e.getMessage());
+        }
     }
 }

@@ -2,9 +2,8 @@ package com.example.holymoly;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -13,10 +12,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,39 +28,40 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 public class MakeBookcoverActivity extends AppCompatActivity {
 
     private CustomView drawView;
-    private ImageButton pen, erase, undo, rainbow, remove, AI;
+    private ImageButton pen, erase, undo, rainbow, remove, ok;
     private ImageButton selectedColorButton, selectedToolButton;
     private Map<ImageButton, Integer> colorButtonMap = new HashMap<>();
     private Map<ImageButton, Integer> colorCheckMap = new HashMap<>();
     private Map<Integer, String> colorCodeMap = new HashMap<>();
     private String selectedColorCode = "#303030"; // 기본 색상 코드 (검정색)
     private SeekBar penSeekBar; // 추가된 SeekBar
-    private String selectedTheme;
-    private ArrayList<String> selectedCharacters;
-    private Karlo karlo;
-    private Gemini gemini;
+    private String bookTitle = "";
+
+    /* firebase 초기화 */
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseUser user = auth.getCurrentUser();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private StorageReference storageRef = storage.getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_bookcover);
 
-        karlo = new Karlo(768, 960);
-        gemini = new Gemini();
-
+        // Intent에서 테마를 가져옴
         Intent intent = getIntent();
-        selectedTheme = intent.getStringExtra("selectedTheme");
-        selectedCharacters = intent.getStringArrayListExtra("selectedCharacters");
+        bookTitle = intent.getStringExtra("bookTitle");
 
         // 버튼 초기화
         pen = findViewById(R.id.ib_pen);
         erase = findViewById(R.id.ib_erase);
         rainbow = findViewById(R.id.ib_rainbow); // rainbow 버튼 초기화
         remove = findViewById(R.id.ib_remove); // remove 버튼 초기화
-        AI = findViewById(R.id.ib_AI);
         drawView = findViewById(R.id.drawing);
         penSeekBar = findViewById(R.id.pen_seekbar); // SeekBar 초기화
         undo = findViewById(R.id.ib_back); // Undo 버튼 초기화
+        ok = findViewById(R.id.ib_ok);
 
         // 색상 버튼과 리소스 매핑
         int[] colorButtonIds = {
@@ -124,6 +128,11 @@ public class MakeBookcoverActivity extends AppCompatActivity {
             }
         });
 
+        ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { uploadImage(); }
+        });
+
 
         // SeekBar의 값을 펜 굵기에 설정하는 리스너 설정
         penSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -162,12 +171,6 @@ public class MakeBookcoverActivity extends AppCompatActivity {
             }
         });
 
-        AI.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                generateImageFromThemeAndCharacters(selectedTheme, selectedCharacters);
-            }
-        });
 
         // 앱 실행 시 기본 선택된 도구와 색상 설정
         selectDefaultToolAndColor();
@@ -219,6 +222,7 @@ public class MakeBookcoverActivity extends AppCompatActivity {
     }
 
 
+
     private void handleToolButtonClick(ImageButton button) {
         // 현재 선택된 도구 버튼의 이미지 리소스를 원래 상태로 복원
         if (selectedToolButton != null) {
@@ -256,123 +260,47 @@ public class MakeBookcoverActivity extends AppCompatActivity {
             button.setImageResource(R.drawable.color_rainbow_check); // rainbow 체크 이미지
         }
     }
-    private void generateImage(String prompt) {
-        karlo.requestImage(prompt, "", new Karlo.Callback() {
-            @Override
-            public void onSuccess(String imageUrl) {
-                new LoadImageTask().execute(imageUrl);
-            }
 
-            @Override
-            public void onFailure(Exception e) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(MakeBookcoverActivity.this, "이미지 생성 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+    private void uploadImage() {
+        // CustomView에서 Bitmap 생성
+        Bitmap bitmap = Bitmap.createBitmap(drawView.getWidth(), drawView.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawView.draw(canvas);
+
+        // Intent로부터 데이터 가져오기
+        Intent intent = getIntent();
+        String theme = intent.getStringExtra("selectedTheme");
+        // cover 별로 저장된 경로
+        StorageReference coverRef = storageRef.child("covers/");
+
+        // 경로에 있는 파일 목록 가져오기
+        coverRef.listAll().addOnSuccessListener(listResult -> {
+            // 테마별 index 증가 처리
+            int themeCount = 0;
+            for (StorageReference item : listResult.getItems()) {
+                // 파일 이름에서 테마를 추출하여 비교
+                String itemName = item.getName();
+                String[] parts = itemName.split("_");
+                if (parts.length > 2 && parts[1].equals(theme)) themeCount++;
             }
+            int index = themeCount + 1;
+            String fileName = user.getUid() + "_" + theme + "_" + index + ".png";
+
+            // 이미지가 저장될 경로 설정
+            StorageReference imageRef = coverRef.child(fileName);
+
+            // bitmap을 png로 압축 및 저장
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byte[] data = baos.toByteArray();
+
+            // 업로드 시작
+            UploadTask uploadTask = imageRef.putBytes(data);
+            uploadTask.addOnSuccessListener(taskSnapshot -> {
+                Toast.makeText(this, "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
+                Intent intent2 = new Intent(MakeBookcoverActivity.this, AlbumActivity.class);
+                startActivity(intent2);
+            });
         });
     }
-
-    private class LoadImageTask extends AsyncTask<String, Void, Bitmap> {
-        @Override
-        protected Bitmap doInBackground(String... urls) {
-            String url = urls[0];
-            return getBitmapFromURL(url);
-        }
-
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            if (result != null) {
-                drawView.drawBitmapOnCanvas(result);
-            } else {
-                Toast.makeText(MakeBookcoverActivity.this, "이미지 로드 실패", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-
-    // URL에서 Bitmap 객체를 생성하는 메서드
-    private Bitmap getBitmapFromURL(String src) {
-        try {
-            URL url = new URL(src);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoInput(true);
-            connection.connect();
-            InputStream input = connection.getInputStream();
-            return BitmapFactory.decodeStream(input);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    //선택한 테마를 영어로 번역
-    public void translateTheme(String theme, TranslationCallback callback) {
-        String prompt = "Translate the following theme to English: " + theme + ". Please provide a concise, single-word or short-phrase answer.";
-        gemini.generateText(prompt, new Gemini.Callback() {
-            @Override
-            public void onSuccess(String text) {
-                callback.onSuccess(text.trim());
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                callback.onFailure(t);
-            }
-        });
-    }
-
-    //선택한 캐릭터를 영어로 번역
-    public void translateCharacters(ArrayList<String> characters, TranslationCallback callback) {
-        StringBuilder promptBuilder = new StringBuilder("Translate the following character names to English and prepend 'a cute ' before each noun. Separate the nouns with commas: ");
-        for (int i = 0; i < characters.size(); i++) {
-            promptBuilder.append(characters.get(i));
-            if (i < characters.size() - 1) {
-                promptBuilder.append(", ");
-            }
-        }
-        String prompt = promptBuilder.toString();
-
-        gemini.generateText(prompt, new Gemini.Callback() {
-            @Override
-            public void onSuccess(String text) {
-                callback.onSuccess(text.trim());
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                callback.onFailure(t);
-            }
-        });
-    }
-
-    private void generateImageFromThemeAndCharacters(String theme, ArrayList<String> characters) {
-        translateTheme(theme, new TranslationCallback() {
-            @Override
-            public void onSuccess(String translatedTheme) {
-                translateCharacters(characters, new TranslationCallback() {
-                    @Override
-                    public void onSuccess(String translatedCharacters) {
-                        String prompt = "Dreamy, fairytale, cute, smooth, fancy, twinkle, super bright, cartoon style. " + translatedCharacters + " are together. the background of a " + translatedTheme;
-                        generateImage(prompt);
-                    }
-
-                    @Override
-                    public void onFailure(Throwable t) {
-                        Toast.makeText(MakeBookcoverActivity.this, "캐릭터 번역 실패: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Toast.makeText(MakeBookcoverActivity.this, "테마 번역 실패: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-
 }
-

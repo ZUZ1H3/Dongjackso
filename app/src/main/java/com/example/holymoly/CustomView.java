@@ -123,37 +123,4 @@ public class CustomView extends View {
             this.width = width;
         }
     }
-    public void drawBitmapOnCanvas(Bitmap bitmap) {
-        if (bitmap != null) {
-            // 캔버스의 너비와 높이를 가져옵니다.
-            int canvasWidth = drawCanvas.getWidth();
-            int canvasHeight = drawCanvas.getHeight();
-
-            // 비트맵의 너비와 높이를 가져옵니다.
-            int bitmapWidth = bitmap.getWidth();
-            int bitmapHeight = bitmap.getHeight();
-
-            // 캔버스에 맞도록 비트맵의 크기 비율을 계산합니다.
-            float scaleWidth = ((float) canvasWidth) / bitmapWidth;
-            float scaleHeight = ((float) canvasHeight) / bitmapHeight;
-
-            // 크기 조정을 위한 비율을 계산합니다.
-            float scale = Math.min(scaleWidth, scaleHeight);
-
-            // 비율에 따라 새로운 크기를 계산합니다.
-            int newWidth = (int) (bitmapWidth * scale);
-            int newHeight = (int) (bitmapHeight * scale);
-
-            // 새 크기로 비트맵을 조정합니다.
-            Bitmap scaledBitmap = Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
-
-            // 조정된 비트맵을 캔버스에 그립니다.
-            // 캔버스의 중심에 비트맵을 그립니다.
-            float left = (canvasWidth - newWidth) / 2.0f;
-            float top = (canvasHeight - newHeight) / 2.0f;
-
-            drawCanvas.drawBitmap(scaledBitmap, left, top, canvasPaint);
-        }
-        invalidate(); // View를 다시 그려 화면에 반영
-    }
 }

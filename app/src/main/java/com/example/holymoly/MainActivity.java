@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
-    private boolean autoLogin = false; // 체크 버튼 상태
+    private boolean autoLogin = true; // 체크 버튼 상태
     private boolean isPasswordVisible = false;   // 비밀번호 표시 및 숨기기
 
     public static ArrayList<Activity> actList = new ArrayList<Activity>(); //    스택에 쌓인 액티비티들 중 제거할 액티비티 리스트
@@ -90,6 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
         // 자동 로그인 체크박스 클릭 시
         auto.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            autoLogin = true;
             editor.putBoolean("autoLogin", isChecked);
             editor.commit();
         });
@@ -151,8 +152,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();
-        autoLogin = sharedPreferences.getBoolean("autoLogin", false);
+        autoLogin = sharedPreferences.getBoolean("autoLogin", true);
 
+        autoLogin(user, autoLogin);
+    }
+
+    private void autoLogin(FirebaseUser user, boolean autoLogin) {
         if(user != null && autoLogin) {
             Intent intent = new Intent(this, StartActivity.class);
             startActivity(intent);
