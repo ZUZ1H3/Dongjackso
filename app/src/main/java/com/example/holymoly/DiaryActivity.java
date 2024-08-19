@@ -1,4 +1,5 @@
 package com.example.holymoly;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.*;
@@ -19,6 +20,14 @@ public class DiaryActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MessageAdapter messageAdapter;
     private List<Message> messageList = new ArrayList<>();
+
+    // 육하원칙 및 감정 플래그
+    private boolean hasWho = false;
+    private boolean hasWhen = false;
+    private boolean hasWhere = false;
+    private boolean hasWhat = false;
+    private boolean hasHow = false;
+    private boolean hasWhy = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +51,9 @@ public class DiaryActivity extends AppCompatActivity {
         // 이전 채팅 기록 생성
         Content.Builder userContentBuilder = new Content.Builder();
         userContentBuilder.setRole("user");
-        userContentBuilder.addText("당신이 대화할 대상은 어린이입니다. 다정하고 즐겁고 친근한 반말 말투로 말해주세요. 당신의 대화 대상은 오늘 있었던 일에 대해 이야기 할 것입니다. 그 내용에 맞는 구체적 질문이나 감정에 대해 물어봐주세요.");
+        userContentBuilder.addText("당신이 대화할 대상은 어린이입니다. 다정하고 친근한 반말 말투로 말해주세요." +
+                "오늘 있었던 일에 대해 이야기할 건데, 육하원칙을 기준으로 그 경험에 대해 하나하나 물어봐주세요." +
+                "감정도 함께 이야기해줄 수 있도록 유도해주세요. 한 번에 하나씩만 질문해주세요.");
         Content userContent = userContentBuilder.build();
 
         Content.Builder modelContentBuilder = new Content.Builder();
@@ -70,7 +81,6 @@ public class DiaryActivity extends AppCompatActivity {
         });
     }
 
-
     private void sendMessage() {
         String userMessageText = userInput.getText().toString();
         if (userMessageText.isEmpty()) {
@@ -88,6 +98,15 @@ public class DiaryActivity extends AppCompatActivity {
         userMessageBuilder.setRole("user");
         userMessageBuilder.addText(userMessageText.replace("\n", " ")); // 줄 바꿈 문자 제거
         Content userMessageContent = userMessageBuilder.build();
+
+        // 메시지 분석
+        analyzeUserMessage(userMessageText);
+
+        // 대화 종료 조건 확인
+        if (hasWho && hasWhen && hasWhere && hasWhat && hasHow && hasWhy) {
+            endConversation();
+            return;
+        }
 
         // Executor 생성
         Executor executor = Executors.newSingleThreadExecutor();
@@ -120,5 +139,23 @@ public class DiaryActivity extends AppCompatActivity {
 
         // 입력 필드 비우기
         userInput.setText("");
+    }
+
+    private void analyzeUserMessage(String message) {
+        if (message.contains("누구")) { hasWho = true; }
+        if (message.contains("언제")) { hasWhen = true; }
+        if (message.contains("어디서")) { hasWhere = true; }
+        if (message.contains("무엇을")) { hasWhat = true; }
+        if (message.contains("어떻게")) { hasHow = true; }
+        if (message.contains("왜")) { hasWhy = true; }
+    }
+
+    private void endConversation() {
+        String endMessage = "모든 이야기가 끝났어! 이제 이야기를 만들어볼까?";
+        Message endBotMessage = new Message(endMessage, Message.TYPE_BOT);
+        messageList.add(endBotMessage);
+        messageAdapter.notifyItemInserted(messageList.size() - 1);
+        recyclerView.scrollToPosition(messageList.size() - 1);
+        // 추가적으로 새로운 이야기를 생성하는 로직을 여기에 추가할 수 있습니다.
     }
 }
