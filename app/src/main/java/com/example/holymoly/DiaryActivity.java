@@ -1,6 +1,7 @@
 package com.example.holymoly;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,7 +30,7 @@ public class DiaryActivity extends AppCompatActivity {
     private boolean hasHow = false;
     private boolean hasWhy = false;
 
-    @Override
+    private Gemini gemini = new Gemini();
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diary);
@@ -44,7 +45,7 @@ public class DiaryActivity extends AppCompatActivity {
         messageAdapter = new MessageAdapter(messageList);
         recyclerView.setAdapter(messageAdapter);
 
-        // GenerativeModel 초기화
+        // GenerativeModel 초기화 및 이전 채팅 기록 설정
         model = new GenerativeModel("gemini-1.5-flash", "AIzaSyB5Vf0Nk67nJOKk4BADvPDQhRGNyYTVxjU");
         GenerativeModelFutures modelFutures = GenerativeModelFutures.from(model);
 
@@ -99,14 +100,47 @@ public class DiaryActivity extends AppCompatActivity {
         userMessageBuilder.addText(userMessageText.replace("\n", " ")); // 줄 바꿈 문자 제거
         Content userMessageContent = userMessageBuilder.build();
 
-        // 메시지 분석
-        analyzeUserMessage(userMessageText);
+        // 메시지 분석 (Gemini를 활용)
+        analyzeUserMessageWithGemini(userMessageText);
 
-        // 대화 종료 조건 확인
-        if (hasWho && hasWhen && hasWhere && hasWhat && hasHow && hasWhy) {
-            endConversation();
-            return;
-        }
+        // 입력 필드 비우기
+        userInput.setText("");
+    }
+
+    private void analyzeUserMessageWithGemini(String message) {
+        String prompt = "아래 문장에서 육하원칙 즉, '누구', '언제', '어디서', '무엇을', '어떻게', '왜'에 해당하는 정보가 있을 경우, 이렇게 단답으로 답변하세요." +
+                " ex)친구와 아침에 만났다. 답변: '누구:친구, 언제:아침, 무엇을:만났다'\n문장: " + message;
+
+        gemini.generateText(prompt, new Gemini.Callback() {
+            @Override
+            public void onSuccess(String resultText) {
+                // Log 분석 결과 출력
+                Log.d("AnalyzeResult", "분석 결과: " + resultText);
+                // 분석된 결과를 바탕으로 플래그 설정
+                updatePrincipleFlags(resultText);
+
+                // 대화 종료 조건 확인
+                if (hasWho && hasWhen && hasWhere && hasWhat && hasHow && hasWhy) {
+                    endConversation();
+                } else {
+                    sendBotMessage(message);
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                // Log 오류 출력
+                Log.e("AnalyzeError", "분석 실패", t);
+            }
+        });
+    }
+
+    private void sendBotMessage(String userMessageText) {
+        // 사용자 메시지 생성
+        Content.Builder userMessageBuilder = new Content.Builder();
+        userMessageBuilder.setRole("user");
+        userMessageBuilder.addText(userMessageText.replace("\n", " ")); // 줄 바꿈 문자 제거
+        Content userMessageContent = userMessageBuilder.build();
 
         // Executor 생성
         Executor executor = Executors.newSingleThreadExecutor();
@@ -120,42 +154,38 @@ public class DiaryActivity extends AppCompatActivity {
             public void onSuccess(GenerateContentResponse result) {
                 String resultText = result.getText().replace("\n", " "); // 줄 바꿈 문자 제거
                 // UI 업데이트를 메인 스레드에서 수행
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Message botMessage = new Message(resultText, Message.TYPE_BOT);
-                        messageList.add(botMessage);
-                        messageAdapter.notifyItemInserted(messageList.size() - 1);
-                        recyclerView.scrollToPosition(messageList.size() - 1);
-                    }
+                runOnUiThread(() -> {
+                    Message botMessage = new Message(resultText, Message.TYPE_BOT);
+                    messageList.add(botMessage);
+                    messageAdapter.notifyItemInserted(messageList.size() - 1);
+                    recyclerView.scrollToPosition(messageList.size() - 1);
                 });
             }
 
             @Override
             public void onFailure(Throwable t) {
-                t.printStackTrace(); // 오류 출력
+                // Log 오류 출력
+                Log.e("BotMessageError", "메시지 전송 실패", t);
             }
         }, executor);
-
-        // 입력 필드 비우기
-        userInput.setText("");
     }
 
-    private void analyzeUserMessage(String message) {
-        if (message.contains("누구")) { hasWho = true; }
-        if (message.contains("언제")) { hasWhen = true; }
-        if (message.contains("어디서")) { hasWhere = true; }
-        if (message.contains("무엇을")) { hasWhat = true; }
-        if (message.contains("어떻게")) { hasHow = true; }
-        if (message.contains("왜")) { hasWhy = true; }
+    private void updatePrincipleFlags(String resultText) {
+        if (resultText.contains("언제")) { hasWhen = true; }
+        if (resultText.contains("누구")) { hasWho = true; }
+        if (resultText.contains("어디서")) { hasWhere = true; }
+        if (resultText.contains("무엇을")) { hasWhat = true; }
+        if (resultText.contains("어떻게")) { hasHow = true; }
+        if (resultText.contains("왜")) { hasWhy = true; }
     }
 
     private void endConversation() {
-        String endMessage = "모든 이야기가 끝났어! 이제 이야기를 만들어볼까?";
-        Message endBotMessage = new Message(endMessage, Message.TYPE_BOT);
-        messageList.add(endBotMessage);
-        messageAdapter.notifyItemInserted(messageList.size() - 1);
-        recyclerView.scrollToPosition(messageList.size() - 1);
-        // 추가적으로 새로운 이야기를 생성하는 로직을 여기에 추가할 수 있습니다.
+        runOnUiThread(() -> {
+            String endMessage = "모든 이야기가 끝났어! 이제 이야기를 만들어볼까?";
+            Message endBotMessage = new Message(endMessage, Message.TYPE_BOT);
+            messageList.add(endBotMessage);
+            messageAdapter.notifyItemInserted(messageList.size() - 1);
+            recyclerView.scrollToPosition(messageList.size() - 1);
+        });
     }
 }
