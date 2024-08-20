@@ -24,7 +24,11 @@ import com.google.firebase.storage.StorageReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
     private TextView name;
@@ -40,7 +44,7 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
     private TextView tvNone, tvPush, tvMakeFirst;
     private RecyclerView recyclerView;
     private BookAdapter bookAdapter;
-    private List<String> imageUrls;
+    private List<String> imageUrls, titles;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +69,8 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         imageUrls = new ArrayList<>();
-        bookAdapter = new BookAdapter(this, imageUrls);
+        titles = new ArrayList<>();
+        bookAdapter = new BookAdapter(this, imageUrls, titles);
         recyclerView.setAdapter(bookAdapter);
 
         loadImages();
@@ -144,18 +149,6 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
                     int index2 = extractIndex(o2.getName());
                     return Integer.compare(index1, index2);
                 }
-
-                // 파일 이름에 따라 '_'로 분할해 숫자를 알아냄
-                private int extractIndex(String fileName) {
-                    try {
-                        // 파일 이름을 "_"로 분할하여 숫자 추출
-                        String[] parts = fileName.split("_");
-                        return Integer.parseInt(parts[2]);
-                    } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-                        // 숫자 추출에 실패하면 기본값 0 반환
-                        return 0;
-                    }
-                }
             });
 
             // 정렬된 순서대로 이미지 로드
@@ -165,13 +158,35 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
                 if (img.startsWith(user.getUid())) {
                     item.getDownloadUrl().addOnSuccessListener(uri -> {
                         String url = uri.toString();
-                        if (imageUrls.add(url)) {  // 중복 방지
+                        String title = extractTitle(img); // 파일 이름에서 제목 추출
+                        // URL이 리스트에 없으면 추가
+                        if (!imageUrls.contains(url)) {  // 중복 방지
+                            imageUrls.add(url);
+                            titles.add(title);
                             bookAdapter.notifyDataSetChanged();
                         }
                     });
                 }
             }
         });
+    }
+    // 파일 이름에 따라 '_'로 분할해 숫자를 알아냄
+    private int extractIndex(String fileName) {
+        try {
+            fileName.startsWith(user.getUid());
+            // 파일 이름을 "_"로 분할하여 숫자 추출
+            String[] parts = fileName.split("_");
+            return Integer.parseInt(parts[2]);
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            // 숫자 추출에 실패하면 기본값 0 반환
+            return 0;
+        }
+    }
+    // 파일 이름에 따라 '_'로 분할해 제목 알아냄
+    private String extractTitle(String fileName) {
+        String[] parts = fileName.split("_");
+        // 제목 부분에서 .png 제거 후 반환
+        return parts[3].replace(".png", "");
     }
 
     @Override

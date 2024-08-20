@@ -155,10 +155,10 @@
         app:layout_constraintHorizontal_bias="0.5" />
 
     <androidx.core.widget.NestedScrollView
-        android:layout_width="1080dp"
+        android:layout_width="1020dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginLeft="80dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="58dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/theme_spinner"
         app:layout_constraintEnd_toEndOf="parent"
