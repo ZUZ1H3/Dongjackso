@@ -59,7 +59,7 @@ public class MaketitleActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MaketitleActivity.this, MakeBookcoverActivity.class);
-                intent.putExtra("booktitle", bookTitle);
+                intent.putExtra("bookTitle", bookTitle);
                 intent.putExtra("selectedTheme", selectedTheme); // 작업이 완료되었을 때 MakeBookcoverActivity로 이동
                 intent.putStringArrayListExtra("selectedCharacters", selectedCharacters);
                 startActivity(intent);
