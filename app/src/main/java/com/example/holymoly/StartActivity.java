@@ -1,6 +1,8 @@
 package com.example.holymoly;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -21,6 +23,9 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
     private FirebaseUser user;
     private FirebaseFirestore db;
 
+    private static final String PREFS_NAME = "UserPrefs";
+    private static final String KEY_USER_NAME = "userPref";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,15 +42,31 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         user = auth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
 
-        // Firestore에서 사용자 이름 가져오기
-        db.collection("users").document(user.getUid())
-                .get()
-                .addOnSuccessListener(document -> {
-                    if (document.exists()) {
-                        String userName = document.getString("name");
-                        name.setText(userName);
-                    }
-                });
+        // 로컬 SharedPreferences에서 사용자 이름을 가져옴
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        String namePref = prefs.getString(KEY_USER_NAME, null);
+
+        if (namePref != null) { // 저장된 이름이 있으면 텍스트뷰에 바로 설정
+            name.setText(namePref);
+        }
+        else if (user != null) { // 저장된 이름이 없으면 사용자 이름을 Firestore에서 가져옴
+            db.collection("users").document(user.getUid())
+                    .get()
+                    .addOnSuccessListener(document -> {
+                        if (document.exists()) {
+                            String userName = document.getString("name");
+                            if (userName != null) {
+                                // 사용자 이름을 SharedPreferences에 저장
+                                SharedPreferences.Editor editor = prefs.edit();
+                                editor.putString(KEY_USER_NAME, userName);
+                                editor.apply();
+
+                                // 텍스트뷰에 설정
+                                name.setText(userName);
+                            }
+                        }
+                    });
+        }
     }
     @Override
     public void onClick(View v) {

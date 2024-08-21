@@ -341,10 +341,8 @@ public class RegistrationActivity extends AppCompatActivity {
     }
     // Storage에 이미지 파일 업로드
     private void uploadImage(Bitmap bitmap) {
-        // Storage에 올라갈 파일 참조명 - 타임스탬프 생성
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH", Locale.getDefault());
-        String timestamp = sdf.format(new Date());
-        String fileName = user.getUid() + "_" + timestamp + ".png";
+        // Storage에 올라갈 파일 참조명
+        String fileName = user.getUid() + ".png";
 
         StorageReference imageRef = storageRef.child("characters/" + fileName);
 

@@ -23,30 +23,19 @@ public class UserInfo implements UserInfoLoader {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef = storage.getReference();
-    StorageReference characterRef = storageRef.child("characters/");
+    StorageReference characterRef = storageRef.child("characters/" + user.getUid() + ".png");
 
     // Firestore에서 사용자 정보 가져오기
     @Override
     public void loadUserInfo(ImageView profile, TextView name) {
-        // 이미지 가져오기
-        characterRef.listAll().addOnSuccessListener(listResult -> {
-            List<StorageReference> items = listResult.getItems();
-            for (StorageReference item : items) {
-                String img = item.getName();
-                // 파일 이름이 현재 사용자의 ID로 시작하는 경우
-                if (img.startsWith(user.getUid())) {
-                    final long MEGABYTE = 1024 * 1024; // 1MB
-                    item.getBytes(MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                        @Override
-                        public void onSuccess(byte[] bytes) {
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                            Bitmap cBitmap = cropImage(bitmap);
-                            profile.setImageBitmap(cBitmap);
-                        }
-                    });
-                }
-            }
+        // 캐릭터 이미지 가져오기
+        final long MEGABYTE = 1024 * 1024; // 1MB
+        characterRef.getBytes(MEGABYTE).addOnSuccessListener(bytes -> {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            Bitmap cBitmap = cropImage(bitmap);
+            profile.setImageBitmap(cBitmap);
         });
+
         // 이름 가져오기
         db.collection("users").document(user.getUid())
                 .get()

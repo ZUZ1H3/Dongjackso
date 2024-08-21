@@ -31,7 +31,7 @@ public class CustomImageView extends AppCompatImageView {
     private FirebaseUser user = auth.getCurrentUser();
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef = storage.getReference();
-    private StorageReference characterRef = storageRef.child("characters/");
+    private StorageReference characterRef = storageRef.child("characters/" + user.getUid() + ".png");
 
     public CustomImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -42,30 +42,18 @@ public class CustomImageView extends AppCompatImageView {
     private void initPaint() {
         paint = new Paint();
         paint.setColor(Color.WHITE); // 색상 설정
-        paint.setStyle(Paint.Style.FILL_AND_STROKE); // 색상 채우기 및 테두리
+        paint.setStyle(Paint.Style.STROKE); // 색상 채우기 및 테두리
         paint.setStrokeWidth(6); // 두께 설정
         paint.setStrokeJoin(Paint.Join.ROUND); // 경로 연결 부분을 둥글게 설정
         paint.setAntiAlias(true); // 높은 해상도 설정
     }
     // 이미지 가져오기
     public void loadImage() {
-        characterRef.listAll().addOnSuccessListener(listResult -> {
-            List<StorageReference> items = listResult.getItems();
-            for (StorageReference item : items) {
-                String img = item.getName();
-                // 파일 이름이 현재 사용자의 ID로 시작하는 경우
-                if (img.startsWith(user.getUid())) {
-                    final long MEGABYTE = 1024 * 1024; // 1MB
-                    item.getBytes(MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                        @Override
-                        public void onSuccess(byte[] bytes) {
-                            bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                            path = createStroke(bitmap); // 비트맵 경로 생성
-                            invalidate(); // ImageView 화면에 다시 그림
-                        }
-                    });
-                }
-            }
+        final long MEGABYTE = 1024 * 1024; // 1MB
+        characterRef.getBytes(MEGABYTE).addOnSuccessListener(bytes -> {
+            bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            path = createStroke(bitmap); // 비트맵 경로 생성
+            invalidate(); // ImageView 화면에 다시 그림
         });
     }
     // 캔버스에 stroke와 캐릭터 그리기
@@ -89,7 +77,6 @@ public class CustomImageView extends AppCompatImageView {
             canvas.drawPath(path, paint);
             // 캐릭터 불러오기
             canvas.drawBitmap(bitmap, null, new RectF(left, top, right, bottom), null);
-
         }
     }
     private Path createStroke(Bitmap bitmap) {
