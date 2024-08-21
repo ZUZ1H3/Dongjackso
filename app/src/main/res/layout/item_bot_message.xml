@@ -18,7 +18,7 @@
         android:layout_gravity="center"
         android:background="@drawable/message_background"
         android:fontFamily="@font/ssurround"
-        android:maxWidth="550dp"
+        android:maxWidth="600dp"
         android:text="안녕하세요"
         android:textColor="#000000"
         android:textSize="24sp" />

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_main2"
+    tools:context=".MakeDiaryActivity">
+
+    <ImageView
+        android:id="@+id/iv_writingZone"
+        android:layout_width="640dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/pic_writingzone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/storyTextView"
+        android:layout_width="600dp"
+        android:layout_height="700dp"
+        android:fontFamily="@font/ssurround"
+        android:gravity="left"
+        android:lineSpacingExtra="16dp"
+        android:padding="16dp"
+        android:scrollbars="vertical"
+        android:text="일기 동화를 생성 중입니다."
+        android:textColor="#ffffff"
+        android:textSize="28sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.058"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.163" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
