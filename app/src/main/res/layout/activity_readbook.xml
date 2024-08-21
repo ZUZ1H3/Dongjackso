@@ -47,7 +47,6 @@
         android:gravity="left"
         android:lineSpacingExtra="16dp"
         android:scrollbars="vertical"
-        android:text="1 / 6"
         android:textColor="@color/white"
         android:textSize="34dp"
         app:layout_constraintBottom_toBottomOf="parent"

@@ -357,7 +357,6 @@ public class MakeStoryActivity extends AppCompatActivity {
         return inSampleSize;
     }
 
-
     private void showToast(String message) {
         Toast.makeText(MakeStoryActivity.this, message, Toast.LENGTH_SHORT).show();
     }

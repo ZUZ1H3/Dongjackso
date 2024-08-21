@@ -44,7 +44,8 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
     private TextView tvNone, tvPush, tvMakeFirst;
     private RecyclerView recyclerView;
     private BookAdapter bookAdapter;
-    private List<String> imageUrls, titles;
+    // 이미지의 url, 제목, 파일명
+    private List<String> imageUrls, titles, imgNames;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +71,7 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
 
         imageUrls = new ArrayList<>();
         titles = new ArrayList<>();
+        imgNames = new ArrayList<>();
         bookAdapter = new BookAdapter(this, imageUrls, titles);
         recyclerView.setAdapter(bookAdapter);
 
@@ -100,9 +102,11 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
         });
 
         bookAdapter.setOnItemClickListener((position, imageUrl) -> {
-            // 클릭된 이미지의 URL을 이용해 작업 수행
+            // 클릭된 이미지의 파일명을 인텐트에 추가
+            String imgName = imgNames.get(position);
+
             Intent intent = new Intent(AlbumActivity.this, ReadBookActivity.class);
-            intent.putExtra("imageUrl", imageUrl);
+            intent.putExtra("imgName", imgName);
             startActivity(intent);
         });
 
@@ -163,6 +167,7 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
                         if (!imageUrls.contains(url)) {  // 중복 방지
                             imageUrls.add(url);
                             titles.add(title);
+                            imgNames.add(img);
                             bookAdapter.notifyDataSetChanged();
                         }
                     });
