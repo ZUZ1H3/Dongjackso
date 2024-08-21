@@ -17,7 +17,7 @@
         android:layout_marginRight="20dp"
         android:background="@drawable/message_background2"
         android:fontFamily="@font/ssurround"
-        android:maxWidth="550dp"
+        android:maxWidth="600dp"
         android:text="냐하하하하하"
         android:textColor="#ffffff"
         android:textSize="24sp" />

@@ -18,7 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HolyMoly"
         tools:targetApi="31">
-
+        <activity
+            android:name=".MakeDiaryActivity"
+            android:exported="true" />
         <activity
             android:name=".PuzzleActivity"
             android:exported="true" />
