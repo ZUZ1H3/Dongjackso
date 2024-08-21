@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -42,31 +43,7 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         user = auth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
 
-        // 로컬 SharedPreferences에서 사용자 이름을 가져옴
-        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        String namePref = prefs.getString(KEY_USER_NAME, null);
-
-        if (namePref != null) { // 저장된 이름이 있으면 텍스트뷰에 바로 설정
-            name.setText(namePref);
-        }
-        else if (user != null) { // 저장된 이름이 없으면 사용자 이름을 Firestore에서 가져옴
-            db.collection("users").document(user.getUid())
-                    .get()
-                    .addOnSuccessListener(document -> {
-                        if (document.exists()) {
-                            String userName = document.getString("name");
-                            if (userName != null) {
-                                // 사용자 이름을 SharedPreferences에 저장
-                                SharedPreferences.Editor editor = prefs.edit();
-                                editor.putString(KEY_USER_NAME, userName);
-                                editor.apply();
-
-                                // 텍스트뷰에 설정
-                                name.setText(userName);
-                            }
-                        }
-                    });
-        }
+        checkUserName();
     }
     @Override
     public void onClick(View v) {
@@ -81,4 +58,34 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
             finishAffinity();
         }
     }
+    // 저장된 사용자 이름이 현재 로그인한 사용자와 같은지 확인하고 필요시 업데이트
+    private void checkUserName() {
+        SharedPreferences prefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        String savedUserName = prefs.getString(KEY_USER_NAME, null);
+
+        // 현재 로그인한 사용자의 정보를 가져옴
+        db.collection("users").document(user.getUid()).get()
+                .addOnSuccessListener(document -> {
+                    if (document.exists()) {
+                        String currentUserName = document.getString("name");
+                        if (currentUserName != null) {
+                            // 저장된 이름과 현재 사용자 이름이 다르면 업데이트
+                            if (savedUserName == null || !savedUserName.equals(currentUserName)) {
+                                // SharedPreferences에 현재 사용자 이름 저장
+                                SharedPreferences.Editor editor = prefs.edit();
+                                editor.putString(KEY_USER_NAME, currentUserName);
+                                editor.apply(); // 변경사항 적용
+
+                                // 텍스트뷰에 새로운 사용자 이름 설정
+                                name.setText(currentUserName);
+                            } else {
+                                // 저장된 사용자 이름이 현재 사용자 이름과 같으면 그대로 사용
+                                name.setText(savedUserName);
+                            }
+                        }
+                    }
+                });
+    }
+
+
 }

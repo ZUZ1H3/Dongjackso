@@ -38,7 +38,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private FirebaseFirestore db;
     private FirebaseStorage storage;
     private StorageReference storageRef;
-    private StorageReference charcterRef;
+    private StorageReference characterRef;
 
     private Spinner genderSpinner;
     private ArrayAdapter<String> adapter;
@@ -69,7 +69,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
-        charcterRef = storageRef.child("characters/");
+        characterRef = storageRef.child("characters/" + user.getUid() + ".png");
 
         pref = getSharedPreferences("music", MODE_PRIVATE);
         isBgmOn = pref.getBoolean("on&off", true); // 기본값 켜짐
@@ -194,24 +194,12 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                         }
                     }
                 });
-        // 이미지 가져오기
-        charcterRef.listAll().addOnSuccessListener(listResult -> {
-            List<StorageReference> items = listResult.getItems();
-            for (StorageReference item : items) {
-                String img = item.getName();
-                // 파일 이름이 현재 사용자의 ID로 시작하는 경우
-                if (img.startsWith(user.getUid())) {
-                    final long MEGABYTE = 1024 * 1024; // 1MB
-                    item.getBytes(MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                        @Override
-                        public void onSuccess(byte[] bytes) {
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                            Bitmap cBitmap = cropImage(bitmap);
-                            profile.setImageBitmap(cBitmap);
-                        }
-                    });
-                }
-            }
+        // 캐릭터 이미지 가져오기
+        final long MEGABYTE = 1024 * 1024; // 1MB
+        characterRef.getBytes(MEGABYTE).addOnSuccessListener(bytes -> {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            Bitmap cBitmap = cropImage(bitmap);
+            profile.setImageBitmap(cBitmap);
         });
     }
     // 이미지 확대
