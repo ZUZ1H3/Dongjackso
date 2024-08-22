@@ -129,6 +129,9 @@ public class MakeStoryActivity extends AppCompatActivity {
                     ++num;
                     pageTextView.setText(num + " / 6");
                 }
+                if (num >=5){
+                    nextBtn.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -147,6 +150,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                         makeStory.generateNextStoryPart(selectedChoice);
                     } else if (num == 5) {
                         makeStory.generateEndStoryPart(selectedChoice);
+
                     }
                     ++num;
                     pageTextView.setText(num + " / 6");
