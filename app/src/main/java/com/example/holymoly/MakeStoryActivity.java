@@ -128,6 +128,9 @@ public class MakeStoryActivity extends AppCompatActivity {
                     }
                     ++num;
                 }
+                if (num >=5){
+                    nextBtn.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -146,6 +149,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                         makeStory.generateNextStoryPart(selectedChoice);
                     } else if (num == 5) {
                         makeStory.generateEndStoryPart(selectedChoice);
+
                     }
                     ++num;
                 }
