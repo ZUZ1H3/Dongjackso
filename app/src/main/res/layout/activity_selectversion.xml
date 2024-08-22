@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_main"
+    tools:context=".SelectversionActivity">
+
+    <ImageView
+        android:id="@+id/iv_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_contain"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.022"
+        app:layout_constraintVertical_bias="0.03" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/mini_profile"
+        android:layout_width="86dp"
+        android:layout_height="86dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_container"
+        app:layout_constraintHorizontal_bias="0.0225"
+        app:layout_constraintVertical_bias="0.0094" />
+
+    <TextView
+        android:id="@+id/mini_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:fontFamily="@font/ssurround"
+        android:hint="어린이"
+        android:textColor="@color/white"
+        android:textSize="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_container"
+        app:layout_constraintVertical_bias="0.08"
+        app:layout_constraintHorizontal_bias="0.11" />
+
+    <TextView
+        android:id="@+id/mini_nickname"
+        android:layout_width="130dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ssurround"
+        android:text=" 꼬마 작가"
+        android:textColor="@color/white"
+        android:textSize="24dp"
+        app:layout_constraintStart_toEndOf="@+id/mini_name"
+        app:layout_constraintTop_toTopOf="@id/mini_name" />
+
+    <!--오른쪽 위에 버튼3개 / 트로피, 환경설정, 홈버튼 -->
+    <ImageButton
+        android:id="@+id/ib_trophy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_trophy"
+        android:backgroundTint="#0000"
+        android:contentDescription="트로피"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_container"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintHorizontal_bias="0.91" />
+    <ImageButton
+        android:id="@+id/ib_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_setting"
+        android:backgroundTint="#0000"
+        android:contentDescription="환경설정"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/ib_trophy"
+        app:layout_constraintTop_toTopOf="@id/ib_trophy"
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintHorizontal_bias="0" />
+    <ImageButton
+        android:id="@+id/ib_homebutton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#0000"
+        android:contentDescription="홈버튼"
+        android:src="@drawable/ic_homebutton"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/ib_trophy"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintTop_toTopOf="@id/ib_trophy"
+        app:layout_constraintVertical_bias="0" />
+
+    <ImageButton
+        android:id="@+id/ib_makeWithAI"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ib_version_makewithai"
+        android:contentDescription="AI와 함께 만들기 버튼"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.8"
+        app:layout_constraintHorizontal_bias="0.12"/>
+
+    <ImageButton
+        android:id="@+id/ib_makeWithAlone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ib_version_makealone"
+        android:contentDescription="혼자 만들기 버튼"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.8"
+        app:layout_constraintHorizontal_bias="0.88"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
