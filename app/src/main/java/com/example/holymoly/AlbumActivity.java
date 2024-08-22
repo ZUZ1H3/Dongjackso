@@ -132,18 +132,29 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
     private void loadImages() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference().child("covers");
+        String uid = user.getUid();
 
         storageRef.listAll().addOnSuccessListener(listResult -> {
-            if (!listResult.getItems().isEmpty()) {
-                // 표지가 있으면 TextView를 숨기고 RecyclerView를 보이게 설정
+            List<StorageReference> items = listResult.getItems();
+
+            // UID로 시작하는 이미지가 있는지 확인
+            boolean hasUserImages = false;
+
+            for (StorageReference item : items) {
+                if (item.getName().startsWith(uid)) {
+                    hasUserImages = true;
+                    break;
+                }
+            }
+
+            // UID로 시작하는 이미지가 있으면 TextView를 숨기고 RecyclerView를 보이게 설정
+            if (hasUserImages) {
                 tvNone.setVisibility(View.GONE);
                 tvPush.setVisibility(View.GONE);
                 tvMakeFirst.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
             }
 
-            // 파일들을 리스트로 가져옴
-            List<StorageReference> items = listResult.getItems();
             // 파일 이름을 기준으로 정렬
             Collections.sort(items, new Comparator<StorageReference>() {
                 @Override
@@ -159,7 +170,7 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
             for (StorageReference item : items) {
                 String img = item.getName();
                 // 파일 이름이 현재 사용자의 ID로 시작하는 경우
-                if (img.startsWith(user.getUid())) {
+                if (img.startsWith(uid)) {
                     item.getDownloadUrl().addOnSuccessListener(uri -> {
                         String url = uri.toString();
                         String title = extractTitle(img); // 파일 이름에서 제목 추출
@@ -175,6 +186,7 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
             }
         });
     }
+
     // 파일 이름에 따라 '_'로 분할해 숫자를 알아냄
     private int extractIndex(String fileName) {
         try {

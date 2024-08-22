@@ -124,7 +124,9 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
     private void bookTextContent(String textContent) {
         String[] pages = textContent.split("(?=페이지 \\d+)");
         for (String page : pages) {
-            pageContents.add(page.trim());
+            // "페이지"와 숫자 부분을 제거하고, 나머지 텍스트만 추가
+            String cleanedPage = page.replaceAll("페이지 \\d+", "").trim();
+            pageContents.add(cleanedPage);
         }
     }
     private void showPage(int num) {
