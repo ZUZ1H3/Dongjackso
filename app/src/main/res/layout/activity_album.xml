@@ -154,25 +154,22 @@
         app:layout_constraintVertical_bias="0.35"
         app:layout_constraintHorizontal_bias="0.5" />
 
-    <androidx.core.widget.NestedScrollView
+    <LinearLayout
         android:layout_width="1020dp"
-        android:layout_height="wrap_content"
+        android:layout_height="480dp"
+        android:orientation="horizontal"
         android:layout_marginTop="50dp"
         android:layout_marginLeft="58dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/theme_spinner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
-        <LinearLayout
-            android:layout_width="wrap_content"
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="480dp"
-                android:nestedScrollingEnabled="false"
-                android:visibility="gone" />
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+            android:nestedScrollingEnabled="false"
+            android:visibility="gone" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

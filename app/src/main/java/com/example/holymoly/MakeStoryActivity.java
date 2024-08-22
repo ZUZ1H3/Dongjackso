@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -128,9 +129,8 @@ public class MakeStoryActivity extends AppCompatActivity {
                     }
                     ++num;
                 }
-                if (num >=5){
-                    nextBtn.setVisibility(View.VISIBLE);
-                }
+                if (num > 5) nextBtn.setVisibility(View.VISIBLE);
+
             }
         });
 
@@ -149,10 +149,10 @@ public class MakeStoryActivity extends AppCompatActivity {
                         makeStory.generateNextStoryPart(selectedChoice);
                     } else if (num == 5) {
                         makeStory.generateEndStoryPart(selectedChoice);
-
                     }
                     ++num;
                 }
+                if (num > 5) nextBtn.setVisibility(View.VISIBLE);
             }
         });
 
@@ -173,7 +173,6 @@ public class MakeStoryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (num == 6) {
                     pageContents.set(num -1, storyTextView.getText().toString());
-                    nextBtn.setVisibility(View.VISIBLE);
                 }
                 if (isImageLoaded) {
                     byte[] imageBytes = (byte[]) nextBtn.getTag();

@@ -22,10 +22,10 @@
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/iv_writingZone"
@@ -75,11 +75,25 @@
         app:layout_constraintVertical_bias="0.724" />
 
     <ImageButton
+        android:id="@+id/ib_backStep"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#0000"
+        android:contentDescription="이전장으로"
+        android:src="@drawable/ic_backstep"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.85"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.98" />
+
+    <ImageButton
         android:id="@+id/ib_nextStep"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#0000"
-        android:contentDescription="환경설정"
+        android:contentDescription="다음장으로"
         android:src="@drawable/ic_nextstep"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

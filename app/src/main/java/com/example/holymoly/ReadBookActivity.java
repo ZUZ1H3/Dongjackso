@@ -28,7 +28,7 @@ import java.util.List;
 
 public class ReadBookActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView storyTextView, pageTextView;
-    private ImageButton stopReadingBtn, nextBtn;
+    private ImageButton stopReadingBtn, backBtn, nextBtn;
     private ImageView backgroundImageView;
     private int currentPage = 1;
     private long backPressedTime = 0;
@@ -50,9 +50,11 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
         pageTextView = findViewById(R.id.tv_page);
         backgroundImageView = findViewById(R.id.background_image_view);
         stopReadingBtn = findViewById(R.id.ib_stopReading);
+        backBtn = findViewById(R.id.ib_backStep);
         nextBtn = findViewById(R.id.ib_nextStep);
         storyTextView.setMovementMethod(new ScrollingMovementMethod());
 
+        backBtn.setOnClickListener(this);
         nextBtn.setOnClickListener(this);
         stopReadingBtn.setOnClickListener(this);
 
@@ -66,10 +68,9 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-        if(v.getId() == R.id.ib_nextStep) {
-            nextPage();
-        }
-        else if(v.getId() == R.id.ib_stopReading) {
+        if(v.getId() == R.id.ib_backStep) { backPage();}        // 이전 페이지로
+        else if(v.getId() == R.id.ib_nextStep) { nextPage(); }  // 다음 페이지로
+        else if(v.getId() == R.id.ib_stopReading) { // 그만 읽기
             if (System.currentTimeMillis() - backPressedTime >= 2000) {
                 backPressedTime = System.currentTimeMillis();
                 Toast.makeText(this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
@@ -90,6 +91,15 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
         imgRef.getDownloadUrl().addOnSuccessListener(uri -> {
             Glide.with(this).load(uri).into(backgroundImageView);
         });
+    }
+    // 이전 페이지로 이동
+    private void backPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            showPage(currentPage); // 페이지 내용 업데이트
+        } else {
+            Toast.makeText(this, "첫 번째 페이지입니다.", Toast.LENGTH_SHORT).show();
+        }
     }
     // 다음 페이지로 이동
     private void nextPage() {
