@@ -54,10 +54,10 @@ public class MaketitleActivity extends AppCompatActivity {
             }
         }
 
-        bookTitle = title.getText().toString();
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                bookTitle = title.getText().toString();
                 Intent intent = new Intent(MaketitleActivity.this, MakeBookcoverActivity.class);
                 intent.putExtra("bookTitle", bookTitle);
                 intent.putExtra("selectedTheme", selectedTheme); // 작업이 완료되었을 때 MakeBookcoverActivity로 이동

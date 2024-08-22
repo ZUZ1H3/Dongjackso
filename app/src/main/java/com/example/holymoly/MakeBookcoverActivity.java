@@ -50,7 +50,6 @@ public class MakeBookcoverActivity extends AppCompatActivity {
     /* firebase 초기화 */
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef = storage.getReference();
 
@@ -309,7 +308,7 @@ public class MakeBookcoverActivity extends AppCompatActivity {
             }
             int index = themeCount + 1;
             // index가 아니라 책 표지 제목으로 변경할 것.
-            String fileName = user.getUid() + "_" + theme + "_" + index + ".png";
+            String fileName = user.getUid() + "_" + theme + "_" + index + "_" + bookTitle + ".png";
 
             // 이미지가 저장될 경로 설정
             StorageReference imageRef = coverRef.child(fileName);
