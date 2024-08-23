@@ -28,7 +28,7 @@ public class DiaryActivity extends AppCompatActivity {
     private ChatFutures chat;
     private EditText userInput;
     private ImageView rectangles;
-    private ImageButton sendButton, makeDiaryButton, moreButton;
+    private ImageButton sendButton, makeDiaryButton, moreButton, stopMakingBtn;
     private RecyclerView recyclerView;
     private MessageAdapter messageAdapter;
     private List<Message> messageList = new ArrayList<>();
@@ -41,6 +41,8 @@ public class DiaryActivity extends AppCompatActivity {
     private FirebaseUser user = auth.getCurrentUser();
     private String story = ""; // 사용자가 작성한 메시지를 저장할 변수
     private boolean isConversationEnded = false; // 대화 종료 여부를 체크하는 플래그
+    private long backPressedTime = 0;
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,10 +50,11 @@ public class DiaryActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerView);
         userInput = findViewById(R.id.userInput);
-        rectangles= findViewById(R.id.rectangles);
+        rectangles = findViewById(R.id.rectangles);
         sendButton = findViewById(R.id.sendButton);
         makeDiaryButton = findViewById(R.id.makeDiary);
         moreButton = findViewById(R.id.more);
+        stopMakingBtn = findViewById(R.id.ib_stopMaking);
         who = findViewById(R.id.who);
         when = findViewById(R.id.when);
         where = findViewById(R.id.where);
@@ -74,10 +77,10 @@ public class DiaryActivity extends AppCompatActivity {
         userContentBuilder.setRole("user");
         userContentBuilder.addText("당신이 대화할 대상은 어린이입니다. 다정하고 친근한 반말 말투로 말해주세요." +
                 "사용자는 오늘 있었던 일에 대해 이야기할 것입니다. 리액션과 함께 그 경험에 대해 구체적으로 대답할 수 있도록 물어봐주세요." +
-                "사용자가 '누구와 함께했는지, 언제, 어디서, 무엇을, 어떻게, 왜'에 대한 이야기를 하지 않았다면, 이를 이야기할 수 있도록 물어봐주세요."+
+                "사용자가 '누구와 함께했는지, 언제, 어디서, 무엇을, 어떻게, 왜'에 대한 이야기를 하지 않았다면, 이를 이야기할 수 있도록 물어봐주세요." +
                 "감정도 함께 이야기할 수 있도록 유도해주세요. 한 번에 한가지만 질문해주세요. 폐쇄형 질문이 아닌 개방형 질문으로 해주세요." +
-                "누군가와 함께 했는지, 혼자했는지 여부를 알 수 없다면, 함께한 사람이 있었는지 물어봐주세요."+
-                "그러나 질문만 계속 하지는 말고 가끔 주제에 맞는 재밌는 이야기도 하며 수다를 떨어주세요."+
+                "누군가와 함께 했는지, 혼자했는지 여부를 알 수 없다면, 함께한 사람이 있었는지 물어봐주세요." +
+                "그러나 질문만 계속 하지는 말고 가끔 주제에 맞는 재밌는 이야기도 하며 수다를 떨어주세요." +
                 "'ㅋㅋㅋ', 'ㅎㅎ'와 같은 초성으로 대화하지 마세요. 표준어를 사용해주세요.");
         Content userContent = userContentBuilder.build();
         Content.Builder modelContentBuilder = new Content.Builder();
@@ -127,6 +130,18 @@ public class DiaryActivity extends AppCompatActivity {
                 handleMakeDiaryButtonClick();
             }
         });
+
+        stopMakingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (System.currentTimeMillis() - backPressedTime >= 2000) {
+                    backPressedTime = System.currentTimeMillis();
+                    Toast.makeText(DiaryActivity.this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+                } else {
+                    finish();
+                }
+            }
+        });
     }
 
     private void showFirstMessageWithDelay() {
@@ -138,6 +153,7 @@ public class DiaryActivity extends AppCompatActivity {
             recyclerView.scrollToPosition(messageList.size() - 1);
         }, 2000); // 3000 밀리초 = 3초
     }
+
     private void handleMoreButtonClick() {
         //isConversationEnded = false; // 대화가 계속 진행되도록 플래그 업데이트
         // UI 업데이트: 대화 입력 필드와 버튼을 보이도록 설정
@@ -153,6 +169,7 @@ public class DiaryActivity extends AppCompatActivity {
         messageAdapter.notifyItemInserted(messageList.size() - 1);
         recyclerView.scrollToPosition(messageList.size() - 1);
     }
+
     private void handleMakeDiaryButtonClick() {
         Intent intent = new Intent(DiaryActivity.this, MakeDiaryActivity.class);
         intent.putExtra("story", story); // 스토리를 전달
@@ -205,7 +222,7 @@ public class DiaryActivity extends AppCompatActivity {
                 "'언제' 정보에 대해 '오늘', '어제', '내일'등은 포함되지 않습니다. '언제'는 특정 시각, 아침, 낮, 저녁 등 구체적인 시간대에 대한 언급이 없으면, 공백입니다." +
                 "이모지를 사용하지 마세요. 'ㅋㅋㅋ', 'ㅎㅎ' 등 초성을 사용하지 마세요.\n" +
                 "ex)사용자: 나 오늘 도서관에서 공부했어.\n" +
-                "당신: 오늘 도서관에서 공부를 했구나! 힘들었을텐데 정말 대단하다. 도서관에는 언제 갔니? 낮에 간거야?\n"+
+                "당신: 오늘 도서관에서 공부를 했구나! 힘들었을텐데 정말 대단하다. 도서관에는 언제 갔니? 낮에 간거야?\n" +
                 "이제 아래의 문장에 대해 답변해주세요." +
                 " \n문장: " + message;
 
