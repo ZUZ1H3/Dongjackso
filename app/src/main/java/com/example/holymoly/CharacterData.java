@@ -48,8 +48,8 @@ public class CharacterData {
         });
 
         themeCharacterMap.put("마을", new CharacterInfo[]{
-                new CharacterInfo("소년", R.drawable.ic_village1),
-                new CharacterInfo("소녀", R.drawable.ic_village2),
+                new CharacterInfo("소녀", R.drawable.ic_village1),
+                new CharacterInfo("소년", R.drawable.ic_village2),
                 new CharacterInfo("엄마", R.drawable.ic_village3),
                 new CharacterInfo("아빠", R.drawable.ic_village4),
                 new CharacterInfo("강아지", R.drawable.ic_village5),

@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 외부 저장소 허용 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 구글 STT 허가 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:allowBackup="true"
@@ -50,6 +52,9 @@
             android:enabled="true"
             android:exported="true" />
 
+        <activity
+            android:name=".VoiceActivity"
+            android:exported="true" />
         <activity
             android:name=".JoinActivity"
             android:exported="true" />

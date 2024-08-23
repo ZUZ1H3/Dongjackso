@@ -1,83 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".SelectthemaActivity"
-    android:background="@drawable/bg_bookbackground">
+    tools:context=".VoiceActivity"
+    android:background="@color/black" >
 
-    <!--반투명한 검은 사각형-->
-    <ImageView
-        android:id="@+id/iv_blackbg"
-        android:layout_width="1280dp"
-        android:layout_height="800dp"
-        android:src="@drawable/bg_black"
+    <TextView
+        android:id="@+id/tv_sayit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/ssurround"
+        android:text="다음에 이어질 내용은?"
+        android:textSize="60sp"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0"
-        app:layout_constraintHorizontal_bias="0" />
+        app:layout_constraintVertical_bias="0.15" />
 
-    <!--그만 만들기 버튼-->
+    <ImageView
+        android:id="@+id/iv_mic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_bigmic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_sayit"
+        app:layout_constraintVertical_bias="0.4" />
+
+    <TextView
+        android:id="@+id/tv_script"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="40sp"
+        android:fontFamily="@font/ssurround"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:hint="마이크를 눌러 음성을 인식하세요."
+        android:textColorHint="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_mic"
+        app:layout_constraintVertical_bias="0.75" />
+
     <ImageButton
-        android:id="@+id/ib_stopMaking"
+        android:id="@+id/ib_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_stopmaking"
-        android:backgroundTint="#0000"
-        android:contentDescription="그만만들기"
+        android:src="@drawable/ic_nextstep"
+        android:background="null"
+        android:contentDescription="다음"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.98"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.01"
-        app:layout_constraintHorizontal_bias="1.01" />
-
-    <!--어떻게 해야할까?-->
-    <TextView
-        android:id="@+id/tv_storyQuest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ssurround"
-        android:gravity="center"
-        android:text="무슨말을 했을까?"
-        android:textColor="@color/white"
-        android:textSize="50dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.18"
-        app:layout_constraintHorizontal_bias="0.5" />
-
-    <!--마이크모양-->
-    <ImageView
-        android:id="@+id/iv_voice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_mic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.6"
-        app:layout_constraintHorizontal_bias="0.5" />
-
-    <!--녹음중..text-->
-    <TextView
-        android:id="@+id/tv_recording"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ssurround"
-        android:gravity="center"
-        android:text="녹음중.."
-        android:textColor="@color/white"
-        android:textSize="50dp"
-        app:layout_constraintTop_toBottomOf="@id/iv_voice"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5" />
-
+        app:layout_constraintTop_toTopOf="@id/tv_script"
+        app:layout_constraintVertical_bias="0.75"
+        android:visibility="invisible" />
 </androidx.constraintlayout.widget.ConstraintLayout>
