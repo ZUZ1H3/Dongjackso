@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,12 +18,16 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class VoiceActivity extends AppCompatActivity {
-
     Intent intent;
     SpeechRecognizer mRecognizer;
-    ImageView sttBtn;
+    ImageView mic;
     TextView textView;
+    ImageButton next;
     MakeStory makeStory;
+    private String selectedTheme;
+    private ArrayList<String> selectedCharacters;
+
+    private String themePath, finalSelectedTheme;
 
     final int PERMISSION = 1;
 
@@ -38,18 +43,22 @@ public class VoiceActivity extends AppCompatActivity {
         }
 
         textView = (TextView)findViewById(R.id.tv_script);
-        sttBtn = (ImageView) findViewById(R.id.iv_mic);
+        mic = (ImageView) findViewById(R.id.iv_mic);
+        next = (ImageButton) findViewById(R.id.ib_next);
 
         intent=new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE,getPackageName());
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE,"ko-KR");
 
-        sttBtn.setOnClickListener(v -> {
+        Intent intent = getIntent();
+        selectedTheme = intent.getStringExtra("selectedTheme");
+        selectedCharacters = intent.getStringArrayListExtra("selectedCharacters");
+
+        mic.setOnClickListener(v -> {
             mRecognizer=SpeechRecognizer.createSpeechRecognizer(this);
             mRecognizer.setRecognitionListener(listener);
             mRecognizer.startListening(intent);
         });
-
     }
 
     private RecognitionListener listener = new RecognitionListener() {
@@ -106,7 +115,6 @@ public class VoiceActivity extends AppCompatActivity {
                     message = "알 수 없는 오류";
                     break;
             }
-
             Toast.makeText(getApplicationContext(), "에러가 발생하였습니다. : " + message,Toast.LENGTH_SHORT).show();
         }
 

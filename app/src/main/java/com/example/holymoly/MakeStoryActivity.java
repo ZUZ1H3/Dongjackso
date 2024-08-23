@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -44,10 +45,9 @@ import java.util.Locale;
 
 public class MakeStoryActivity extends AppCompatActivity {
     private boolean isImageLoaded = false; // 이미지 로드 상태를 추적하는 변수
-    private TextView storyTextView, pageTextView;
-    private Button choice1, choice2;
+    private TextView storyTextView, pageTextView, selectText1, selectText2;
     private ImageButton stopMakingBtn, nextBtn;
-    private ImageView backgroundImageView, loading;
+    private ImageView backgroundImageView, loading, selectImage1, selectImage2, selectMic, nextStory;
     private String selectedTheme;
     private ArrayList<String> selectedCharacters;
     private Handler handler = new Handler();
@@ -78,12 +78,16 @@ public class MakeStoryActivity extends AppCompatActivity {
         pageTextView = findViewById(R.id.tv_page);
         backgroundImageView = findViewById(R.id.background_image_view);
         loading = findViewById(R.id.ib_loading);
-        choice1 = findViewById(R.id.btn_choice1);
-        choice2 = findViewById(R.id.btn_choice2);
+        selectText1 = findViewById(R.id.tv_select1);
+        selectText2 = findViewById(R.id.tv_select2);
+        selectImage1 = findViewById(R.id.iv_select1);
+        selectImage2 = findViewById(R.id.iv_select2);
+        selectMic = findViewById(R.id.iv_mic);
+        nextStory = findViewById(R.id.iv_nextstory);
         stopMakingBtn = findViewById(R.id.ib_stopMaking);
         nextBtn = findViewById(R.id.ib_nextStep);
-        storyTextView.setMovementMethod(new ScrollingMovementMethod());
 
+        storyTextView.setMovementMethod(new ScrollingMovementMethod());
         MainActivity mainActivity = new MainActivity();
 
         //지금까지 ArrayList에 저장한 액티비티 전부를 for문을 돌려서 finish한다.
@@ -111,12 +115,25 @@ public class MakeStoryActivity extends AppCompatActivity {
 
         makeStory.generateInitialStory();
 
-        choice1.setOnClickListener(new View.OnClickListener() {
+        selectMic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                choice1.setVisibility(View.INVISIBLE);
-                choice2.setVisibility(View.INVISIBLE);
-                String selectedChoice = choice1.getText().toString(); // 선택지1 가져오기
+                Intent intent = new Intent(MakeStoryActivity.this, VoiceActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        selectText1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nextStory.setVisibility(View.INVISIBLE);
+                selectImage1.setVisibility(View.INVISIBLE);
+                selectImage2.setVisibility(View.INVISIBLE);
+                selectText1.setVisibility(View.INVISIBLE);
+                selectText2.setVisibility(View.INVISIBLE);
+                selectMic.setVisibility(View.INVISIBLE);
+
+                String selectedChoice = selectText1.getText().toString(); // 선택지1 가져오기
 
                 if (num < 6) {
                     // 현재 페이지 내용, 선택지 저장
@@ -134,12 +151,17 @@ public class MakeStoryActivity extends AppCompatActivity {
             }
         });
 
-        choice2.setOnClickListener(new View.OnClickListener() {
+        selectText2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                choice1.setVisibility(View.INVISIBLE);
-                choice2.setVisibility(View.INVISIBLE);
-                String selectedChoice = choice2.getText().toString(); // 선택지2 가져오기
+                nextStory.setVisibility(View.INVISIBLE);
+                selectImage1.setVisibility(View.INVISIBLE);
+                selectImage2.setVisibility(View.INVISIBLE);
+                selectText1.setVisibility(View.INVISIBLE);
+                selectText2.setVisibility(View.INVISIBLE);
+                selectMic.setVisibility(View.INVISIBLE);
+
+                String selectedChoice = selectText2.getText().toString(); // 선택지2 가져오기
 
                 if (num < 6) {
                     // 현재 페이지 내용, 선택지 저장
@@ -190,7 +212,6 @@ public class MakeStoryActivity extends AppCompatActivity {
         });
 
     }
-
 
     public void translate(final String storyText) {
         //선택한 테마 번역
@@ -296,13 +317,17 @@ public class MakeStoryActivity extends AppCompatActivity {
     public void showChoices(String choicesText) {
         String[] choices = choicesText.split("/");
         if (choices.length >= 2) {
-            choice1.setText(choices[0].trim());
-            choice2.setText(choices[1].trim());
+            selectText1.setText(choices[0].trim());
+            selectText2.setText(choices[1].trim());
         } else {
             showToast("선택지가 부족합니다.");
         }
-        choice1.setVisibility(View.VISIBLE);
-        choice2.setVisibility(View.VISIBLE);
+        nextStory.setVisibility(View.VISIBLE);
+        selectImage1.setVisibility(View.VISIBLE);
+        selectImage2.setVisibility(View.VISIBLE);
+        selectText1.setVisibility(View.VISIBLE);
+        selectText2.setVisibility(View.VISIBLE);
+        selectMic.setVisibility(View.VISIBLE);
     }
 
     // URL에서 Bitmap 객체를 생성하는 함수
@@ -461,8 +486,13 @@ public class MakeStoryActivity extends AppCompatActivity {
             fis.read(data);
             fis.close();
 
+            // 파일 메타데이터 생성 (MIME 타입 설정)
+            StorageMetadata metadata = new StorageMetadata.Builder()
+                    .setContentType("text/plain")
+                    .build();
+
             // 파일 업로드
-            UploadTask uploadTask = fileRef.putBytes(data);
+            UploadTask uploadTask = fileRef.putBytes(data, metadata);
             uploadTask.addOnSuccessListener(taskSnapshot -> {
                 showToast("파일 업로드 성공");
             });

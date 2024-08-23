@@ -42,10 +42,28 @@
         android:textSize="40sp"
         android:fontFamily="@font/ssurround"
         android:textColor="@color/white"
+        android:gravity="center"
+        android:hint="마이크를 눌러 음성을 인식하세요."
+        android:textColorHint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_mic"
         app:layout_constraintVertical_bias="0.75" />
+
+    <ImageButton
+        android:id="@+id/ib_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_nextstep"
+        android:background="null"
+        android:contentDescription="다음"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.98"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_script"
+        app:layout_constraintVertical_bias="0.75"
+        android:visibility="invisible" />
 </androidx.constraintlayout.widget.ConstraintLayout>
