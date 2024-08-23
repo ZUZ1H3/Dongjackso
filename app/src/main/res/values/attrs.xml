@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="StrokeText">
+        <attr name="textStroke" format="boolean" />
+        <attr name="textStrokeWidth" format="float" /> <!-- 외곽선 두께 -->
+        <attr name="textStrokeColor" format="color" /> <!-- 외곽선 색상 -->
+    </declare-styleable>
+</resources>

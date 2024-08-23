@@ -14,7 +14,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class AchieveActivity extends AppCompatActivity {
+public class AchieveActivity extends AppCompatActivity implements UserInfoLoader {
     //라디오버튼2개 라디오그룹1 나가기버튼1 등록
     //동화 업적 - ~~개 만들기 텍스트뷰 수정, 오른쪽에 진행도 퍼센트+보상받기 텍스트뷰 등록 / 이미지버튼 등록
     //작가 호칭 - 프로그래스바, 프로그래스바 위 텍스트뷰, 이미지버튼 등록 (+사진도 등록 진척도에 따라 버튼이 활성화 되게끔함)
@@ -23,16 +23,30 @@ public class AchieveActivity extends AppCompatActivity {
 
     private RadioGroup rgTrophyCategory;
     private ImageButton ibCloseWindow;
+    private ImageView profile;
+    private TextView name;
+
+    private UserInfo userInfo = new UserInfo();
 
     //완료된 동화 테마 개수 세기
-    private int seaTrophyCount, forestTrophyCount, castleTrophyCount, villageTrophyCount, universeTrophyCount;
+    private int seaTrophyCount, forestTrophyCount,
+                castleTrophyCount, villageTrophyCount,
+                universeTrophyCount, desertTrophyCount,
+                customTrophyCount;
+
+    //동화 테마 목표 개수
+    private int goalSeaTrophyCount, goalForestTrophyCount, goalcastleTrophyCount,
+                goalVillageTrophyCount, goalUniverseTrophyCount, goalDesertTrophyCount,
+                goalCustomTrophyCount;
 
     //동화 업적 텍스트뷰
     private TextView tvSeaTrophy, tvSeaTrophyPercent,
             tvForestTrophy, tvForestTrophyPercent,
             tvCastleTrophy, tvCastleTrophyPercent,
             tvVillageTrophy, tvVillageTrophyPercent,
-            tvUniverseTrophy, tvUniverseTrophyPercent;
+            tvUniverseTrophy, tvUniverseTrophyPercent,
+            tvDesertTrophy, tvDesertTrophyPercent,
+            tvCustomTrophy, tvCustomTrophyPercent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +61,11 @@ public class AchieveActivity extends AppCompatActivity {
 
         //동화업적 개수 초기화?
         seaTrophyCount = 0; forestTrophyCount = 0; castleTrophyCount = 0; villageTrophyCount = 0; universeTrophyCount = 0;
+
+        name = findViewById(R.id.mini_name);
+        profile = findViewById(R.id.mini_profile);
+
+        loadUserInfo(profile, name);
 
         //동화업적 텍스트뷰 연결
         tvSeaTrophy = findViewById(R.id.tv_seaTrophy); tvSeaTrophyPercent = findViewById(R.id.tv_seaTrophyPercent);
@@ -84,7 +103,7 @@ public class AchieveActivity extends AppCompatActivity {
         });
 
         //동화업적창 알고리즘
-
+        
         //완료된 바다 숲 궁전 마을 우주 동화 개수 세기
 
         //만들어질때마다 업데이트 + 그에 맞도록 퍼센트 업데이트 textView.setText("New Text from Java Code");
@@ -98,5 +117,10 @@ public class AchieveActivity extends AppCompatActivity {
         //목표치를 채우면 사용버튼의 이미지가 바뀌면서 버튼이 활성화됨 - 이 부분은 버튼의 이미지가 바뀌고 바뀐 이미지면 그에 맞는 행동을 넣어놓음
         //얻은 호칭은 프로필에 나오도록함(업데이트)
 
+    }
+
+    @Override
+    public void loadUserInfo(ImageView profile, TextView name) {
+        userInfo.loadUserInfo(profile, name);
     }
 }

@@ -66,4 +66,11 @@ dependencies {
 
     implementation ("org.json:json:20210307")
     implementation ("com.squareup.okhttp3:okhttp:4.9.3")
+
+    //color picker
+    implementation ("com.github.yukuku:ambilwarna:2.0.1")
+
+    // Glide
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
 }

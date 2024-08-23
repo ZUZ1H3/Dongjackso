@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- 외곽선 -->
+    <item>
+        <shape android:shape="rectangle">
+            <stroke
+                android:color="@android:color/white"
+                android:width="5dp" />
+        </shape>
+    </item>
+</layer-list>

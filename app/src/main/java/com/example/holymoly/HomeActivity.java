@@ -62,7 +62,7 @@ public class HomeActivity extends AppCompatActivity implements UserInfoLoader {
         btnmaking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, SelectthemaActivity.class);
+                Intent intent = new Intent(HomeActivity.this, SelectversionActivity.class);
                 startActivity(intent);
             }
         });
@@ -85,7 +85,7 @@ public class HomeActivity extends AppCompatActivity implements UserInfoLoader {
 
         btndiary.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 Intent intent = new Intent(HomeActivity.this, Home2Activity.class);
                 startActivity(intent);
             }

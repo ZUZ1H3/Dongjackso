@@ -94,6 +94,19 @@
         app:layout_constraintTop_toTopOf="@id/tv_pwd"
         app:layout_constraintLeft_toRightOf="@id/tv_pwd"
         app:layout_constraintHorizontal_bias="0.32" />
+    <ImageButton
+        android:id="@+id/btn_hidenshow"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:hint="show"
+        android:src="@drawable/ic_eye2"
+        android:backgroundTint="#0000"
+        android:contentDescription="숨김/나타냄"
+        android:layout_marginLeft="520dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/et_pwd" />
     <TextView
         android:id="@+id/tv_pwdchk"
         android:layout_width="wrap_content"
@@ -124,6 +137,19 @@
         app:layout_constraintTop_toTopOf="@id/tv_pwdchk"
         app:layout_constraintLeft_toRightOf="@id/tv_pwdchk"
         app:layout_constraintHorizontal_bias="0.41" />
+    <ImageButton
+        android:id="@+id/btn_hidenshow2"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:hint="show"
+        android:src="@drawable/ic_eye2"
+        android:backgroundTint="#0000"
+        android:contentDescription="숨김/나타냄"
+        android:layout_marginLeft="520dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/et_pwdchk" />
     <ImageButton
         android:id="@+id/btn_next"
         android:layout_width="wrap_content"

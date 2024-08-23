@@ -21,15 +21,14 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/mini_profile"
-        android:layout_width="85dp"
-        android:layout_height="85dp"
-        android:src="@color/white"
+        android:layout_width="86dp"
+        android:layout_height="86dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_container"
-        app:layout_constraintHorizontal_bias="0.023"
-        app:layout_constraintVertical_bias="0.011" />
+        app:layout_constraintHorizontal_bias="0.0225"
+        app:layout_constraintVertical_bias="0.0094" />
 
     <TextView
         android:id="@+id/mini_name"
@@ -44,7 +43,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/iv_container"
-        app:layout_constraintVertical_bias="0.078"
+        app:layout_constraintVertical_bias="0.08"
         app:layout_constraintHorizontal_bias="0.11" />
 
     <TextView
@@ -97,6 +96,20 @@
         app:layout_constraintTop_toTopOf="@id/ib_trophy"
         app:layout_constraintVertical_bias="0" />
 
+    <Spinner
+        android:id="@+id/theme_spinner"
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="130dp"
+        android:layout_marginLeft="72dp"
+        android:background="@drawable/theme_spinner"
+        android:dropDownWidth="wrap_content"
+        android:spinnerMode="dropdown"
+        android:textAlignment="center"
+        android:popupBackground="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_container" />
+
     <!--동화가 없을 때 나오는 텍스트뷰-->
     <TextView
         android:id="@+id/tv_none"
@@ -141,25 +154,22 @@
         app:layout_constraintVertical_bias="0.35"
         app:layout_constraintHorizontal_bias="0.5" />
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/sv_books"
-        android:layout_width="1000dp"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:layout_width="1020dp"
+        android:layout_height="480dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="58dp"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/theme_spinner"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.6"
-        app:layout_constraintHorizontal_bias="0.5" >
-        <LinearLayout
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal" >
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:nestedScrollingEnabled="false"
-                android:visibility="gone" />
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+            android:nestedScrollingEnabled="false"
+            android:visibility="gone" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

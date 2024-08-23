@@ -122,26 +122,12 @@
         app:layout_constraintVertical_bias="0.39"
         app:layout_constraintHorizontal_bias="0.092"/>
 
-    <!--캐릭터 눈동자 이미지뷰-->
-    <ImageView
-        android:id="@+id/iv_character_eyes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/iv_character_eyes"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_registration"
-        app:layout_constraintVertical_bias="0.48"
-        app:layout_constraintHorizontal_bias="0.164"/>
-
     <!--헤어레이아웃-->
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/hairLayout"
         android:layout_width="700dp"
         android:layout_height="475dp"
-        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -150,124 +136,130 @@
         app:layout_constraintHorizontal_bias="0.883" >
 
         <HorizontalScrollView
-            android:layout_gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scrollbars="none">
 
-            <RadioGroup
-                android:id="@+id/rg_hair"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@id/hairLayout"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.775"
-                app:layout_constraintHorizontal_bias="0.884" >
+                android:orientation="vertical">
 
-                <RadioButton
-                    android:id="@+id/rb_g_long"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
+                <RadioGroup
+                    android:id="@+id/rg_hair"
+                    android:layout_width="wrap_content"
+                    android:layout_height="475dp"
                     android:layout_margin="20dp"
-                    android:button="@null"
-                    android:background="@drawable/rb_hair_g_long"
-                    android:checked="true"/>
+                    android:orientation="horizontal"
+                    android:gravity="center"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@id/hairLayout"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.775"
+                    app:layout_constraintHorizontal_bias="0.884">
 
-                <RadioButton
-                    android:id="@+id/rb_b_hook"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:layout_margin="20dp"
-                    android:button="@null"
-                    android:background="@drawable/rb_hair_b_hook" />
+                    <RadioButton
+                        android:id="@+id/rb_g_long"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_margin="20dp"
+                        android:button="@null"
+                        android:background="@drawable/rb_hair_g_long"
+                        android:checked="true"/>
 
-                <RadioButton
-                    android:id="@+id/rb_g_pigtails"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:layout_margin="20dp"
-                    android:button="@null"
-                    android:background="@drawable/rb_hair_g_pigtails" />
+                    <RadioButton
+                        android:id="@+id/rb_b_hook"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_margin="20dp"
+                        android:button="@null"
+                        android:background="@drawable/rb_hair_b_hook" />
 
-                <RadioButton
-                    android:id="@+id/rb_b_hedgehog"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:layout_margin="20dp"
-                    android:button="@null"
-                    android:background="@drawable/rb_hair_b_hedgehog" />
+                    <RadioButton
+                        android:id="@+id/rb_g_pigtails"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_margin="20dp"
+                        android:button="@null"
+                        android:background="@drawable/rb_hair_g_pigtails" />
 
-                <RadioButton
-                    android:id="@+id/rb_g_twinbuns"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:layout_margin="20dp"
-                    android:button="@null"
-                    android:background="@drawable/rb_hair_g_twinbuns" />
+                    <RadioButton
+                        android:id="@+id/rb_b_hedgehog"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_margin="20dp"
+                        android:button="@null"
+                        android:background="@drawable/rb_hair_b_hedgehog" />
 
-                <RadioButton
-                    android:id="@+id/rb_b_broccoli"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:layout_margin="20dp"
-                    android:button="@null"
-                    android:background="@drawable/rb_hair_b_broccoli" />
+                    <RadioButton
+                        android:id="@+id/rb_g_twinbuns"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_margin="20dp"
+                        android:button="@null"
+                        android:background="@drawable/rb_hair_g_twinbuns" />
 
-                <RadioButton
-                    android:id="@+id/rb_g_short"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:layout_margin="20dp"
-                    android:button="@null"
-                    android:background="@drawable/rb_hair_g_short" />
+                    <RadioButton
+                        android:id="@+id/rb_b_broccoli"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_margin="20dp"
+                        android:button="@null"
+                        android:background="@drawable/rb_hair_b_broccoli" />
 
-                <RadioButton
-                    android:id="@+id/rb_b_gourd"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:layout_margin="20dp"
-                    android:button="@null"
-                    android:background="@drawable/rb_hair_b_gourd" />
+                    <RadioButton
+                        android:id="@+id/rb_g_short"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_margin="20dp"
+                        android:button="@null"
+                        android:background="@drawable/rb_hair_g_short" />
 
-                <!--twintail이랑 pontail은
-                 width를 다른머리에 비해 50dp씩 더 더해줘야함-->
-                <RadioButton
-                    android:id="@+id/rb_g_twintail"
-                    android:layout_width="250dp"
-                    android:layout_height="200dp"
-                    android:layout_margin="20dp"
-                    android:button="@null"
-                    android:background="@drawable/rb_hair_g_twintail" />
+                    <RadioButton
+                        android:id="@+id/rb_b_gourd"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_margin="20dp"
+                        android:button="@null"
+                        android:background="@drawable/rb_hair_b_gourd" />
 
-                <RadioButton
-                    android:id="@+id/rb_b_chestnut"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:layout_margin="20dp"
-                    android:button="@null"
-                    android:background="@drawable/rb_hair_b_chestnut" />
+                    <!--twintail이랑 pontail은
+                     width를 다른머리에 비해 50dp씩 더 더해줘야함-->
+                    <RadioButton
+                        android:id="@+id/rb_g_twintail"
+                        android:layout_width="230dp"
+                        android:layout_height="200dp"
+                        android:layout_margin="20dp"
+                        android:button="@null"
+                        android:background="@drawable/rb_hair_g_twintail" />
 
-                <RadioButton
-                    android:id="@+id/rb_hair_g_ponytail"
-                    android:layout_width="250dp"
-                    android:layout_height="200dp"
-                    android:layout_margin="20dp"
-                    android:button="@null"
-                    android:background="@drawable/rb_hair_g_ponytail" />
+                    <RadioButton
+                        android:id="@+id/rb_b_chestnut"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_margin="20dp"
+                        android:button="@null"
+                        android:background="@drawable/rb_hair_b_chestnut" />
 
-                <RadioButton
-                    android:id="@+id/rb_hair_b_twohooks"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
-                    android:layout_margin="20dp"
-                    android:button="@null"
-                    android:background="@drawable/rb_hair_b_twohooks" />
+                    <RadioButton
+                        android:id="@+id/rb_hair_g_ponytail"
+                        android:layout_width="230dp"
+                        android:layout_height="200dp"
+                        android:layout_margin="20dp"
+                        android:button="@null"
+                        android:background="@drawable/rb_hair_g_ponytail" />
 
-            </RadioGroup>
+                    <RadioButton
+                        android:id="@+id/rb_hair_b_twohooks"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_margin="20dp"
+                        android:button="@null"
+                        android:background="@drawable/rb_hair_b_twohooks" />
+
+                </RadioGroup>
+            </LinearLayout>
         </HorizontalScrollView>
     </LinearLayout>
 
@@ -284,6 +276,32 @@
         app:layout_constraintVertical_bias="0.33"
         app:layout_constraintHorizontal_bias="0"/>
 
+    <!--캐릭터 옷+몸 이미지뷰 위치수정XXXXXXX 여기선 이상해도 AVD에선 다르게나옴-->
+    <ImageView
+        android:id="@+id/iv_character_clothes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/iv_clothes_princessdress"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.805"
+        app:layout_constraintHorizontal_bias="0.113"/>
+
+    <!--캐릭터 눈동자 이미지뷰-->
+    <ImageView
+        android:id="@+id/iv_character_eyes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/iv_character_eyes"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tv_registration"
+        app:layout_constraintVertical_bias="0.48"
+        app:layout_constraintHorizontal_bias="0.164"/>
+
     <!--캐릭터 몸 이미지뷰-->
     <!--
     <ImageView
@@ -298,19 +316,6 @@
         app:layout_constraintVertical_bias="0.81"
         app:layout_constraintHorizontal_bias="0.113"/>
         -->
-
-    <!--캐릭터 옷+몸 이미지뷰 위치수정XXXXXXX 여기선 이상해도 AVD에선 다르게나옴-->
-    <ImageView
-        android:id="@+id/iv_character_clothes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/iv_clothes_princessdress"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.805"
-        app:layout_constraintHorizontal_bias="0.113"/>
 
     <!--옷 레이아웃-->
     <LinearLayout

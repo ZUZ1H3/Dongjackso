@@ -42,8 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
-    private int checked = 0; // 자동 로그인 상태를 위한 변수
-    private boolean autoLogin; // 라디오 버튼 상태
+    private boolean autoLogin = true; // 체크 버튼 상태
     private boolean isPasswordVisible = false;   // 비밀번호 표시 및 숨기기
 
     public static ArrayList<Activity> actList = new ArrayList<Activity>(); //    스택에 쌓인 액티비티들 중 제거할 액티비티 리스트
@@ -66,9 +65,8 @@ public class MainActivity extends AppCompatActivity {
         btnToggle = findViewById(R.id.btn_hidenshow);
         auto = findViewById(R.id.cb_auto);
 
-        // 자동 로그인 라디오 버튼 상태 설정
+        // 자동 로그인 체크 박스 상태 설정
         auto.setChecked(sharedPreferences.getBoolean("autoLogin", false));
-        checked = autoLogin ? 1 : 0;
 
         // 액티비티가 시작될 때 MusicService를 시작
         Intent startIntent = new Intent(this, MusicService.class);
@@ -89,37 +87,13 @@ public class MainActivity extends AppCompatActivity {
                 isPasswordVisible = !isPasswordVisible;
             }
         });
-        auto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                boolean isChecked = auto.isChecked();
-                editor.putBoolean("autoLogin", isChecked);
-                editor.apply();
-            }
+
+        // 자동 로그인 체크박스 클릭 시
+        auto.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            autoLogin = true;
+            editor.putBoolean("autoLogin", isChecked);
+            editor.commit();
         });
-        /*
-        // 자동 로그인 라디오 버튼 클릭 시
-        auto.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) { // 체크 상태가 활성화된 경우
-                    buttonView.setSelected(true);
-                    if (checked == 0) {
-                        editor.putBoolean("autoLogin", isChecked);
-                        editor.apply();
-                        checked = 1;
-                    }
-                } else { // 체크 상태가 비활성화된 경우
-                    buttonView.setSelected(false);
-                    /*if (checked == 1) {
-                        editor.putBoolean("autoLogin", isChecked);
-                        editor.apply();
-                        checked = 0;
-                    }
-                }
-            }
-        });
-        */
 
         // 비밀번호 재설정 클릭 시
         findpwd.setOnClickListener(new View.OnClickListener() {
@@ -178,8 +152,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();
-        autoLogin = sharedPreferences.getBoolean("autoLogin", false);
+        autoLogin = sharedPreferences.getBoolean("autoLogin", true);
 
+        autoLogin(user, autoLogin);
+    }
+
+    private void autoLogin(FirebaseUser user, boolean autoLogin) {
         if(user != null && autoLogin) {
             Intent intent = new Intent(this, StartActivity.class);
             startActivity(intent);

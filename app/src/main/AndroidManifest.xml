@@ -7,8 +7,6 @@
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 외부 저장소 허용 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- 구글 STT 허가 -->
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
         android:allowBackup="true"
@@ -21,7 +19,22 @@
         android:theme="@style/Theme.HolyMoly"
         tools:targetApi="31">
         <activity
-            android:name=".VoiceActivity"
+            android:name=".MakeDiaryActivity"
+            android:exported="true" />
+        <activity
+            android:name=".PuzzleActivity"
+            android:exported="true" />
+        <activity
+            android:name=".SelectPuzzleActivity"
+            android:exported="true" />
+        <activity
+            android:name=".DiaryActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ReadBookActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CustomCharacterActivity"
             android:exported="false" />
         <activity
             android:name=".CustomThemeActivity"
@@ -48,6 +61,9 @@
             android:name=".HomeActivity"
             android:exported="true" />
         <activity
+            android:name=".Home2Activity"
+            android:exported="true" />
+        <activity
             android:name=".InfoActivity"
             android:exported="true" />
         <activity
@@ -69,6 +85,9 @@
             android:name=".SelectcharacterActivity"
             android:exported="true" />
         <activity
+            android:name=".SelectversionActivity"
+            android:exported="true" />
+        <activity
             android:name=".MakeStoryActivity"
             android:exported="true" />
         <activity
@@ -76,6 +95,12 @@
             android:exported="true" />
         <activity
             android:name=".RegistrationActivity"
+            android:exported="true" />
+        <activity
+            android:name=".MaketitleActivity"
+            android:exported="true" />
+        <activity
+            android:name=".MakeBookcoverActivity"
             android:exported="true" />
         <activity
             android:name=".MainActivity"

@@ -210,6 +210,7 @@ public class SelectthemaActivity extends AppCompatActivity implements UserInfoLo
             }
         });
     }
+
     private void generateImage(String prompt) {
         karlo.requestImage(prompt, "", new Karlo.Callback() {
             @Override
@@ -272,7 +273,6 @@ public class SelectthemaActivity extends AppCompatActivity implements UserInfoLo
             imageView.setImageBitmap(circularBitmap);
         }
     }
-
 
     private Bitmap getCircularBitmap(Bitmap bitmap) {
         int width = bitmap.getWidth();
