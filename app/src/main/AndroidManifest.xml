@@ -21,7 +21,7 @@
         <activity
             android:name=".MakeDiaryActivity"
             android:exported="true"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".PuzzleActivity"
             android:exported="true" />
