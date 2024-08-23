@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_diaryalbum"
+    tools:context=".AlbumDiaryActivity">
+
+    <TextView
+        android:id="@+id/calendar"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:textSize="35sp"
+        android:gravity="center"
+        android:fontFamily="@font/ssurround"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="30dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_left"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:textSize="35sp"
+        android:gravity="center"
+        android:fontFamily="@font/ssurround"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="260dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <ImageView
+        android:id="@+id/leftWeather"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="380dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_right"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:textSize="35sp"
+        android:gravity="center"
+        android:fontFamily="@font/ssurround"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="880dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <ImageView
+        android:id="@+id/rightWeather"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="1000dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <ImageButton
+        android:id="@+id/ib_stopReading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#0000"
+        android:contentDescription="그만보기"
+        android:src="@drawable/ic_stopmaking2"
+        android:layout_marginTop="28dp"
+        android:layout_marginLeft="1186dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+    
+    <ImageView
+        android:id="@+id/leftImage"
+        android:layout_width="571dp"
+        android:layout_height="615dp"
+        android:layout_marginTop="132dp"
+        android:layout_marginLeft="44dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <ImageView
+        android:id="@+id/rightImage"
+        android:layout_width="571dp"
+        android:layout_height="615dp"
+        android:layout_marginTop="132dp"
+        android:layout_marginLeft="665dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <ImageButton
+        android:id="@+id/backPage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_backpage"
+        android:layout_marginTop="380dp"
+        android:layout_marginLeft="23dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <ImageButton
+        android:id="@+id/nextPage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_nextpage"
+        android:layout_marginTop="380dp"
+        android:layout_marginLeft="1177dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_spring"
+        android:layout_marginTop="50dp"
+        android:layout_marginLeft="603dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -72,8 +72,8 @@ public class Home2Activity extends AppCompatActivity implements UserInfoLoader {
         btnalbum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(Home2Activity.this, AlbumActivity.class);
-                //startActivity(intent);
+                Intent intent = new Intent(Home2Activity.this, AlbumDiaryActivity.class);
+                startActivity(intent);
             }
         });
 
