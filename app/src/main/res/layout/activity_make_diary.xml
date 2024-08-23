@@ -8,59 +8,43 @@
     android:background="@drawable/bg_diary"
     tools:context=".MakeDiaryActivity">
 
+
     <ImageView
         android:id="@+id/background_image_view"
-        android:layout_width="578dp"
-        android:layout_height="634dp"
+        android:layout_width="571dp"
+        android:layout_height="615dp"
         android:layout_marginLeft="44dp"
         android:contentDescription="@string/background_image_description"
         android:foregroundGravity=""
         android:scaleType="centerCrop"
         android:src="@drawable/bg_main2"
+        android:layout_marginTop="90dp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.344"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.704" />
+        app:layout_constraintVertical_bias="0" />
 
-    <ImageView
-        android:id="@+id/spring"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="602.89dp"
-        android:layout_marginTop="53.57dp"
-        android:contentDescription="@string/background_image_description"
-        android:foregroundGravity=""
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_spring"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/storyTextView"
-        android:layout_width="550dp"
-        android:layout_height="642dp"
-        android:fontFamily="@font/ssurround"
+        android:layout_width="680dp"
+        android:layout_height="468dp"
+        android:fontFamily="@font/yeongdeok"
         android:gravity="left"
         android:lineSpacingExtra="16dp"
         android:lineSpacingMultiplier="1.64"
         android:padding="16dp"
         android:scrollbars="vertical"
-        android:text="일기 동화를 생성 중입니다. 하하하하하하하하하하하하일기 동화를 생성 중입니다.일기 동화를 생성 중입니다.하하하하하하하하하하하하일기 동화를 생성 중입니다.일기 동화를 생성 중입니다.하하하하하하하하하하하하일기 동화를 생성 중입니다.일기 동화를 생성 중입니다."
+        android:text="일기 동화를 생성 중입니다.일기 동화를 생성 중입니다.하하하하하하하하하하하하일기 동화를 생성 중입니다.일기 동화를 생성 중입니다.하하하하하하하하하하하하일기 동화를 생성 중입니다.일기 동화를 생성 중입니다."
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.938"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.689" />
+        app:layout_constraintVertical_bias="0.912" />
 
     <TextView
         android:id="@+id/dayTextView"
@@ -68,15 +52,13 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/ssurround"
         android:gravity="left"
-        android:text="8월 20일 목요일"
-        android:textSize="38sp"
+        android:text="8월 20일 목"
+        android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.183"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.052" />
-
+        app:layout_constraintVertical_bias="0.029" />
 
     <ImageButton
         android:id="@+id/ib_stopMaking"
@@ -87,10 +69,10 @@
         android:src="@drawable/ic_stopmaking2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.971"
+        app:layout_constraintHorizontal_bias="0.942"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.046" />
+        app:layout_constraintVertical_bias="0.034" />
 
     <ImageButton
         android:id="@+id/ib_sunny"
@@ -101,64 +83,9 @@
         android:src="@drawable/ic_sunny"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.62"
+        app:layout_constraintHorizontal_bias="0.673"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.043" />
+        app:layout_constraintVertical_bias="0.022" />
 
-    <ImageButton
-        android:id="@+id/ib_suncludy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#0000"
-        android:contentDescription="그만만들기"
-        android:src="@drawable/ic_suncludy"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.677"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.045" />
-
-    <ImageButton
-        android:id="@+id/ib_cloudy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#0000"
-        android:contentDescription="그만만들기"
-        android:src="@drawable/ic_cloudy"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.747"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.052" />
-
-    <ImageButton
-        android:id="@+id/ib_rainy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#0000"
-        android:contentDescription="그만만들기"
-        android:src="@drawable/ic_rainy"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.806"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.045" />
-
-    <ImageButton
-        android:id="@+id/ib_snowy"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#0000"
-        android:contentDescription="그만만들기"
-        android:src="@drawable/ic_snowy"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.866"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.046" />
 </androidx.constraintlayout.widget.ConstraintLayout>

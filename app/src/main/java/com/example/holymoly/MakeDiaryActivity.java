@@ -1,6 +1,7 @@
 package com.example.holymoly;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -27,7 +28,6 @@ public class MakeDiaryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_diary);
-
         Intent intent = getIntent();
         story = intent.getStringExtra("story");
         name = intent.getStringExtra("name");
@@ -67,6 +67,7 @@ public class MakeDiaryActivity extends AppCompatActivity {
                 "이 대화를 바탕으로, 이야기 형태로 다듬어 일기 동화를 만들어주세요." +
                 "이야기는 대화 내역을 바탕으로 현실적인 내용이지만, 약간의 과장을 해도 좋습니다." +
                 "판타지 등 추가적인 요소를 과하지 않게 섞는 것도 좋습니다." +
+                "제목은 만들지 마세요. 한 문장이 끝나면 '\n'를 넣어 엔터치세요." +
                 "주인공은 반드시 어린이로 설정해주세요. 어린이의 이름은 '" + name + "' 입니다.\n" +
                 "다음은 대화 내역입니다. :" + story;
 
@@ -90,7 +91,7 @@ public class MakeDiaryActivity extends AppCompatActivity {
 
     private String getCurrentDate() {
         // 날짜 포맷 설정
-        SimpleDateFormat dateFormat = new SimpleDateFormat("M월 d일 E요일", Locale.KOREAN);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("M월 d일 E", Locale.KOREAN);
         // 현재 날짜 가져오기
         Date date = new Date();
         // 포맷팅된 날짜 반환

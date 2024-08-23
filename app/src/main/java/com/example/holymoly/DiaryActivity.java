@@ -8,10 +8,8 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.*;
-
 import com.google.ai.client.generativeai.GenerativeModel;
 import com.google.ai.client.generativeai.java.*;
 import com.google.ai.client.generativeai.type.*;
@@ -19,7 +17,6 @@ import com.google.common.util.concurrent.*;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -186,6 +183,12 @@ public class DiaryActivity extends AppCompatActivity {
         // 메시지 추가 처리
         Message userMessage = new Message(userMessageText, Message.TYPE_USER);
         messageList.add(userMessage);
+
+        // 메시지 리스트 크기 제한 (예: 50개)
+        if (messageList.size() > 50) {
+            messageList.remove(0); // 가장 오래된 메시지 제거
+        }
+
         messageAdapter.notifyItemInserted(messageList.size() - 1);
         recyclerView.scrollToPosition(messageList.size() - 1);
 
@@ -200,19 +203,16 @@ public class DiaryActivity extends AppCompatActivity {
         userMessageBuilder.addText(userMessageText.replace("\n", " ")); // 줄 바꿈 문자 제거
         Content userMessageContent = userMessageBuilder.build();
 
-        if (!isConversationEnded) {
-            // 메시지 분석 (Gemini를 활용)
-            analyzeUserMessageWithGemini(userMessageText);
-        } else {
-            // 대화가 종료된 상태에서는 메시지 분석을 하지 않음
-            sendBotMessage(userMessageText);
-        }
+        // 메시지 분석 (Gemini를 활용)
+        analyzeUserMessageWithGemini(userMessageText);
 
         // 입력 필드 비우기
         userInput.setText("");
     }
 
     private void analyzeUserMessageWithGemini(String message) {
+        if (isConversationEnded) return; // 대화가 종료된 경우 아무 작업도 하지 않음
+
         String prompt = "아래 문장에서 육하원칙 즉, '누구와', '언제', '어디서', '무엇을', '어떻게', '왜, 그리고 '기분'에 해당하는 정보가 있을 경우, " +
                 "','로 분리하여 키워드를 뽑아 단답으로 답변하세요.\n" +
                 " ex) 문장:친구와 아침에 만났는데 즐거웠다.\n" +
@@ -230,8 +230,6 @@ public class DiaryActivity extends AppCompatActivity {
             @Override
             public void onSuccess(String resultText) {
                 Log.d("AnalyzeResult", "분석 결과: " + resultText);
-
-                // 분석된 결과를 추가적으로 처리
                 processGeminiResult(resultText);
             }
 
@@ -242,59 +240,63 @@ public class DiaryActivity extends AppCompatActivity {
         });
     }
 
+    // 예를 들어 processGeminiResult 메소드에서 UI 업데이트가 필요할 때
     private void processGeminiResult(String resultText) {
         // 결과 문자열을 분리하여 각 항목을 파싱
         String[] parts = resultText.split(",");
         for (String part : parts) {
             String[] keyValue = part.split(":");
             if (keyValue.length == 2) {
-                String key = keyValue[0].trim();
-                String value = keyValue[1].trim();
+                final String key = keyValue[0].trim();
+                final String value = keyValue[1].trim();
 
-                switch (key) {
-                    case "누구와":
-                        if (!value.isEmpty()) {
-                            hasWho = true;
-                            who.setTextColor(Color.WHITE);
-                        }
-                        break;
-                    case "언제":
-                        if (!value.isEmpty()) {
-                            hasWhen = true;
-                            when.setTextColor(Color.WHITE);
-                        }
-                        break;
-                    case "어디서":
-                        if (!value.isEmpty()) {
-                            hasWhere = true;
-                            where.setTextColor(Color.WHITE);
-                        }
-                        break;
-                    case "무엇을":
-                        if (!value.isEmpty()) {
-                            hasWhat = true;
-                            what.setTextColor(Color.WHITE);
-                        }
-                        break;
-                    case "어떻게":
-                        if (!value.isEmpty()) {
-                            hasHow = true;
-                            how.setTextColor(Color.WHITE);
-                        }
-                        break;
-                    case "왜":
-                        if (!value.isEmpty()) {
-                            hasWhy = true;
-                            why.setTextColor(Color.WHITE);
-                        }
-                        break;
-                    case "기분":
-                        if (!value.isEmpty()) {
-                            hasMood = true;
-                            mood.setTextColor(Color.WHITE);
-                        }
-                        break;
-                }
+                // UI 업데이트는 메인 스레드에서 수행해야 합니다.
+                runOnUiThread(() -> {
+                    switch (key) {
+                        case "누구와":
+                            if (!value.isEmpty()) {
+                                hasWho = true;
+                                who.setTextColor(Color.WHITE);
+                            }
+                            break;
+                        case "언제":
+                            if (!value.isEmpty()) {
+                                hasWhen = true;
+                                when.setTextColor(Color.WHITE);
+                            }
+                            break;
+                        case "어디서":
+                            if (!value.isEmpty()) {
+                                hasWhere = true;
+                                where.setTextColor(Color.WHITE);
+                            }
+                            break;
+                        case "무엇을":
+                            if (!value.isEmpty()) {
+                                hasWhat = true;
+                                what.setTextColor(Color.WHITE);
+                            }
+                            break;
+                        case "어떻게":
+                            if (!value.isEmpty()) {
+                                hasHow = true;
+                                how.setTextColor(Color.WHITE);
+                            }
+                            break;
+                        case "왜":
+                            if (!value.isEmpty()) {
+                                hasWhy = true;
+                                why.setTextColor(Color.WHITE);
+                            }
+                            break;
+                        case "기분":
+                            if (!value.isEmpty()) {
+                                hasMood = true;
+                                mood.setTextColor(Color.WHITE);
+                            }
+                            break;
+                    }
+                });
             }
         }
 
@@ -305,6 +307,7 @@ public class DiaryActivity extends AppCompatActivity {
             sendBotMessage(resultText);
         }
     }
+
 
     private void sendBotMessage(String userMessageText) {
         // 사용자 메시지 생성
@@ -339,6 +342,8 @@ public class DiaryActivity extends AppCompatActivity {
                 Log.e("BotMessageError", "메시지 전송 실패", t);
             }
         }, executor);
+
+        // Executor 종료
     }
 
 
@@ -347,6 +352,12 @@ public class DiaryActivity extends AppCompatActivity {
             String endMessage = "너의 이야기를 동화로 제작할 준비가 끝났어! 이제 만들러 가볼까?";
             Message endBotMessage = new Message(endMessage, Message.TYPE_BOT);
             messageList.add(endBotMessage);
+
+            // 메시지 리스트 크기 제한 (예: 50개)
+            if (messageList.size() > 50) {
+                messageList.remove(0); // 가장 오래된 메시지 제거
+            }
+
             messageAdapter.notifyItemInserted(messageList.size() - 1);
             recyclerView.scrollToPosition(messageList.size() - 1);
 
@@ -357,7 +368,6 @@ public class DiaryActivity extends AppCompatActivity {
             sendButton.setVisibility(View.INVISIBLE);
             userInput.setVisibility(View.INVISIBLE);
             isConversationEnded = true;
-
         });
     }
 }
