@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="@drawable/bg_main"
-    tools:context=".AlbumActivity">
-    <!-- 상단 프로필 -->
+    tools:context=".SelectversionActivity">
+
     <ImageView
         android:id="@+id/iv_container"
         android:layout_width="wrap_content"
@@ -96,80 +96,30 @@
         app:layout_constraintTop_toTopOf="@id/ib_trophy"
         app:layout_constraintVertical_bias="0" />
 
-    <Spinner
-        android:id="@+id/theme_spinner"
-        android:layout_width="160dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="130dp"
-        android:layout_marginLeft="72dp"
-        android:background="@drawable/theme_spinner"
-        android:dropDownWidth="wrap_content"
-        android:spinnerMode="dropdown"
-        android:textAlignment="center"
-        android:popupBackground="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/iv_container" />
-
-    <!--동화가 없을 때 나오는 텍스트뷰-->
-    <TextView
-        android:id="@+id/tv_none"
+    <ImageButton
+        android:id="@+id/ib_makeWithAI"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="아직 만든 동화가 없어요!"
-        android:fontFamily="@font/ssurround"
-        android:textSize="65dp"
-        android:textColor="@color/white"
+        android:background="@drawable/ib_version_makewithai"
+        android:contentDescription="AI와 함께 만들기 버튼"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.35"
-        app:layout_constraintHorizontal_bias="0.5" />
-    <TextView
-        android:id="@+id/tv_push"
+        app:layout_constraintVertical_bias="0.8"
+        app:layout_constraintHorizontal_bias="0.12"/>
+
+    <ImageButton
+        android:id="@+id/ib_makeWithAlone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="동화 제작 버튼을 눌러"
-        android:fontFamily="@font/ssurround"
-        android:textSize="65dp"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_none"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/ib_version_makealone"
+        android:contentDescription="혼자 만들기 버튼"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.25"
-        app:layout_constraintHorizontal_bias="0.5" />
-    <TextView
-        android:id="@+id/tv_makefirst"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="동화를 완성하고 감상해봐요"
-        android:fontFamily="@font/ssurround"
-        android:textSize="65dp"
-        android:textColor="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tv_push"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.35"
-        app:layout_constraintHorizontal_bias="0.5" />
-
-    <LinearLayout
-        android:layout_width="1020dp"
-        android:layout_height="480dp"
-        android:orientation="horizontal"
-        android:layout_marginTop="50dp"
-        android:layout_marginLeft="58dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/theme_spinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.8"
+        app:layout_constraintHorizontal_bias="0.88"/>
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false"
-            android:visibility="gone" />
-    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

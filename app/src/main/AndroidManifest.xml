@@ -85,6 +85,9 @@
             android:name=".SelectcharacterActivity"
             android:exported="true" />
         <activity
+            android:name=".SelectversionActivity"
+            android:exported="true" />
+        <activity
             android:name=".MakeStoryActivity"
             android:exported="true" />
         <activity

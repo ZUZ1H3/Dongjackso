@@ -315,7 +315,7 @@ public class MakeBookcoverActivity extends AppCompatActivity {
 
             // bitmap을 png로 압축 및 저장
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 80, baos);
             byte[] data = baos.toByteArray();
 
             // 업로드 시작

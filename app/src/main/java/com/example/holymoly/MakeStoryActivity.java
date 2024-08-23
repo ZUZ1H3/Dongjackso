@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -119,7 +120,7 @@ public class MakeStoryActivity extends AppCompatActivity {
 
                 if (num < 6) {
                     // 현재 페이지 내용, 선택지 저장
-                    pageContents.set(num - 1, storyTextView.getText().toString() + "\n선택: " + selectedChoice);
+                    pageContents.set(num - 1, storyTextView.getText().toString() + selectedChoice);
 
                     if (num < 5) {
                         makeStory.generateNextStoryPart(selectedChoice);
@@ -127,11 +128,9 @@ public class MakeStoryActivity extends AppCompatActivity {
                         makeStory.generateEndStoryPart(selectedChoice);
                     }
                     ++num;
-                    pageTextView.setText(num + " / 6");
                 }
-                if (num >=5){
-                    nextBtn.setVisibility(View.VISIBLE);
-                }
+                if (num > 5) nextBtn.setVisibility(View.VISIBLE);
+
             }
         });
 
@@ -144,20 +143,16 @@ public class MakeStoryActivity extends AppCompatActivity {
 
                 if (num < 6) {
                     // 현재 페이지 내용, 선택지 저장
-                    pageContents.set(num - 1, storyTextView.getText().toString() + "\n선택: " + selectedChoice);
+                    pageContents.set(num - 1, storyTextView.getText().toString() + selectedChoice);
 
                     if (num < 5) {
                         makeStory.generateNextStoryPart(selectedChoice);
                     } else if (num == 5) {
                         makeStory.generateEndStoryPart(selectedChoice);
-
                     }
                     ++num;
-                    pageTextView.setText(num + " / 6");
                 }
-                if (num >=5){
-                    nextBtn.setVisibility(View.VISIBLE);
-                }
+                if (num > 5) nextBtn.setVisibility(View.VISIBLE);
             }
         });
 
@@ -178,7 +173,6 @@ public class MakeStoryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (num == 6) {
                     pageContents.set(num -1, storyTextView.getText().toString());
-                    nextBtn.setVisibility(View.VISIBLE);
                 }
                 if (isImageLoaded) {
                     byte[] imageBytes = (byte[]) nextBtn.getTag();
@@ -244,14 +238,11 @@ public class MakeStoryActivity extends AppCompatActivity {
                                     isImageLoaded = true;
 
                                     uploadImage(bitmap); // Storage에 배경 업로드
-                                    //showToast(prompt);
                                     displayStoryText(storyText); //동화 출력
 
                                     // 비트맵을 ByteArray로 변환하여 인텐트에 저장
                                     byte[] imageBytes = convertBitmapToByteArray(bitmap);
                                     nextBtn.setTag(imageBytes);
-
-                                    displayStoryText(storyText);
                                 } else {
                                     showToast("이미지 로드 실패");
                                 }
@@ -275,6 +266,7 @@ public class MakeStoryActivity extends AppCompatActivity {
 
 
     public void displayStoryText(final String storyText) {
+        pageTextView.setText(num + " / 6");
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -427,7 +419,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         for (int i = 0; i < pageContents.size(); i++) {
             String pageContent = pageContents.get(i); // 페이지 내용 가져오기
             fileContent.append("페이지 ").append(i + 1).append("\n");
-            fileContent.append(pageContent).append("\n\n");
+            fileContent.append(pageContent).append("\n");
         }
 
         fileRef.listAll().addOnSuccessListener(listResult -> {
