@@ -18,12 +18,15 @@ import java.util.Date;
 import java.util.Locale;
 
 public class MakeDiaryActivity extends AppCompatActivity {
-    private String story, name;
+    private String story, name, generateStory;
     private ImageButton stopMakingBtn;
-    private Gemini gemini = new Gemini(); // Gemini 인스턴스 생성
+    private Gemini gemini = new Gemini();
     private TextView storyTextView, day;
     private long backPressedTime = 0;
     private ImageView backgroundimageview;
+
+    private boolean isGenerated = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,19 +35,23 @@ public class MakeDiaryActivity extends AppCompatActivity {
         story = intent.getStringExtra("story");
         name = intent.getStringExtra("name");
 
-        // story 값을 사용하여 동화 제작 로직을 구현
         storyTextView = findViewById(R.id.storyTextView);
         storyTextView.setMovementMethod(new ScrollingMovementMethod());
         stopMakingBtn = findViewById(R.id.ib_stopMaking);
         day = findViewById(R.id.dayTextView);
-
         backgroundimageview= findViewById(R.id.background_image_view);
+
         String currentDate = getCurrentDate();
+
         day.setText(currentDate);
 
         if (story != null) {
-            // Gemini를 사용하여 동화 생성
-            generateFairyTale(story);
+            if(!isGenerated) {
+                generateFairyTale(story);
+            }
+            else{
+                storyTextView.setText(generateStory);
+            }
         } else {
             storyTextView.setText("스토리가 없습니다.");
         }
@@ -60,6 +67,14 @@ public class MakeDiaryActivity extends AppCompatActivity {
                 }
             }
         });
+        backgroundimageview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MakeDiaryActivity.this, MakeDrowDiaryActivity.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private void generateFairyTale(String story) {
@@ -76,6 +91,8 @@ public class MakeDiaryActivity extends AppCompatActivity {
             public void onSuccess(String text) {
                 runOnUiThread(() -> {
                     storyTextView.setText(text);
+                    isGenerated = true;
+                    generateStory = text;
                 });
             }
 
@@ -90,11 +107,8 @@ public class MakeDiaryActivity extends AppCompatActivity {
     }
 
     private String getCurrentDate() {
-        // 날짜 포맷 설정
         SimpleDateFormat dateFormat = new SimpleDateFormat("M월 d일 E", Locale.KOREAN);
-        // 현재 날짜 가져오기
         Date date = new Date();
-        // 포맷팅된 날짜 반환
         return dateFormat.format(date);
     }
 }

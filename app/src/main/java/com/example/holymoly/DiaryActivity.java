@@ -256,7 +256,6 @@ public class DiaryActivity extends AppCompatActivity {
                     }
                 }
             }
-            // End conversation if all required fields are filled
             if (hasWho && hasWhen && hasWhere && hasWhat && hasHow && hasWhy && hasMood && !isConversationEnded) {
                 endConversation();
             } else {
