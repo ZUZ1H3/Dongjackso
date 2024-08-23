@@ -1,5 +1,6 @@
 package com.example.holymoly;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,7 +17,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 public class Home2Activity extends AppCompatActivity implements UserInfoLoader {
-    private ImageButton btntrophy, btnsetting, btnmaking, btnalbum, btnworld, btnfairy;
+    private ImageButton btntrophy, btnsetting, btnmaking, btnalbum, btngame, btnfairy;
     private ImageView profile;
     private TextView name;
 
@@ -32,7 +33,7 @@ public class Home2Activity extends AppCompatActivity implements UserInfoLoader {
         btnsetting = findViewById(R.id.ib_setting);
         btnmaking = findViewById(R.id.ib_making);
         btnalbum = findViewById(R.id.ib_album);
-        btnworld = findViewById(R.id.ib_world);
+        btngame = findViewById(R.id.ib_game);
         btnfairy = findViewById(R.id.ib_diaryHome);
 
 
@@ -76,10 +77,10 @@ public class Home2Activity extends AppCompatActivity implements UserInfoLoader {
             }
         });
 
-        btnworld.setOnClickListener(new View.OnClickListener() {
+        btngame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Home2Activity.this, WorldActivity.class);
+                Intent intent = new Intent(Home2Activity.this, PuzzleActivity.class);
                 startActivity(intent);
             }
         });

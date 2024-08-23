@@ -3,11 +3,9 @@ package com.example.holymoly;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -24,6 +22,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -461,8 +460,13 @@ public class MakeStoryActivity extends AppCompatActivity {
             fis.read(data);
             fis.close();
 
+            // 파일 메타데이터 생성 (MIME 타입 설정)
+            StorageMetadata metadata = new StorageMetadata.Builder()
+                    .setContentType("text/plain")
+                    .build();
+
             // 파일 업로드
-            UploadTask uploadTask = fileRef.putBytes(data);
+            UploadTask uploadTask = fileRef.putBytes(data, metadata);
             uploadTask.addOnSuccessListener(taskSnapshot -> {
                 showToast("파일 업로드 성공");
             });

@@ -4,23 +4,32 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class SelectversionActivity extends AppCompatActivity {
+public class SelectversionActivity extends AppCompatActivity implements UserInfoLoader {
     private ImageButton btnhome, btntrophy, btnsetting;
     private ImageButton ibMakeWithAI, ibMakeAlone;
+    private TextView name;
+    private ImageView profile;
+    private UserInfo userInfo = new UserInfo();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selectversion);
 
+        name = findViewById(R.id.mini_name);
+        profile = findViewById(R.id.mini_profile);
         ibMakeWithAI = findViewById(R.id.ib_makeWithAI);
         ibMakeAlone = findViewById(R.id.ib_makeWithAlone);
 
         btnhome = findViewById(R.id.ib_homebutton);
         btntrophy = findViewById(R.id.ib_trophy);
         btnsetting = findViewById(R.id.ib_setting);
+
+        loadUserInfo(profile, name);
 
         btnhome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,5 +74,11 @@ public class SelectversionActivity extends AppCompatActivity {
             Intent intent = new Intent(SelectversionActivity.this, HomeActivity.class);
             startActivity(intent);
         });
+    }
+
+
+    @Override
+    public void loadUserInfo(ImageView profile, TextView name) {
+        userInfo.loadUserInfo(profile, name);
     }
 }

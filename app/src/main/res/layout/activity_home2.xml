@@ -132,7 +132,7 @@
         app:layout_constraintVertical_bias="0.643" />
 
     <ImageButton
-        android:id="@+id/ib_world"
+        android:id="@+id/ib_game"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#0000"
