@@ -20,10 +20,8 @@ import java.util.ArrayList;
 
 public class MakeStoryActivity extends AppCompatActivity {
     private boolean isImageLoaded = false; // 이미지 로드 상태를 추적하는 변수
-    private TextView storyTextView;
-    private Button choice1, choice2;
-    private TextView selectText1, selectText2;
-    private ImageView backgroundImageView, selectView1, selectView2;
+    private TextView storyTextView, selectText1, selectText2;
+    private ImageView backgroundImageView, selectView1, selectView2, selectMic, nextStory;
     private String selectedTheme;
     private ArrayList<String> selectedCharacters;
     private Handler handler = new Handler();
@@ -42,6 +40,10 @@ public class MakeStoryActivity extends AppCompatActivity {
         backgroundImageView = findViewById(R.id.background_image_view);
         selectView1 = findViewById(R.id.iv_select1);
         selectView2 = findViewById(R.id.iv_select2);
+        selectText1 = findViewById(R.id.tv_select1);
+        selectText2 = findViewById(R.id.tv_select2);
+        selectMic = findViewById(R.id.iv_mic);
+        nextStory = findViewById(R.id.iv_nextstory);
 
         // Intent로부터 데이터 가져오기
         Intent intent = getIntent();
@@ -54,8 +56,15 @@ public class MakeStoryActivity extends AppCompatActivity {
         makeStory = new MakeStory(this, selectedTheme, selectedCharacters, gemini);
 
         makeStory.generateInitialStory();
-    }
 
+        selectMic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MakeStoryActivity.this, VoiceActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
 
     public void translate(final String storyText) {
         //선택한 테마 번역
@@ -143,7 +152,6 @@ public class MakeStoryActivity extends AppCompatActivity {
                         }
                     }, delay * i);
                 }
-
             }
         });
     }
@@ -156,11 +164,12 @@ public class MakeStoryActivity extends AppCompatActivity {
         } else {
             showToast("선택지가 부족합니다.");
         }
+        nextStory.setVisibility(View.VISIBLE);
         selectView1.setVisibility(View.VISIBLE);
         selectView2.setVisibility(View.VISIBLE);
         selectText1.setVisibility(View.VISIBLE);
         selectText2.setVisibility(View.VISIBLE);
-
+        selectMic.setVisibility(View.VISIBLE);
     }
 
     // URL에서 Bitmap 객체를 생성하는 함수
