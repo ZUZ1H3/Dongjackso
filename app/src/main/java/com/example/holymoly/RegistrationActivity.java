@@ -7,6 +7,8 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
@@ -271,8 +273,22 @@ public class RegistrationActivity extends AppCompatActivity {
     private void saveCharacterImage() {
         // 캐릭터 이미지 생성
         Bitmap finalBitmap = createBitmap();
+        // 캐릭터 테두리 생성
+        Bitmap finalBitmapWithStroke = createBitmapWithStroke(finalBitmap);
+        StorageReference imageRef = storageRef.child("characters/" + user.getUid() + "_1.png");
+
+        // 캐릭터 테두리를 png로 압축 및 저장
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        finalBitmapWithStroke.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        // 테두리 업로드 시작
+        UploadTask uploadTask = imageRef.putBytes(data);
+        uploadTask.addOnSuccessListener(taskSnapshot -> { });
+
         // 기존 이미지 삭제 후 새 파일 업로드
-        deleteImageAndUpload(finalBitmap);
+        //deleteImageAndUpload(finalBitmap);
+        uploadImage(finalBitmap);
     }
     // 캐릭터 Bitmap 이미지 제작
     private Bitmap createBitmap() {
@@ -299,6 +315,11 @@ public class RegistrationActivity extends AppCompatActivity {
         Bitmap cClothesBitmap = Bitmap.createScaledBitmap(clothesBitmap, 276, 308, true);
         Bitmap cEyesBitmap = Bitmap.createScaledBitmap(eyesBitmap, 126, 40, true);
 
+        faceBitmap.recycle();
+        eyesBitmap.recycle();
+        clothesBitmap.recycle();
+        hairBitmap.recycle();
+
         // 최종 Bitmap 이미지 생성할 크기 설정 - 너비, 높이, 배경 투명
         Bitmap finalBitmap = Bitmap.createBitmap(600, 600, Bitmap.Config.ARGB_8888);
 
@@ -311,40 +332,47 @@ public class RegistrationActivity extends AppCompatActivity {
         return finalBitmap;
     }
 
-    // 이미지 삭제 및 업로드
-    private void deleteImageAndUpload(Bitmap newBitmap) {
-        // 'characters' 경로의 모든 파일을 나열
-        StorageReference imageRef = storageRef.child("characters/");
-        imageRef.listAll().addOnSuccessListener(listResult -> {
-            List<StorageReference> items = listResult.getItems();
-            boolean fileExists = false; // 파일 존재 확인 변수
+    // 테두리가 있는 Bitmap
+    private Bitmap createBitmapWithStroke(Bitmap bitmap) {
+        Bitmap bitmapWithStroke = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmapWithStroke);
 
-            for (StorageReference item : items) {
-                String name = item.getName();
-                // 파일 이름이 현재 사용자의 ID로 시작하는 경우 삭제
-                if (name.startsWith(user.getUid())) {
-                    fileExists = true;
-                    item.delete().addOnSuccessListener(aVoid -> {
-                        // 삭제 성공 시 새 이미지 업로드
-                        uploadImage(newBitmap);
-                    });
-                    break; // 찾으면 멈춤
+        // 테두리(스트로크)를 위한 Paint 설정
+        Paint strokePaint = new Paint();
+        strokePaint.setColor(Color.WHITE); // 테두리 색상
+        strokePaint.setStyle(Paint.Style.STROKE); // 테두리만 그리기
+        //strokePaint.setStrokeJoin(Paint.Join.ROUND); // 경로 연결 부분을 둥글게 설정
+        strokePaint.setStrokeWidth(10); // 테두리 두께 설정
+        //strokePaint.setAntiAlias(true); // 높은 해상도 설정
+
+        // 이미지 및 테두리 그리기
+        Path strokePath = createStroke(bitmap);
+        canvas.drawPath(strokePath, strokePaint);
+        canvas.drawBitmap(bitmap, 0, 0, null);
+
+        return bitmapWithStroke;
+    }
+
+    // 테두리 생성
+    private Path createStroke(Bitmap bitmap) {
+        Path path = new Path();
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int pixel = bitmap.getPixel(x, y);
+                if (pixel != Color.TRANSPARENT) {
+                    // 투명하지 않은 픽셀에 대해 경로 추가
+                    path.addCircle(x , y, 5, Path.Direction.CW);
                 }
             }
-
-            // 현재 사용자의 ID로 시작하는 파일이 없을 경우
-            if (!fileExists) uploadImage(newBitmap);
-        }).addOnFailureListener(exception -> {
-            // 파일 나열 실패 시
-            Toast.makeText(this, "파일 나열 실패: " + exception.getMessage(), Toast.LENGTH_SHORT).show();
-        });
+        }
+        return path;
     }
     // Storage에 이미지 파일 업로드
     private void uploadImage(Bitmap bitmap) {
-        // Storage에 올라갈 파일 참조명
-        String fileName = user.getUid() + ".png";
-
-        StorageReference imageRef = storageRef.child("characters/" + fileName);
+        StorageReference imageRef = storageRef.child("characters/" + user.getUid() + ".png");
 
         // bitmap을 png로 압축 및 저장
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -356,8 +384,6 @@ public class RegistrationActivity extends AppCompatActivity {
         uploadTask.addOnSuccessListener(taskSnapshot -> {
             Toast.makeText(this, "이미지 업데이트 성공", Toast.LENGTH_SHORT).show();
             isRegistration(); // 이미지 업로드 완료되면 이동
-        }).addOnFailureListener(e -> {
-            Toast.makeText(this, "업로드 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         });
     }
     // 가입 유무에 따라 activity 변환
@@ -373,10 +399,12 @@ public class RegistrationActivity extends AppCompatActivity {
                             if (name != null) { // 존재하면 등록된 사용자 -> HomeActivity
                                 Intent intent = new Intent(this, HomeActivity.class);
                                 startActivity(intent);
+                                finish();
                             }
                             else { // 없으면 신규 사용자 -> InfoActivity로 정보 등록
                                 Intent intent = new Intent(this, InfoActivity.class);
                                 startActivity(intent);
+                                finish();
                             }
                         }
                     }

@@ -99,48 +99,40 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.4" />
 
-    <com.example.holymoly.CustomImageView
+    <ImageView
         android:id="@+id/iv_spot1"
-        android:layout_width="230dp"
-        android:layout_height="300dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="485dp"
+        android:layout_marginLeft="465dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.428"
-        app:layout_constraintVertical_bias="0.892" />
+        app:layout_constraintLeft_toLeftOf="parent" />
 
-    <com.example.holymoly.CustomImageView
+    <ImageView
         android:id="@+id/iv_spot2"
-        android:layout_width="230dp"
-        android:layout_height="300dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="356dp"
+        android:layout_marginLeft="758dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.708"
-        app:layout_constraintVertical_bias="0.63" />
+        app:layout_constraintLeft_toLeftOf="parent" />
 
-    <com.example.holymoly.CustomImageView
+    <ImageView
         android:id="@+id/iv_spot3"
-        android:layout_width="230dp"
-        android:layout_height="300dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="240dp"
+        android:layout_marginLeft="466dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.43"
-        app:layout_constraintVertical_bias="0.39" />
+        app:layout_constraintLeft_toLeftOf="parent" />
 
-    <com.example.holymoly.CustomImageView
+    <ImageView
         android:id="@+id/iv_spot4"
-        android:layout_width="230dp"
-        android:layout_height="300dp"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="55dp"
+        android:layout_marginLeft="753dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.703"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintLeft_toLeftOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
