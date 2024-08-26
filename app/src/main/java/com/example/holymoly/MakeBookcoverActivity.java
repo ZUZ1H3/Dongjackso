@@ -34,7 +34,7 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 public class MakeBookcoverActivity extends AppCompatActivity {
 
     private CustomView drawView;
-    private ImageButton pen, erase, undo, rainbow, remove, ok, AI;
+    private ImageButton pen, erase, undo, rainbow, remove, ok, AI, stop;
     private ImageButton selectedColorButton, selectedToolButton;
     private Map<ImageButton, Integer> colorButtonMap = new HashMap<>();
     private Map<ImageButton, Integer> colorCheckMap = new HashMap<>();
@@ -76,6 +76,7 @@ public class MakeBookcoverActivity extends AppCompatActivity {
         undo = findViewById(R.id.ib_back); // Undo 버튼 초기화
         ok = findViewById(R.id.ib_ok);
         AI = findViewById(R.id.ib_AI);
+        stop = findViewById(R.id.ib_stopMaking);
 
 
         // 색상 버튼과 리소스 매핑
@@ -154,6 +155,7 @@ public class MakeBookcoverActivity extends AppCompatActivity {
                 generateImageFromThemeAndCharacters(selectedTheme, selectedCharacters);
             }
         });
+
 
         // SeekBar의 값을 펜 굵기에 설정하는 리스너 설정
         penSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
