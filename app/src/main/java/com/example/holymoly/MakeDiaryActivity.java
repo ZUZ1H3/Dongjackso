@@ -80,12 +80,12 @@ public class MakeDiaryActivity extends AppCompatActivity {
     }
 
     private void generateFairyTale(String story) {
-        String prompt = "어린이가 AI와 오늘 있었던 일을 주제로 대화한 내역을 제공해드리겠습니다." +
-                "이 대화를 바탕으로, 이야기 형태로 다듬어 일기 동화를 만들어주세요." +
+        String prompt = "어린이가 오늘 있었던 일을 주제로 대화한 내역을 제공해드리겠습니다." +
+                "이 대화를 바탕으로, 이야기 형태로 다듬어 어린이가 주인공인 일기 동화를 만들어주세요." +
                 "이야기는 대화 내역을 바탕으로 현실적인 내용이지만, 약간의 과장을 해도 좋습니다." +
                 "판타지 등 추가적인 요소를 과하지 않게 섞는 것도 좋습니다." +
                 "제목은 만들지 마세요. 한 문장이 끝나면 '\n'를 넣어 엔터치세요." +
-                "주인공은 반드시 어린이로 설정해주세요. 어린이의 이름은 '" + name + "' 입니다.\n" +
+                "어린이의 이름은 '" + name + "' 입니다.\n" +
                 "다음은 대화 내역입니다. :" + story;
 
         gemini.generateText(prompt, new Gemini.Callback() {
