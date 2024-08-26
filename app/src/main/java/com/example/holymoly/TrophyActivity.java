@@ -76,6 +76,7 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
         edit.setOnClickListener(this);
     }
     public void onClick(View v) {
+        sound();
         if(v.getId() == R.id.ib_bictrophy) {
             Intent intent = new Intent(this, AchieveActivity.class);
             startActivity(intent);
@@ -93,5 +94,10 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void loadUserInfo(ImageView profile, TextView name) {
         userInfo.loadUserInfo(profile, name);
+    }
+
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
     }
 }

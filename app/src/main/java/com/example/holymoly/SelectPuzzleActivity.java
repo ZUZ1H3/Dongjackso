@@ -88,4 +88,9 @@ public class SelectPuzzleActivity extends AppCompatActivity implements View.OnCl
     public void loadUserInfo(ImageView profile, TextView name) {
         userInfo.loadUserInfo(profile, name);
     }
+
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
+    }
 }

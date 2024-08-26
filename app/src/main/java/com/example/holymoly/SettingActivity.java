@@ -126,6 +126,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View v) {
+        sound();
         if (v.getId() == R.id.img_profile) {
             Intent intent = new Intent(this, RegistrationActivity.class);
             startActivity(intent);
@@ -210,5 +211,10 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         int newHeight = 450;
 
         return Bitmap.createBitmap(bm, cropW, cropH, newWidth, newHeight);
+    }
+
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
     }
 }

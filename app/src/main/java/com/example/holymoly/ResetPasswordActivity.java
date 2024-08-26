@@ -80,6 +80,7 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
                 startActivity(intent);
             }
         }
+        sound();
     }
     // 이메일 입력 칸 형식 검사
     private void emailForm() {
@@ -199,5 +200,10 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
     private boolean isPasswordValid(String password) {
         Pattern pattern = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[!@#$%^&*()_+=<>?{}\\[\\]~-]).{8,}$");
         return pattern.matcher(password).matches();
+    }
+
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
     }
 }

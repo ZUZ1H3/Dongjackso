@@ -55,6 +55,7 @@ public class VoiceActivity extends AppCompatActivity {
         selectedCharacters = intent.getStringArrayListExtra("selectedCharacters");
 
         mic.setOnClickListener(v -> {
+            sound();
             mRecognizer=SpeechRecognizer.createSpeechRecognizer(this);
             mRecognizer.setRecognitionListener(listener);
             mRecognizer.startListening(intent);
@@ -136,4 +137,9 @@ public class VoiceActivity extends AppCompatActivity {
         @Override
         public void onEvent(int eventType, Bundle params) {}
     };
+
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
+    }
 }
