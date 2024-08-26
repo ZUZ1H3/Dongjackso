@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -289,8 +290,12 @@ public class MakeStoryActivity extends AppCompatActivity {
     }
 
 
+    // 텍스트 타이핑 효과 및 터치 시 전체 텍스트 표시
     public void displayStoryText(final String storyText) {
         pageTextView.setText(num + " / 6");
+
+        // 터치하면 전체 텍스트를 즉시 표시하는 플래그
+        final boolean[] textFullyDisplayed = {false};
         handler.post(new Runnable() {
             @Override
             public void run() {
@@ -303,7 +308,10 @@ public class MakeStoryActivity extends AppCompatActivity {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            storyTextView.setText(storyText.substring(0, index));
+                            // 텍스트가 아직 전부 표시되지 않았으면 타이핑 효과 진행
+                            if (!textFullyDisplayed[0]) {
+                                storyTextView.setText(storyText.substring(0, index));
+                            }
                             if (index == length) {
                                 if (isImageLoaded && num <= 5) {
                                     makeStory.generateChoices(); // 이미지가 로드된 후에 선택지 생성
@@ -313,6 +321,24 @@ public class MakeStoryActivity extends AppCompatActivity {
                     }, delay * i);
                 }
 
+                // storyTextView에 터치 이벤트 리스너 추가
+                storyTextView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                            // 터치 시 핸들러의 모든 작업 취소하고 전체 텍스트 표시
+                            handler.removeCallbacksAndMessages(null);
+                            storyTextView.setText(storyText);
+                            textFullyDisplayed[0] = true; // 전체 텍스트 표시 상태로 플래그 설정
+
+                            if (isImageLoaded && num <= 5) {
+                                makeStory.generateChoices(); // 선택지 생성
+                            }
+                            return true;
+                        }
+                        return false;
+                    }
+                });
             }
         });
     }
