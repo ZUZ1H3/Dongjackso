@@ -96,6 +96,7 @@ public class RegistrationActivity extends AppCompatActivity {
         rgCategory.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                sound();
                 if (checkedId == R.id.rb_hairCategory) {
                     findViewById(R.id.hairLayout).setVisibility(View.VISIBLE);
                     findViewById(R.id.clothLayout).setVisibility(View.GONE);
@@ -121,6 +122,7 @@ public class RegistrationActivity extends AppCompatActivity {
         ibNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 saveCharacterImage();
             }
         });
@@ -129,6 +131,7 @@ public class RegistrationActivity extends AppCompatActivity {
         rgHair.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                sound();
                 // 예외 처리 또는 기본 행동
                 if (checkedId == R.id.rb_g_long) {
                     ivHair.setImageResource(R.drawable.iv_hair_long);
@@ -163,6 +166,7 @@ public class RegistrationActivity extends AppCompatActivity {
         rgEyesColor.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                sound();
                 // 예외 처리 또는 기본 행동
                 if (checkedId == R.id.rb_ec_purple) {
                     ivEyesColor.setImageResource(R.drawable.iv_eyes_purple);
@@ -183,6 +187,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
         // 머리 색깔 바꿔주는 체크체인지리스너
         rgHairColor.setOnCheckedChangeListener((group, checkedId) -> {
+            sound();
             int colorFilter = Color.TRANSPARENT;
 
             if (checkedId == R.id.rb_hc_purple) {
@@ -206,6 +211,7 @@ public class RegistrationActivity extends AppCompatActivity {
         rgClothes.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                sound();
                 // 예외 처리 또는 기본 행동
                 if (checkedId == R.id.rb_clothes_princessdress) {
                     ivClothes.setImageResource(R.drawable.iv_clothes_princessdress);
@@ -409,5 +415,10 @@ public class RegistrationActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+    // 효과음
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
     }
 }

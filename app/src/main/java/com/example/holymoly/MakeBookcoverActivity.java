@@ -127,6 +127,7 @@ public class MakeBookcoverActivity extends AppCompatActivity {
         pen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 handleToolButtonClick(pen);
                 // 도구 변경 시 현재 선택된 색상으로 설정
                 if (selectedColorButton != null) {
@@ -138,6 +139,7 @@ public class MakeBookcoverActivity extends AppCompatActivity {
         erase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 handleToolButtonClick(erase);
                 // 도구 변경 시 흰색으로 설정
                 drawView.setColor("#FFFFFFFF");
@@ -146,12 +148,16 @@ public class MakeBookcoverActivity extends AppCompatActivity {
 
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { uploadImage(); }
+            public void onClick(View v) {
+                sound();
+                uploadImage();
+            }
         });
 
         AI.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sound();
                 generateImageFromThemeAndCharacters(selectedTheme, selectedCharacters);
             }
         });
@@ -181,6 +187,7 @@ public class MakeBookcoverActivity extends AppCompatActivity {
         remove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 drawView.clearCanvas(); // 그림을 모두 지움
             }
         });
@@ -190,6 +197,7 @@ public class MakeBookcoverActivity extends AppCompatActivity {
         undo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 drawView.undo(); // Undo 기능 호출
             }
         });
@@ -257,6 +265,7 @@ public class MakeBookcoverActivity extends AppCompatActivity {
     }
 
     private void resetButtonImage(ImageButton button) {
+        sound();
         // 각 버튼의 기본 이미지를 설정
         int buttonId = button.getId();
         if (buttonId == R.id.ib_pen) {
@@ -271,6 +280,7 @@ public class MakeBookcoverActivity extends AppCompatActivity {
     }
 
     private void setCheckedButtonImage(ImageButton button) {
+        sound();
         // 각 버튼의 체크된 이미지를 설정
         int buttonId = button.getId();
         if (buttonId == R.id.ib_pen) {
@@ -447,6 +457,9 @@ public class MakeBookcoverActivity extends AppCompatActivity {
             }
         });
     }
-
-
+    // 효과음
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
+    }
 }

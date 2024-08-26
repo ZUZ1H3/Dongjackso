@@ -57,6 +57,7 @@ public class MaketitleActivity extends AppCompatActivity {
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sound();
                 bookTitle = title.getText().toString();
                 Intent intent = new Intent(MaketitleActivity.this, MakeBookcoverActivity.class);
                 intent.putExtra("bookTitle", bookTitle);
@@ -73,6 +74,11 @@ public class MaketitleActivity extends AppCompatActivity {
                         name.setText(userName);
                     }
                 });
+    }
+    // 효과음
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
     }
 }
 

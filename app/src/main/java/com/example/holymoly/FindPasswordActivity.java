@@ -55,6 +55,7 @@ public class FindPasswordActivity extends AppCompatActivity implements View.OnCl
     }
     @Override
     public void onClick(View v) {
+        sound();
         if(v.getId() == R.id.btn_emailCertification) {
             emailForm();
         }
@@ -141,5 +142,10 @@ public class FindPasswordActivity extends AppCompatActivity implements View.OnCl
         clipboard.setPrimaryClip(clip);
 
         Toast.makeText(this, "텍스트가 클립보드에 복사되었습니다.", Toast.LENGTH_SHORT).show();
+    }
+    // 효과음
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
     }
 }

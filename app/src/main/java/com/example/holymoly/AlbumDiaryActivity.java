@@ -1,5 +1,6 @@
 package com.example.holymoly;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -7,11 +8,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import java.util.Calendar;
+
 
 public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClickListener{
     private TextView calendar, leftTV, rightTV;
@@ -34,10 +34,17 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
         stop = findViewById(R.id.ib_stopReading);
 
         stop.setOnClickListener(this);
+
+        // 현재 날짜를 구함
+        Calendar cal = Calendar.getInstance();
+        int month = cal.get(Calendar.MONTH) + 1;
+
+        calendar.setText(month + "월");
     }
 
     @Override
     public void onClick(View v) {
+        sound();
         if(v.getId() == R.id.ib_backStep) { }        // 이전 페이지로
         else if(v.getId() == R.id.ib_nextStep) { }  // 다음 페이지로
         else if(v.getId() == R.id.ib_stopReading) { // 그만 읽기
@@ -48,5 +55,11 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
                 finish(); // 현재 액티비티 종료
             }
         }
+    }
+
+    // 효과음
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
     }
 }

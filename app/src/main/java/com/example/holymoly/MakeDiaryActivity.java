@@ -59,6 +59,7 @@ public class MakeDiaryActivity extends AppCompatActivity {
         stopMakingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sound();
                 if (System.currentTimeMillis() - backPressedTime >= 2000) {
                     backPressedTime = System.currentTimeMillis();
                     Toast.makeText(MakeDiaryActivity.this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
@@ -70,6 +71,7 @@ public class MakeDiaryActivity extends AppCompatActivity {
         backgroundimageview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sound();
                 Intent intent = new Intent(MakeDiaryActivity.this, MakeDrowDiaryActivity.class);
                 startActivity(intent);
             }
@@ -110,5 +112,11 @@ public class MakeDiaryActivity extends AppCompatActivity {
         SimpleDateFormat dateFormat = new SimpleDateFormat("M월 d일 E", Locale.KOREAN);
         Date date = new Date();
         return dateFormat.format(date);
+    }
+
+    // 효과음
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
     }
 }

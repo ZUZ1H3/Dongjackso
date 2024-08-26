@@ -57,6 +57,7 @@ public class JoinActivity extends AppCompatActivity {
         btnDouble.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sound();
                 checkEmailDuplicate();
             }
         });
@@ -64,6 +65,7 @@ public class JoinActivity extends AppCompatActivity {
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sound();
                 if (isEmailUnique) {
                     registerUser();
                 } else {
@@ -75,6 +77,7 @@ public class JoinActivity extends AppCompatActivity {
         btnToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 if (!isPasswordVisible) { // 비밀번호 표시
                     etPwd.setInputType(InputType.TYPE_CLASS_TEXT);
                     btnToggle.setImageResource(R.drawable.ic_eye);
@@ -90,6 +93,7 @@ public class JoinActivity extends AppCompatActivity {
         btnToggle2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 if (!isChkPasswordVisible) { // 비밀번호 표시
                     etPwdChk.setInputType(InputType.TYPE_CLASS_TEXT);
                     btnToggle2.setImageResource(R.drawable.ic_eye);
@@ -213,5 +217,11 @@ public class JoinActivity extends AppCompatActivity {
             this.email = email;
             this.password = password;
         }
+    }
+
+    // 효과음
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
     }
 }

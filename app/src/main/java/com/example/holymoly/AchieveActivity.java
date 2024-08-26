@@ -460,4 +460,6 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
     public void loadUserInfo(ImageView profile, TextView name) {
         userInfo.loadUserInfo(profile, name);
     }
+
+
 }

@@ -116,6 +116,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         selectMic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 Intent intent = new Intent(MakeStoryActivity.this, VoiceActivity.class);
                 startActivity(intent);
             }
@@ -124,6 +125,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         selectText1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 nextStory.setVisibility(View.INVISIBLE);
                 selectImage1.setVisibility(View.INVISIBLE);
                 selectImage2.setVisibility(View.INVISIBLE);
@@ -152,6 +154,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         selectText2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 nextStory.setVisibility(View.INVISIBLE);
                 selectImage1.setVisibility(View.INVISIBLE);
                 selectImage2.setVisibility(View.INVISIBLE);
@@ -179,6 +182,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         stopMakingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sound();
                 if (System.currentTimeMillis() - backPressedTime >= 2000) {
                     backPressedTime = System.currentTimeMillis();
                     Toast.makeText(MakeStoryActivity.this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
@@ -191,6 +195,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 if (num == 6) {
                     pageContents.set(num -1, storyTextView.getText().toString());
                 }
@@ -497,5 +502,10 @@ public class MakeStoryActivity extends AppCompatActivity {
         } catch (IOException e) {
             showToast("파일 읽기 실패: " + e.getMessage());
         }
+    }
+    // 효과음
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
     }
 }

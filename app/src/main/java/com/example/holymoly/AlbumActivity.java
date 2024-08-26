@@ -88,6 +88,7 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
         btnhome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 Intent intent = new Intent(AlbumActivity.this, HomeActivity.class);
                 startActivity(intent);
             }
@@ -96,6 +97,7 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
         btntrophy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 Intent intent = new Intent(AlbumActivity.this, TrophyActivity.class);
                 startActivity(intent);
             }
@@ -104,6 +106,7 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
         btnsetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 Intent intent = new Intent(AlbumActivity.this, SettingActivity.class);
                 startActivity(intent);
             }
@@ -112,7 +115,7 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
         bookAdapter.setOnItemClickListener((position, imageUrl) -> {
             // 클릭된 이미지의 파일명을 인텐트에 추가
             String imgName = imgNames.get(position);
-
+            sound();
             Intent intent = new Intent(AlbumActivity.this, ReadBookActivity.class);
             intent.putExtra("imgName", imgName);
             startActivity(intent);
@@ -254,5 +257,11 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
     @Override
     public void loadUserInfo(ImageView profile, TextView name) {
         userInfo.loadUserInfo(profile, name);
+    }
+
+    // 효과음
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
     }
 }

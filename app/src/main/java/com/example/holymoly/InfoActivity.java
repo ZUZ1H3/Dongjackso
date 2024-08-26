@@ -87,6 +87,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
+        sound();
         if (v.getId() == R.id.btn_ok) { // OK 버튼 클릭 시
             if (validateInput()) {
                 saveInfo();
@@ -168,5 +169,11 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         int newHeight = 450;
 
         return Bitmap.createBitmap(bm, cropW, cropH, newWidth, newHeight);
+    }
+
+    // 효과음
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
     }
 }
