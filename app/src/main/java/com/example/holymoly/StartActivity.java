@@ -7,13 +7,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class StartActivity extends AppCompatActivity implements View.OnClickListener {
@@ -47,6 +45,7 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
     }
     @Override
     public void onClick(View v) {
+        sound();
         // 좋아! 클릭 시
         if(v.getId() == R.id.btn_good) {
             Intent intent = new Intent(this, HomeActivity.class);
@@ -86,6 +85,9 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                     }
                 });
     }
-
-
+    // 효과음
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
+    }
 }

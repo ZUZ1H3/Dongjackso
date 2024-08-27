@@ -68,6 +68,7 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
+        sound();
         if(v.getId() == R.id.ib_backStep) { backPage();}        // 이전 페이지로
         else if(v.getId() == R.id.ib_nextStep) { nextPage(); }  // 다음 페이지로
         else if(v.getId() == R.id.ib_stopReading) { // 그만 읽기
@@ -136,7 +137,7 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
         for (String page : pages) {
             // "페이지"와 숫자 부분을 제거하고, 나머지 텍스트만 추가
             String cleanedPage = page.replaceAll("페이지 \\d+", "").trim();
-            pageContents.add(cleanedPage);
+            if (!cleanedPage.isEmpty()) pageContents.add(cleanedPage);
         }
     }
     private void showPage(int num) {
@@ -145,5 +146,10 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
             pageTextView.setText(currentPage + " / " + pageContents.size());
             storyTextView.scrollTo(0, 0); // 스크롤뷰를 맨 위로 초기화
         }
+    }
+    // 효과음
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
     }
 }

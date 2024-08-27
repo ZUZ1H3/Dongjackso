@@ -14,11 +14,11 @@
         android:layout_width="571dp"
         android:layout_height="615dp"
         android:layout_marginLeft="44dp"
+        android:layout_marginTop="100dp"
         android:contentDescription="@string/background_image_description"
         android:foregroundGravity=""
         android:scaleType="centerCrop"
-        android:src="@drawable/bg_main2"
-        android:layout_marginTop="90dp"
+        android:src="@drawable/ic_touch"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -38,7 +38,7 @@
         android:lineSpacingMultiplier="1.64"
         android:padding="16dp"
         android:scrollbars="vertical"
-        android:text="일기 동화를 생성 중입니다.일기 동화를 생성 중입니다.하하하하하하하하하하하하일기 동화를 생성 중입니다.일기 동화를 생성 중입니다.하하하하하하하하하하하하일기 동화를 생성 중입니다.일기 동화를 생성 중입니다."
+        android:text="일기 동화를 생성 중입니다..."
         android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -50,15 +50,18 @@
         android:id="@+id/dayTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="138dp"
+        android:layout_marginTop="45dp"
         android:fontFamily="@font/ssurround"
         android:gravity="left"
         android:text="8월 20일 목"
         android:textSize="34sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.029" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageButton
         android:id="@+id/ib_stopMaking"
@@ -74,18 +77,59 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.034" />
 
-    <ImageButton
-        android:id="@+id/ib_sunny"
+    <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#0000"
-        android:contentDescription="그만만들기"
-        android:src="@drawable/ic_sunny"
+        android:checkedButton="@+id/ib_sunny"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.673"
+        app:layout_constraintHorizontal_bias="0.73"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.022" />
+        app:layout_constraintVertical_bias="0.034">
 
+        <RadioButton
+            android:id="@+id/ib_sunny"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/radio_button_sunny"
+            android:button="@android:color/transparent"
+            android:src="@drawable/weather_sunny" />
+
+        <RadioButton
+            android:id="@+id/ib_suncloudy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/radio_button_suncloudy"
+            android:button="@android:color/transparent" />
+
+        <RadioButton
+            android:id="@+id/ib_cloudy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/radio_button_cloudy"
+            android:button="@android:color/transparent" />
+
+        <RadioButton
+            android:id="@+id/ib_rainy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/radio_button_rainy"
+            android:button="@android:color/transparent"
+            android:src="@drawable/weather_rainy" />
+
+        <RadioButton
+            android:id="@+id/ib_snowy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/radio_button_snowy"
+            android:button="@android:color/transparent" />
+    </RadioGroup>
 </androidx.constraintlayout.widget.ConstraintLayout>

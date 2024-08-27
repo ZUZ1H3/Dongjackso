@@ -79,6 +79,7 @@ public class SelectthemaActivity extends AppCompatActivity implements UserInfoLo
         btnhome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 Intent intent = new Intent(SelectthemaActivity.this, HomeActivity.class);
                 startActivity(intent);
             }
@@ -87,6 +88,7 @@ public class SelectthemaActivity extends AppCompatActivity implements UserInfoLo
         btntrophy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 Intent intent = new Intent(SelectthemaActivity.this, TrophyActivity.class);
                 startActivity(intent);
             }
@@ -95,6 +97,7 @@ public class SelectthemaActivity extends AppCompatActivity implements UserInfoLo
         btnsetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 Intent intent = new Intent(SelectthemaActivity.this, SettingActivity.class);
                 startActivity(intent);
             }
@@ -112,6 +115,7 @@ public class SelectthemaActivity extends AppCompatActivity implements UserInfoLo
         btnnext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 int selectedId = radioGroup.getCheckedRadioButtonId();
                 if (selectedId == -1) { // 테마가 선택되지 않은 경우
                     Toast.makeText(SelectthemaActivity.this, "테마를 선택하세요!", Toast.LENGTH_SHORT).show();
@@ -164,6 +168,7 @@ public class SelectthemaActivity extends AppCompatActivity implements UserInfoLo
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 // 선택된 View의 ID를 라디오 그룹의 체크된 항목으로 설정
                 radioGroup.check(v.getId());
 
@@ -297,4 +302,8 @@ public class SelectthemaActivity extends AppCompatActivity implements UserInfoLo
         return output;
     }
 
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
+    }
 }

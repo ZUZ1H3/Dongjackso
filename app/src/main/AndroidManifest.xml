@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.holymoly">
+
     <!-- 패키지 경로 추가 -->
     <uses-permission android:name="android.permission.ACCEPT_INTERNET" />
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 외부 저장소 허용 -->
@@ -20,10 +21,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HolyMoly"
         tools:targetApi="31">
+
+        <service
+            android:name=".SoundService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".StartPuzzleActivity"
+            android:exported="true" />
+        <activity
+            android:name=".MakeDrowDiaryActivity"
+            android:exported="true"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".AlbumDiaryActivity"
+            android:exported="true" />
         <activity
             android:name=".MakeDiaryActivity"
             android:exported="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".PuzzleActivity"
             android:exported="true" />

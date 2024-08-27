@@ -71,6 +71,7 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
         btnhome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 Intent intent = new Intent(SelectcharacterActivity.this, HomeActivity.class);
                 startActivity(intent);
             }
@@ -79,14 +80,17 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
         btntrophy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 Intent intent = new Intent(SelectcharacterActivity.this, TrophyActivity.class);
                 startActivity(intent);
+
             }
         });
 
         btnsetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 Intent intent = new Intent(SelectcharacterActivity.this, SettingActivity.class);
                 startActivity(intent);
             }
@@ -434,5 +438,10 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
         float centerY = (height - minEdge) / 2f;
         canvas.drawCircle(minEdge / 2f, minEdge / 2f, minEdge / 2f, paint);
         return output;
+    }
+
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
     }
 }

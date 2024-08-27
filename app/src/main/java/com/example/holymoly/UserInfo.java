@@ -50,7 +50,7 @@ public class UserInfo implements UserInfoLoader {
     private Bitmap cropImage(Bitmap bm) {
         int cropW = 25;
         int cropH = 5;
-        int newWidth = 555;
+        int newWidth = 560;
         int newHeight = 440;
 
         return Bitmap.createBitmap(bm, cropW, cropH, newWidth, newHeight);

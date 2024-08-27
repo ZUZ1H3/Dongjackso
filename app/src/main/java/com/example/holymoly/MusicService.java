@@ -22,7 +22,7 @@ public class MusicService extends Service {
         // 음악 재생 시작
         mediaPlayer.start();
 
-        // START_NOT_STICKY를 반환하면 시스템이 서비스가 강제 종료된 경우 재생성하지 않음
+        // 서비스가 중단되었을 때 재시작하지 않도록 설정
         return START_NOT_STICKY;
     }
 

@@ -94,7 +94,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="#0000"
         android:contentDescription="다음장으로"
-        android:src="@drawable/ic_nextstep"
+        android:src="@drawable/ic_nextstep2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.98"

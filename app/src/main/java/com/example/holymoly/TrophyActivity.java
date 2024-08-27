@@ -18,6 +18,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.bumptech.glide.Glide;
+import com.google.android.gms.auth.api.signin.internal.Storage;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,9 +33,16 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
     private TextView name;
     private ImageButton trophy, home, edit;
     private ImageView profile;
-    private CustomImageView spot1, spot2, spot3, spot4;
+
+    // 캐릭터 생성 위치
+    private ImageView spot1, spot2, spot3, spot4;
 
     private UserInfo userInfo = new UserInfo();
+
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseUser user = auth.getCurrentUser();
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private StorageReference storageRef = storage.getReference();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,16 +62,21 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
 
         loadUserInfo(profile, name); // 미니 프로필 불러오기
 
-        spot1.loadImage(); // 첫 번째 위치에 캐릭터 생성
-        // spot2.loadImage(); // 두 번째 위치에 캐릭터 생성
-        // spot3.loadImage(); // 세 번째 위치에 캐릭터 생성
-        // spot4.loadImage(); // 네 번째 위치에 캐릭터 생성
+        StorageReference imgRef = storageRef.child("characters/" + user.getUid() + "_1.png");
+        // 이미지 로드
+        imgRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            Glide.with(this).load(uri).into(spot1); // 첫 번째 위치에 캐릭터 생성
+            // Glide.with(this).load(uri).into(spot2); // 두 번째 위치에 캐릭터 생성
+            // Glide.with(this).load(uri).into(spot3); // 세 번째 위치에 캐릭터 생성
+            // Glide.with(this).load(uri).into(spot4); // 네 번째 위치에 캐릭터 생성
+        });
 
         trophy.setOnClickListener(this);
         home.setOnClickListener(this);
         edit.setOnClickListener(this);
     }
     public void onClick(View v) {
+        sound();
         if(v.getId() == R.id.ib_bictrophy) {
             Intent intent = new Intent(this, AchieveActivity.class);
             startActivity(intent);
@@ -80,5 +94,10 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     public void loadUserInfo(ImageView profile, TextView name) {
         userInfo.loadUserInfo(profile, name);
+    }
+
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
     }
 }

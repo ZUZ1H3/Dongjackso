@@ -97,6 +97,7 @@ public class DiaryActivity extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 sendMessage();
             }
         });
@@ -125,6 +126,7 @@ public class DiaryActivity extends AppCompatActivity {
         }, 2000); // 3000 밀리초 = 3초
     }
     private void handleMoreButtonClick() {
+        sound();
         //isConversationEnded = false; // 대화가 계속 진행되도록 플래그 업데이트
         // UI 업데이트: 대화 입력 필드와 버튼을 보이도록 설정
         sendButton.setVisibility(View.VISIBLE);
@@ -139,6 +141,7 @@ public class DiaryActivity extends AppCompatActivity {
         recyclerView.scrollToPosition(messageList.size() - 1);
     }
     private void handleMakeDiaryButtonClick() {
+        sound();
         Intent intent = new Intent(DiaryActivity.this, MakeDiaryActivity.class);
         intent.putExtra("story", story); // 스토리를 전달
         intent.putExtra("name", name); // 스토리를 전달
@@ -256,7 +259,6 @@ public class DiaryActivity extends AppCompatActivity {
                     }
                 }
             }
-            // End conversation if all required fields are filled
             if (hasWho && hasWhen && hasWhere && hasWhat && hasHow && hasWhy && hasMood && !isConversationEnded) {
                 endConversation();
             } else {
@@ -310,5 +312,10 @@ public class DiaryActivity extends AppCompatActivity {
             userInput.setVisibility(View.INVISIBLE);
             isConversationEnded = true;
         });
+    }
+    // 효과음
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
     }
 }

@@ -40,6 +40,7 @@ public class Home2Activity extends AppCompatActivity implements UserInfoLoader {
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 Intent intent = new Intent(Home2Activity.this, RegistrationActivity.class);
                 startActivity(intent);
             }
@@ -56,6 +57,7 @@ public class Home2Activity extends AppCompatActivity implements UserInfoLoader {
         btnsetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 Intent intent = new Intent(Home2Activity.this, SettingActivity.class);
                 startActivity(intent);
             }
@@ -64,6 +66,7 @@ public class Home2Activity extends AppCompatActivity implements UserInfoLoader {
         btnmaking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 Intent intent = new Intent(Home2Activity.this, DiaryActivity.class);
                 startActivity(intent);
             }
@@ -72,14 +75,16 @@ public class Home2Activity extends AppCompatActivity implements UserInfoLoader {
         btnalbum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Intent intent = new Intent(Home2Activity.this, AlbumActivity.class);
-                //startActivity(intent);
+                sound();
+                Intent intent = new Intent(Home2Activity.this, AlbumDiaryActivity.class);
+                startActivity(intent);
             }
         });
 
         btngame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 Intent intent = new Intent(Home2Activity.this, PuzzleActivity.class);
                 startActivity(intent);
             }
@@ -88,6 +93,7 @@ public class Home2Activity extends AppCompatActivity implements UserInfoLoader {
         btnfairy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sound();
                 Intent intent = new Intent(Home2Activity.this, HomeActivity.class);
                 startActivity(intent);
             }
@@ -101,5 +107,10 @@ public class Home2Activity extends AppCompatActivity implements UserInfoLoader {
     @Override
     public void loadUserInfo(ImageView profile, TextView name) {
         userInfo.loadUserInfo(profile, name);
+    }
+    // 효과음
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
     }
 }

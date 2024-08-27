@@ -34,6 +34,7 @@ public class SelectversionActivity extends AppCompatActivity implements UserInfo
         btnhome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 Intent intent = new Intent(SelectversionActivity.this, HomeActivity.class);
                 startActivity(intent);
             }
@@ -42,6 +43,7 @@ public class SelectversionActivity extends AppCompatActivity implements UserInfo
         btntrophy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 Intent intent = new Intent(SelectversionActivity.this, TrophyActivity.class);
                 startActivity(intent);
             }
@@ -50,12 +52,14 @@ public class SelectversionActivity extends AppCompatActivity implements UserInfo
         btnsetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 Intent intent = new Intent(SelectversionActivity.this, SettingActivity.class);
                 startActivity(intent);
             }
         });
 
         ibMakeWithAI.setOnClickListener(v -> {
+            sound();
             // 버튼 스타일 변경 (테두리 및 색상 추가)
             ibMakeWithAI.setBackgroundResource(R.drawable.ib_version_makewithai_checked);
             ibMakeAlone.setBackgroundResource(R.drawable.ib_version_makealone);
@@ -66,6 +70,7 @@ public class SelectversionActivity extends AppCompatActivity implements UserInfo
         });
 
         ibMakeAlone.setOnClickListener(v -> {
+            sound();
             // 버튼 스타일 변경 (테두리 및 색상 추가)
             ibMakeAlone.setBackgroundResource(R.drawable.ib_version_makealone_checked);
             ibMakeWithAI.setBackgroundResource(R.drawable.ib_version_makewithai);
@@ -81,4 +86,10 @@ public class SelectversionActivity extends AppCompatActivity implements UserInfo
     public void loadUserInfo(ImageView profile, TextView name) {
         userInfo.loadUserInfo(profile, name);
     }
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
+    }
+
+
 }

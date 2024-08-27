@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         btnToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 if (!isPasswordVisible) { // 비밀번호 표시
                     etPwd.setInputType(InputType.TYPE_CLASS_TEXT);
                     btnToggle.setImageResource(R.drawable.ic_eye);
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
 
         // 자동 로그인 체크박스 클릭 시
         auto.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            sound();
             autoLogin = true;
             editor.putBoolean("autoLogin", isChecked);
             editor.commit();
@@ -99,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
         findpwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 Intent intent = new Intent(MainActivity.this, FindPasswordActivity.class);
                 startActivity(intent);
             }
@@ -108,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sound();
                 String email = etId.getText().toString().trim();
                 String password = etPwd.getText().toString().trim();
 
@@ -141,6 +145,7 @@ public class MainActivity extends AppCompatActivity {
         btnJoin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                sound();
                 Intent intent = new Intent(MainActivity.this, JoinActivity.class);
                 startActivity(intent);
             }
@@ -167,5 +172,11 @@ public class MainActivity extends AppCompatActivity {
     //제거할 액티비티를 리스트에 저장하기 위함
     public ArrayList<Activity> actList(){
         return actList;
+    }
+
+    // 효과음
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
     }
 }
