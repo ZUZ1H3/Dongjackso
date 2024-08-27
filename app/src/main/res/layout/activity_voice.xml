@@ -57,7 +57,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_nextstep"
-        android:background="null"
+        android:backgroundTint="#000"
         android:contentDescription="다음"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -65,5 +65,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/tv_script"
         app:layout_constraintVertical_bias="0.75"
-        android:visibility="invisible" />
+        android:visibility="visible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

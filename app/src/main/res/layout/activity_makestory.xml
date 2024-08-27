@@ -123,6 +123,19 @@
         app:layout_constraintVertical_bias="0.724" />
 
     <ImageView
+        android:id="@+id/iv_nextstory"
+        android:layout_width="400dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_nextstory"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.885"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.12"
+        android:visibility="invisible" />
+
+    <ImageView
         android:id="@+id/iv_select1"
         android:layout_width="560dp"
         android:layout_height="120dp"
@@ -135,22 +148,9 @@
         app:layout_constraintVertical_bias="0.3"
         android:visibility="invisible" />
 
-    <ImageView
-        android:id="@+id/iv_nextstory"
-        android:layout_width="450dp"
-        android:layout_height="100dp"
-        android:src="@drawable/ic_nextstory"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.1"
-        android:visibility="invisible" />
-
     <TextView
         android:id="@+id/tv_select1"
-        android:layout_width="560dp"
+        android:layout_width="550dp"
         android:layout_height="120dp"
         android:fontFamily="@font/ssurround"
         android:textSize="32sp"
@@ -179,7 +179,7 @@
 
     <TextView
         android:id="@+id/tv_select2"
-        android:layout_width="560dp"
+        android:layout_width="550dp"
         android:layout_height="120dp"
         android:fontFamily="@font/ssurround"
         android:textSize="32sp"
@@ -194,13 +194,42 @@
         android:visibility="invisible" />
 
     <ImageView
-        android:id="@+id/iv_mic"
+        android:id="@+id/iv_mic1"
         android:layout_width="560dp"
         android:layout_height="120dp"
-        android:background="@drawable/ic_mic"
+        android:background="@drawable/ic_selectbox"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.961"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.85"
+        android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/iv_mic2"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/ic_bigmic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.78"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.83"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/iv_mic3"
+        android:layout_width="550dp"
+        android:layout_height="120dp"
+        android:fontFamily="@font/ssurround"
+        android:textSize="32sp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.96"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.85"
@@ -218,6 +247,6 @@
         app:layout_constraintHorizontal_bias="0.98"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.98"
+        app:layout_constraintVertical_bias="0.99"
         android:visibility="invisible" />
 </androidx.constraintlayout.widget.ConstraintLayout>

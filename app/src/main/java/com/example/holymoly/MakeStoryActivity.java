@@ -43,9 +43,9 @@ import java.util.Locale;
 
 public class MakeStoryActivity extends AppCompatActivity {
     private boolean isImageLoaded = false; // 이미지 로드 상태를 추적하는 변수
-    private TextView storyTextView, pageTextView, selectText1, selectText2;
+    private TextView storyTextView, pageTextView, selectText1, selectText2, selectMic3;
     private ImageButton stopMakingBtn, nextBtn;
-    private ImageView backgroundImageView, loading, selectImage1, selectImage2, selectMic, nextStory;
+    private ImageView backgroundImageView, loading, selectImage1, selectImage2, selectMic1, selectMic2, nextStory;
     private String selectedTheme;
     private ArrayList<String> selectedCharacters;
     private Handler handler = new Handler();
@@ -54,6 +54,7 @@ public class MakeStoryActivity extends AppCompatActivity {
     private MakeStory makeStory;
     private int num = 1;
     private long backPressedTime = 0;
+    private String recognizedText;
 
     // 테마 경로 및 최종적으로 선택된 테마
     private String themePath, finalSelectedTheme;
@@ -80,7 +81,9 @@ public class MakeStoryActivity extends AppCompatActivity {
         selectText2 = findViewById(R.id.tv_select2);
         selectImage1 = findViewById(R.id.iv_select1);
         selectImage2 = findViewById(R.id.iv_select2);
-        selectMic = findViewById(R.id.iv_mic);
+        selectMic1 = findViewById(R.id.iv_mic1);
+        selectMic2 = findViewById(R.id.iv_mic2);
+        selectMic3 = findViewById(R.id.iv_mic3);
         nextStory = findViewById(R.id.iv_nextstory);
         stopMakingBtn = findViewById(R.id.ib_stopMaking);
         nextBtn = findViewById(R.id.ib_nextStep);
@@ -113,7 +116,15 @@ public class MakeStoryActivity extends AppCompatActivity {
 
         makeStory.generateInitialStory();
 
-        selectMic.setOnClickListener(new View.OnClickListener() {
+        selectMic1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MakeStoryActivity.this, VoiceActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        selectMic2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MakeStoryActivity.this, VoiceActivity.class);
@@ -129,7 +140,9 @@ public class MakeStoryActivity extends AppCompatActivity {
                 selectImage2.setVisibility(View.INVISIBLE);
                 selectText1.setVisibility(View.INVISIBLE);
                 selectText2.setVisibility(View.INVISIBLE);
-                selectMic.setVisibility(View.INVISIBLE);
+                selectMic1.setVisibility(View.INVISIBLE);
+                selectMic2.setVisibility(View.INVISIBLE);
+                selectMic3.setVisibility(View.INVISIBLE);
 
                 String selectedChoice = selectText1.getText().toString(); // 선택지1 가져오기
 
@@ -157,9 +170,40 @@ public class MakeStoryActivity extends AppCompatActivity {
                 selectImage2.setVisibility(View.INVISIBLE);
                 selectText1.setVisibility(View.INVISIBLE);
                 selectText2.setVisibility(View.INVISIBLE);
-                selectMic.setVisibility(View.INVISIBLE);
+                selectMic1.setVisibility(View.INVISIBLE);
+                selectMic2.setVisibility(View.INVISIBLE);
+                selectMic3.setVisibility(View.INVISIBLE);
 
                 String selectedChoice = selectText2.getText().toString(); // 선택지2 가져오기
+
+                if (num < 6) {
+                    // 현재 페이지 내용, 선택지 저장
+                    pageContents.set(num - 1, storyTextView.getText().toString() + selectedChoice);
+
+                    if (num < 5) {
+                        makeStory.generateNextStoryPart(selectedChoice);
+                    } else if (num == 5) {
+                        makeStory.generateEndStoryPart(selectedChoice);
+                    }
+                    ++num;
+                }
+                if (num > 5) nextBtn.setVisibility(View.VISIBLE);
+            }
+        });
+
+        selectMic3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nextStory.setVisibility(View.INVISIBLE);
+                selectImage1.setVisibility(View.INVISIBLE);
+                selectImage2.setVisibility(View.INVISIBLE);
+                selectText1.setVisibility(View.INVISIBLE);
+                selectText2.setVisibility(View.INVISIBLE);
+                selectMic1.setVisibility(View.INVISIBLE);
+                selectMic2.setVisibility(View.INVISIBLE);
+                selectMic3.setVisibility(View.INVISIBLE);
+
+                String selectedChoice = selectMic3.getText().toString(); // 선택지2 가져오기
 
                 if (num < 6) {
                     // 현재 페이지 내용, 선택지 저장
@@ -325,7 +369,9 @@ public class MakeStoryActivity extends AppCompatActivity {
         selectImage2.setVisibility(View.VISIBLE);
         selectText1.setVisibility(View.VISIBLE);
         selectText2.setVisibility(View.VISIBLE);
-        selectMic.setVisibility(View.VISIBLE);
+        selectMic1.setVisibility(View.VISIBLE);
+        selectMic2.setVisibility(View.VISIBLE);
+        selectMic3.setVisibility(View.VISIBLE);
     }
 
     // URL에서 Bitmap 객체를 생성하는 함수
