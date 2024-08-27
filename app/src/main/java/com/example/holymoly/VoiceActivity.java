@@ -39,7 +39,7 @@ public class VoiceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_voice);
 
         if (Build.VERSION.SDK_INT >= 23) {
-            // Permission check
+            // 퍼미션 체크
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET,
                     Manifest.permission.RECORD_AUDIO}, PERMISSION);
         }
@@ -61,6 +61,7 @@ public class VoiceActivity extends AppCompatActivity {
 
         // 이미지 누르면 음성 인식 시작
         micImage.setOnClickListener(v -> {
+            sound();
             mRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
             mRecognizer.setRecognitionListener(listener);
             mRecognizer.startListening(intent);
@@ -144,8 +145,9 @@ public class VoiceActivity extends AppCompatActivity {
 
         @Override
         public void onResults(Bundle results) {
-            // Append the recognized words to the recognizedText StringBuilder
-            ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+            // 말을 하면 ArrayList에 단어를 넣고 textView에 단어를 이어줌
+            ArrayList<String> matches =
+                    results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
 
             for (int i = 0; i < matches.size(); i++) {
                 recognizedText.append(matches.get(i)).append(" ");
@@ -159,4 +161,8 @@ public class VoiceActivity extends AppCompatActivity {
         @Override
         public void onEvent(int eventType, Bundle params) {}
     };
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
+    }
 }
