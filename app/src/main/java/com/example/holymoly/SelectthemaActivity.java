@@ -32,7 +32,7 @@ import java.net.URL;
 public class SelectthemaActivity extends AppCompatActivity implements UserInfoLoader {
     private ImageButton btnhome, btntrophy, btnsetting, btnnext;
     private RadioGroup radioGroup;
-    private TextView name;
+    private TextView name, nickname;
     private ImageView profile;
 
     private UserInfo userInfo = new UserInfo();
@@ -46,6 +46,7 @@ public class SelectthemaActivity extends AppCompatActivity implements UserInfoLo
         setContentView(R.layout.activity_selectthema);
 
         name = findViewById(R.id.mini_name);
+        nickname = findViewById(R.id.mini_nickname);
         profile = findViewById(R.id.mini_profile);
         btnhome = findViewById(R.id.ib_homebutton);
         btntrophy = findViewById(R.id.ib_trophy);
@@ -53,7 +54,7 @@ public class SelectthemaActivity extends AppCompatActivity implements UserInfoLo
         radioGroup = findViewById(R.id.radioGroup);
         btnnext = findViewById(R.id.ib_nextStep);
 
-        loadUserInfo(profile, name);
+        loadUserInfo(profile, name, nickname);
         gemini = new Gemini();
         karlo = new Karlo();
 
@@ -195,8 +196,8 @@ public class SelectthemaActivity extends AppCompatActivity implements UserInfoLo
     }
 
     @Override
-    public void loadUserInfo(ImageView profile, TextView name) {
-        userInfo.loadUserInfo(profile, name);
+    public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
+        userInfo.loadUserInfo(profile, name, nickname);
     }
 
     //테마를 번역하는 함수

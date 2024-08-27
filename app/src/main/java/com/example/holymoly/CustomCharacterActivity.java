@@ -16,7 +16,7 @@ public class CustomCharacterActivity extends AppCompatActivity implements UserIn
     private EditText editTextCharacter;
     private ImageButton btnOk;
     private ImageView profile;
-    private TextView name;
+    private TextView name, nickname;
 
     private UserInfo userInfo = new UserInfo();
 
@@ -28,9 +28,10 @@ public class CustomCharacterActivity extends AppCompatActivity implements UserIn
         editTextCharacter = findViewById(R.id.customCharacter);
         btnOk = findViewById(R.id.ib_nextStep);
         name = findViewById(R.id.mini_name);
+        nickname = findViewById(R.id.mini_nickname);
         profile = findViewById(R.id.mini_profile);
 
-        loadUserInfo(profile, name);
+        loadUserInfo(profile, name, nickname);
 
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -50,7 +51,7 @@ public class CustomCharacterActivity extends AppCompatActivity implements UserIn
     }
 
     @Override
-    public void loadUserInfo(ImageView profile, TextView name) {
-        userInfo.loadUserInfo(profile, name);
+    public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
+        userInfo.loadUserInfo(profile, name, nickname);
     }
 }

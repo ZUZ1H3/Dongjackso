@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
-    private TextView name;
+    private TextView name, nickname;
     private ImageView profile;
     private ImageButton btnhome, btntrophy, btnsetting;
     private Spinner spinnerNav;
@@ -55,13 +55,14 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
         setContentView(R.layout.activity_album);
 
         name = findViewById(R.id.mini_name);
+        nickname = findViewById(R.id.mini_nickname);
         profile = findViewById(R.id.mini_profile);
         btnhome = findViewById(R.id.ib_homebutton);
         btntrophy = findViewById(R.id.ib_trophy);
         btnsetting = findViewById(R.id.ib_setting);
         spinnerNav = findViewById(R.id.theme_spinner);
 
-        loadUserInfo(profile, name);
+        loadUserInfo(profile, name, nickname);
 
         // TextView 초기화
         tvNone = findViewById(R.id.tv_none);
@@ -255,8 +256,8 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
     }
 
     @Override
-    public void loadUserInfo(ImageView profile, TextView name) {
-        userInfo.loadUserInfo(profile, name);
+    public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
+        userInfo.loadUserInfo(profile, name, nickname);
     }
 
     // 효과음

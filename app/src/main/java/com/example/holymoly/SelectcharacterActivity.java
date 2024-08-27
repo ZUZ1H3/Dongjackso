@@ -12,7 +12,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,10 +24,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -39,7 +34,7 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
     private View[] customCheckBoxes; // 캐릭터를 저장할 체크박스 배열
     private CharacterData.CharacterInfo[] characters; // 캐릭터 정보를 저장할 배열
     private boolean[] isChecked; // 체크 상태를 저장할 배열
-    private TextView name;
+    private TextView name, nickname;
     private ImageView profile;
     private String thema;
 
@@ -61,12 +56,13 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
         karlo = new Karlo();
         profile = findViewById(R.id.mini_profile);
         name = findViewById(R.id.mini_name);
+        nickname = findViewById(R.id.mini_nickname);
         btnhome = findViewById(R.id.ib_homebutton);
         btntrophy = findViewById(R.id.ib_trophy);
         btnsetting = findViewById(R.id.ib_setting);
         btnnext = findViewById(R.id.ib_nextStep);
 
-        loadUserInfo(profile, name);
+        loadUserInfo(profile, name, nickname);
 
         btnhome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -228,8 +224,8 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
     }
 
     @Override
-    public void loadUserInfo(ImageView profile, TextView name) {
-        userInfo.loadUserInfo(profile, name);
+    public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
+        userInfo.loadUserInfo(profile, name, nickname);
     }
 
     private void randomCharacters(String thema) {

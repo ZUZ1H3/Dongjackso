@@ -19,7 +19,7 @@ import com.google.firebase.storage.StorageReference;
 public class Home2Activity extends AppCompatActivity implements UserInfoLoader {
     private ImageButton btntrophy, btnsetting, btnmaking, btnalbum, btngame, btnfairy;
     private ImageView profile;
-    private TextView name;
+    private TextView name, nickname;
 
     private UserInfo userInfo = new UserInfo();
 
@@ -28,6 +28,7 @@ public class Home2Activity extends AppCompatActivity implements UserInfoLoader {
         setContentView(R.layout.activity_home2);
 
         name = findViewById(R.id.mini_name);
+        nickname = findViewById(R.id.mini_nickname);
         profile = findViewById(R.id.mini_profile);
         btntrophy = findViewById(R.id.ib_trophy);
         btnsetting = findViewById(R.id.ib_setting);
@@ -35,7 +36,6 @@ public class Home2Activity extends AppCompatActivity implements UserInfoLoader {
         btnalbum = findViewById(R.id.ib_album);
         btngame = findViewById(R.id.ib_game);
         btnfairy = findViewById(R.id.ib_diaryHome);
-
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,13 +101,14 @@ public class Home2Activity extends AppCompatActivity implements UserInfoLoader {
     }
     public void onStart() {
         super.onStart();
-        loadUserInfo(profile, name);
+        loadUserInfo(profile, name, nickname);
     }
 
     @Override
-    public void loadUserInfo(ImageView profile, TextView name) {
-        userInfo.loadUserInfo(profile, name);
+    public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
+        userInfo.loadUserInfo(profile, name, nickname);
     }
+
     // 효과음
     public void sound() {
         Intent intent = new Intent(this, SoundService.class);

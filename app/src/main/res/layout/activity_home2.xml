@@ -45,6 +45,7 @@
         android:text=" 꼬마 작가"
         android:textColor="@color/white"
         android:textSize="24dp"
+        android:layout_marginLeft="10dp"
         app:layout_constraintStart_toEndOf="@+id/mini_name"
         app:layout_constraintTop_toTopOf="@id/mini_name" />
 

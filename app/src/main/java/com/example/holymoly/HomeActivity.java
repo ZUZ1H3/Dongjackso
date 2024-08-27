@@ -1,6 +1,11 @@
 package com.example.holymoly;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Path;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -14,11 +19,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 
 public class HomeActivity extends AppCompatActivity implements UserInfoLoader {
     private ImageButton btntrophy, btnsetting, btnmaking, btnalbum, btnworld, btndiary;
     private ImageView profile;
-    private TextView name;
+    private TextView name, nickname;
 
     private UserInfo userInfo = new UserInfo();
 
@@ -27,6 +35,7 @@ public class HomeActivity extends AppCompatActivity implements UserInfoLoader {
         setContentView(R.layout.activity_home);
 
         name = findViewById(R.id.mini_name);
+        nickname = findViewById(R.id.mini_nickname);
         profile = findViewById(R.id.mini_profile);
         btntrophy = findViewById(R.id.ib_trophy);
         btnsetting = findViewById(R.id.ib_setting);
@@ -98,13 +107,16 @@ public class HomeActivity extends AppCompatActivity implements UserInfoLoader {
             }
         });
     }
+
+    @Override
     public void onStart() {
         super.onStart();
-        loadUserInfo(profile, name);
+        loadUserInfo(profile, name, nickname);
     }
+
     @Override
-    public void loadUserInfo(ImageView profile, TextView name) {
-        userInfo.loadUserInfo(profile, name);
+    public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
+        userInfo.loadUserInfo(profile, name, nickname);
     }
     // 효과음
     public void sound() {

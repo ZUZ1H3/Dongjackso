@@ -25,7 +25,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
     private RadioGroup rgTrophyCategory;
     private ImageButton ibCloseWindow;
     private ImageView profile;
-    private TextView name;
+    private TextView name, nickname;
 
     private UserInfo userInfo = new UserInfo();
 
@@ -64,8 +64,9 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         setContentView(R.layout.activity_achieve);
 
         name = findViewById(R.id.mini_name);
+        nickname = findViewById(R.id.mini_nickname);
         profile = findViewById(R.id.mini_profile);
-        loadUserInfo(profile, name);
+        loadUserInfo(profile, name, nickname);
 
         //UI설정
         settingUI();
@@ -457,9 +458,8 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
     }
 
     @Override
-    public void loadUserInfo(ImageView profile, TextView name) {
-        userInfo.loadUserInfo(profile, name);
+    public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
+        userInfo.loadUserInfo(profile, name, nickname);
     }
-
 
 }

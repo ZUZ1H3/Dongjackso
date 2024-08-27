@@ -207,7 +207,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private Bitmap cropImage(Bitmap bm) {
         int cropW = 30;
         int cropH = 5;
-        int newWidth = 530;
+        int newWidth = 540;
         int newHeight = 450;
 
         return Bitmap.createBitmap(bm, cropW, cropH, newWidth, newHeight);

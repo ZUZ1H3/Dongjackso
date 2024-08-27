@@ -5,5 +5,5 @@ import android.widget.TextView;
 
 // 사용자 정보 가져오는 interface
 public interface UserInfoLoader {
-    void loadUserInfo(ImageView profile, TextView name);
+    void loadUserInfo(ImageView profile, TextView name, TextView nickname);
 }

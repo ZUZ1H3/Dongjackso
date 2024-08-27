@@ -30,7 +30,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.List;
 
 public class TrophyActivity extends AppCompatActivity implements View.OnClickListener, UserInfoLoader{
-    private TextView name;
+    private TextView name, nickname;
     private ImageButton trophy, home, edit;
     private ImageView profile;
 
@@ -50,6 +50,7 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_trophy);
 
         name = findViewById(R.id.mini_name);
+        nickname = findViewById(R.id.mini_nickname);
         trophy = findViewById(R.id.ib_bictrophy);
         home = findViewById(R.id.ib_homebutton);
         edit = findViewById(R.id.ib_edit);
@@ -60,7 +61,7 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
         spot3 = findViewById(R.id.iv_spot3);
         spot4 = findViewById(R.id.iv_spot4);
 
-        loadUserInfo(profile, name); // 미니 프로필 불러오기
+        loadUserInfo(profile, name, nickname); // 미니 프로필 불러오기
 
         StorageReference imgRef = storageRef.child("characters/" + user.getUid() + "_1.png");
         // 이미지 로드
@@ -92,8 +93,8 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     @Override
-    public void loadUserInfo(ImageView profile, TextView name) {
-        userInfo.loadUserInfo(profile, name);
+    public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
+        userInfo.loadUserInfo(profile, name, nickname);
     }
 
     public void sound() {

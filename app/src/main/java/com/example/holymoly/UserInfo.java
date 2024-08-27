@@ -27,7 +27,7 @@ public class UserInfo implements UserInfoLoader {
 
     // Firestore에서 사용자 정보 가져오기
     @Override
-    public void loadUserInfo(ImageView profile, TextView name) {
+    public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
         // 캐릭터 이미지 가져오기
         final long MEGABYTE = 1024 * 1024; // 1MB
         characterRef.getBytes(MEGABYTE).addOnSuccessListener(bytes -> {
@@ -42,7 +42,9 @@ public class UserInfo implements UserInfoLoader {
                 .addOnSuccessListener(document -> {
                     if (document.exists()) {
                         String userName = document.getString("name");
+                        String userNickName = document.getString("nickname");
                         name.setText(userName);
+                        nickname.setText(userNickName);
                     }
                 });
     }
