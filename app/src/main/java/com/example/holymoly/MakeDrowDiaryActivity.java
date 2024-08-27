@@ -177,7 +177,7 @@ public class MakeDrowDiaryActivity extends AppCompatActivity {
         Canvas canvas = new Canvas(bitmap);
         drawView.draw(canvas);
 
-        // cover 별로 저장된 경로
+        // diaries 별로 저장된 경로
         StorageReference coverRef = storageRef.child("diaries/");
 
         // 현재 날짜를 yyyyMMdd 형식으로 가져오기
@@ -198,8 +198,9 @@ public class MakeDrowDiaryActivity extends AppCompatActivity {
         UploadTask uploadTask = imageRef.putBytes(data);
         uploadTask.addOnSuccessListener(taskSnapshot -> {
             Toast.makeText(this, "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
-            Intent intent2 = new Intent(MakeDrowDiaryActivity.this, AlbumDiaryActivity.class);
+            Intent intent2 = new Intent(MakeDrowDiaryActivity.this, MakeDiaryActivity.class);
             startActivity(intent2);
+            finish();
         });
     }
 }

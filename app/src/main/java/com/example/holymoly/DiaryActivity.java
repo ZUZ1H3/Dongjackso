@@ -23,7 +23,8 @@ public class DiaryActivity extends AppCompatActivity {
     private ChatFutures chat;
     private EditText userInput;
     private ImageView rectangles;
-    private ImageButton sendButton, makeDiaryButton, moreButton;
+    private ImageButton stopMakingBtn, sendButton, makeDiaryButton, moreButton;
+    private long backPressedTime = 0;
     private RecyclerView recyclerView;
     private MessageAdapter messageAdapter;
     private List<Message> messageList = new ArrayList<>();
@@ -42,6 +43,7 @@ public class DiaryActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView);
         userInput = findViewById(R.id.userInput);
         rectangles= findViewById(R.id.rectangles);
+        stopMakingBtn = findViewById(R.id.ib_stopMaking);
         sendButton = findViewById(R.id.sendButton);
         makeDiaryButton = findViewById(R.id.makeDiary);
         moreButton = findViewById(R.id.more);
@@ -99,6 +101,18 @@ public class DiaryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 sound();
                 sendMessage();
+            }
+        });
+        stopMakingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sound();
+                if (System.currentTimeMillis() - backPressedTime >= 2000) {
+                    backPressedTime = System.currentTimeMillis();
+                    Toast.makeText(DiaryActivity.this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+                } else {
+                    finish();
+                }
             }
         });
         // 더 대화하기 버튼 클릭 리스너 설정
