@@ -207,6 +207,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                     // 표지 제작할 때 테마 별로 구분하기 위한 용도
                     intent.putExtra("selectedTheme", finalSelectedTheme);
                     intent.putStringArrayListExtra("selectedCharacters", selectedCharacters);
+                    intent.putStringArrayListExtra("story", pageContents);
                     saveStory(); // 내용 저장
                     startActivity(intent);
                 } else {
