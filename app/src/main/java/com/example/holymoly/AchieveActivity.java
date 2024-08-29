@@ -2,6 +2,7 @@ package com.example.holymoly;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -85,6 +87,16 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         for (ImageButton btn : ibTrophy) {
             btn.setEnabled(false);
         }
+
+        Button resetButton = findViewById(R.id.resetButton);
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 초기화 메서드 호출
+                resetTrophyCounts();
+                Toast.makeText(AchieveActivity.this, "모든 데이터가 초기화되었습니다.", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         //동화업적, 작가호칭 선택 리스너
         rgTrophyCategory.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -167,15 +179,43 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         });
 
         // 버튼 클릭 리스너 설정
-        for (int i = 0; i < totalTrophyGoals.length; i++) {
-            final int index = i;
-            ibTrophy[i].setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    handleTrophyReward(index);
-                }
-            });
-        }
+        //for (int i = 0; i < totalTrophyGoals.length; i++) {
+        //    final int index = i;
+        //    ibTrophy[i].setOnClickListener(new View.OnClickListener() {
+        //        @Override
+        //        public void onClick(View v) {
+        //            handleTrophyReward(index);
+        //        }
+        //    });
+        //}
+
+        ibTrophy[0].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleTrophyReward(0);
+            }
+        });
+
+        ibTrophy[1].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleTrophyReward(1);
+            }
+        });
+
+        ibTrophy[2].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleTrophyReward(2);
+            }
+        });
+
+        ibTrophy[3].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleTrophyReward(3);
+            }
+        });
     }
 
     // SharedPreferences에서 TrophyCounts 로드
@@ -254,19 +294,31 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
     public void handleTrophyReward(int trophyIndex) {
         if(ibTrophy[trophyIndex].isEnabled()) { //활성화된 상태에서 눌렀다면
             //작가호칭 보상
-            Toast.makeText(this, totalTrophyGoals[trophyIndex] + "개 목표 달성! 보상을 받았어요!", Toast.LENGTH_SHORT).show();
-
-            ibTrophy[trophyIndex].setEnabled(false);
-            ibTrophy[trophyIndex].setBackgroundResource(R.drawable.ic_btn_appellation_done); // 완료 이미지로 변경
-
-            // 텍스트뷰 업데이트
-            tvTrophy[trophyIndex].setText("완료");
+            Toast.makeText(this, "작가 호칭 선택완료!", Toast.LENGTH_SHORT).show();
 
             // 상태 저장
             saveTrophyRewardStatus(trophyIndex);
 
             //UI 업데이트
             updateProgressBars();
+
+            for(int i=0; i < totalTrophyGoals.length; i++) {
+                int goal = totalTrophyGoals[i];
+
+                //목표 달성 시 이미지 버튼 활성화 + 배경 이미지 바꿈
+                if (totalTrophyCount >= goal) {
+                    ibTrophy[i].setEnabled(true);
+                    ibTrophy[i].setBackgroundResource(R.drawable.ic_btn_appellation);
+                }
+                // 잠금해제 이미지로 변경
+                else {
+                    ibTrophy[i].setEnabled(false);
+                    ibTrophy[i].setBackgroundResource(R.drawable.ic_btn_appellation_locked); // 잠금 이미지로 변경
+                }
+            }
+
+            ibTrophy[trophyIndex].setEnabled(false);
+            ibTrophy[trophyIndex].setBackgroundResource(R.drawable.ic_btn_appellation_done); // 완료 이미지로 변경
         }
     }
 
@@ -300,18 +352,32 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
 
             //목표 달성 시 이미지 버튼 활성화 + 배경 이미지 바꿈
             if(totalTrophyCount >= goal) {
-                if (!isTrophyRewardClaimed(i)) {
-                    ibTrophy[i].setEnabled(true);
-                    ibTrophy[i].setBackgroundResource(R.drawable.ic_btn_appellation); // 잠금해제 이미지로 변경
-                } else {
-                    ibTrophy[i].setEnabled(false);
-                    ibTrophy[i].setBackgroundResource(R.drawable.ic_btn_appellation_done); // 완료 이미지로 변경
+                if(isBackgroundImage(ibTrophy[i], R.drawable.ic_btn_appellation_done)) {
+                    //이미 완료선택한거면
                 }
-            } else {
+
+                else {
+                    ibTrophy[i].setEnabled(true);
+                    ibTrophy[i].setBackgroundResource(R.drawable.ic_btn_appellation);
+                }
+            }
+            // 잠금해제 이미지로 변경
+            else {
                 ibTrophy[i].setEnabled(false);
                 ibTrophy[i].setBackgroundResource(R.drawable.ic_btn_appellation_locked); // 잠금 이미지로 변경
             }
         }
+    }
+
+    public boolean isBackgroundImage(ImageButton button, int drawableId) {
+        // 현재 배경 Drawable 객체 가져오기
+        Drawable currentDrawable = button.getBackground();
+
+        // 비교할 Drawable 객체 가져오기
+        Drawable drawableToCompare = ContextCompat.getDrawable(this, drawableId);
+
+        // Drawable 객체의 id를 비교하여 일치 여부 확인
+        return currentDrawable != null && drawableToCompare != null && currentDrawable.getConstantState().equals(drawableToCompare.getConstantState());
     }
 
     public void updateUI(String thema) {
@@ -454,6 +520,38 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         tvTrophy[1] = findViewById(R.id.tv_trophyCount5);
         tvTrophy[2] = findViewById(R.id.tv_trophyCount10);
         tvTrophy[3] = findViewById(R.id.tv_trophyCount50);
+    }
+
+    private void resetTrophyCounts() {
+        SharedPreferences sharedPreferences = getSharedPreferences("TrophyPrefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        // 저장된 모든 데이터를 삭제
+        editor.clear();
+        editor.apply();
+
+        // 트로피와 관련된 변수들을 기본값으로 초기화
+        seaTrophyCount = 0;
+        forestTrophyCount = 1;
+        castleTrophyCount = 3;
+        villageTrophyCount = 5;
+        universeTrophyCount = 10;
+        desertTrophyCount = 15;
+        customTrophyCount = 20;
+
+        seaTrophyIndex = 0;
+        forestTrophyIndex = 0;
+        castleTrophyIndex = 0;
+        villageTrophyIndex = 0;
+        universeTrophyIndex = 0;
+        desertTrophyIndex = 0;
+        customTrophyIndex = 0;
+
+        totalTrophyCount = 0;
+
+        // UI 업데이트
+        updateUIForAllThemes();
+        updateProgressBars();
     }
 
     @Override
