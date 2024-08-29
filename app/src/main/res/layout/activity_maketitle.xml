@@ -68,7 +68,7 @@
         android:text=""
         android:textColor="@color/white"
         android:textSize="80dp"
-        android:textColorHint="#ffffff"
+        android:textColorHint="#cdcdcd"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -77,21 +77,18 @@
 
     <TextView
         android:id="@+id/tv_AItitle"
-        android:layout_width="550dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ssurround"
         android:gravity="center"
         android:text="이런 제목은 어때요? -> "
         android:textColor="#cdcdcd"
         android:textSize="24dp"
-
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.445" />
-
-    <!--오른쪽 아래 다음 단계 화살표 버튼-->
+        app:layout_constraintVertical_bias="0.46" />
 
     <TextView
         android:id="@+id/tv_writer"

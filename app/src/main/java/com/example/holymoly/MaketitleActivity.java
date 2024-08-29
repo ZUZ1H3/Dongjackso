@@ -23,25 +23,32 @@ public class MaketitleActivity extends AppCompatActivity {
     private ImageView backgroundImageView;
     private ImageButton nextBtn;
     private EditText title;
+    private static final int MAX_RETRY_COUNT = 3; // 최대 재시도 횟수
+    private int retryCount = 0; // 현재 재시도 횟수
     private String bookTitle;
-    private TextView name;
+    private TextView name, AItitle;
+    private Gemini gemini;
     private String selectedTheme;
-    private ArrayList<String> selectedCharacters;
+    private ArrayList<String> selectedCharacters, story;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maketitle);
 
+        gemini = new Gemini();
         backgroundImageView = findViewById(R.id.background_image_view);
         nextBtn = findViewById(R.id.ib_nextStep);
         title = findViewById(R.id.tv_booktitle);
         name = findViewById(R.id.tv_writername);
+        AItitle = findViewById(R.id.tv_AItitle);
 
         Intent intent = getIntent();
         byte[] imageBytes = intent.getByteArrayExtra("backgroundImageBytes");
+        story = intent.getStringArrayListExtra("story");
         selectedTheme = intent.getStringExtra("selectedTheme");
         selectedCharacters = intent.getStringArrayListExtra("selectedCharacters");
 
@@ -53,6 +60,9 @@ public class MaketitleActivity extends AppCompatActivity {
                 Toast.makeText(this, "이미지 로드 실패", Toast.LENGTH_SHORT).show();
             }
         }
+
+        // Gemini를 사용하여 제목 생성
+        generateAItitle(String.join(" ", story));
 
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +76,7 @@ public class MaketitleActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         db.collection("users").document(user.getUid())
                 .get()
                 .addOnSuccessListener(document -> {
@@ -75,10 +86,38 @@ public class MaketitleActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    // Gemini를 사용하여 AI 제목 생성
+    public void generateAItitle(String story) {
+        String prompt = "이 동화 스토리에 대한 제목을 2가지 지어서 단답형으로 대답하세요." +
+                "지어진 제목과 제목 사이에는 ', '로 띄어주세요. 아래는 동화 스토리입니다. \n 이야기: " + story;
+        gemini.generateText(prompt, new Gemini.Callback() {
+            @Override
+            public void onSuccess(String text) {
+                // UI 업데이트를 메인 스레드에서 실행
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        AItitle.setText("이런 제목은 어때요? -> " + text);  // 생성된 제목을 AItitle 텍스트뷰에 설정
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MaketitleActivity.this, "AI 동화 생성 실패", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
+
     // 효과음
     public void sound() {
         Intent intent = new Intent(this, SoundService.class);
         startService(intent);
     }
 }
-
