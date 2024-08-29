@@ -1,12 +1,17 @@
 package com.example.holymoly;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +24,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -38,6 +44,7 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
 
     private List<Diary> diaries = new ArrayList<>();
     private int currentIndex = 0;
+    private int month;
 
     private SharedPreferences sharedPreferences;
     private static final String PREF_NAME = "Weather";
@@ -69,7 +76,7 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
 
         // 현재 날짜를 구해 캘린더에 표시
         Calendar cal = Calendar.getInstance();
-        int month = cal.get(Calendar.MONTH) + 1;
+        month = cal.get(Calendar.MONTH) + 1;
         calendar.setText(month + "월");
 
         // SharedPreferences 초기화
@@ -121,6 +128,9 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
             Intent intent = new Intent(this, MakeDiaryActivity.class);
             intent.putExtra("date", date);
             startActivity(intent);
+        }
+        else if (v.getId() == R.id.calendar) { // 달력 클릭 시 월 변경
+            showMonthPickerDialog();
         }
     }
 
@@ -241,6 +251,48 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
         rightIV.setImageResource(android.R.color.transparent);
         rightTV.setText("");
         rightWT.setImageResource(android.R.color.transparent);
+    }
+
+    // 달 클릭 시 다이얼로그 표시
+    private void showMonthPickerDialog() {
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_month, null);
+
+        NumberPicker monthPicker = dialogView.findViewById(R.id.numberPickerMonth);
+        monthPicker.setMinValue(1);
+        monthPicker.setMaxValue(12);
+        monthPicker.setValue(month);
+
+        // NumberPicker의 텍스트 색상과 크기 조정
+        setNumberPickerTextStyle(monthPicker, "#F383A9", 30);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("월 선택하세요");
+        builder.setView(dialogView);
+        builder.setPositiveButton("확인", (dialog, which) -> {
+            month = monthPicker.getValue();
+            calendar.setText(month + "월");
+        });
+        builder.setNegativeButton("취소", (dialog, which) -> dialog.dismiss());
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    // NumberPicker의 텍스트 색상과 크기 설정 메서드
+    private void setNumberPickerTextStyle(NumberPicker numberPicker, String color, float textSize) {
+        // NumberPicker의 내부 TextView에 접근
+        try {
+            // "mInputText"는 NumberPicker의 내부 TextView 필드 이름
+            Field field = NumberPicker.class.getDeclaredField("mInputText");
+            field.setAccessible(true);
+
+            TextView inputText = (TextView) field.get(numberPicker);
+            inputText.setTextColor(Color.parseColor(color)); // 텍스트 색상 설정
+            inputText.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSize); // 텍스트 크기 설정
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     // 효과음

@@ -72,8 +72,6 @@ public class MakeDiaryActivity extends AppCompatActivity {
 
         day.setText(currentDate);
 
-
-        String loadDate = getDate();
         sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
 
         loadImage(date); // 이미지 불러오기
@@ -170,11 +168,17 @@ public class MakeDiaryActivity extends AppCompatActivity {
         return dateFormat.format(date);
     }
 
-    // YYYY MM DD 형식으로 저장된 날짜 얻기
-    private String getDate() {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
-        Date date = new Date();
-        return dateFormat.format(date);
+    // 저장된 날짜를 M월 d일 E로 반환
+    private String getDate(String date) {
+        try {
+            SimpleDateFormat originalFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+            SimpleDateFormat targetFormat = new SimpleDateFormat("M월 d일 E", Locale.KOREAN);
+            Date parsedDate = originalFormat.parse(date);
+            return targetFormat.format(parsedDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     // 텍스트 업로드
@@ -204,6 +208,10 @@ public class MakeDiaryActivity extends AppCompatActivity {
                     // 파일을 읽어 텍스트로 변환
                     String text = new String(bytes);
                     storyTextView.setText(text);
+
+                    // 불러온 날짜로 설정
+                    String loadDate = getDate(date);
+                    day.setText(loadDate);
                 });
     }
     // 이미지 불러오기
