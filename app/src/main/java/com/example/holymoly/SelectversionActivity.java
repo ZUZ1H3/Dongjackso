@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class SelectversionActivity extends AppCompatActivity implements UserInfoLoader {
     private ImageButton btnhome, btntrophy, btnsetting;
     private ImageButton ibMakeWithAI, ibMakeAlone;
-    private TextView name;
+    private TextView name, nickname;
     private ImageView profile;
     private UserInfo userInfo = new UserInfo();
 
@@ -21,6 +21,7 @@ public class SelectversionActivity extends AppCompatActivity implements UserInfo
         setContentView(R.layout.activity_selectversion);
 
         name = findViewById(R.id.mini_name);
+        nickname = findViewById(R.id.mini_nickname);
         profile = findViewById(R.id.mini_profile);
         ibMakeWithAI = findViewById(R.id.ib_makeWithAI);
         ibMakeAlone = findViewById(R.id.ib_makeWithAlone);
@@ -29,7 +30,7 @@ public class SelectversionActivity extends AppCompatActivity implements UserInfo
         btntrophy = findViewById(R.id.ib_trophy);
         btnsetting = findViewById(R.id.ib_setting);
 
-        loadUserInfo(profile, name);
+        loadUserInfo(profile, name, nickname);
 
         btnhome.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,13 +84,11 @@ public class SelectversionActivity extends AppCompatActivity implements UserInfo
 
 
     @Override
-    public void loadUserInfo(ImageView profile, TextView name) {
-        userInfo.loadUserInfo(profile, name);
+    public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
+        userInfo.loadUserInfo(profile, name, nickname);
     }
     public void sound() {
         Intent intent = new Intent(this, SoundService.class);
         startService(intent);
     }
-
-
 }
