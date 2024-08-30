@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_main2"
+    tools:context=".WordGameActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
+        android:fontFamily="@font/bitbit"
+        android:text="제시어 : 과일"
+        android:textColor="#ffffff"
+        android:textSize="48dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_profileai"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.09"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.172" />
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="3"
+        android:orientation="horizontal"
+        android:layout_marginTop="232dp"
+        android:layout_marginLeft="108dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <ImageView
+            android:id="@+id/AIrect1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rect1"
+            android:layout_margin="4dp"/>
+
+        <ImageView
+            android:id="@+id/AIrect2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rect1"
+            android:layout_margin="4dp"/>
+
+        <ImageView
+            android:id="@+id/AIrect3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rect1"
+            android:layout_margin="4dp"/>
+
+        <ImageView
+            android:id="@+id/AIrect4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rect1"
+            android:layout_margin="4dp"/>
+
+        <ImageView
+            android:id="@+id/AIrect5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rect1"
+            android:layout_margin="4dp"/>
+
+        <ImageView
+            android:id="@+id/AIrect6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rect1"
+            android:layout_margin="4dp"/>
+
+        <ImageView
+            android:id="@+id/AIrect7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rect1"
+            android:layout_margin="4dp"/>
+
+        <ImageView
+            android:id="@+id/AIrect8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rect1"
+            android:layout_margin="4dp"/>
+
+        <ImageView
+            android:id="@+id/AIrect9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rect1"
+            android:layout_margin="4dp"/>
+
+    </GridLayout>
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="3"
+        android:orientation="horizontal"
+        android:layout_marginTop="232dp"
+        android:layout_marginLeft="672dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <ImageView
+            android:id="@+id/rect1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rect1"
+            android:layout_margin="4dp"/>
+
+        <ImageView
+            android:id="@+id/rect2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rect1"
+            android:layout_margin="4dp"/>
+
+        <ImageView
+            android:id="@+id/rect3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rect1"
+            android:layout_margin="4dp"/>
+
+        <ImageView
+            android:id="@+id/rect4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rect1"
+            android:layout_margin="4dp"/>
+
+        <ImageView
+            android:id="@+id/rect5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rect1"
+            android:layout_margin="4dp"/>
+
+        <ImageView
+            android:id="@+id/rect6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rect1"
+            android:layout_margin="4dp"/>
+
+        <ImageView
+            android:id="@+id/rect7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rect1"
+            android:layout_margin="4dp"/>
+
+        <ImageView
+            android:id="@+id/rect8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rect1"
+            android:layout_margin="4dp"/>
+
+        <ImageView
+            android:id="@+id/rect9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/rect1"
+            android:layout_margin="4dp"/>
+
+    </GridLayout>
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="232dp"
+        android:layout_marginLeft="108dp"
+        android:columnCount="3"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:id="@+id/tv_AIrect1"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:text="\?"
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textStroke="true"
+            app:textStrokeColor="@color/black"
+            app:textStrokeWidth="6" />
+
+        <TextView
+            android:id="@+id/tv_AIrect2"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:text="\?"
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textStroke="true"
+            app:textStrokeColor="@color/black"
+            app:textStrokeWidth="6" />
+
+        <TextView
+            android:id="@+id/tv_AIrect3"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:text= "\?"
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textStroke="true"
+            app:textStrokeColor="@color/black"
+            app:textStrokeWidth="6" />
+
+        <TextView
+            android:id="@+id/tv_AIrect4"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:text= "\?"
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textStroke="true"
+            app:textStrokeColor="@color/black"
+            app:textStrokeWidth="6" />
+
+        <TextView
+            android:id="@+id/tv_AIrect5"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:text="\?"
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textStroke="true"
+            app:textStrokeColor="@color/black"
+            app:textStrokeWidth="6" />
+
+        <TextView
+            android:id="@+id/tv_AIrect6"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:text="\?"
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textStroke="true"
+            app:textStrokeColor="@color/black"
+            app:textStrokeWidth="6" />
+
+        <TextView
+            android:id="@+id/tv_AIrect7"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:text="\?"
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textStroke="true"
+            app:textStrokeColor="@color/black"
+            app:textStrokeWidth="6" />
+
+        <TextView
+            android:id="@+id/tv_AIrect8"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:text="\?"
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textStroke="true"
+            app:textStrokeColor="@color/black"
+            app:textStrokeWidth="6" />
+
+        <TextView
+            android:id="@+id/tv_AIrect9"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:text="\?"
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textStroke="true"
+            app:textStrokeColor="@color/black"
+            app:textStrokeWidth="6" />
+
+
+    </GridLayout>
+
+
+
+
+    <GridLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="232dp"
+        android:layout_marginLeft="672dp"
+        android:columnCount="3"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:id="@+id/tv_rect1"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:text=" "
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textStroke="true"
+            app:textStrokeColor="@color/black"
+            app:textStrokeWidth="6" />
+
+        <TextView
+            android:id="@+id/tv_rect2"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:text=" "
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textStroke="true"
+            app:textStrokeColor="@color/black"
+            app:textStrokeWidth="6" />
+
+        <TextView
+            android:id="@+id/tv_rect3"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:text=" "
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textStroke="true"
+            app:textStrokeColor="@color/black"
+            app:textStrokeWidth="6" />
+
+        <TextView
+            android:id="@+id/tv_rect4"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:text=" "
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textStroke="true"
+            app:textStrokeColor="@color/black"
+            app:textStrokeWidth="6" />
+
+        <TextView
+            android:id="@+id/tv_rect5"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:text=" "
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textStroke="true"
+            app:textStrokeColor="@color/black"
+            app:textStrokeWidth="6" />
+
+        <TextView
+            android:id="@+id/tv_rect6"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:text=" "
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textStroke="true"
+            app:textStrokeColor="@color/black"
+            app:textStrokeWidth="6" />
+
+        <TextView
+            android:id="@+id/tv_rect7"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:text=" "
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textStroke="true"
+            app:textStrokeColor="@color/black"
+            app:textStrokeWidth="6" />
+
+        <TextView
+            android:id="@+id/tv_rect8"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:text=" "
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textStroke="true"
+            app:textStrokeColor="@color/black"
+            app:textStrokeWidth="6" />
+
+        <TextView
+            android:id="@+id/tv_rect9"
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:gravity="center"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:text=" "
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:textStroke="true"
+            app:textStrokeColor="@color/black"
+            app:textStrokeWidth="6" />
+    </GridLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
