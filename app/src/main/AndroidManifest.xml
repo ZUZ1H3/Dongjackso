@@ -20,18 +20,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HolyMoly"
         tools:targetApi="31">
-        <activity
-            android:name=".GaroseroActivity"
-            android:exported="true" />
 
         <service
             android:name=".SoundService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity
-            android:name=".StartPuzzleActivity"
-            android:exported="true" />
         <activity
             android:name=".MakeDrowDiaryActivity"
             android:exported="true"
@@ -48,6 +42,12 @@
             android:exported="true" />
         <activity
             android:name=".SelectPuzzleActivity"
+            android:exported="true" />
+        <activity
+            android:name=".WordGameReadyActivity"
+            android:exported="true" />
+        <activity
+            android:name=".WordGameActivity"
             android:exported="true" />
         <activity
             android:name=".DiaryActivity"
