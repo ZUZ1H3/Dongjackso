@@ -69,6 +69,15 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         profile = findViewById(R.id.mini_profile);
         loadUserInfo(profile, name);
 
+        // 작가 호칭 보상 버튼을 초기에는 비활성화
+        //for (ImageButton btn : ibTrophy) {
+        //    btn.setEnabled(false);
+        //}
+
+        //디폴트 상태 설정 - 처음에 키면 동화업적이 띄워져있는걸로함
+        findViewById(R.id.fairytaleAchievementLayout).setVisibility(View.VISIBLE);
+        findViewById(R.id.writerappellationLayout).setVisibility(View.GONE);
+
         //UI설정
         settingUI();
 
@@ -79,15 +88,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         //프로그래스바 업데이트
         updateProgressBars();
 
-        //디폴트 상태 설정 - 처음에 키면 동화업적이 띄워져있는걸로함
-        findViewById(R.id.fairytaleAchievementLayout).setVisibility(View.VISIBLE);
-        findViewById(R.id.writerappellationLayout).setVisibility(View.GONE);
-
-        // 작가 호칭 보상 버튼을 초기에는 비활성화
-        for (ImageButton btn : ibTrophy) {
-            btn.setEnabled(false);
-        }
-
+        //초기화 버튼 리스너
         Button resetButton = findViewById(R.id.resetButton);
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -189,33 +190,36 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         //    });
         //}
 
-        ibTrophy[0].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleTrophyReward(0);
-            }
-        });
+        // 작가 호칭 사용 버튼리스너
+        for (int i = 0; i < ibTrophy.length; i++) {
+            int index = i;
+            ibTrophy[i].setOnClickListener(v -> {
+                handleTrophyReward(index);
+                saveLastButtonClicked(index);
+                Toast.makeText(this, "작가 호칭 선택완료!", Toast.LENGTH_SHORT).show();
+            });
+        }
 
-        ibTrophy[1].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleTrophyReward(1);
-            }
-        });
+        // 앱 시작 시 마지막 버튼 상태 복원
+        restoreLastButtonState();
 
-        ibTrophy[2].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleTrophyReward(2);
-            }
-        });
+    }
 
-        ibTrophy[3].setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleTrophyReward(3);
-            }
-        });
+    private void saveLastButtonClicked(int buttonIndex) {
+        SharedPreferences sharedPref = getSharedPreferences("ButtonState", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("lastButtonIndex", buttonIndex); // 마지막으로 클릭한 버튼의 인덱스 저장
+        editor.apply();
+    }
+
+    private void restoreLastButtonState() {
+        SharedPreferences sharedPref = getSharedPreferences("ButtonState", MODE_PRIVATE);
+        int lastButtonIndex = sharedPref.getInt("lastButtonIndex", -1); // 저장된 버튼 인덱스 가져오기, 기본값 -1
+
+        if (lastButtonIndex != -1 && lastButtonIndex < ibTrophy.length) {
+            ibTrophy[lastButtonIndex].setPressed(true); // 마지막으로 클릭된 버튼의 상태를 눌린 상태로 설정
+            handleTrophyReward(lastButtonIndex);
+        }
     }
 
     // SharedPreferences에서 TrophyCounts 로드
@@ -294,7 +298,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
     public void handleTrophyReward(int trophyIndex) {
         if(ibTrophy[trophyIndex].isEnabled()) { //활성화된 상태에서 눌렀다면
             //작가호칭 보상
-            Toast.makeText(this, "작가 호칭 선택완료!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "작가 호칭 선택완료!", Toast.LENGTH_SHORT).show();
 
             // 상태 저장
             saveTrophyRewardStatus(trophyIndex);
@@ -354,6 +358,8 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             if(totalTrophyCount >= goal) {
                 if(isBackgroundImage(ibTrophy[i], R.drawable.ic_btn_appellation_done)) {
                     //이미 완료선택한거면
+                    ibTrophy[i].setEnabled(false);
+                    ibTrophy[i].setBackgroundResource(R.drawable.ic_btn_appellation_done);
                 }
 
                 else {
