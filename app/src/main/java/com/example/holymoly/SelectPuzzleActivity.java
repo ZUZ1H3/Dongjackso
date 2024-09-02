@@ -85,8 +85,8 @@ public class SelectPuzzleActivity extends AppCompatActivity implements View.OnCl
         startActivity(intent);
     }
     @Override
-    public void loadUserInfo(ImageView profile, TextView name) {
-        userInfo.loadUserInfo(profile, name);
+    public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
+        userInfo.loadUserInfo(profile, name, nickname);
     }
 
     public void sound() {

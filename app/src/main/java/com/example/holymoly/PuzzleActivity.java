@@ -31,7 +31,7 @@ import android.app.AlertDialog;
 
 public class PuzzleActivity extends AppCompatActivity implements View.OnClickListener, UserInfoLoader {
     /* 상단 프로필 */
-    private TextView name;
+    private TextView name, nickname;
     private ImageView profile;
     private UserInfo userInfo = new UserInfo();
 
@@ -64,8 +64,9 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
 
         // 상단 프로필 로딩
         name = findViewById(R.id.mini_name);
+        nickname = findViewById(R.id.mini_nickname);
         profile = findViewById(R.id.mini_profile);
-        loadUserInfo(profile, name);
+        loadUserInfo(profile, name, nickname);
 
         // Firebase 초기화
         auth = FirebaseAuth.getInstance();
@@ -341,7 +342,7 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         imageCnt = 0;
     }
     @Override
-    public void loadUserInfo(ImageView profile, TextView name) {
-        userInfo.loadUserInfo(profile, name);
+    public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
+        userInfo.loadUserInfo(profile, name, nickname);
     }
 }
