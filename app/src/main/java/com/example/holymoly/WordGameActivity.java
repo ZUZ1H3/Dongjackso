@@ -112,6 +112,7 @@ public class WordGameActivity extends AppCompatActivity {
         userSelected[row][col] = true;  // 사용자 선택 기록
 
         String selectedWord = userTextViews[row][col].getText().toString(); // 사용자가 선택한 단어
+        userTextView.setText(selectedWord + "!"); //대화창
 
         // AI의 텍스트뷰에서 단어를 찾아 이미지를 변경
         for (int i = 0; i < 3; i++) {
@@ -125,11 +126,13 @@ public class WordGameActivity extends AppCompatActivity {
         }
 
         userTurn = false; // 턴을 AI로 변경
-        new Handler().postDelayed(this::aiTurn, 1000);  // 1초 후 AI의 턴 실행
+        new Handler().postDelayed(this::aiTurn, 2500);  // 2.5초 후 AI의 턴 실행
     }
 
 
     private void aiTurn() {
+        userTextView.setText(""); //대화창
+
         // 랜덤으로 AI의 단어 선택
         Random random = new Random();
         int row, col;
@@ -145,6 +148,15 @@ public class WordGameActivity extends AppCompatActivity {
 
         // AI가 선택한 단어에 해당하는 사용자의 텍스트뷰도 선택된 것으로 표시
         String selectedWord = aiWords[row][col];
+        aiTextView.setText(selectedWord +"!");
+
+        // Handler를 사용하여 지연 작업을 설정
+        new Handler().postDelayed(() -> {
+            // 지정된 시간(durationMillis) 후에 메시지를 비움
+            aiTextView.setText("");
+            userTextView.setText("내 차례!");
+        }, 1500);
+
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
                 if (userTextViews[i][j].getText().toString().equals(selectedWord) && !userSelected[i][j]) {
@@ -155,6 +167,7 @@ public class WordGameActivity extends AppCompatActivity {
         }
 
         userTurn = true; // 턴을 사용자로 변경
+
     }
 
 

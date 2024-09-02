@@ -98,7 +98,7 @@
         android:layout_marginTop="145dp"
         android:fontFamily="@font/bitbit"
         android:gravity="center"
-        android:text=""
+        android:text="내 차례!"
         android:textColor="#ffffff"
         android:textSize="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
