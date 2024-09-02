@@ -48,6 +48,16 @@ public class UserInfo implements UserInfoLoader {
                     }
                 });
     }
+
+    public void loadUserInfo(ImageView profile) {
+        // 캐릭터 이미지 가져오기
+        final long MEGABYTE = 1024 * 1024; // 1MB
+        characterRef.getBytes(MEGABYTE).addOnSuccessListener(bytes -> {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            Bitmap cBitmap = cropImage(bitmap);
+            profile.setImageBitmap(cBitmap);
+        });
+    }
     // 이미지 확대
     private Bitmap cropImage(Bitmap bm) {
         int cropW = 25;
