@@ -140,8 +140,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             startActivity(intent);
         } else if (v.getId() == R.id.ib_ok) {
             updateUser();
-            Intent intent = new Intent(this, HomeActivity.class);
-            startActivity(intent);
+            finish();
         }
     }
 

@@ -111,7 +111,7 @@
         app:layout_constraintHorizontal_bias="0.12"/>
 
     <ImageButton
-        android:id="@+id/ib_makeWithAlone"
+        android:id="@+id/ib_makeAlone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/ib_version_makealone"
@@ -122,5 +122,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.8"
         app:layout_constraintHorizontal_bias="0.88"/>
+
+    <ImageView
+        android:id="@+id/userImage"
+        android:layout_width="450dp"
+        android:layout_height="450dp"
+        android:layout_marginLeft="720dp"
+        android:layout_marginTop="260dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

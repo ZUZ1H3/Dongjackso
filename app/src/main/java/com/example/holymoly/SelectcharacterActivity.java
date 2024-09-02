@@ -5,11 +5,15 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -200,10 +204,12 @@ public class SelectcharacterActivity extends AppCompatActivity implements UserIn
             TextView textView = customCheckBoxes[i].findViewById(R.id.checkbox_text);
             textView.setText(characters[i].name);
 
+            // 이미지 설정
             ImageView imageView = customCheckBoxes[i].findViewById(R.id.checkbox_image);
             imageView.setImageResource(characters[i].imageResId);
         }
     }
+
 
     // 체크박스 배경 업데이트 메서드
     private void updateCheckBoxBackground(View customCheckBox, boolean isChecked) {

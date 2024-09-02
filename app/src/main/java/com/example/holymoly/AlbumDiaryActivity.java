@@ -1,5 +1,4 @@
 package com.example.holymoly;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
@@ -43,6 +42,7 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
     private StorageReference storageRef = storage.getReference();
 
     private List<Diary> diaries = new ArrayList<>();
+    private List<Diary> filteredDiaries = new ArrayList<>();
     private int currentIndex = 0;
     private int month;
 
@@ -90,22 +90,63 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         sound();
         if (v.getId() == R.id.backPage) {  // 이전 페이지로 이동
-            if (currentIndex > 1) {
+            if (currentIndex > 0) {
                 currentIndex -= 2;
-                displayImages();
+                if (currentIndex < 0) {
+                    // 현재 월의 첫 페이지에서 이전 페이지로 이동할 경우
+                    if (month > 1) {
+                        int previousMonth = month - 1;
+                        if (filterDiariesByMonth(previousMonth)) {
+                            month = previousMonth;
+                            calendar.setText(month + "월");
+                            currentIndex = filteredDiaries.size() - 2; // 마지막 페이지로 설정
+                            displayImages();
+                        } else {
+                            Toast.makeText(this, "일기가 없습니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(this, "첫 번째 페이지입니다.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    displayImages();
+                }
             } else {
-                Toast.makeText(this, "첫 번째 페이지입니다.", Toast.LENGTH_SHORT).show();
+                // 현재 월의 첫 페이지에서 이전 페이지로 이동할 경우
+                if (month > 1) {
+                    int previousMonth = month - 1;
+                    if (filterDiariesByMonth(previousMonth)) {
+                        month = previousMonth;
+                        calendar.setText(month + "월");
+                        currentIndex = filteredDiaries.size() - 2; // 마지막 페이지로 설정
+                        displayImages();
+                    } else {
+                        Toast.makeText(this, "일기가 없습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(this, "첫 번째 페이지입니다.", Toast.LENGTH_SHORT).show();
+                }
             }
-        }
-        else if (v.getId() == R.id.nextPage) { // 다음 페이지로 이동
-            if (currentIndex < diaries.size() - 2) {
+        } else if (v.getId() == R.id.nextPage) { // 다음 페이지로 이동
+            if (currentIndex + 2 < filteredDiaries.size()) {
                 currentIndex += 2;
                 displayImages();
             } else {
-                Toast.makeText(this, "마지막 페이지입니다.", Toast.LENGTH_SHORT).show();
+                // 현재 월의 마지막 페이지에서 다음 페이지로 이동할 경우
+                if (month < 12) {
+                    int nextMonth = month + 1;
+                    if (filterDiariesByMonth(nextMonth)) {
+                        month = nextMonth;
+                        calendar.setText(month + "월");
+                        currentIndex = 0; // 첫 페이지로 설정
+                        displayImages();
+                    } else {
+                        Toast.makeText(this, "일기가 없습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(this, "마지막 페이지입니다.", Toast.LENGTH_SHORT).show();
+                }
             }
-        }
-        else if (v.getId() == R.id.ib_stopReading) {  // 종료 버튼
+        } else if (v.getId() == R.id.ib_stopReading) {  // 종료 버튼
             if (System.currentTimeMillis() - backPressedTime >= 2000) {
                 backPressedTime = System.currentTimeMillis();
                 Toast.makeText(this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
@@ -114,22 +155,24 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
             } else {
                 finish(); // 현재 액티비티 종료
             }
-        }
-        else if(v.getId() == R.id.leftImage) { // 왼쪽 이미지
+        } else if (v.getId() == R.id.leftImage) { // 왼쪽 이미지
             // yyyyMMdd 형식의 날짜 가져오기
-            String date = diaries.get(currentIndex).getDate();
+            String date = filteredDiaries.get(currentIndex).getDate();
             Intent intent = new Intent(this, MakeDiaryActivity.class);
             intent.putExtra("date", date);
             startActivity(intent);
-        }
-        else if(v.getId() == R.id.rightImage) { // 오른쪽 이미지
-            // yyyyMMdd 형식의 날짜 가져오기
-            String date = diaries.get(currentIndex + 1).getDate();
-            Intent intent = new Intent(this, MakeDiaryActivity.class);
-            intent.putExtra("date", date);
-            startActivity(intent);
-        }
-        else if (v.getId() == R.id.calendar) { // 달력 클릭 시 월 변경
+        } else if (v.getId() == R.id.rightImage) { // 오른쪽 이미지
+            // 이미지와 텍스트가 비어있는 경우
+            if (rightTV.getText().toString().isEmpty()) {
+                Toast.makeText(this, "내일 일기를 작성하세요.", Toast.LENGTH_SHORT).show();
+            } else {
+                // yyyyMMdd 형식의 날짜 가져오기
+                String date = filteredDiaries.get(currentIndex + 1).getDate();
+                Intent intent = new Intent(this, MakeDiaryActivity.class);
+                intent.putExtra("date", date);
+                startActivity(intent);
+            }
+        } else if (v.getId() == R.id.calendar) { // 달력 클릭 시 월 변경
             showMonthPickerDialog();
         }
     }
@@ -153,12 +196,8 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
                             diaries.add(new Diary(dateString, uri.toString()));
                             pendingUris.remove(dateString); // 처리된 URI를 제거
                             if (pendingUris.isEmpty()) {
-                                Collections.sort(diaries, new Comparator<Diary>() {
-                                    @Override
-                                    public int compare(Diary entry1, Diary entry2) {
-                                        return entry1.getDate().compareTo(entry2.getDate());
-                                    }
-                                });
+                                Collections.sort(diaries, (entry1, entry2) -> entry1.getDate().compareTo(entry2.getDate()));
+                                filterDiariesByMonth(month); // 초기 필터링
                                 displayImages();
                             }
                         });
@@ -168,16 +207,27 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
         });
     }
 
+    // 지정된 월에 해당하는 일기들로 필터링
+    private boolean filterDiariesByMonth(int monthToFilter) {
+        filteredDiaries.clear();
+        for (Diary diary : diaries) {
+            if (Integer.parseInt(diary.getDate().substring(4, 6)) == monthToFilter) {
+                filteredDiaries.add(diary);
+            }
+        }
+        return !filteredDiaries.isEmpty(); // 필터링된 결과가 있을 경우 true 반환
+    }
+
     // 현재 인덱스에 해당하는 이미지와 날짜를 표시
     private void displayImages() {
-        if (currentIndex < diaries.size()) {
-            loadImageIntoView(diaries.get(currentIndex).getImageUrl(), leftIV, leftTV, diaries.get(currentIndex).getDate(), leftWT);
+        if (currentIndex < filteredDiaries.size()) {
+            loadImageIntoView(filteredDiaries.get(currentIndex).getImageUrl(), leftIV, leftTV, filteredDiaries.get(currentIndex).getDate(), leftWT);
         } else {
             clearLeftView(); // 이미지가 없을 경우 초기화
         }
 
-        if (currentIndex + 1 < diaries.size()) {
-            loadImageIntoView(diaries.get(currentIndex + 1).getImageUrl(), rightIV, rightTV, diaries.get(currentIndex + 1).getDate(), rightWT);
+        if (currentIndex + 1 < filteredDiaries.size()) {
+            loadImageIntoView(filteredDiaries.get(currentIndex + 1).getImageUrl(), rightIV, rightTV, filteredDiaries.get(currentIndex + 1).getDate(), rightWT);
         } else {
             clearRightView(); // 이미지가 없을 경우 초기화
         }
@@ -213,11 +263,11 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
     private void setWeatherIcon(String date, ImageView weather) {
         int selected = sharedPreferences.getInt(date, 0000);
 
-        if(selected == R.id.ib_sunny) weather.setImageResource(R.drawable.weather_sunny);
-        else if(selected == R.id.ib_suncloudy) weather.setImageResource(R.drawable.weather_suncloudy);
-        else if(selected == R.id.ib_cloudy) weather.setImageResource(R.drawable.weather_cloudy);
-        else if(selected == R.id.ib_rainy) weather.setImageResource(R.drawable.weather_rainy);
-        else if(selected == R.id.ib_snowy) weather.setImageResource(R.drawable.weather_snowy);
+        if (selected == R.id.ib_sunny) weather.setImageResource(R.drawable.weather_sunny);
+        else if (selected == R.id.ib_suncloudy) weather.setImageResource(R.drawable.weather_suncloudy);
+        else if (selected == R.id.ib_cloudy) weather.setImageResource(R.drawable.weather_cloudy);
+        else if (selected == R.id.ib_rainy) weather.setImageResource(R.drawable.weather_rainy);
+        else if (selected == R.id.ib_snowy) weather.setImageResource(R.drawable.weather_snowy);
     }
 
     // Diary 클래스 정의
@@ -270,8 +320,15 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
         builder.setTitle("월 선택하세요");
         builder.setView(dialogView);
         builder.setPositiveButton("확인", (dialog, which) -> {
-            month = monthPicker.getValue();
-            calendar.setText(month + "월");
+            int selectedMonth = monthPicker.getValue();
+            if (filterDiariesByMonth(selectedMonth)) {
+                month = selectedMonth;
+                calendar.setText(month + "월");
+                currentIndex = 0; // 페이지를 처음으로 설정
+                displayImages();
+            } else {
+                Toast.makeText(this, "일기가 없습니다.", Toast.LENGTH_SHORT).show();
+            }
         });
         builder.setNegativeButton("취소", (dialog, which) -> dialog.dismiss());
 
