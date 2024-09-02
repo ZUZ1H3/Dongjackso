@@ -18,6 +18,7 @@ public class WordGameActivity extends AppCompatActivity {
     private Gemini gemini; // Gemini API와 상호작용을 위한 객체
     private String[][] aiWords;  // Gemini가 생성한 AI 단어들을 저장할 2차원 배열
     private static final int SELECTED_IMAGE_RESOURCE = R.drawable.rect2;  // 선택된 이미지를 나타내는 리소스
+    private static final int BINGO_IMAGE_RESOURCE = R.drawable.ic_rect3; // 빙고일 때 사용할 보라색 이미지 리소스
 
     private UserInfo userInfo = new UserInfo(); // 사용자 정보를 관리하는 객체
 
@@ -92,6 +93,7 @@ public class WordGameActivity extends AppCompatActivity {
 
 
     private void handleUserClick(int row, int col) {
+        sound();
         if (!userTurn) {
             Toast.makeText(this, "AI의 턴입니다.", Toast.LENGTH_SHORT).show();
             return;
@@ -125,12 +127,16 @@ public class WordGameActivity extends AppCompatActivity {
             }
         }
 
+        checkUserBingo();
+        checkAIBingo();
+
         userTurn = false; // 턴을 AI로 변경
-        new Handler().postDelayed(this::aiTurn, 2500);  // 2.5초 후 AI의 턴 실행
+        new Handler().postDelayed(this::aiTurn, 3000);  // 2.5초 후 AI의 턴 실행
     }
 
 
     private void aiTurn() {
+        sound();
         userTextView.setText(""); //대화창
 
         // 랜덤으로 AI의 단어 선택
@@ -165,11 +171,93 @@ public class WordGameActivity extends AppCompatActivity {
                 }
             }
         }
+        checkUserBingo();
+        checkAIBingo();
 
         userTurn = true; // 턴을 사용자로 변경
 
     }
 
+    private void checkUserBingo() {
+        // 행, 열, 대각선 체크
+        for (int i = 0; i < 3; i++) {
+            // 행 체크
+            if (checkLine(userSelected[i])) {
+                highlightLine(userImageViews[i]);
+            }
+            // 열 체크
+            boolean[] colSelected = new boolean[3];
+            for (int j = 0; j < 3; j++) {
+                colSelected[j] = userSelected[j][i];
+            }
+            if (checkLine(colSelected)) {
+                highlightLine(new ImageView[]{userImageViews[0][i], userImageViews[1][i], userImageViews[2][i]});
+            }
+        }
+
+        // 대각선 체크
+        boolean[] diag1Selected = new boolean[3];
+        boolean[] diag2Selected = new boolean[3];
+        for (int i = 0; i < 3; i++) {
+            diag1Selected[i] = userSelected[i][i];
+            diag2Selected[i] = userSelected[i][2 - i];
+        }
+        if (checkLine(diag1Selected)) {
+            highlightLine(new ImageView[]{userImageViews[0][0], userImageViews[1][1], userImageViews[2][2]});
+        }
+        if (checkLine(diag2Selected)) {
+            highlightLine(new ImageView[]{userImageViews[0][2], userImageViews[1][1], userImageViews[2][0]});
+        }
+    }
+
+    private void checkAIBingo() {
+        // 행, 열, 대각선 체크
+        for (int i = 0; i < 3; i++) {
+            // 행 체크
+            if (checkLine(aiSelected[i])) {
+                highlightLine(aiImageViews[i]);
+            }
+            // 열 체크
+            boolean[] colSelected = new boolean[3];
+            for (int j = 0; j < 3; j++) {
+                colSelected[j] = aiSelected[j][i];
+            }
+            if (checkLine(colSelected)) {
+                highlightLine(new ImageView[]{aiImageViews[0][i], aiImageViews[1][i], aiImageViews[2][i]});
+
+
+            }
+        }
+
+        // 대각선 체크
+        boolean[] diag1Selected = new boolean[3];
+        boolean[] diag2Selected = new boolean[3];
+        for (int i = 0; i < 3; i++) {
+            diag1Selected[i] = aiSelected[i][i];
+            diag2Selected[i] = aiSelected[i][2 - i];
+        }
+        if (checkLine(diag1Selected)) {
+            highlightLine(new ImageView[]{aiImageViews[0][0], aiImageViews[1][1], aiImageViews[2][2]});
+        }
+        if (checkLine(diag2Selected)) {
+            highlightLine(new ImageView[]{aiImageViews[0][2], aiImageViews[1][1], aiImageViews[2][0]});
+        }
+    }
+
+    private boolean checkLine(boolean[] line) {
+        for (boolean cell : line) {
+            if (!cell) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void highlightLine(ImageView[] line) {
+        for (ImageView img : line) {
+            img.setImageResource(BINGO_IMAGE_RESOURCE);
+        }
+    }
 
     public void generateAIWords(String theme) { // Gemini에 전달할 프롬프트 생성
         String prompt = theme + "를 주제로 빙고게임을 하려고 합니다. 3*3 빙고이므로, 단어 9개를 생성해주세요." +
@@ -180,12 +268,13 @@ public class WordGameActivity extends AppCompatActivity {
             public void onSuccess(String text) {
                 runOnUiThread(() -> {
                     // 생성된 단어 문자열을 쉼표와 공백으로 분리하여 배열에 저장
-                    String[] aiWordsArray = text.split(",\\s*");
+                    String[] aiWordsArray = text.split(", ");
+
                     if (aiWordsArray.length == 9) {
                         aiWords = new String[3][3];
                         for (int i = 0; i < 3; i++) {
                             for (int j = 0; j < 3; j++) {
-                                aiWords[i][j] = aiWordsArray[i * 3 + j];
+                                aiWords[i][j] = aiWordsArray[i * 3 + j].replace("\n", "").trim();
                             }
                         }
                     } else {
@@ -216,6 +305,6 @@ public class WordGameActivity extends AppCompatActivity {
 
     public void sound() {
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent); // SoundService를 시작하여 효과음 재생
+        startService(intent);
     }
 }
