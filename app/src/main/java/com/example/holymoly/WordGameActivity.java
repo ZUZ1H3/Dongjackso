@@ -18,6 +18,7 @@ public class WordGameActivity extends AppCompatActivity {
     private Gemini gemini; // Gemini API와 상호작용을 위한 객체
     private String[][] aiWords;  // Gemini가 생성한 AI 단어들을 저장할 2차원 배열
     private static final int SELECTED_IMAGE_RESOURCE = R.drawable.rect2;  // 선택된 이미지를 나타내는 리소스
+    private static final int BINGO_IMAGE_RESOURCE = R.drawable.rect3; // 빙고일 때 사용할 보라색 이미지 리소스
 
     private UserInfo userInfo = new UserInfo(); // 사용자 정보를 관리하는 객체
 
@@ -37,49 +38,54 @@ public class WordGameActivity extends AppCompatActivity {
         aiTextView = findViewById(R.id.AITextView);
 
         // 사용자와 AI의 선택 상태를 추적할 배열 초기화
-        userSelected = new boolean[3][3];
-        aiSelected = new boolean[3][3];
+        userSelected = new boolean[4][4];
+        aiSelected = new boolean[4][4];
         userTurn = true; // 게임 시작 시 사용자가 먼저 선택
 
         // 사용자 빙고판의 TextView 및 ImageView 배열 초기화
         userTextViews = new TextView[][]{
-                {findViewById(R.id.tv_rect1), findViewById(R.id.tv_rect2), findViewById(R.id.tv_rect3)},
-                {findViewById(R.id.tv_rect4), findViewById(R.id.tv_rect5), findViewById(R.id.tv_rect6)},
-                {findViewById(R.id.tv_rect7), findViewById(R.id.tv_rect8), findViewById(R.id.tv_rect9)}
+                {findViewById(R.id.tv_rect1), findViewById(R.id.tv_rect2), findViewById(R.id.tv_rect3), findViewById(R.id.tv_rect4)},
+                {findViewById(R.id.tv_rect5), findViewById(R.id.tv_rect6), findViewById(R.id.tv_rect7), findViewById(R.id.tv_rect8)},
+                {findViewById(R.id.tv_rect9), findViewById(R.id.tv_rect10), findViewById(R.id.tv_rect11), findViewById(R.id.tv_rect12)},
+                {findViewById(R.id.tv_rect13), findViewById(R.id.tv_rect14), findViewById(R.id.tv_rect15), findViewById(R.id.tv_rect16)}
         };
 
         userImageViews = new ImageView[][]{
-                {findViewById(R.id.rect1), findViewById(R.id.rect2), findViewById(R.id.rect3)},
-                {findViewById(R.id.rect4), findViewById(R.id.rect5), findViewById(R.id.rect6)},
-                {findViewById(R.id.rect7), findViewById(R.id.rect8), findViewById(R.id.rect9)}
+                {findViewById(R.id.rect1), findViewById(R.id.rect2), findViewById(R.id.rect3), findViewById(R.id.rect4)},
+                {findViewById(R.id.rect5), findViewById(R.id.rect6), findViewById(R.id.rect7), findViewById(R.id.rect8)},
+                {findViewById(R.id.rect9), findViewById(R.id.rect10), findViewById(R.id.rect11), findViewById(R.id.rect12)},
+                {findViewById(R.id.rect13), findViewById(R.id.rect14), findViewById(R.id.rect15), findViewById(R.id.rect16)}
         };
 
         // AI 빙고판의 TextView 및 ImageView 배열 초기화
         aiTextViews = new TextView[][]{
-                {findViewById(R.id.tv_AIrect1), findViewById(R.id.tv_AIrect2), findViewById(R.id.tv_AIrect3)},
-                {findViewById(R.id.tv_AIrect4), findViewById(R.id.tv_AIrect5), findViewById(R.id.tv_AIrect6)},
-                {findViewById(R.id.tv_AIrect7), findViewById(R.id.tv_AIrect8), findViewById(R.id.tv_AIrect9)}
+                {findViewById(R.id.tv_AIrect1), findViewById(R.id.tv_AIrect2), findViewById(R.id.tv_AIrect3), findViewById(R.id.tv_AIrect4)},
+                {findViewById(R.id.tv_AIrect5), findViewById(R.id.tv_AIrect6), findViewById(R.id.tv_AIrect7), findViewById(R.id.tv_AIrect8)},
+                {findViewById(R.id.tv_AIrect9), findViewById(R.id.tv_AIrect10), findViewById(R.id.tv_AIrect11), findViewById(R.id.tv_AIrect12)},
+                {findViewById(R.id.tv_AIrect13), findViewById(R.id.tv_AIrect14), findViewById(R.id.tv_AIrect15), findViewById(R.id.tv_AIrect16)}
         };
 
         aiImageViews = new ImageView[][]{
-                {findViewById(R.id.AIrect1), findViewById(R.id.AIrect2), findViewById(R.id.AIrect3)},
-                {findViewById(R.id.AIrect4), findViewById(R.id.AIrect5), findViewById(R.id.AIrect6)},
-                {findViewById(R.id.AIrect7), findViewById(R.id.AIrect8), findViewById(R.id.AIrect9)}
+                {findViewById(R.id.AIrect1), findViewById(R.id.AIrect2), findViewById(R.id.AIrect3), findViewById(R.id.AIrect4)},
+                {findViewById(R.id.AIrect5), findViewById(R.id.AIrect6), findViewById(R.id.AIrect7), findViewById(R.id.AIrect8)},
+                {findViewById(R.id.AIrect9), findViewById(R.id.AIrect10), findViewById(R.id.AIrect11), findViewById(R.id.AIrect12)},
+                {findViewById(R.id.AIrect13), findViewById(R.id.AIrect14), findViewById(R.id.AIrect15), findViewById(R.id.AIrect16)}
         };
+
 
         // Intent로부터 사용자 단어 배열을 가져옴
         String[] words = getIntent().getStringArrayExtra("words");
 
         // 단어 배열이 null이거나 크기가 9가 아닌 경우 임의의 단어로 초기화
-        if (words == null || words.length != 9) {
-            words = new String[]{"사과", "바나나", "포도", "딸기", "수박", "복숭아", "오렌지", "자두", "참외"};
+        if (words == null || words.length != 16) {
+            words = new String[]{"사과", "바나나", "포도", "딸기", "수박", "복숭아", "오렌지", "자두", "참외", "키위", "멜론", "망고", "블루베리", "라즈베리", "체리", "파인애플"};
             Toast.makeText(this, "임의의 단어가 설정되었습니다.", Toast.LENGTH_SHORT).show();
         }
 
         // 사용자의 빙고판에 단어를 설정하고 클릭 이벤트 핸들러를 설정
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                userTextViews[i][j].setText(words[i * 3 + j]);  // 각 TextView에 단어를 설정
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                userTextViews[i][j].setText(words[i * 4 + j]);  // 각 TextView에 단어를 설정
                 final int row = i;
                 final int col = j;
                 userTextViews[i][j].setOnClickListener(view -> handleUserClick(row, col)); // 클릭 이벤트 핸들러 설정
@@ -92,6 +98,7 @@ public class WordGameActivity extends AppCompatActivity {
 
 
     private void handleUserClick(int row, int col) {
+        sound();
         if (!userTurn) {
             Toast.makeText(this, "AI의 턴입니다.", Toast.LENGTH_SHORT).show();
             return;
@@ -115,8 +122,8 @@ public class WordGameActivity extends AppCompatActivity {
         userTextView.setText(selectedWord + "!"); //대화창
 
         // AI의 텍스트뷰에서 단어를 찾아 이미지를 변경
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
                 if (aiWords[i][j].equals(selectedWord) && !aiSelected[i][j]) {
                     aiTextViews[i][j].setText(aiWords[i][j]);  // 일치하는 경우 단어를 보여줌
                     aiImageViews[i][j].setImageResource(SELECTED_IMAGE_RESOURCE);  // 일치하는 경우 이미지 변경
@@ -125,20 +132,24 @@ public class WordGameActivity extends AppCompatActivity {
             }
         }
 
+        checkUserBingo();
+        checkAIBingo();
+
         userTurn = false; // 턴을 AI로 변경
-        new Handler().postDelayed(this::aiTurn, 2500);  // 2.5초 후 AI의 턴 실행
+        new Handler().postDelayed(this::aiTurn, 3000);  // 2.5초 후 AI의 턴 실행
     }
 
 
     private void aiTurn() {
+        sound();
         userTextView.setText(""); //대화창
 
         // 랜덤으로 AI의 단어 선택
         Random random = new Random();
         int row, col;
         do {
-            row = random.nextInt(3);
-            col = random.nextInt(3);
+            row = random.nextInt(4);
+            col = random.nextInt(4);
         } while (aiSelected[row][col]); // 이미 선택된 칸은 다시 선택하지 않음
 
         // AI의 선택 처리
@@ -157,22 +168,102 @@ public class WordGameActivity extends AppCompatActivity {
             userTextView.setText("내 차례!");
         }, 1500);
 
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
                 if (userTextViews[i][j].getText().toString().equals(selectedWord) && !userSelected[i][j]) {
                     userImageViews[i][j].setImageResource(SELECTED_IMAGE_RESOURCE);
                     userSelected[i][j] = true;
                 }
             }
         }
+        checkUserBingo();
+        checkAIBingo();
 
         userTurn = true; // 턴을 사용자로 변경
 
     }
 
+    private void checkUserBingo() {
+        // 행, 열, 대각선 체크
+        for (int i = 0; i < 4; i++) {
+            // 행 체크
+            if (checkLine(userSelected[i])) {
+                highlightLine(userImageViews[i]);
+            }
+            // 열 체크
+            boolean[] colSelected = new boolean[4];
+            for (int j = 0; j < 4; j++) {
+                colSelected[j] = userSelected[j][i];
+            }
+            if (checkLine(colSelected)) {
+                highlightLine(new ImageView[]{userImageViews[0][i], userImageViews[1][i], userImageViews[2][i], userImageViews[3][i]});
+            }
+        }
+
+        // 대각선 체크
+        boolean[] diag1Selected = new boolean[4];
+        boolean[] diag2Selected = new boolean[4];
+        for (int i = 0; i < 4; i++) {
+            diag1Selected[i] = userSelected[i][i];
+            diag2Selected[i] = userSelected[i][3 - i];
+        }
+        if (checkLine(diag1Selected)) {
+            highlightLine(new ImageView[]{userImageViews[0][0], userImageViews[1][1], userImageViews[2][2], userImageViews[3][3]});
+        }
+        if (checkLine(diag2Selected)) {
+            highlightLine(new ImageView[]{userImageViews[0][3], userImageViews[1][2], userImageViews[2][1], userImageViews[3][0]});
+        }
+    }
+
+    private void checkAIBingo() {
+        // 행, 열, 대각선 체크
+        for (int i = 0; i < 4; i++) {
+            // 행 체크
+            if (checkLine(aiSelected[i])) {
+                highlightLine(aiImageViews[i]);
+            }
+            // 열 체크
+            boolean[] colSelected = new boolean[4];
+            for (int j = 0; j < 4; j++) {
+                colSelected[j] = aiSelected[j][i];
+            }
+            if (checkLine(colSelected)) {
+                highlightLine(new ImageView[]{aiImageViews[0][i], aiImageViews[1][i], aiImageViews[2][i], aiImageViews[3][i]});
+            }
+        }
+
+        // 대각선 체크
+        boolean[] diag1Selected = new boolean[4];
+        boolean[] diag2Selected = new boolean[4];
+        for (int i = 0; i < 4; i++) {
+            diag1Selected[i] = aiSelected[i][i];
+            diag2Selected[i] = aiSelected[i][3 - i];
+        }
+        if (checkLine(diag1Selected)) {
+            highlightLine(new ImageView[]{aiImageViews[0][0], aiImageViews[1][1], aiImageViews[2][2], aiImageViews[3][3]});
+        }
+        if (checkLine(diag2Selected)) {
+            highlightLine(new ImageView[]{aiImageViews[0][3], aiImageViews[1][2], aiImageViews[2][1], aiImageViews[3][0]});
+        }
+    }
+
+    private boolean checkLine(boolean[] line) {
+        for (boolean cell : line) {
+            if (!cell) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void highlightLine(ImageView[] line) {
+        for (ImageView img : line) {
+            img.setImageResource(BINGO_IMAGE_RESOURCE);
+        }
+    }
 
     public void generateAIWords(String theme) { // Gemini에 전달할 프롬프트 생성
-        String prompt = theme + "를 주제로 빙고게임을 하려고 합니다. 3*3 빙고이므로, 단어 9개를 생성해주세요." +
+        String prompt = theme + "를 주제로 빙고게임을 하려고 합니다. 4*4 빙고이므로, 단어 16개를 생성해주세요." +
                 "단어와 단어 사이에는 ', '로 띄워주세요.";
 
         gemini.generateText(prompt, new Gemini.Callback() {
@@ -180,12 +271,13 @@ public class WordGameActivity extends AppCompatActivity {
             public void onSuccess(String text) {
                 runOnUiThread(() -> {
                     // 생성된 단어 문자열을 쉼표와 공백으로 분리하여 배열에 저장
-                    String[] aiWordsArray = text.split(",\\s*");
-                    if (aiWordsArray.length == 9) {
-                        aiWords = new String[3][3];
-                        for (int i = 0; i < 3; i++) {
-                            for (int j = 0; j < 3; j++) {
-                                aiWords[i][j] = aiWordsArray[i * 3 + j];
+                    String[] aiWordsArray = text.split(", ");
+
+                    if (aiWordsArray.length == 16) {
+                        aiWords = new String[4][4];
+                        for (int i = 0; i < 4; i++) {
+                            for (int j = 0; j < 4; j++) {
+                                aiWords[i][j] = aiWordsArray[i * 4 + j].replace("\n", "").trim();
                             }
                         }
                     } else {
@@ -216,6 +308,6 @@ public class WordGameActivity extends AppCompatActivity {
 
     public void sound() {
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent); // SoundService를 시작하여 효과음 재생
+        startService(intent);
     }
 }

@@ -37,18 +37,48 @@
         android:id="@+id/next_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
         android:src="@drawable/ic_arrow"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.968"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@android:color/transparent"
         app:layout_constraintVertical_bias="0.043" />
+
+
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:src="@drawable/ic_bubble"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.937"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.458" />
+
+    <TextView
+        android:id="@+id/AITextView"
+        android:layout_width="230dp"
+        android:layout_height="130dp"
+        android:fontFamily="@font/bitbit"
+        android:gravity="center"
+        android:text="나를 터치하면 단어를 추천해줄게!"
+        android:textSize="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.914"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.438" />
+
+    <ImageButton
+        android:id="@+id/AI"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
         android:src="@drawable/ic_ai"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -60,9 +90,9 @@
     <GridLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="390dp"
+        android:layout_marginLeft="376dp"
         android:layout_marginTop="190dp"
-        android:columnCount="3"
+        android:columnCount="4"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -134,14 +164,63 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:src="@drawable/rect1" />
+
+        <ImageView
+            android:id="@+id/rect10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:src="@drawable/rect1" />
+
+        <ImageView
+            android:id="@+id/rect11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:src="@drawable/rect1" />
+
+        <ImageView
+            android:id="@+id/rect12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:src="@drawable/rect1" />
+
+        <ImageView
+            android:id="@+id/rect13"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:src="@drawable/rect1" />
+
+        <ImageView
+            android:id="@+id/rect14"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:src="@drawable/rect1" />
+
+        <ImageView
+            android:id="@+id/rect15"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:src="@drawable/rect1" />
+
+        <ImageView
+            android:id="@+id/rect16"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:src="@drawable/rect1" />
     </GridLayout>
 
     <GridLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="390dp"
+        android:layout_marginLeft="376dp"
         android:layout_marginTop="190dp"
-        android:columnCount="3"
+        android:columnCount="4"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -152,147 +231,213 @@
 
         <EditText
             android:id="@+id/tv_rect1"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
+            android:layout_width="126dp"
+            android:layout_height="126dp"
             android:layout_margin="4dp"
             android:fontFamily="@font/bitbit"
             android:gravity="center"
-            android:text=" "
+            android:text=""
             android:textColor="#ffffff"
             android:textSize="36dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:textStroke="true"
-            app:textStrokeColor="@color/black"
-            app:textStrokeWidth="6" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/tv_rect2"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
+            android:layout_width="126dp"
+            android:layout_height="126dp"
             android:layout_margin="4dp"
             android:fontFamily="@font/bitbit"
             android:gravity="center"
-            android:text=" "
+            android:text=""
             android:textColor="#ffffff"
             android:textSize="36dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:textStroke="true"
-            app:textStrokeColor="@color/black"
-            app:textStrokeWidth="6" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/tv_rect3"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
+            android:layout_width="126dp"
+            android:layout_height="126dp"
             android:layout_margin="4dp"
             android:fontFamily="@font/bitbit"
             android:gravity="center"
-            android:text=" "
+            android:text=""
             android:textColor="#ffffff"
             android:textSize="36dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:textStroke="true"
-            app:textStrokeColor="@color/black"
-            app:textStrokeWidth="6" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/tv_rect4"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
+            android:layout_width="126dp"
+            android:layout_height="126dp"
             android:layout_margin="4dp"
             android:fontFamily="@font/bitbit"
             android:gravity="center"
-            android:text=" "
+            android:text=""
             android:textColor="#ffffff"
             android:textSize="36dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:textStroke="true"
-            app:textStrokeColor="@color/black"
-            app:textStrokeWidth="6" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/tv_rect5"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
+            android:layout_width="126dp"
+            android:layout_height="126dp"
             android:layout_margin="4dp"
             android:fontFamily="@font/bitbit"
             android:gravity="center"
-            android:text=" "
+            android:text=""
             android:textColor="#ffffff"
             android:textSize="36dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:textStroke="true"
-            app:textStrokeColor="@color/black"
-            app:textStrokeWidth="6" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/tv_rect6"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
+            android:layout_width="126dp"
+            android:layout_height="126dp"
             android:layout_margin="4dp"
             android:fontFamily="@font/bitbit"
             android:gravity="center"
-            android:text=" "
+            android:text=""
             android:textColor="#ffffff"
             android:textSize="36dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:textStroke="true"
-            app:textStrokeColor="@color/black"
-            app:textStrokeWidth="6" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/tv_rect7"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
+            android:layout_width="126dp"
+            android:layout_height="126dp"
             android:layout_margin="4dp"
             android:fontFamily="@font/bitbit"
             android:gravity="center"
-            android:text=" "
+            android:text=""
             android:textColor="#ffffff"
             android:textSize="36dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:textStroke="true"
-            app:textStrokeColor="@color/black"
-            app:textStrokeWidth="6" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/tv_rect8"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
+            android:layout_width="126dp"
+            android:layout_height="126dp"
             android:layout_margin="4dp"
             android:fontFamily="@font/bitbit"
             android:gravity="center"
-            android:text=" "
+            android:text=""
             android:textColor="#ffffff"
             android:textSize="36dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:textStroke="true"
-            app:textStrokeColor="@color/black"
-            app:textStrokeWidth="6" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/tv_rect9"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
+            android:layout_width="126dp"
+            android:layout_height="126dp"
             android:layout_margin="4dp"
             android:fontFamily="@font/bitbit"
             android:gravity="center"
-            android:text=" "
+            android:text=""
             android:textColor="#ffffff"
             android:textSize="36dp"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:textStroke="true"
-            app:textStrokeColor="@color/black"
-            app:textStrokeWidth="6" />
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/tv_rect10"
+            android:layout_width="126dp"
+            android:layout_height="126dp"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:gravity="center"
+            android:text=""
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/tv_rect11"
+            android:layout_width="126dp"
+            android:layout_height="126dp"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:gravity="center"
+            android:text=""
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/tv_rect12"
+            android:layout_width="126dp"
+            android:layout_height="126dp"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:gravity="center"
+            android:text=""
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/tv_rect13"
+            android:layout_width="126dp"
+            android:layout_height="126dp"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:gravity="center"
+            android:text=""
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/tv_rect14"
+            android:layout_width="126dp"
+            android:layout_height="126dp"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:gravity="center"
+            android:text=""
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/tv_rect15"
+            android:layout_width="126dp"
+            android:layout_height="126dp"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:gravity="center"
+            android:text=""
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/tv_rect16"
+            android:layout_width="126dp"
+            android:layout_height="126dp"
+            android:layout_margin="4dp"
+            android:fontFamily="@font/bitbit"
+            android:gravity="center"
+            android:text=""
+            android:textColor="#ffffff"
+            android:textSize="36dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
     </GridLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
