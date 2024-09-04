@@ -5,10 +5,11 @@
     android:orientation="vertical"
     android:padding="20dp">
 
-    <com.example.holymoly.CustomNumberPicker
+    <NumberPicker
         android:id="@+id/numberPickerMonth"
         android:layout_width="300dp"
         android:layout_height="200dp"
+        android:theme="@style/NumberPicker"
         android:descendantFocusability="blocksDescendants" />
 
 </LinearLayout>

@@ -1,8 +1,6 @@
 package com.example.holymoly;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -19,15 +17,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClickListener {
@@ -38,16 +37,15 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
 
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef = storage.getReference();
+    private String uid = user.getUid();
 
     private List<Diary> diaries = new ArrayList<>();
     private List<Diary> filteredDiaries = new ArrayList<>();
     private int currentIndex = 0;
     private int month;
-
-    private SharedPreferences sharedPreferences;
-    private static final String PREF_NAME = "Weather";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,9 +76,6 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
         Calendar cal = Calendar.getInstance();
         month = cal.get(Calendar.MONTH) + 1;
         calendar.setText(month + "월");
-
-        // SharedPreferences 초기화
-        sharedPreferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
 
         // 이미지, 날짜, 날씨를 가져옴
         loadAll();
@@ -237,7 +232,7 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
     private void loadImageIntoView(String imageUrl, ImageView imageView, TextView textView, String date, ImageView weather) {
         Glide.with(this).load(imageUrl).into(imageView);
         textView.setText(formatDateToText(date));
-        setWeatherIcon(date, weather);
+        loadWeather(date, weather);
     }
 
     // 날짜를 "dd 요일" 형식으로 변환
@@ -260,14 +255,28 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
     }
 
     // 날씨 아이콘 설정
-    private void setWeatherIcon(String date, ImageView weather) {
-        int selected = sharedPreferences.getInt(date, 0000);
-
+    private void setWeatherIcon(int selected, ImageView weather) {
         if (selected == R.id.ib_sunny) weather.setImageResource(R.drawable.weather_sunny);
         else if (selected == R.id.ib_suncloudy) weather.setImageResource(R.drawable.weather_suncloudy);
         else if (selected == R.id.ib_cloudy) weather.setImageResource(R.drawable.weather_cloudy);
         else if (selected == R.id.ib_rainy) weather.setImageResource(R.drawable.weather_rainy);
         else if (selected == R.id.ib_snowy) weather.setImageResource(R.drawable.weather_snowy);
+    }
+    // 날씨 불러오기
+    private void loadWeather(String date, ImageView weather) {
+        DocumentReference weatherRef = db.collection("weather").document(uid).collection("dates").document(date);
+
+        weatherRef.get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            int selectedId = document.getLong("selectedId").intValue();
+                            // 날씨 아이콘 설정
+                            setWeatherIcon(selectedId, weather);
+                        }
+                    }
+                });
     }
 
     // Diary 클래스 정의
@@ -314,7 +323,7 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
         monthPicker.setValue(month);
 
         // NumberPicker의 텍스트 색상과 크기 조정
-        setNumberPickerTextStyle(monthPicker, "#F383A9", 30);
+        setNumberPickerTextStyle(monthPicker, "#F383A9", 32);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("월 선택하세요");
@@ -338,9 +347,8 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
 
     // NumberPicker의 텍스트 색상과 크기 설정 메서드
     private void setNumberPickerTextStyle(NumberPicker numberPicker, String color, float textSize) {
-        // NumberPicker의 내부 TextView에 접근
         try {
-            // "mInputText"는 NumberPicker의 내부 TextView 필드 이름
+            // TextView 필드 이름
             Field field = NumberPicker.class.getDeclaredField("mInputText");
             field.setAccessible(true);
 
