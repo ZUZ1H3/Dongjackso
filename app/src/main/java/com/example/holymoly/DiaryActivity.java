@@ -148,6 +148,7 @@ public class DiaryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 handleMoreButtonClick();
+                miniArrow.setVisibility(View.VISIBLE);
             }
         });
 
@@ -160,7 +161,7 @@ public class DiaryActivity extends AppCompatActivity {
         });
 
         // 동화 제작 버튼 클릭 리스너 설정
-        makeDiaryButton.setOnClickListener(new View.OnClickListener() {
+        miniArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 handleMakeDiaryButtonClick();
@@ -226,7 +227,7 @@ public class DiaryActivity extends AppCompatActivity {
             analyzeUserMessageWithGemini(userMessageText);
         } else {
             // 대화가 종료된 상태에서는 메시지 분석을 하지 않음
-            sendBotMessage(userMessageText);
+            sendBotMessage(userMessageText, false);
         }
         // 입력 필드 비우기
         userInput.setText("");
@@ -262,7 +263,6 @@ public class DiaryActivity extends AppCompatActivity {
 
     private void processGeminiResult(String resultText) {
         runOnUiThread(() -> {
-            // Results processing
             String[] parts = resultText.split(",");
             for (String part : parts) {
                 String[] keyValue = part.split(":");
@@ -316,14 +316,14 @@ public class DiaryActivity extends AppCompatActivity {
                 }
             }
             if (hasWho && hasWhen && hasWhere && hasWhat && hasHow && hasWhy && hasMood && !isConversationEnded) {
-                endConversation();
+                sendBotMessage(resultText, true);
             } else {
-                sendBotMessage(resultText);
+                sendBotMessage(resultText, false);
             }
         });
     }
 
-    private void sendBotMessage(String userMessageText) {
+    private void sendBotMessage(String userMessageText, boolean shouldEndConversation) {
         // 사용자 메시지 생성
         Content.Builder userMessageBuilder = new Content.Builder();
         userMessageBuilder.setRole("user");
@@ -344,6 +344,10 @@ public class DiaryActivity extends AppCompatActivity {
                     messageList.add(botMessage);
                     messageAdapter.notifyItemInserted(messageList.size() - 1);
                     recyclerView.scrollToPosition(messageList.size() - 1);
+
+                    if (shouldEndConversation) {
+                        endConversation();
+                    }
                 });
             }
 
@@ -367,7 +371,6 @@ public class DiaryActivity extends AppCompatActivity {
             moreButton.setVisibility(View.VISIBLE);
             rectangles.setVisibility(View.INVISIBLE);
             sendButton.setVisibility(View.INVISIBLE);
-            miniArrow.setVisibility(View.VISIBLE);
             userInput.setVisibility(View.INVISIBLE);
             isConversationEnded = true;
         });
