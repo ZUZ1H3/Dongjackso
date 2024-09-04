@@ -28,7 +28,7 @@ public class DiaryActivity extends AppCompatActivity {
     private ChatFutures chat;
     private EditText userInput;
     private ImageView rectangles;
-    private ImageButton stopMakingBtn, sendButton, makeDiaryButton, moreButton;
+    private ImageButton stopMakingBtn, sendButton, makeDiaryButton, moreButton, miniArrow;
     private long backPressedTime = 0;
     private RecyclerView recyclerView;
     private MessageAdapter messageAdapter;
@@ -53,6 +53,7 @@ public class DiaryActivity extends AppCompatActivity {
         stopMakingBtn = findViewById(R.id.ib_stopMaking);
         sendButton = findViewById(R.id.sendButton);
         makeDiaryButton = findViewById(R.id.makeDiary);
+        miniArrow = findViewById(R.id.ib_makingDiary);
         moreButton = findViewById(R.id.more);
         who = findViewById(R.id.who);
         when = findViewById(R.id.when);
@@ -147,6 +148,14 @@ public class DiaryActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 handleMoreButtonClick();
+            }
+        });
+
+        // 동화 제작 버튼 클릭 리스너 설정
+        makeDiaryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleMakeDiaryButtonClick();
             }
         });
 
@@ -358,6 +367,7 @@ public class DiaryActivity extends AppCompatActivity {
             moreButton.setVisibility(View.VISIBLE);
             rectangles.setVisibility(View.INVISIBLE);
             sendButton.setVisibility(View.INVISIBLE);
+            miniArrow.setVisibility(View.VISIBLE);
             userInput.setVisibility(View.INVISIBLE);
             isConversationEnded = true;
         });
