@@ -85,13 +85,15 @@ public class DiaryActivity extends AppCompatActivity {
         // 이전 채팅 기록 생성
         Content.Builder userContentBuilder = new Content.Builder();
         userContentBuilder.setRole("user");
-        userContentBuilder.addText("당신이 대화할 대상은 어린이입니다. 다정하고 친근한 반말 말투로 말해주세요." +
-                "사용자는 오늘 있었던 일에 대해 이야기할 것입니다. 리액션과 함께 그 경험에 대해 구체적으로 대답할 수 있도록 물어봐주세요." +
-                "사용자가 '누구와 함께했는지, 언제, 어디서, 무엇을, 어떻게, 왜'에 대한 이야기를 하지 않았다면, 이를 이야기할 수 있도록 물어봐주세요." +
-                "감정도 함께 이야기할 수 있도록 유도해주세요. 한 번에 한가지만 질문해주세요. 폐쇄형 질문이 아닌 개방형 질문으로 해주세요." +
+        userContentBuilder.addText("당신이 대화할 대상은 어린이입니다. 다정한 반말 말투로 말해주세요." +
+                "만약 사용자가 욕을 사용하거나 성적인 말 등 적절하지 않은 말을 사용한다면, 그런 말 쓰지 말라고 따끔하게 혼내주세요." +
+                "사용자가 오늘 있었던 일에 대해 이야기한다면. 리액션과 함께 그 경험에 대해 구체적으로 대답할 수 있도록 물어봐주세요." +
+                "사용자가 '누구와 함께했는지, 언제, 어디서, 무엇을, 어떻게, 왜'에 대한 이야기를 하지 않았다면, 이 중 한가지에 대해 물어봐주세요." +
+                "감정도 함께 이야기할 수 있도록 유도해주세요. 답장은 한 번에 한가지만 질문해주세요." +
                 "누군가와 함께 했는지, 혼자했는지 여부를 알 수 없다면, 함께한 사람이 있었는지 물어봐주세요." +
                 "그러나 질문만 계속 하지는 말고 가끔 주제에 맞는 재밌는 이야기도 하며 수다를 떨어주세요." +
-                "'ㅋㅋㅋ', 'ㅎㅎ'와 같은 초성으로 대화하지 마세요. 표준어를 사용해주세요.");
+                "'ㅋㅋㅋ', 'ㅎㅎ'와 같은 초성으로 대화하지 마세요. 표준어를 사용해주세요..." +
+                "2~4문장 정도로 대답해주세요.");
         Content userContent = userContentBuilder.build();
         Content.Builder modelContentBuilder = new Content.Builder();
         modelContentBuilder.setRole("model");
@@ -227,7 +229,7 @@ public class DiaryActivity extends AppCompatActivity {
                 " ex) 문장:친구와 아침에 만났는데 즐거웠다.\n" +
                 "답변:누구와:친구,언제:아침,어디서: ,무엇을:만남,어떻게: ,왜: ,기분:즐거움\n" +
                 "키워드가 없을 경우 공백으로 나타냅니다. 단, 인사하는 것은 감정이 아닙니다." +
-                "'누구와' 정보에 대해 누구와 함께했는지, 혹은 혼자였는지에 대한 언급이 없으면, 공백입니다." +
+                "'누구와' 정보에 대해 누구와 함께했는지, 혹은 혼자였는지에 대한 언급이 없으면, 공백입니다. 혼자 했다고 말할 경우 키워드는 '혼자'입니다." +
                 "'언제' 정보에 대해 '오늘', '어제', '내일'등은 포함되지 않습니다. '언제'는 특정 시각, 아침, 낮, 저녁 등 구체적인 시간대에 대한 언급이 없으면, 공백입니다." +
                 "이모지를 사용하지 마세요. 'ㅋㅋㅋ', 'ㅎㅎ' 등 초성을 사용하지 마세요.\n" +
                 "ex)사용자: 나 오늘 도서관에서 공부했어.\n" +
@@ -250,7 +252,6 @@ public class DiaryActivity extends AppCompatActivity {
     }
 
     private void processGeminiResult(String resultText) {
-        // Result processing and UI updates need to be done on the main thread
         runOnUiThread(() -> {
             // Results processing
             String[] parts = resultText.split(",");
