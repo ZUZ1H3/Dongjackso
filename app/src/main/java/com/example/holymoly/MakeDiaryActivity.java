@@ -74,10 +74,11 @@ public class MakeDiaryActivity extends AppCompatActivity {
 
         day.setText(currentDate);
 
-        loadImage(date); // 이미지 불러오기
-        loadTxt(date);   // 텍스트 불러오기
-        loadWeather(date); // 날씨 불러오기
-
+        if (date != null) {
+            loadImage(date);   // 이미지 불러오기
+            loadTxt(date);     // 텍스트 불러오기
+            loadWeather(date); // 날씨 불러오기
+        }
         if (story != null) {
             if(!isGenerated) {
                 generateFairyTale(story);
@@ -130,7 +131,7 @@ public class MakeDiaryActivity extends AppCompatActivity {
                 "이 이야기를 바탕으로, 동화 형태로 다듬어 어린이가 주인공인 일기 동화를 만들어주세요. " +
                 "이야기는 현실적인 내용이지만, 약간의 과장을 해도 좋습니다. " +
                 "판타지 등 추가적인 요소를 과하지 않게 섞는 것도 좋습니다. " +
-                "제목은 만들지 마세요. 문단이 끝나면 '\n'를 넣어주세요. "+
+                "제목은 만들지 마세요. 줄바꿈을 하지 마세요. 따옴표를 사용하여 대사를 만들지 마세요. "+
                 "어린이의 이름은 '" + name + "' 입니다.\n" +
                 "다음은 어린아이가 얘기한 내용 입니다. :" + story;
 
