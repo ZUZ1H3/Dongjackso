@@ -4,12 +4,16 @@ import android.util.Log;
 
 import com.google.ai.client.generativeai.GenerativeModel;
 import com.google.ai.client.generativeai.java.GenerativeModelFutures;
+import com.google.ai.client.generativeai.type.BlockThreshold;
 import com.google.ai.client.generativeai.type.Content;
+import com.google.ai.client.generativeai.type.HarmCategory;
+import com.google.ai.client.generativeai.type.SafetySetting;
 import com.google.ai.client.generativeai.type.GenerateContentResponse;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.util.Arrays;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -23,12 +27,24 @@ public class Gemini {
     }
 
     public void generateText(String prompt, Callback callback) {
-        GenerativeModel gm = new GenerativeModel("gemini-1.5-flash", GEMINI_API_KEY);
+        SafetySetting harassmentSafety = new SafetySetting(HarmCategory.HARASSMENT,
+                BlockThreshold.NONE);
+
+        SafetySetting hateSpeechSafety = new SafetySetting(HarmCategory.HATE_SPEECH,
+                BlockThreshold.NONE);
+
+        SafetySetting hateDangerousSafety = new SafetySetting(HarmCategory.DANGEROUS_CONTENT,
+                BlockThreshold.NONE);
+
+
+        GenerativeModel gm = new GenerativeModel("gemini-1.5-flash", GEMINI_API_KEY, null, // generation config is optional
+                Arrays.asList(harassmentSafety, hateSpeechSafety, hateDangerousSafety));
         GenerativeModelFutures model = GenerativeModelFutures.from(gm);
 
         Content content = new Content.Builder()
                 .addText(prompt)
                 .build();
+
 
         ListenableFuture<GenerateContentResponse> response = model.generateContent(content);
         Futures.addCallback(response, new FutureCallback<GenerateContentResponse>() {
