@@ -92,7 +92,7 @@ public class DiaryActivity extends AppCompatActivity {
                 "감정도 함께 이야기할 수 있도록 유도해주세요. 답장은 한 번에 한가지만 질문해주세요." +
                 "누군가와 함께 했는지, 혼자했는지 여부를 알 수 없다면, 함께한 사람이 있었는지 물어봐주세요." +
                 "그러나 질문만 계속 하지는 말고 가끔 주제에 맞는 재밌는 이야기도 하며 수다를 떨어주세요." +
-                "'ㅋㅋㅋ', 'ㅎㅎ'와 같은 초성으로 대화하지 마세요. 표준어를 사용해주세요." +
+                "'ㅋㅋㅋ', 'ㅎㅎ'와 같은 초성으로 대화하지 마세요. 표준어를 사용해주세요..." +
                 "2~4문장 정도로 대답해주세요.");
         Content userContent = userContentBuilder.build();
         Content.Builder modelContentBuilder = new Content.Builder();
