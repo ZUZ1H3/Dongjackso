@@ -31,6 +31,9 @@
             android:exported="true" />
 
         <activity
+            android:name=".StartPuzzleActivity"
+            android:exported="true" />
+        <activity
             android:name=".MakeDrowDiaryActivity"
             android:exported="true"
             android:screenOrientation="portrait" />

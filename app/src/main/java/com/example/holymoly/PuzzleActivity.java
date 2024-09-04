@@ -1,15 +1,21 @@
 package com.example.holymoly;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -17,6 +23,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,60 +44,69 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
     private UserInfo userInfo = new UserInfo();
 
     /* DB */
-    private FirebaseAuth auth;
-    private FirebaseUser user;
-    private FirebaseStorage storage;
-    private StorageReference storageRef;
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseUser user = auth.getCurrentUser();
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private StorageReference storageRef = storage.getReference();
 
-    private List<Bitmap> bitmapList = new ArrayList<>();
+    /* 우측 상단 미니 버튼 */
+    private ImageButton btnhome, btntrophy, btnsetting;
+
+    // 이미지의 url
+    private List<String> allImageUrls = new ArrayList<>();
     private List<String> imageUrls = new ArrayList<>();
+
+    private String[] items = { "전체", "바다", "궁전", "숲", "마을", "우주", "사막", "커스텀", "내 사진" };
+    private RecyclerView recyclerView;
     private Spinner spinnerNav;
+    private PuzzleAdapter puzzleAdapter;
 
-    private GridLayout imagesContainer;
-    private ImageView iv, plusImageView; // 현재 plusImageView를 참조하는 변수
-    private int imageCnt = 0; // 현재 이미지 개수
-    private Bitmap selectedBitmap; // 선택된 비트맵 저장
-    private String selectedImageUrl; // 선택된 이미지의 URL 저장
-
-    private Map<Integer, List<Bitmap>> themesMap = new HashMap<>(); //
-    private int currentThemeId = -1; // 현재 테마 id
+    private static final int REQUEST_IMAGE_PICK = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_puzzle);
 
-        iv = findViewById(R.id.iv);
-        iv.setOnClickListener(this);
+        btnhome = findViewById(R.id.ib_homebutton);
+        btntrophy = findViewById(R.id.ib_trophy);
+        btnsetting = findViewById(R.id.ib_setting);
+
+        btnhome.setOnClickListener(this);
+        btntrophy.setOnClickListener(this);
+        btnsetting.setOnClickListener(this);
 
         // 상단 프로필 로딩
         name = findViewById(R.id.mini_name);
         nickname = findViewById(R.id.mini_nickname);
         profile = findViewById(R.id.mini_profile);
         loadUserInfo(profile, name, nickname);
+        recyclerView = findViewById(R.id.recyclerView);
 
-        // Firebase 초기화
-        auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
-        storage = FirebaseStorage.getInstance();
-        storageRef = storage.getReference();
+        // 가로 방향 스크롤 설정
+        recyclerView.setLayoutManager(new GridLayoutManager(this, 2, GridLayoutManager.HORIZONTAL, false));
 
-        imagesContainer = findViewById(R.id.images_container);
+        puzzleAdapter = new PuzzleAdapter(this, imageUrls);
+        recyclerView.setAdapter(puzzleAdapter);
 
-        String[] items = { "전체", "바다", "궁전", "숲", "마을", "우주", "사막", "커스텀", "내 사진" };
         // 스피너 설정
         spinnerNav = findViewById(R.id.thema_spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.thema_text, items);
         adapter.setDropDownViewResource(R.layout.thema_text);
         spinnerNav.setAdapter(adapter);
 
+        loadImages();  // 전체 이미지 로드
+
+        // 스피너 선택 이벤트 처리
         spinnerNav.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectSection(position);
-                if (currentThemeId != position) {
-                    currentThemeId = position;
-                    loadImagesByTheme(); // 현재 테마에 맞는 저장된 이미지 로드
+                selectSection(position);  // 선택된 섹션으로 설정
+                String selectedTheme = items[position];
+                if (selectedTheme.equals("내 사진")) {
+                    openGallery();  // "내 사진" 선택 시 갤러리 열기
+                } else {
+                    filterByTheme(selectedTheme);  // 다른 테마는 필터링
                 }
             }
 
@@ -98,15 +115,30 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
                 // 아무것도 선택되지 않았을 때의 행동
             }
         });
+        puzzleAdapter.setOnItemClickListener(imageUrl -> {
+            Intent intent = new Intent(this, SelectPuzzleActivity.class);
+            intent.putExtra("selectedImage", imageUrl);
+            startActivity(intent);
+            finish();
+        });
     }
 
     @Override
     public void onClick(View v) {
-        if (selectedBitmap != null && selectedImageUrl != null) { // 선택된 이미지가 있는 경우
-            Intent intent = new Intent(PuzzleActivity.this, SelectPuzzleActivity.class);
-            intent.putExtra("selectedImage", selectedImageUrl); // Intent에 이미지 바이트 배열을 추가
+        sound();
+        /* 상단 미니 아이콘 클릭 */
+        if(v.getId() == R.id.ib_homebutton) {
+            Intent intent = new Intent(this, Home2Activity.class);
             startActivity(intent);
-        } else loadImages(); // 이미지가 설정되지 않은 경우
+        }
+        else if(v.getId() == R.id.ib_trophy) {
+            Intent intent = new Intent(this, TrophyActivity.class);
+            startActivity(intent);
+        }
+        else if(v.getId() == R.id.ib_setting) {
+            Intent intent = new Intent(this, SettingActivity.class);
+            startActivity(intent);
+        }
     }
 
     private void selectSection(int id) {
@@ -122,227 +154,84 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
             case 7: secTitle.setText("- 커스텀 -"); break;
             case 8: secTitle.setText("- 내 사진 -"); break;
         }
-        if(id != 0) resetImages();
     }
 
-
+    // Firebase Storage에서 이미지 가져옴
     private void loadImages() {
-        String selectedTheme = spinnerNav.getSelectedItem().toString();
-        StorageReference themeRef = storageRef.child("background/" + selectedTheme + "/");
-        if ("전체".equals(selectedTheme)) {
-            loadAllThemesImages();
-            return;
-        }
+        String uid = user.getUid();
 
-        themeRef.listAll().addOnSuccessListener(listResult -> {
-            bitmapList.clear(); // 리스트 초기화
-            List<StorageReference> items = listResult.getItems();
+        for (String theme : items) {
+            // "전체"와 "내 사진"은 Storage에 없는 폴더이므로 제외
+            if (!theme.equals("전체") && !theme.equals("내 사진")) {
+                StorageReference themeRef = storageRef.child("background").child(theme);
 
-            // 현재 사용자의 이미지 리스트
-            List<StorageReference> userItems = new ArrayList<>();
-            for (StorageReference item : items) {
-                if (item.getName().startsWith(user.getUid())) userItems.add(item);
-            }
-
-            if (userItems.isEmpty()) {
-                Toast.makeText(this, "불러올 이미지가 없습니다.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            final long MEGABYTE = 2 * 1024 * 1024; // 2MB
-            for (StorageReference item : userItems) {
-                // URL을 얻기 위한 호출
-                item.getDownloadUrl().addOnSuccessListener(uri -> {
-                    imageUrls.add(uri.toString()); // URL을 리스트에 추가
-
-                    item.getBytes(MEGABYTE).addOnSuccessListener(bytes -> {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        bitmapList.add(bitmap);
-
-                        if (bitmapList.size() == userItems.size())
-                            showImagesDialog(bitmapList);
-                    });
-                });
-            }
-        });
-    }
-
-    private void showImagesDialog(List<Bitmap> bitmapList) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = getLayoutInflater();
-        View dialogView = inflater.inflate(R.layout.dialog_image_list, null);
-        builder.setView(dialogView);
-
-        RecyclerView recyclerView = dialogView.findViewById(R.id.dialog_recycler_view);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-
-        PuzzleImageAdapter adapter = new PuzzleImageAdapter(this, bitmapList, new PuzzleImageAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Bitmap bitmap) {
-                selectedBitmap = bitmap; // 선택된 이미지 설정
-
-                AlertDialog applyDialog = new AlertDialog.Builder(PuzzleActivity.this)
-                        .setTitle("이미지를 추가하세요")
-                        .setMessage("정말 이 이미지를 추가하시겠습니까?")
-                        .setPositiveButton("추가하기", (dialog, which) -> {
-                            if (imageCnt == 0) {  // 첫 번째 이미지
-                                iv.setImageBitmap(bitmap);
-                                iv.setPadding(5,5,5,5);
-                                iv.setBackgroundResource(R.drawable.puzzle_stroke_box);
-                                imageCnt++;
-                            } else {
-                                plusImageView.setImageBitmap(bitmap);
-                                plusImageView.setPadding(5,5,5,5);
-                                plusImageView.setBackgroundResource(R.drawable.puzzle_stroke_box);
-                            }
-
-                            saveImagesByTheme(bitmap); // 현재 테마에 추가된 이미지 저장
-                            addImageView(); // 새로운 ImageView 추가
-                            dialog.dismiss(); // 다이얼로그 닫기
-                        })
-                        .setNegativeButton("돌아가기", (dialog, which) -> dialog.dismiss())
-                        .create();
-
-                applyDialog.show();
-            }
-        });
-        recyclerView.setAdapter(adapter);
-
-        builder.setPositiveButton("완료", (dialog, which) -> dialog.dismiss());
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-    private void addImageView() {
-        plusImageView = new ImageView(PuzzleActivity.this);
-
-        // 320 dp x 200 dp를 픽셀로 변환
-        int widthPx = dpToPx(320);
-        int heightPx = dpToPx(200);
-
-        // 현재 추가된 이미지 수에 따라 위치 계산
-        int column; // 열
-        int row;    // 행
-
-        if (imageCnt < 3) {
-            // 처음 3개의 이미지는 row=0에 위치
-            column = imageCnt;
-            row = 0;
-        } else if (imageCnt < 6) {
-            // 다음 3개의 이미지는 row=1에 위치
-            column = imageCnt - 3;
-            row = 1;
-        } else {
-            // 7번째부터는 row=0, 1 사이를 번갈아가며 배치, column는 증가
-            row = imageCnt % 2;  // 0과 1을 번갈아가면서
-            column = imageCnt / 2;  // 이미지 개수가 7개 이상일 때 column 증가
-        }
-
-        // LayoutParams 설정
-        GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-        params.width = widthPx;
-        params.height = heightPx;
-
-        // margin 적용
-        params.setMargins(0, 0, dpToPx(50), dpToPx(50));
-        params.columnSpec = GridLayout.spec(column);
-        params.rowSpec = GridLayout.spec(row);
-        plusImageView.setLayoutParams(params);
-
-        plusImageView.setImageResource(R.drawable.iv_plusimg);
-        plusImageView.setBackgroundResource(R.drawable.puzzle_stroke_box); // 테두리 추가
-
-        // plusImg 클릭 시 loadImages 호출
-        plusImageView.setOnClickListener(v -> loadImages());
-
-        // GridLayout에 ic_plusImg 추가
-        imagesContainer.addView(plusImageView);
-        // 이미지가 추가될 때마다 카운트 증가
-        imageCnt++;
-    }
-
-    // dp를 px로 변환
-    private int dpToPx(int dp) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
-    }
-
-    // 각 테마에 맞는 이미지 저장 (테마 ID에 따라)
-    private void saveImagesByTheme(Bitmap bitmap) {
-        if (!themesMap.containsKey(currentThemeId)) {
-            themesMap.put(currentThemeId, new ArrayList<>());
-        }
-        themesMap.get(currentThemeId).add(bitmap);
-    }
-
-    private void loadAllThemesImages() {
-        // Storage에서 background 폴더의 모든 폴더 및 파일을 가져옴
-        StorageReference backgroundRef = storageRef.child("background/");
-        backgroundRef.listAll().addOnSuccessListener(listResult -> {
-            bitmapList.clear(); // 리스트 초기화
-            List<StorageReference> folders = listResult.getPrefixes(); // 폴더들
-            List<StorageReference> allImages = new ArrayList<>();
-
-            // 모든 폴더에서 이미지 참조 가져오기
-            for (StorageReference folder : folders) {
-                folder.listAll().addOnSuccessListener(folderResult -> {
-                    allImages.addAll(folderResult.getItems()); // 모든 이미지를 리스트에 추가
-
-                    // 모든 폴더에서 이미지 수집이 완료되었을 때
-                    if (folders.indexOf(folder) == folders.size() - 1) {
-                        final long MEGABYTE = 2 * 1024 * 1024; // 2MB로 이미지 크기 제한
-                        for (StorageReference item : allImages) {
-                            // 파일 이름이 현재 사용자 UID로 시작하는지 확인
-                            if (item.getName().startsWith(user.getUid())) {
-                                item.getBytes(MEGABYTE).addOnSuccessListener(bytes -> {
-                                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                    bitmapList.add(bitmap);
-
-                                    // 각 테마에 이미지 저장
-                                    saveImagesByTheme(bitmap);
-                                    // 모든 이미지 로딩이 완료되면 다이얼로그 표시
-                                    if (bitmapList.size() == allImages.size()) {
-                                        showImagesDialog(bitmapList);
-
-                                    }
-                                });
-                            }
+                themeRef.listAll().addOnSuccessListener(listResult -> {
+                    for (StorageReference item : listResult.getItems()) {
+                        String img = item.getName();
+                        if (img.startsWith(uid)) {
+                            item.getDownloadUrl().addOnSuccessListener(uri -> {
+                                String url = uri.toString();
+                                // URL에 테마를 추가하여 저장
+                                if (!allImageUrls.contains(url)) {
+                                    allImageUrls.add(url + "|" + theme); // 테마 정보를 함께 저장
+                                }
+                                filterByTheme(spinnerNav.getSelectedItem().toString()); // 현재 선택된 테마로 필터링
+                            });
                         }
                     }
                 });
             }
-        });
+        }
     }
 
-    private void loadImagesByTheme() {
-        List<Bitmap> savedBitmaps = themesMap.get(currentThemeId);
-        if (savedBitmaps != null) {
-            for (Bitmap bitmap : savedBitmaps) {
-                if (imageCnt == 0) {
-                    iv.setImageBitmap(bitmap);
-                    imageCnt++;
-                } else {
-                    plusImageView.setImageBitmap(bitmap);
-                    plusImageView.setBackgroundResource(R.drawable.puzzle_stroke_box);
+    // 테마에 따라 이미지를 필터링
+    private void filterByTheme(String theme) {
+        imageUrls.clear();
+
+        if (theme.equals("전체")) {
+            // 전체 이미지를 보여줌
+            for (String url : allImageUrls) {
+                imageUrls.add(url.split("\\|")[0]); // 테마 정보 제거 후 URL만 사용
+            }
+        } else {
+            // 선택된 테마에 해당하는 이미지만 필터링
+            for (String url : allImageUrls) {
+                String[] parts = url.split("\\|");
+                if (parts[1].equals(theme)) {
+                    imageUrls.add(parts[0]); // URL만 추가
                 }
-                addImageView(); // 새로운 ImageView 추가
             }
         }
+        // 어댑터에 변경사항 반영
+        puzzleAdapter.notifyDataSetChanged();
     }
-    private void resetImages() {
-        // GridLayout에서 iv를 제외한 모든 View 제거
-        for (int i = imagesContainer.getChildCount() - 1; i >= 0; i--) {
-            View child = imagesContainer.getChildAt(i);
-            if (child != iv) {
-                imagesContainer.removeViewAt(i);
-            }
-        }
-        iv.setImageResource(R.drawable.iv_plusimg);
 
-        // 이미지 추가 관련 변수 초기화
-        imageCnt = 0;
+    // 갤러리에서 이미지 선택
+    private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, REQUEST_IMAGE_PICK);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_IMAGE_PICK && resultCode == RESULT_OK && data != null) {
+            Uri selectedImageUri = data.getData();
+            if (selectedImageUri != null) {
+                imageUrls.add(selectedImageUri.toString());
+                puzzleAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
     @Override
     public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
         userInfo.loadUserInfo(profile, name, nickname);
+    }
+
+    // 효과음
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
     }
 }
