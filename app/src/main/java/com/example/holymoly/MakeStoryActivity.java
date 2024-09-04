@@ -89,7 +89,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         stopMakingBtn = findViewById(R.id.ib_stopMaking);
         nextBtn = findViewById(R.id.ib_nextStep);
 
-        storyTextView.setMovementMethod(new ScrollingMovementMethod());
+        storyTextView.setMovementMethod(new ScrollingMovementMethod()); //스크롤 가능하도록
         MainActivity mainActivity = new MainActivity();
 
         //지금까지 ArrayList에 저장한 액티비티 전부를 for문을 돌려서 finish한다.
@@ -97,6 +97,7 @@ public class MakeStoryActivity extends AppCompatActivity {
             mainActivity.actList().get(i).finish();
         }
 
+        //로딩중 화면을 만듦
         Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
         loading.setAnimation(animation);
 
@@ -115,7 +116,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         karlo = new Karlo(1280, 800);
         makeStory = new MakeStory(this, selectedTheme, selectedCharacters, gemini);
 
-        makeStory.generateInitialStory();
+        makeStory.generateInitialStory();//동화 도입부 생성
 
         selectMic1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -154,7 +155,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                     pageContents.set(num - 1, storyTextView.getText().toString() + selectedChoice);
 
                     if (num < 5) {
-                        makeStory.generateNextStoryPart(selectedChoice);
+                        makeStory.generateNextStoryPart(selectedChoice, num);
                     } else if (num == 5) {
                         makeStory.generateEndStoryPart(selectedChoice);
                     }
@@ -185,7 +186,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                     pageContents.set(num - 1, storyTextView.getText().toString() + selectedChoice);
 
                     if (num < 5) {
-                        makeStory.generateNextStoryPart(selectedChoice);
+                        makeStory.generateNextStoryPart(selectedChoice, num);
                     } else if (num == 5) {
                         makeStory.generateEndStoryPart(selectedChoice);
                     }
@@ -214,7 +215,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                     pageContents.set(num - 1, storyTextView.getText().toString() + selectedChoice);
 
                     if (num < 5) {
-                        makeStory.generateNextStoryPart(selectedChoice);
+                        makeStory.generateNextStoryPart(selectedChoice, num);
                     } else if (num == 5) {
                         makeStory.generateEndStoryPart(selectedChoice);
                     }
@@ -261,7 +262,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         });
 
     }
-
+    // 선택한 테마와 캐릭터를 번역 하는 함수. 이미지를 만들 때 사용함
     public void translate(final String storyText) {
         //선택한 테마 번역
         makeStory.translateTheme(selectedTheme, new TranslationCallback() {
@@ -288,6 +289,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         });
     }
 
+    //동화 배경 이미지를 생성하는 함수
     private void generateBackgroundImage(String prompt, String storyText) {
         String negativePrompt = "ugly, worst quality, low quality, normal quality, watermark, distorted face, poorly drawn face, framework";
         karlo.requestImage(prompt, negativePrompt, new Karlo.Callback() {
@@ -357,9 +359,9 @@ public class MakeStoryActivity extends AppCompatActivity {
                             if (!textFullyDisplayed[0]) {
                                 storyTextView.setText(storyText.substring(0, index));
                             }
-                            if (index == length) {
-                                if (isImageLoaded && num <= 5) {
-                                    makeStory.generateChoices(); // 이미지가 로드된 후에 선택지 생성
+                            if (index == length) { //텍스트가 전부 표시되면
+                                if (isImageLoaded && num <= 5) { //5장 이하일 때
+                                    makeStory.generateChoices(num); // 이미지가 로드된 후에 선택지 생성
                                 }
                             }
                         }
@@ -377,7 +379,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                             textFullyDisplayed[0] = true; // 전체 텍스트 표시 상태로 플래그 설정
 
                             if (isImageLoaded && num <= 5) {
-                                makeStory.generateChoices(); // 선택지 생성
+                                makeStory.generateChoices(num); // 선택지 생성
                             }
                             return true;
                         }
@@ -388,6 +390,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         });
     }
 
+    //선택지를 화면에 띄움
     public void showChoices(String choicesText) {
         String[] choices = choicesText.split("/");
         if (choices.length >= 2) {
