@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -18,9 +19,10 @@ import com.google.android.flexbox.FlexboxLayout;
 
 public class MakeStoryAloneActivity extends AppCompatActivity {
 
-    ImageView bookmark_AI, bookmark_Mic, bookmark_OK, bookmark_write, Mic, alertIc, scriptBg, touch;
+    ImageView Mic, alertIc, scriptBg, touch;
     ImageButton before, next, stop, again, create;
     TextView howabout, alertTxt, scriptTxt;
+    RadioButton bookmark_AI, bookmark_Mic, bookmark_OK, bookmark_write;
     EditText story_txt;
     FlexboxLayout keywordsLayout;
 
@@ -30,10 +32,10 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_make_story_alone);
 
-        bookmark_write = findViewById(R.id.iv_bookmark_write);
-        bookmark_AI = findViewById(R.id.iv_bookmark_ai);
-        bookmark_Mic = findViewById(R.id.iv_bookmark_mic);
-        bookmark_OK = findViewById(R.id.iv_bookmark_ok);
+        bookmark_write = findViewById(R.id.rb_bookmark_write);
+        bookmark_AI = findViewById(R.id.rb_bookmark_ai);
+        bookmark_Mic = findViewById(R.id.rb_bookmark_mic);
+        bookmark_OK = findViewById(R.id.rb_bookmark_ok);
         Mic = findViewById(R.id.iv_alone_mic);
         before = findViewById(R.id.ib_before);
         next = findViewById(R.id.ib_next);
@@ -53,6 +55,20 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 sound();
+                // ai
+                howabout.setVisibility(View.INVISIBLE);
+                alertIc.setVisibility(View.INVISIBLE);
+                alertTxt.setVisibility(View.INVISIBLE);
+                howabout.setVisibility(View.INVISIBLE);
+                again.setVisibility(View.INVISIBLE);
+                create.setVisibility(View.INVISIBLE);
+                keywordsLayout.setVisibility(View.INVISIBLE);
+                // ai-create
+                scriptBg.setVisibility(View.INVISIBLE);
+                scriptTxt.setVisibility(View.INVISIBLE);
+                // mic
+                Mic.setVisibility(View.INVISIBLE);
+                // write
                 touch.setVisibility(View.VISIBLE);
                 story_txt.setVisibility(View.VISIBLE);
             }
@@ -62,6 +78,12 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sound();
+                // write
+                touch.setVisibility(View.INVISIBLE);
+                story_txt.setVisibility(View.INVISIBLE);
+                // mic
+                Mic.setVisibility(View.INVISIBLE);
+                // ai
                 howabout.setVisibility(View.VISIBLE);
                 alertIc.setVisibility(View.VISIBLE);
                 alertTxt.setVisibility(View.VISIBLE);
@@ -76,6 +98,22 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sound();
+                // write
+                touch.setVisibility(View.INVISIBLE);
+                story_txt.setVisibility(View.INVISIBLE);
+                // ai
+                howabout.setVisibility(View.INVISIBLE);
+                alertIc.setVisibility(View.INVISIBLE);
+                alertTxt.setVisibility(View.INVISIBLE);
+                howabout.setVisibility(View.INVISIBLE);
+                again.setVisibility(View.INVISIBLE);
+                create.setVisibility(View.INVISIBLE);
+                keywordsLayout.setVisibility(View.INVISIBLE);
+                // ai-create
+                scriptBg.setVisibility(View.INVISIBLE);
+                scriptTxt.setVisibility(View.INVISIBLE);
+                //mic
+                Mic.setVisibility(View.VISIBLE);
             }
         });
 
@@ -90,8 +128,17 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 sound();
+                // create
                 scriptBg.setVisibility(View.VISIBLE);
                 scriptTxt.setVisibility(View.VISIBLE);
+            }
+        });
+
+        stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sound();
+
             }
         });
 

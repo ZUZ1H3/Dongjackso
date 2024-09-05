@@ -77,30 +77,6 @@
         android:visibility="invisible"/>
 
     <ImageView
-        android:id="@+id/iv_bookmark_ai"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/selector_bookmark_ai"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.247"
-        app:layout_constraintVertical_bias="0.045" />
-
-    <ImageView
-        android:id="@+id/iv_bookmark_mic"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/selector_bookmark_mic"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.42"
-        app:layout_constraintVertical_bias="0.058" />
-
-    <ImageView
         android:id="@+id/iv_bookmark_null"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -110,31 +86,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.338"
-        app:layout_constraintVertical_bias="0.073" />
+        app:layout_constraintVertical_bias="0.0735" />
 
-    <ImageView
-        android:id="@+id/iv_bookmark_ok"
+    <RadioGroup
+        android:id="@+id/rg_bookmarks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/selector_bookmark_ok"
+        android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.84"
-        app:layout_constraintVertical_bias="0.051" />
-
-    <ImageView
-        android:id="@+id/iv_bookmark_write"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/selector_bookmark_write"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.16"
-        app:layout_constraintVertical_bias="0.042" />
+        app:layout_constraintHorizontal_bias="0.43"
+        app:layout_constraintVertical_bias="0.046" >
+            <RadioButton
+                android:id="@+id/rb_bookmark_write"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_bookmark_write"
+                android:button="@null"
+                android:checked="true" />
+            <RadioButton
+                android:id="@+id/rb_bookmark_ai"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_bookmark_ai"
+                android:button="@null" />
+            <RadioButton
+                android:id="@+id/rb_bookmark_mic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_bookmark_mic"
+                android:button="@null"
+                android:layout_marginLeft="110dp"
+                android:layout_marginTop="9dp"/>
+            <RadioButton
+                android:id="@+id/rb_bookmark_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/selector_bookmark_ok"
+                android:button="@null"
+                android:layout_marginLeft="325dp"
+                android:layout_marginTop="4dp"/>
+    </RadioGroup>
 
     <ScrollView
         android:id="@+id/sv_story"
@@ -153,17 +147,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/hakgyoansim"
-            android:textSize="28dp"
-            android:lineSpacingExtra="30dp"
+            android:textSize="30dp"
+            android:lineSpacingExtra="25dp"
             android:padding="20dp"
             android:layout_gravity="center"
+            android:hint="여기에 동화를 작성하세요"
+            android:background="@null"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.792"
             app:layout_constraintVertical_bias="0.5"
-            android:visibility="invisible"/>
+            android:visibility="visible"/>
     </ScrollView>
 
     <ImageView
