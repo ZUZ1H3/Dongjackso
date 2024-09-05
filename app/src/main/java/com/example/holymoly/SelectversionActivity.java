@@ -99,7 +99,7 @@ public class SelectversionActivity extends AppCompatActivity implements UserInfo
             //ibMakeWithAI.setBackgroundResource(R.drawable.ib_version_makewithai);
 
             // 다른 액티비티로 전환
-            Intent intent = new Intent(SelectversionActivity.this, HomeActivity.class);
+            Intent intent = new Intent(SelectversionActivity.this, MakeStoryAloneActivity.class);
             startActivity(intent);
         });
     }
