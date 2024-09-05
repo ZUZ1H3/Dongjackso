@@ -58,7 +58,7 @@ public class MakeStoryActivity extends AppCompatActivity {
     private String recognizedText;
 
     // 테마 경로 및 최종적으로 선택된 테마
-    private String themePath, finalSelectedTheme;
+    private String themePath, finalSelectedTheme, fileName;
     // 페이지 내용과 선택지를 추적하기 위한 변수 추가
     private ArrayList<String> pageContents = new ArrayList<>();
 
@@ -235,6 +235,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                 sound();
                 if (System.currentTimeMillis() - backPressedTime >= 2000) {
                     backPressedTime = System.currentTimeMillis();
+                    deleteImage(); // 업로드된 배경 이미지 삭제
                     Toast.makeText(MakeStoryActivity.this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
                 } else {
                     finish();
@@ -262,6 +263,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                 } else {
                     showToast("이미지가 로드되지 않았습니다.");
                 }
+                finish();
             }
         });
 
@@ -501,7 +503,7 @@ public class MakeStoryActivity extends AppCompatActivity {
             }
             int index = userCount + 1;
 
-            String fileName = user.getUid() + "_" + index + ".png";
+            fileName = user.getUid() + "_" + index + ".png";
 
             // 이미지가 저장될 경로 설정
             StorageReference imageRef = themeRef.child(fileName);
@@ -516,6 +518,18 @@ public class MakeStoryActivity extends AppCompatActivity {
             uploadTask.addOnSuccessListener(taskSnapshot -> {
                 Toast.makeText(this, "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
             });
+        });
+    }
+    // 업로드된 이미지 삭제
+    private void deleteImage() {
+        StorageReference themeRef = storageRef.child(themePath);
+        StorageReference imageRef = themeRef.child(fileName);
+
+        imageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                Toast.makeText(MakeStoryActivity.this, "이미지 삭제", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 

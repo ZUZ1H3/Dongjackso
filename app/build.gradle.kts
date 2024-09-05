@@ -73,4 +73,7 @@ dependencies {
     // Glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
+
+    //나 혼자 만들기 레이아웃
+    implementation ("com.google.android.flexbox:flexbox:3.0.0")
 }

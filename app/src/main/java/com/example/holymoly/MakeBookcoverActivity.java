@@ -337,6 +337,7 @@ public class MakeBookcoverActivity extends AppCompatActivity {
                 Intent intent2 = new Intent(MakeBookcoverActivity.this, AlbumActivity.class);
                 intent2.putExtra("booktitle", bookTitle);
                 startActivity(intent2);
+                finish();
             });
         });
     }

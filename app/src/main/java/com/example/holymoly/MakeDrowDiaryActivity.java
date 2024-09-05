@@ -1,5 +1,6 @@
 package com.example.holymoly;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -198,7 +199,7 @@ public class MakeDrowDiaryActivity extends AppCompatActivity {
         UploadTask uploadTask = imageRef.putBytes(data);
         uploadTask.addOnSuccessListener(taskSnapshot -> {
             Toast.makeText(this, "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
-            Intent intent2 = new Intent(MakeDrowDiaryActivity.this, MakeDiaryActivity.class);
+            Intent intent2 = new Intent(MakeDrowDiaryActivity.this, AlbumDiaryActivity.class);
             startActivity(intent2);
             finish();
         });
