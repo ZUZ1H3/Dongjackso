@@ -3,6 +3,7 @@ package com.example.holymoly;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,7 +15,7 @@ public class WordGameActivity extends AppCompatActivity {
     private TextView[][] userTextViews, aiTextViews; // 사용자와 AI의 단어를 표시할 TextView 배열
     private ImageView[][] userImageViews, aiImageViews; // 사용자와 AI의 선택된 상태를 표시할 ImageView 배열
     private TextView userTextView, aiTextView; // 사용자와 AI의 추가적인 정보 표시용 TextView
-    private ImageView profile; // 사용자 프로필을 표시할 ImageView
+    private ImageView profile, aiBingo, userBingo; // 사용자 프로필을 표시할 ImageView
     private Gemini gemini; // Gemini API와 상호작용을 위한 객체
     private String[][] aiWords;  // Gemini가 생성한 AI 단어들을 저장할 2차원 배열
     private static final int SELECTED_IMAGE_RESOURCE = R.drawable.rect2;  // 선택된 이미지를 나타내는 리소스
@@ -25,6 +26,14 @@ public class WordGameActivity extends AppCompatActivity {
     private boolean[][] userSelected; // 사용자가 선택한 칸을 추적하는 배열
     private boolean[][] aiSelected;   // AI가 선택한 칸을 추적하는 배열
     private boolean userTurn;         // 현재 턴이 사용자인지 AI인지 관리하는 변수
+    // 각 행, 열, 대각선의 빙고 상태를 추적하는 변수들
+    private boolean[] userRowBingo = new boolean[4];
+    private boolean[] userColBingo = new boolean[4];
+    private boolean[] userDiagBingo = new boolean[2];
+
+    private boolean[] aiRowBingo = new boolean[4];
+    private boolean[] aiColBingo = new boolean[4];
+    private boolean[] aiDiagBingo = new boolean[2];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +45,8 @@ public class WordGameActivity extends AppCompatActivity {
         profile = findViewById(R.id.mini_profile);
         userTextView = findViewById(R.id.userTextView);
         aiTextView = findViewById(R.id.AITextView);
-
+        aiBingo = findViewById(R.id.AIbingo);
+        userBingo = findViewById(R.id.userbingo);
         // 사용자와 AI의 선택 상태를 추적할 배열 초기화
         userSelected = new boolean[4][4];
         aiSelected = new boolean[4][4];
@@ -99,6 +109,8 @@ public class WordGameActivity extends AppCompatActivity {
 
     private void handleUserClick(int row, int col) {
         sound();
+        userBingo.setVisibility(View.INVISIBLE);
+        aiBingo.setVisibility(View.INVISIBLE);
         if (!userTurn) {
             Toast.makeText(this, "AI의 턴입니다.", Toast.LENGTH_SHORT).show();
             return;
@@ -121,6 +133,7 @@ public class WordGameActivity extends AppCompatActivity {
         String selectedWord = userTextViews[row][col].getText().toString(); // 사용자가 선택한 단어
         userTextView.setText(selectedWord + "!"); //대화창
 
+
         // AI의 텍스트뷰에서 단어를 찾아 이미지를 변경
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -142,6 +155,8 @@ public class WordGameActivity extends AppCompatActivity {
 
     private void aiTurn() {
         sound();
+        userBingo.setVisibility(View.INVISIBLE);
+        aiBingo.setVisibility(View.INVISIBLE);
         userTextView.setText(""); //대화창
 
         // 랜덤으로 AI의 단어 선택
@@ -166,6 +181,8 @@ public class WordGameActivity extends AppCompatActivity {
             // 지정된 시간(durationMillis) 후에 메시지를 비움
             aiTextView.setText("");
             userTextView.setText("내 차례!");
+            userBingo.setVisibility(View.INVISIBLE);
+            aiBingo.setVisibility(View.INVISIBLE);
         }, 1500);
 
         for (int i = 0; i < 4; i++) {
@@ -187,16 +204,22 @@ public class WordGameActivity extends AppCompatActivity {
         // 행, 열, 대각선 체크
         for (int i = 0; i < 4; i++) {
             // 행 체크
-            if (checkLine(userSelected[i])) {
+            if (!userRowBingo[i] && checkLine(userSelected[i])) {
                 highlightLine(userImageViews[i]);
+                userRowBingo[i] = true;
+                userBingo.setVisibility(View.VISIBLE);
+                userTextView.setText("");
             }
             // 열 체크
             boolean[] colSelected = new boolean[4];
             for (int j = 0; j < 4; j++) {
                 colSelected[j] = userSelected[j][i];
             }
-            if (checkLine(colSelected)) {
+            if (!userColBingo[i] && checkLine(colSelected)) {
                 highlightLine(new ImageView[]{userImageViews[0][i], userImageViews[1][i], userImageViews[2][i], userImageViews[3][i]});
+                userColBingo[i] = true;
+                userBingo.setVisibility(View.VISIBLE);
+                userTextView.setText("");
             }
         }
 
@@ -207,11 +230,17 @@ public class WordGameActivity extends AppCompatActivity {
             diag1Selected[i] = userSelected[i][i];
             diag2Selected[i] = userSelected[i][3 - i];
         }
-        if (checkLine(diag1Selected)) {
+        if (!userDiagBingo[0] && checkLine(diag1Selected)) {
             highlightLine(new ImageView[]{userImageViews[0][0], userImageViews[1][1], userImageViews[2][2], userImageViews[3][3]});
+            userDiagBingo[0] = true;
+            userBingo.setVisibility(View.VISIBLE);
+            userTextView.setText("");
         }
-        if (checkLine(diag2Selected)) {
+        if (!userDiagBingo[1] && checkLine(diag2Selected)) {
             highlightLine(new ImageView[]{userImageViews[0][3], userImageViews[1][2], userImageViews[2][1], userImageViews[3][0]});
+            userDiagBingo[1] = true;
+            userBingo.setVisibility(View.VISIBLE);
+            userTextView.setText("");
         }
     }
 
@@ -219,16 +248,22 @@ public class WordGameActivity extends AppCompatActivity {
         // 행, 열, 대각선 체크
         for (int i = 0; i < 4; i++) {
             // 행 체크
-            if (checkLine(aiSelected[i])) {
+            if (!aiRowBingo[i] && checkLine(aiSelected[i])) {
                 highlightLine(aiImageViews[i]);
+                aiRowBingo[i] = true;
+                aiBingo.setVisibility(View.VISIBLE);
+                aiTextView.setText("");
             }
             // 열 체크
             boolean[] colSelected = new boolean[4];
             for (int j = 0; j < 4; j++) {
                 colSelected[j] = aiSelected[j][i];
             }
-            if (checkLine(colSelected)) {
+            if (!aiColBingo[i] && checkLine(colSelected)) {
                 highlightLine(new ImageView[]{aiImageViews[0][i], aiImageViews[1][i], aiImageViews[2][i], aiImageViews[3][i]});
+                aiColBingo[i] = true;
+                aiBingo.setVisibility(View.VISIBLE);
+                aiTextView.setText("");
             }
         }
 
@@ -239,14 +274,19 @@ public class WordGameActivity extends AppCompatActivity {
             diag1Selected[i] = aiSelected[i][i];
             diag2Selected[i] = aiSelected[i][3 - i];
         }
-        if (checkLine(diag1Selected)) {
+        if (!aiDiagBingo[0] && checkLine(diag1Selected)) {
             highlightLine(new ImageView[]{aiImageViews[0][0], aiImageViews[1][1], aiImageViews[2][2], aiImageViews[3][3]});
+            aiDiagBingo[0] = true;
+            aiBingo.setVisibility(View.VISIBLE);
+            aiTextView.setText("");
         }
-        if (checkLine(diag2Selected)) {
+        if (!aiDiagBingo[1] && checkLine(diag2Selected)) {
             highlightLine(new ImageView[]{aiImageViews[0][3], aiImageViews[1][2], aiImageViews[2][1], aiImageViews[3][0]});
+            aiDiagBingo[1] = true;
+            aiBingo.setVisibility(View.VISIBLE);
+            aiTextView.setText("");
         }
     }
-
     private boolean checkLine(boolean[] line) {
         for (boolean cell : line) {
             if (!cell) {
@@ -260,6 +300,7 @@ public class WordGameActivity extends AppCompatActivity {
         for (ImageView img : line) {
             img.setImageResource(BINGO_IMAGE_RESOURCE);
         }
+
     }
 
     public void generateAIWords(String theme) { // Gemini에 전달할 프롬프트 생성
