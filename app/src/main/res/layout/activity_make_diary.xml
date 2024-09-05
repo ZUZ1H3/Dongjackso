@@ -8,13 +8,21 @@
     android:background="@drawable/bg_diary"
     tools:context=".MakeDiaryActivity">
 
+    <ImageView
+        android:layout_width="577dp"
+        android:layout_height="621dp"
+        android:layout_marginLeft="111dp"
+        android:layout_marginTop="100dp"
+        android:background="@color/black"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <ImageView
         android:id="@+id/background_image_view"
         android:layout_width="571dp"
         android:layout_height="615dp"
-        android:layout_marginLeft="44dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginLeft="54dp"
+        android:layout_marginTop="103dp"
         android:contentDescription="@string/background_image_description"
         android:foregroundGravity=""
         android:scaleType="centerCrop"
@@ -30,12 +38,12 @@
 
     <TextView
         android:id="@+id/storyTextView"
-        android:layout_width="680dp"
-        android:layout_height="468dp"
+        android:layout_width="640dp"
+        android:layout_height="460dp"
         android:fontFamily="@font/yeongdeok"
         android:gravity="left"
         android:lineSpacingExtra="16dp"
-        android:lineSpacingMultiplier="1.64"
+        android:lineSpacingMultiplier="1.7"
         android:padding="16dp"
         android:scrollbars="vertical"
         android:text="일기 동화를 생성 중입니다..."
@@ -44,7 +52,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.912" />
+        app:layout_constraintVertical_bias="0.935" />
 
     <TextView
         android:id="@+id/dayTextView"

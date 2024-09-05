@@ -74,6 +74,7 @@ public class MaketitleActivity extends AppCompatActivity {
                 intent.putExtra("selectedTheme", selectedTheme); // 작업이 완료되었을 때 MakeBookcoverActivity로 이동
                 intent.putStringArrayListExtra("selectedCharacters", selectedCharacters);
                 startActivity(intent);
+                finish();
             }
         });
 
