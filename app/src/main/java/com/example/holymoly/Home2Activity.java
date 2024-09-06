@@ -85,7 +85,7 @@ public class Home2Activity extends AppCompatActivity implements UserInfoLoader {
             @Override
             public void onClick(View v) {
                 sound();
-                Intent intent = new Intent(Home2Activity.this, PuzzleActivity.class);
+                Intent intent = new Intent(Home2Activity.this, SelectGameActivity.class);
                 startActivity(intent);
             }
         });
