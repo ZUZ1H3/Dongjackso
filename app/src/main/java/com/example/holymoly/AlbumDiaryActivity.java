@@ -210,7 +210,15 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
                 filteredDiaries.add(diary);
             }
         }
-        return !filteredDiaries.isEmpty(); // 필터링된 결과가 있을 경우 true 반환
+
+        // 필터링된 일기가 있을 경우 마지막 페이지로 설정
+        if (!filteredDiaries.isEmpty()) {
+            // 일기가 짝수개일 경우 마지막 일기부터 표시되도록 인덱스 설정
+            currentIndex = filteredDiaries.size() - (filteredDiaries.size() % 2 == 0 ? 2 : 1);
+            return true; // 필터링된 결과가 있을 경우 true 반환
+        }
+
+        return false; // 필터링된 결과가 없을 경우 false 반환
     }
 
     // 현재 인덱스에 해당하는 이미지와 날짜를 표시

@@ -20,10 +20,17 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class AchieveActivity extends AppCompatActivity implements UserInfoLoader {
-    private static final String PREFS_NAME = "AchievementPrefs";
-    private SharedPreferences sharedPreferences;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.util.Collections;
+
+public class AchieveActivity extends AppCompatActivity implements UserInfoLoader {
     private RadioGroup rgTrophyCategory;
     private ImageButton ibCloseWindow;
     private ImageView profile;
@@ -31,11 +38,19 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
 
     private UserInfo userInfo = new UserInfo();
 
+    /* DB */
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseUser user = auth.getCurrentUser();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private StorageReference storageRef = storage.getReference();
+    private String uid = user.getUid(); // 현재 접속한 사용자
+
     //완료된 동화 테마 개수
-    private int seaTrophyCount = 0, forestTrophyCount = 1,
-                castleTrophyCount = 3, villageTrophyCount = 5,
-                universeTrophyCount = 10, desertTrophyCount = 15,
-                customTrophyCount = 20;
+    private int seaTrophyCount = 0, forestTrophyCount = 0,
+                castleTrophyCount = 0, villageTrophyCount = 0,
+                universeTrophyCount = 0, desertTrophyCount = 0,
+                customTrophyCount = 0;
 
     //동화 업적 텍스트뷰
     private TextView tvSeaTrophy, tvSeaTrophyPercent,
@@ -70,35 +85,19 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         profile = findViewById(R.id.mini_profile);
         loadUserInfo(profile, name, nickname);
 
-        // 작가 호칭 보상 버튼을 초기에는 비활성화
-        //for (ImageButton btn : ibTrophy) {
-        //    btn.setEnabled(false);
-        //}
-
         //디폴트 상태 설정 - 처음에 키면 동화업적이 띄워져있는걸로함
         findViewById(R.id.fairytaleAchievementLayout).setVisibility(View.VISIBLE);
         findViewById(R.id.writerappellationLayout).setVisibility(View.GONE);
 
+        // 테마별 개수 알아내기
+        countThema();
         //UI설정
         settingUI();
 
         // SharedPreferences에서 값을 로드
         loadTrophyCounts();
-        //UI설정 업데이트
-        updateUIForAllThemes();
         //프로그래스바 업데이트
         updateProgressBars();
-
-        //초기화 버튼 리스너
-        Button resetButton = findViewById(R.id.resetButton);
-        resetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 초기화 메서드 호출
-                resetTrophyCounts();
-                Toast.makeText(AchieveActivity.this, "모든 데이터가 초기화되었습니다.", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         //동화업적, 작가호칭 선택 리스너
         rgTrophyCategory.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -180,23 +179,25 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             }
         });
 
-        // 버튼 클릭 리스너 설정
-        //for (int i = 0; i < totalTrophyGoals.length; i++) {
-        //    final int index = i;
-        //    ibTrophy[i].setOnClickListener(new View.OnClickListener() {
-        //        @Override
-        //        public void onClick(View v) {
-        //            handleTrophyReward(index);
-        //        }
-        //    });
-        //}
-
         // 작가 호칭 사용 버튼리스너
         for (int i = 0; i < ibTrophy.length; i++) {
             int index = i;
+            
+            String nickName;
+            if(index == 0) nickName = "꼬마 작가";
+            else if(index == 1) nickName = "새내기 작가";
+            else if(index == 2) nickName = "베테랑 작가";
+            else nickName = "마스터 작가";
+
             ibTrophy[i].setOnClickListener(v -> {
                 handleTrophyReward(index);
                 saveLastButtonClicked(index);
+
+                db.collection("users").document(uid)
+                        .update("nickname", nickName)
+                        .addOnCompleteListener(task -> {
+                            nickname.setText(nickName);
+                        });
                 Toast.makeText(this, "작가 호칭 선택완료!", Toast.LENGTH_SHORT).show();
             });
         }
@@ -228,12 +229,12 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         SharedPreferences sharedPreferences = getSharedPreferences("TrophyPrefs", MODE_PRIVATE);
 
         seaTrophyCount = sharedPreferences.getInt("seaTrophyCount", 0); // 여기서 0은 기본값이지만 기본적으로 설정된 값으로 바꿔줌
-        forestTrophyCount = sharedPreferences.getInt("forestTrophyCount", 1);
-        castleTrophyCount = sharedPreferences.getInt("castleTrophyCount", 3);
-        villageTrophyCount = sharedPreferences.getInt("villageTrophyCount", 5);
-        universeTrophyCount = sharedPreferences.getInt("universeTrophyCount", 10);
-        desertTrophyCount = sharedPreferences.getInt("desertTrophyCount", 15);
-        customTrophyCount = sharedPreferences.getInt("customTrophyCount", 20);
+        forestTrophyCount = sharedPreferences.getInt("forestTrophyCount", 0);
+        castleTrophyCount = sharedPreferences.getInt("castleTrophyCount", 0);
+        villageTrophyCount = sharedPreferences.getInt("villageTrophyCount", 0);
+        universeTrophyCount = sharedPreferences.getInt("universeTrophyCount", 0);
+        desertTrophyCount = sharedPreferences.getInt("desertTrophyCount", 0);
+        customTrophyCount = sharedPreferences.getInt("customTrophyCount", 0);
 
         seaTrophyIndex = sharedPreferences.getInt("seaTrophyIndex", 0);
         forestTrophyIndex = sharedPreferences.getInt("forestTrophyIndex", 0);
@@ -335,11 +336,6 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         editor.putBoolean("trophyReward" + trophyIndex, true);
 
         editor.apply();
-    }
-
-    private boolean isTrophyRewardClaimed(int trophyIndex) {
-        SharedPreferences sharedPreferences = getSharedPreferences("TrophyPrefs", MODE_PRIVATE);
-        return sharedPreferences.getBoolean("trophyReward" + trophyIndex, false);
     }
 
     public void updateProgressBars() {
@@ -529,38 +525,60 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         tvTrophy[3] = findViewById(R.id.tv_trophyCount50);
     }
 
-    private void resetTrophyCounts() {
-        SharedPreferences sharedPreferences = getSharedPreferences("TrophyPrefs", MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+    private void countThema() {
+        StorageReference coverRef = storageRef.child("covers/");
 
-        // 저장된 모든 데이터를 삭제
-        editor.clear();
-        editor.apply();
+        // 경로에 있는 파일 목록 가져오기
+        coverRef.listAll().addOnSuccessListener(listResult -> {
+            for (StorageReference item : listResult.getItems()) {
+                // 파일 이름에서 테마를 추출하여 비교
+                String itemName = item.getName();
+                String[] parts = itemName.split("_");
+                String theme = parts[1];
+                int index; // 숫자 추출
 
-        // 트로피와 관련된 변수들을 기본값으로 초기화
-        seaTrophyCount = 0;
-        forestTrophyCount = 1;
-        castleTrophyCount = 3;
-        villageTrophyCount = 5;
-        universeTrophyCount = 10;
-        desertTrophyCount = 15;
-        customTrophyCount = 20;
+                if (parts[0].equals(uid)) {
+                    try {
+                        index = Integer.parseInt(parts[2]);
+                    } catch (NumberFormatException e) { // 번호 추출 실패 시 처리
+                        continue;  // 건너뜀
+                    }
 
-        seaTrophyIndex = 0;
-        forestTrophyIndex = 0;
-        castleTrophyIndex = 0;
-        villageTrophyIndex = 0;
-        universeTrophyIndex = 0;
-        desertTrophyIndex = 0;
-        customTrophyIndex = 0;
+                    switch (theme) {
+                        case "바다":
+                            seaTrophyCount = Math.max(seaTrophyCount, index);
+                            updateUI("바다");
+                            break;
+                        case "궁전":
+                            castleTrophyCount = Math.max(castleTrophyCount, index);
+                            updateUI("궁전");
+                            break;
+                        case "숲":
+                            forestTrophyCount = Math.max(forestTrophyCount, index);
+                            updateUI("숲");
+                            break;
+                        case "마을":
+                            villageTrophyCount = Math.max(villageTrophyCount, index);
+                            updateUI("마을");
+                            break;
+                        case "우주":
+                            universeTrophyCount = Math.max(universeTrophyCount, index);
+                            updateUI("우주");
+                            break;
+                        case "사막":
+                            desertTrophyCount = Math.max(desertTrophyCount, index);
+                            updateUI("사막");
+                            break;
+                        case "커스텀":
+                            customTrophyCount = Math.max(customTrophyCount, index);
+                            updateUI("커스텀");
+                            break;
+                    }
 
-        totalTrophyCount = 0;
-
-        // UI 업데이트
-        updateUIForAllThemes();
-        updateProgressBars();
+                }
+            }
+        });
     }
-
     @Override
     public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
         userInfo.loadUserInfo(profile, name, nickname);

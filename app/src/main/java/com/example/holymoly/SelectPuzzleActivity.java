@@ -83,6 +83,7 @@ public class SelectPuzzleActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
+        sound();
         if (v.getId() == R.id.btn_start) {
             if (rows == 0 && cols == 0) Toast.makeText(this, "단계를 클릭해 주세요.", Toast.LENGTH_SHORT).show();
             else startPuzzleActivity(rows, cols);
@@ -112,6 +113,19 @@ public class SelectPuzzleActivity extends AppCompatActivity implements View.OnCl
             else if (v.getId() == R.id.btn_6x6) {
                 rows = 6;   cols = 6;
             }
+        }
+        /* 상단 미니 아이콘 클릭 */
+        if(v.getId() == R.id.ib_homebutton) {
+            Intent intent = new Intent(this, Home2Activity.class);
+            startActivity(intent);
+        }
+        else if(v.getId() == R.id.ib_trophy) {
+            Intent intent = new Intent(this, TrophyActivity.class);
+            startActivity(intent);
+        }
+        else if(v.getId() == R.id.ib_setting) {
+            Intent intent = new Intent(this, SettingActivity.class);
+            startActivity(intent);
         }
     }
 

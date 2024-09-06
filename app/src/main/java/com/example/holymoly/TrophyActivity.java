@@ -66,10 +66,10 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
         StorageReference imgRef = storageRef.child("characters/" + user.getUid() + "_1.png");
         // 이미지 로드
         imgRef.getDownloadUrl().addOnSuccessListener(uri -> {
-            Glide.with(this).load(uri).into(spot1); // 첫 번째 위치에 캐릭터 생성
-            // Glide.with(this).load(uri).into(spot2); // 두 번째 위치에 캐릭터 생성
-            // Glide.with(this).load(uri).into(spot3); // 세 번째 위치에 캐릭터 생성
-            // Glide.with(this).load(uri).into(spot4); // 네 번째 위치에 캐릭터 생성
+            if (nickname.getText().toString().equals("새내기 작가")) Glide.with(this).load(uri).into(spot2); // 새내기 작가일 경우 spot2에 캐릭터 위치
+            else if(nickname.getText().toString().equals("베테랑 작가")) Glide.with(this).load(uri).into(spot3); // 베테랑 작가일 경우 spot2에 캐릭터 위치
+            else if(nickname.getText().toString().equals("마스터 작가")) Glide.with(this).load(uri).into(spot3); // 마스터 작가일 경우 spot2에 캐릭터 위치
+            else Glide.with(this).load(uri).into(spot1); // 기본적으로 spot1에 캐릭터 위치
         });
 
         trophy.setOnClickListener(this);
