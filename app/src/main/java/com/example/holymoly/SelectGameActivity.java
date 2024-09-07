@@ -14,7 +14,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-public class SelectGameActivity extends AppCompatActivity {
+public class SelectGameActivity extends AppCompatActivity implements UserInfoLoader {
     private ImageButton btnhome, btntrophy, btnsetting;
     private ImageButton ibSelectBingo, ibSelectPuzzle;
     private ImageView profile;
@@ -35,6 +35,8 @@ public class SelectGameActivity extends AppCompatActivity {
         btnsetting = findViewById(R.id.ib_setting);
         ibSelectBingo = findViewById(R.id.ib_selectBingo);
         ibSelectPuzzle = findViewById(R.id.ib_selectPuzzle);
+
+        loadUserInfo(profile, name, nickname);
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +94,10 @@ public class SelectGameActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
+        userInfo.loadUserInfo(profile, name, nickname);
+    }
     public void sound() {
         Intent intent = new Intent(this, SoundService.class);
         startService(intent);

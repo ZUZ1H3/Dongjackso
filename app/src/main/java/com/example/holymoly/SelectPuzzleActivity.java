@@ -26,6 +26,7 @@ public class SelectPuzzleActivity extends AppCompatActivity implements View.OnCl
     /* 상단 프로필 */
     private TextView name, nickname;
     private ImageView profile;
+    private ImageButton btnhome, btntrophy, btnsetting;
     private UserInfo userInfo = new UserInfo();
 
     /* DB */
@@ -52,6 +53,11 @@ public class SelectPuzzleActivity extends AppCompatActivity implements View.OnCl
         profile = findViewById(R.id.mini_profile);
         loadUserInfo(profile, name, nickname);
 
+        // 우측 상단 미니 아이콘
+        btnhome = findViewById(R.id.ib_homebutton);
+        btntrophy = findViewById(R.id.ib_trophy);
+        btnsetting = findViewById(R.id.ib_setting);
+        
         // Firebase 초기화
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -65,6 +71,10 @@ public class SelectPuzzleActivity extends AppCompatActivity implements View.OnCl
         btn6x6 = findViewById(R.id.btn_6x6);
         btnStart = findViewById(R.id.btn_start);
         btnBack = findViewById(R.id.btn_back);
+
+        btnhome.setOnClickListener(this);
+        btntrophy.setOnClickListener(this);
+        btnsetting.setOnClickListener(this);
 
         btn3x3.setOnClickListener(this);
         btn4x4.setOnClickListener(this);
