@@ -29,9 +29,9 @@ public class WordGameReadyActivity extends AppCompatActivity {
                 findViewById(R.id.tv_rect5), findViewById(R.id.tv_rect6),
                 findViewById(R.id.tv_rect7), findViewById(R.id.tv_rect8),
                 findViewById(R.id.tv_rect9), findViewById(R.id.tv_rect10),
-                findViewById(R.id.tv_rect12), findViewById(R.id.tv_rect13),
-                findViewById(R.id.tv_rect14), findViewById(R.id.tv_rect15),
-                findViewById(R.id.tv_rect16),
+                findViewById(R.id.tv_rect11), findViewById(R.id.tv_rect12),
+                findViewById(R.id.tv_rect13), findViewById(R.id.tv_rect14),
+                findViewById(R.id.tv_rect15), findViewById(R.id.tv_rect16),
         };
 
         nextBtn = findViewById(R.id.next_btn);

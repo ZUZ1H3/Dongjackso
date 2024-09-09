@@ -45,7 +45,7 @@ import java.util.Locale;
 public class MakeStoryActivity extends AppCompatActivity {
     private boolean isImageLoaded = false; // 이미지 로드 상태를 추적하는 변수
     private TextView storyTextView, pageTextView, selectText1, selectText2, selectMic3;
-    private ImageButton stopMakingBtn, nextBtn;
+    private ImageButton stopMakingBtn, nextBtn, retryBtn;
     private ImageView backgroundImageView, loading, selectImage1, selectImage2, selectMic1, selectMic2, nextStory;
     private String selectedTheme;
     private ArrayList<String> selectedCharacters;
@@ -68,6 +68,7 @@ public class MakeStoryActivity extends AppCompatActivity {
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef = storage.getReference();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +89,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         nextStory = findViewById(R.id.iv_nextstory);
         stopMakingBtn = findViewById(R.id.ib_stopMaking);
         nextBtn = findViewById(R.id.ib_nextStep);
+        retryBtn = findViewById(R.id.ib_retry);
 
         storyTextView.setMovementMethod(new ScrollingMovementMethod()); //스크롤 가능하도록
         MainActivity mainActivity = new MainActivity();
@@ -117,7 +119,6 @@ public class MakeStoryActivity extends AppCompatActivity {
         makeStory = new MakeStory(this, selectedTheme, selectedCharacters, gemini);
 
         makeStory.generateInitialStory();//동화 도입부 생성
-
 
 
         selectText1.setOnClickListener(new View.OnClickListener() {
@@ -219,8 +220,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                         ++num;
                     }
                     if (num > 5) nextBtn.setVisibility(View.VISIBLE);
-                }
-                else{
+                } else {
                     Intent intent = new Intent(MakeStoryActivity.this, VoiceActivity.class);
                     byte[] imageBytes = (byte[]) nextBtn.getTag();
                     intent.putExtra("backgroundImageBytes", imageBytes);
@@ -248,7 +248,7 @@ public class MakeStoryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 sound();
                 if (num == 6) {
-                    pageContents.set(num -1, storyTextView.getText().toString());
+                    pageContents.set(num - 1, storyTextView.getText().toString());
                 }
                 if (isImageLoaded) {
                     byte[] imageBytes = (byte[]) nextBtn.getTag();
@@ -268,6 +268,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         });
 
     }
+
     // 선택한 테마와 캐릭터를 번역 하는 함수. 이미지를 만들 때 사용함
     public void translate(final String storyText) {
         //선택한 테마 번역
@@ -384,12 +385,21 @@ public class MakeStoryActivity extends AppCompatActivity {
                             storyTextView.setText(storyText);
                             textFullyDisplayed[0] = true; // 전체 텍스트 표시 상태로 플래그 설정
 
-                            if (isImageLoaded && num <= 5) {
-                                makeStory.generateChoices(num); // 선택지 생성
-                            }
+                            //if (isImageLoaded && num <= 5) {
+                            //    makeStory.generateChoices(num); // 선택지 생성
+                            //}
                             return true;
                         }
                         return false;
+                    }
+                });
+
+                retryBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (isImageLoaded && num <= 5) {
+                            makeStory.generateChoices(num); // 선택지 생성
+                        }
                     }
                 });
             }
@@ -520,6 +530,7 @@ public class MakeStoryActivity extends AppCompatActivity {
             });
         });
     }
+
     // 업로드된 이미지 삭제
     private void deleteImage() {
         StorageReference themeRef = storageRef.child(themePath);
@@ -597,6 +608,7 @@ public class MakeStoryActivity extends AppCompatActivity {
             showToast("파일 읽기 실패: " + e.getMessage());
         }
     }
+
     // 효과음
     public void sound() {
         Intent intent = new Intent(this, SoundService.class);

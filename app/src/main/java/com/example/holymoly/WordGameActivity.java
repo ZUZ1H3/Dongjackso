@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.Random;
 
@@ -34,6 +36,9 @@ public class WordGameActivity extends AppCompatActivity {
     private boolean[] aiRowBingo = new boolean[4];
     private boolean[] aiColBingo = new boolean[4];
     private boolean[] aiDiagBingo = new boolean[2];
+
+    private int userBingoCount = 0;  // 사용자 빙고 카운트
+    private int aiBingoCount = 0;    // AI 빙고 카운트
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,6 +212,7 @@ public class WordGameActivity extends AppCompatActivity {
             if (!userRowBingo[i] && checkLine(userSelected[i])) {
                 highlightLine(userImageViews[i]);
                 userRowBingo[i] = true;
+                userBingoCount++;  // 빙고 카운트 증가
                 userBingo.setVisibility(View.VISIBLE);
                 userTextView.setText("");
             }
@@ -218,6 +224,7 @@ public class WordGameActivity extends AppCompatActivity {
             if (!userColBingo[i] && checkLine(colSelected)) {
                 highlightLine(new ImageView[]{userImageViews[0][i], userImageViews[1][i], userImageViews[2][i], userImageViews[3][i]});
                 userColBingo[i] = true;
+                userBingoCount++;  // 빙고 카운트 증가
                 userBingo.setVisibility(View.VISIBLE);
                 userTextView.setText("");
             }
@@ -233,14 +240,32 @@ public class WordGameActivity extends AppCompatActivity {
         if (!userDiagBingo[0] && checkLine(diag1Selected)) {
             highlightLine(new ImageView[]{userImageViews[0][0], userImageViews[1][1], userImageViews[2][2], userImageViews[3][3]});
             userDiagBingo[0] = true;
+            userBingoCount++;  // 빙고 카운트 증가
             userBingo.setVisibility(View.VISIBLE);
             userTextView.setText("");
         }
         if (!userDiagBingo[1] && checkLine(diag2Selected)) {
             highlightLine(new ImageView[]{userImageViews[0][3], userImageViews[1][2], userImageViews[2][1], userImageViews[3][0]});
             userDiagBingo[1] = true;
+            userBingoCount++;  // 빙고 카운트 증가
             userBingo.setVisibility(View.VISIBLE);
             userTextView.setText("");
+        }
+        int bingoCount = 0;
+        // 빙고 개수를 카운트
+        for (boolean bingo : userRowBingo) {
+            if (bingo) bingoCount++;
+        }
+        for (boolean bingo : userColBingo) {
+            if (bingo) bingoCount++;
+        }
+        for (boolean bingo : userDiagBingo) {
+            if (bingo) bingoCount++;
+        }
+
+        // 빙고가 3개 이상일 때 게임 종료
+        if (bingoCount >= 3) {
+            endGame("사용자");
         }
     }
 
@@ -251,6 +276,7 @@ public class WordGameActivity extends AppCompatActivity {
             if (!aiRowBingo[i] && checkLine(aiSelected[i])) {
                 highlightLine(aiImageViews[i]);
                 aiRowBingo[i] = true;
+                aiBingoCount++;  // 빙고 카운트 증가
                 aiBingo.setVisibility(View.VISIBLE);
                 aiTextView.setText("");
             }
@@ -262,6 +288,7 @@ public class WordGameActivity extends AppCompatActivity {
             if (!aiColBingo[i] && checkLine(colSelected)) {
                 highlightLine(new ImageView[]{aiImageViews[0][i], aiImageViews[1][i], aiImageViews[2][i], aiImageViews[3][i]});
                 aiColBingo[i] = true;
+                aiBingoCount++;  // 빙고 카운트 증가
                 aiBingo.setVisibility(View.VISIBLE);
                 aiTextView.setText("");
             }
@@ -277,15 +304,54 @@ public class WordGameActivity extends AppCompatActivity {
         if (!aiDiagBingo[0] && checkLine(diag1Selected)) {
             highlightLine(new ImageView[]{aiImageViews[0][0], aiImageViews[1][1], aiImageViews[2][2], aiImageViews[3][3]});
             aiDiagBingo[0] = true;
+            aiBingoCount++;  // 빙고 카운트 증가
             aiBingo.setVisibility(View.VISIBLE);
             aiTextView.setText("");
         }
         if (!aiDiagBingo[1] && checkLine(diag2Selected)) {
             highlightLine(new ImageView[]{aiImageViews[0][3], aiImageViews[1][2], aiImageViews[2][1], aiImageViews[3][0]});
             aiDiagBingo[1] = true;
+            aiBingoCount++;  // 빙고 카운트 증가
             aiBingo.setVisibility(View.VISIBLE);
             aiTextView.setText("");
         }
+        int bingoCount = 0;
+
+        for (boolean bingo : aiRowBingo) {
+            if (bingo) bingoCount++;
+        }
+        for (boolean bingo : aiColBingo) {
+            if (bingo) bingoCount++;
+        }
+        for (boolean bingo : aiDiagBingo) {
+            if (bingo) bingoCount++;
+        }
+
+        // 빙고가 3개 이상일 때 게임 종료
+        if (bingoCount >= 3) {
+            endGame("AI");
+        }
+    }
+
+
+    public void endGame(String winner) {
+        // AlertDialog 생성
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("게임 종료");
+        builder.setMessage(winner + "가 이겼습니다!"); // 승자를 표시
+
+        // 확인 버튼 클릭 시 동작 설정
+        builder.setPositiveButton("확인", (dialog, which) -> {
+            // 메인 화면으로 돌아가거나 게임을 재시작하는 동작을 설정할 수 있음
+            finish(); // 현재 액티비티를 종료하고 메인 화면으로 돌아감
+            // 또는 다른 동작을 원하면 아래와 같은 Intent로 새 게임을 시작할 수도 있음
+            // Intent intent = new Intent(this, MainActivity.class);
+            // startActivity(intent);
+        });
+
+        // 다이얼로그 보여주기
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
     private boolean checkLine(boolean[] line) {
         for (boolean cell : line) {
