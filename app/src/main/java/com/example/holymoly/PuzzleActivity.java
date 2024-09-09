@@ -1,31 +1,17 @@
 package com.example.holymoly;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,12 +42,10 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
     private List<String> allImageUrls = new ArrayList<>();
     private List<String> imageUrls = new ArrayList<>();
 
-    private String[] items = { "전체", "바다", "궁전", "숲", "마을", "우주", "사막", "커스텀", "내 사진" };
+    private String[] items = { "전체", "바다", "궁전", "숲", "마을", "우주", "사막", "커스텀" };
     private RecyclerView recyclerView;
     private Spinner spinnerNav;
     private PuzzleAdapter puzzleAdapter;
-
-    private static final int REQUEST_IMAGE_PICK = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,11 +88,7 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
                 sound();
                 selectSection(position);  // 선택된 섹션으로 설정
                 String selectedTheme = items[position];
-                if (selectedTheme.equals("내 사진")) {
-                    openGallery();  // "내 사진" 선택 시 갤러리 열기
-                } else {
-                    filterByTheme(selectedTheme);  // 다른 테마는 필터링
-                }
+                filterByTheme(selectedTheme);  // 테마에 맞게 필터링
             }
 
             @Override
@@ -155,7 +135,6 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
             case 5: secTitle.setText("- 우주 -"); break;
             case 6: secTitle.setText("- 사막 -"); break;
             case 7: secTitle.setText("- 커스텀 -"); break;
-            case 8: secTitle.setText("- 내 사진 -"); break;
         }
     }
 
@@ -207,24 +186,6 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         }
         // 어댑터에 변경사항 반영
         puzzleAdapter.notifyDataSetChanged();
-    }
-
-    // 갤러리에서 이미지 선택
-    private void openGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, REQUEST_IMAGE_PICK);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_PICK && resultCode == RESULT_OK && data != null) {
-            Uri selectedImageUri = data.getData();
-            if (selectedImageUri != null) {
-                imageUrls.add(selectedImageUri.toString());
-                puzzleAdapter.notifyDataSetChanged();
-            }
-        }
     }
 
     @Override

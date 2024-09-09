@@ -136,7 +136,7 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
             resume.setVisibility(View.VISIBLE); // resume 버튼 보이기
         }
         else if(v.getId() == R.id.ib_resume) {
-            pauseSpeech();
+            stopSpeech();
             play.setVisibility(View.VISIBLE);     // play 버튼 보이기
             resume.setVisibility(View.INVISIBLE); // resume 버튼 숨기기
         }
@@ -305,15 +305,6 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
         audioTrack.stop();
         audioTrack.release();
         stream.close();
-    }
-
-    // 음성 멈춤
-    public void pauseSpeech() {
-        if (audioTrack != null) {
-            pausePosition = audioTrack.getPlaybackHeadPosition(); // 현재 재생 위치 저장
-            audioTrack.pause(); // 음성 멈추기
-            isPaused = true;
-        }
     }
 
     // 음성 중단

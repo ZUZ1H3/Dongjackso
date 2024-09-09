@@ -145,8 +145,6 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
             if (System.currentTimeMillis() - backPressedTime >= 2000) {
                 backPressedTime = System.currentTimeMillis();
                 Toast.makeText(this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, Home2Activity.class);
-                startActivity(intent);
             } else {
                 finish(); // 현재 액티비티 종료
             }

@@ -167,7 +167,6 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
                 tvMakeFirst.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
             }
-
             // 파일 이름을 기준으로 정렬
             Collections.sort(items, new Comparator<StorageReference>() {
                 @Override
@@ -204,8 +203,6 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
     // 파일 이름에 따라 '_'로 분할해 숫자를 알아냄
     private int extractIndex(String fileName) {
         try {
-            fileName.startsWith(user.getUid());
-            // 파일 이름을 "_"로 분할하여 숫자 추출
             String[] parts = fileName.split("_");
             return Integer.parseInt(parts[2]);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {

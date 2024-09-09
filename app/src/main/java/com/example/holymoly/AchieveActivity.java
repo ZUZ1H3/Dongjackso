@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -29,6 +30,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.Collections;
+import java.util.List;
 
 public class AchieveActivity extends AppCompatActivity implements UserInfoLoader {
     private RadioGroup rgTrophyCategory;
@@ -50,7 +52,8 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
     private int seaTrophyCount = 0, forestTrophyCount = 0,
                 castleTrophyCount = 0, villageTrophyCount = 0,
                 universeTrophyCount = 0, desertTrophyCount = 0,
-                customTrophyCount = 0;
+                customTrophyCount = 0, bingoCount = 0,
+                puzzleCount = 0;
 
     //동화 업적 텍스트뷰
     private TextView tvSeaTrophy, tvSeaTrophyPercent,
@@ -59,14 +62,16 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             tvVillageTrophy, tvVillageTrophyPercent,
             tvUniverseTrophy, tvUniverseTrophyPercent,
             tvDesertTrophy, tvDesertTrophyPercent,
-            tvCustomTrophy, tvCustomTrophyPercent;
+            tvCustomTrophy, tvCustomTrophyPercent,
+            bingo, bingoPercent,
+            puzzle, puzzlePercent;
 
     //목표 개수 리스트 설정
     private int[] trophyGoals = {1, 5, 10, 20, 50};
     private int seaTrophyIndex=0, forestTrophyIndex=0, castleTrophyIndex=0, villageTrophyIndex=0,
-                universeTrophyIndex=0, desertTrophyIndex=0, customTrophyIndex=0;
+                universeTrophyIndex=0, desertTrophyIndex=0, customTrophyIndex=0, bingoIndex=0, puzzleIndex=0;
     private ImageButton seaButton, forestButton, villageButton, castleButton, universeButton,
-                        desertButton, customButton;
+                        desertButton, customButton, bingoButton, puzzleButton;
 
     //작가호칭 - 프로그래스바 목표
     private int totalTrophyCount=0;
@@ -91,6 +96,8 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
 
         // 테마별 개수 알아내기
         countThema();
+        // 퍼즐 개수 알아내기
+        countPuzzle();
         //UI설정
         settingUI();
 
@@ -103,6 +110,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         rgTrophyCategory.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                sound();
                 if(checkedId == R.id.rb_trophy_fairytaleachievement) {
                     findViewById(R.id.fairytaleAchievementLayout).setVisibility(View.VISIBLE);
                     findViewById(R.id.writerappellationLayout).setVisibility(View.GONE);
@@ -118,6 +126,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         ibCloseWindow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 Intent intent = new Intent(AchieveActivity.this, TrophyActivity.class);
                 startActivity(intent);
             }
@@ -128,6 +137,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             public void onClick(View v) {
                 // 버튼 클릭 시 onRewardButtonClicked 호출
                 onRewardButtonClicked("바다");
+                sound();
             }
         });
 
@@ -136,6 +146,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             public void onClick(View v) {
                 // 버튼 클릭 시 onRewardButtonClicked 호출
                 onRewardButtonClicked("숲");
+                sound();
             }
         });
 
@@ -144,6 +155,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             public void onClick(View v) {
                 // 버튼 클릭 시 onRewardButtonClicked 호출
                 onRewardButtonClicked("궁전");
+                sound();
             }
         });
 
@@ -152,6 +164,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             public void onClick(View v) {
                 // 버튼 클릭 시 onRewardButtonClicked 호출
                 onRewardButtonClicked("마을");
+                sound();
             }
         });
 
@@ -160,6 +173,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             public void onClick(View v) {
                 // 버튼 클릭 시 onRewardButtonClicked 호출
                 onRewardButtonClicked("우주");
+                sound();
             }
         });
 
@@ -168,6 +182,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             public void onClick(View v) {
                 // 버튼 클릭 시 onRewardButtonClicked 호출
                 onRewardButtonClicked("사막");
+                sound();
             }
         });
 
@@ -176,6 +191,16 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             public void onClick(View v) {
                 // 버튼 클릭 시 onRewardButtonClicked 호출
                 onRewardButtonClicked("커스텀");
+                sound();
+            }
+        });
+
+        puzzleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 버튼 클릭 시 onRewardButtonClicked 호출
+                onRewardButtonClicked("퍼즐");
+                sound();
             }
         });
 
@@ -235,6 +260,8 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         universeTrophyCount = sharedPreferences.getInt("universeTrophyCount", 0);
         desertTrophyCount = sharedPreferences.getInt("desertTrophyCount", 0);
         customTrophyCount = sharedPreferences.getInt("customTrophyCount", 0);
+        bingoCount = sharedPreferences.getInt("bingoCount", 0);
+        puzzleCount = sharedPreferences.getInt("puzzleCount", 0);
 
         seaTrophyIndex = sharedPreferences.getInt("seaTrophyIndex", 0);
         forestTrophyIndex = sharedPreferences.getInt("forestTrophyIndex", 0);
@@ -243,6 +270,8 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         universeTrophyIndex = sharedPreferences.getInt("universeTrophyIndex", 0);
         desertTrophyIndex = sharedPreferences.getInt("desertTrophyIndex", 0);
         customTrophyIndex = sharedPreferences.getInt("customTrophyIndex", 0);
+        bingoIndex = sharedPreferences.getInt("bingoIndex", 0);
+        puzzleIndex = sharedPreferences.getInt("puzzleIndex", 0);
 
         totalTrophyCount = sharedPreferences.getInt("totalTrophyCount", 0);
     }
@@ -259,6 +288,8 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         editor.putInt("universeTrophyCount", universeTrophyCount);
         editor.putInt("desertTrophyCount", desertTrophyCount);
         editor.putInt("customTrophyCount", customTrophyCount);
+        editor.putInt("bingoCount", bingoCount);
+        editor.putInt("puzzleCount", puzzleCount);
 
         editor.putInt("seaTrophyIndex", seaTrophyIndex);
         editor.putInt("forestTrophyIndex", forestTrophyIndex);
@@ -267,6 +298,8 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         editor.putInt("universeTrophyIndex", universeTrophyIndex);
         editor.putInt("desertTrophyIndex", desertTrophyIndex);
         editor.putInt("customTrophyIndex", customTrophyIndex);
+        editor.putInt("bingoIndex", bingoIndex);
+        editor.putInt("puzzleIndex", puzzleIndex);
 
         editor.putInt("totalTrophyCount", totalTrophyCount);
 
@@ -277,18 +310,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
     protected void onResume() {
         super.onResume();
         loadTrophyCounts(); // Load state
-        updateUIForAllThemes(); // Update UI
         updateProgressBars();
-    }
-
-    private void updateUIForAllThemes() {
-        updateUI("바다");
-        updateUI("숲");
-        updateUI("궁전");
-        updateUI("마을");
-        updateUI("우주");
-        updateUI("사막");
-        updateUI("커스텀");
     }
 
     @Override
@@ -299,9 +321,6 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
 
     public void handleTrophyReward(int trophyIndex) {
         if(ibTrophy[trophyIndex].isEnabled()) { //활성화된 상태에서 눌렀다면
-            //작가호칭 보상
-            //Toast.makeText(this, "작가 호칭 선택완료!", Toast.LENGTH_SHORT).show();
-
             // 상태 저장
             saveTrophyRewardStatus(trophyIndex);
 
@@ -424,6 +443,16 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             currentIndex = customTrophyIndex;
             goalTextView = tvCustomTrophy;
             percentageTextView = tvCustomTrophyPercent;
+        } else if (thema.equals("빙고")) {
+            currentCount = bingoCount;
+            currentIndex = bingoIndex;
+            goalTextView = bingo;
+            percentageTextView = puzzlePercent;
+        } else if (thema.equals("퍼즐")) {
+            currentCount = puzzleCount;
+            currentIndex = puzzleIndex;
+            goalTextView = puzzle;
+            percentageTextView = puzzlePercent;
         }
 
         if (currentCount >= trophyGoals[currentIndex]) {
@@ -433,8 +462,16 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             percentageTextView.setText(percentage + "%");
         }
 
-        String goalText = String.format("%s 동화 %d개 만들기", thema, trophyGoals[currentIndex]);
-        goalTextView.setText(goalText);
+        if(thema.equals("빙고")) {
+            String goalText = String.format("%s %d번 이기기", thema, trophyGoals[currentIndex]);
+            goalTextView.setText(goalText);
+        } else if (thema.equals("퍼즐")) {
+            String goalText = String.format("%s %d개 맞추기", thema, trophyGoals[currentIndex]);
+            goalTextView.setText(goalText);
+        } else {
+            String goalText = String.format("%s 동화 %d개 만들기", thema, trophyGoals[currentIndex]);
+            goalTextView.setText(goalText);
+        }
     }
 
     public void onRewardButtonClicked(String thema) {
@@ -458,6 +495,8 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             case "우주": return tvUniverseTrophyPercent;
             case "사막": return tvDesertTrophyPercent;
             case "커스텀": return tvCustomTrophyPercent;
+            case "빙고": return bingoPercent;
+            case "퍼즐": return puzzlePercent;
             default: return null;
         }
     }
@@ -471,6 +510,8 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             case "우주": universeTrophyIndex++; break;
             case "사막": desertTrophyIndex++; break;
             case "커스텀": customTrophyIndex++; break;
+            case "빙고": bingoIndex++; break;
+            case "퍼즐": puzzleIndex++; break;
         }
     }
 
@@ -496,6 +537,10 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         tvDesertTrophyPercent = findViewById(R.id.tv_desertTrophyPercent);
         tvCustomTrophy = findViewById(R.id.tv_customTrophy);
         tvCustomTrophyPercent = findViewById(R.id.tv_customTrophyPercent);
+        bingo = findViewById(R.id.tv_bingoTrophy);
+        bingoPercent = findViewById(R.id.tv_bingoTrophyPercent);
+        puzzle = findViewById(R.id.tv_puzzleTrophy);
+        puzzlePercent = findViewById(R.id.tv_puzzleTrophyPercent);
 
         //보상버튼
         seaButton = findViewById(R.id.ib_seaTrophy);
@@ -505,6 +550,8 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         universeButton = findViewById(R.id.ib_universeTrophy);
         desertButton = findViewById(R.id.ib_desertTrophy);
         customButton = findViewById(R.id.ib_customTrophy);
+        bingoButton = findViewById(R.id.ib_bingoTrophy);
+        puzzleButton = findViewById(R.id.ib_puzzleTrophy);
 
         //작가호칭 보상 이미지 버튼
         ibTrophy[0] = findViewById(R.id.ib_littleWriter);
@@ -524,7 +571,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         tvTrophy[2] = findViewById(R.id.tv_trophyCount10);
         tvTrophy[3] = findViewById(R.id.tv_trophyCount50);
     }
-
+    // 완성된 동화 테마별 개수 알아내기
     private void countThema() {
         StorageReference coverRef = storageRef.child("covers/");
 
@@ -579,9 +626,32 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             }
         });
     }
+    // 완성된 퍼즐 개수
+    private void countPuzzle() {
+        // 컬렉션 가져오기
+        db.collection("puzzles").document(uid).collection("completed")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    int index = 0;   // 완성된 개수
+
+                    for (DocumentSnapshot document : queryDocumentSnapshots) {
+                        List<?> rows = (List<?>) document.get("rows");  // rows 배열 가져오기
+                        if (rows != null) {
+                            index += rows.size();  // 배열의 길이를 더함
+                        }
+                    }
+                    puzzleCount = Math.max(puzzleCount, index);  // 퍼즐 인덱스 업데이트
+                    updateUI("퍼즐");  // UI 업데이트
+                });
+    }
+
     @Override
     public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
         userInfo.loadUserInfo(profile, name, nickname);
     }
-
+    // 효과음
+    public void sound() {
+        Intent intent = new Intent(this, SoundService.class);
+        startService(intent);
+    }
 }
