@@ -1,11 +1,16 @@
 package com.example.holymoly;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BlurMaskFilter;
+import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -13,6 +18,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
@@ -51,7 +58,19 @@ public class SelectversionActivity extends AppCompatActivity implements UserInfo
         // 이미지 불러오기
         StorageReference imgRef = storageRef.child("characters/" + user.getUid() + ".png");
         imgRef.getDownloadUrl().addOnSuccessListener(uri -> {
-            Glide.with(this).load(uri).into(userImage);
+            Glide.with(this)
+                    .asBitmap()
+                    .load(uri)
+                    .into(new CustomTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            Bitmap bitmap = createShadow(resource);
+                            userImage.setImageBitmap(bitmap); // ImageView에 설정
+                        }
+
+                        @Override
+                        public void onLoadCleared(Drawable placeholder) {}
+                    });
         });
 
         btnhome.setOnClickListener(new View.OnClickListener() {
@@ -96,13 +115,33 @@ public class SelectversionActivity extends AppCompatActivity implements UserInfo
             sound();
             // 버튼 스타일 변경 (테두리 및 색상 추가)
             ibMakeAlone.setBackgroundResource(R.drawable.ib_version_makealone_checked);
-            //ibMakeWithAI.setBackgroundResource(R.drawable.ib_version_makewithai);
+            ibMakeWithAI.setBackgroundResource(R.drawable.ib_version_makewithai);
 
             // 다른 액티비티로 전환
             Intent intent = new Intent(SelectversionActivity.this, MakeStoryAloneActivity.class);
             startActivity(intent);
         });
     }
+    private Bitmap createShadow(Bitmap bitmap) {
+        // 기존 이미지 크기와 동일한 새 Bitmap 생성
+        Bitmap shadowBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(shadowBitmap);
+
+        // 그림자 효과를 위한 Paint 설정
+        Paint shadowPaint = new Paint();
+        shadowPaint.setAntiAlias(true);    // 경계선이 부드럽게
+        shadowPaint.setColor(Color.BLACK); // 그림자 색상
+        shadowPaint.setAlpha(150);         // 투명도 설정
+        shadowPaint.setMaskFilter(new BlurMaskFilter(10f, BlurMaskFilter.Blur.INNER));
+
+        // 그림자 그리기
+        canvas.drawBitmap(bitmap.extractAlpha(), 5, 5, shadowPaint);
+        // 원본 이미지 그리기
+        canvas.drawBitmap(bitmap, 0, 0, null);
+
+        return shadowBitmap;
+    }
+
     @Override
     public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
         userInfo.loadUserInfo(profile, name, nickname);
@@ -113,6 +152,4 @@ public class SelectversionActivity extends AppCompatActivity implements UserInfo
         Intent intent = new Intent(this, SoundService.class);
         startService(intent);
     }
-
-
 }
