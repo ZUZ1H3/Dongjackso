@@ -131,6 +131,7 @@ public class SelectPuzzleActivity extends AppCompatActivity implements View.OnCl
         }
         else if(v.getId() == R.id.ib_trophy) {
             Intent intent = new Intent(this, TrophyActivity.class);
+            intent.putExtra("from", "SelectPuzzleActivity");
             startActivity(intent);
         }
         else if(v.getId() == R.id.ib_setting) {

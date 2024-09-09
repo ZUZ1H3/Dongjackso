@@ -97,7 +97,6 @@ public class MakeDiaryActivity extends AppCompatActivity {
                 if (System.currentTimeMillis() - backPressedTime >= 2000) {
                     backPressedTime = System.currentTimeMillis();
                     Toast.makeText(MakeDiaryActivity.this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
-
                     int selected = radioGroup.getCheckedRadioButtonId();
                     intent.putExtra("selected", selected);
                     Intent intent = new Intent(MakeDiaryActivity.this, AlbumDiaryActivity.class);
@@ -120,7 +119,7 @@ public class MakeDiaryActivity extends AppCompatActivity {
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                // 선택된 라디오 버튼 ID를 날짜와 함께 저장
+                sound();
                 saveWeather(date, checkedId);
             }
         });
@@ -228,9 +227,10 @@ public class MakeDiaryActivity extends AppCompatActivity {
         // 데이터 저장
         weatherRef.set(Collections.singletonMap("selectedId", selectedId))
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(MakeDiaryActivity.this, "날씨 정보 저장 성공", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MakeDiaryActivity.this, "날씨 정보 저장", Toast.LENGTH_SHORT).show();
                 });
     }
+
     // 날씨 불러오기
     private void loadWeather(String date) {
         DocumentReference weatherRef = db.collection("weather").document(uid).collection("dates").document(date);

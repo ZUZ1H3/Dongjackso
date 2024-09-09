@@ -101,6 +101,7 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         spinnerNav.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                sound();
                 selectSection(position);  // 선택된 섹션으로 설정
                 String selectedTheme = items[position];
                 if (selectedTheme.equals("내 사진")) {
@@ -116,6 +117,7 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
         puzzleAdapter.setOnItemClickListener(imageUrl -> {
+            sound();
             Intent intent = new Intent(this, SelectPuzzleActivity.class);
             intent.putExtra("selectedImage", imageUrl);
             startActivity(intent);
@@ -133,6 +135,7 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         }
         else if(v.getId() == R.id.ib_trophy) {
             Intent intent = new Intent(this, TrophyActivity.class);
+            intent.putExtra("from", "PuzzleActivity");
             startActivity(intent);
         }
         else if(v.getId() == R.id.ib_setting) {

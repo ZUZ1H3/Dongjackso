@@ -30,19 +30,23 @@ import com.google.firebase.storage.StorageReference;
 import java.util.List;
 
 public class TrophyActivity extends AppCompatActivity implements View.OnClickListener, UserInfoLoader{
+    /* 좌측 상단 프로필 초기화 */
     private TextView name, nickname;
     private ImageButton trophy, home, edit;
     private ImageView profile;
-
-    // 캐릭터 생성 위치
-    private ImageView spot1, spot2, spot3, spot4;
-
     private UserInfo userInfo = new UserInfo();
 
+    /* firebase 초기화 */
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef = storage.getReference();
+
+    // 캐릭터 생성 위치
+    private ImageView spot1, spot2, spot3, spot4;
+    // 이전 액티비티 정보
+    private String from;
+    private String[] activities = {"Home2Activity", "SelectGameActivity", "PuzzleActivity", "SelectPuzzleActivity"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,12 +67,15 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
 
         loadUserInfo(profile, name, nickname); // 미니 프로필 불러오기
 
+        // 이전 액티비티 정보 받기
+        from = getIntent().getStringExtra("from");
+
         StorageReference imgRef = storageRef.child("characters/" + user.getUid() + "_1.png");
         // 이미지 로드
         imgRef.getDownloadUrl().addOnSuccessListener(uri -> {
-            if (nickname.getText().toString().equals("새내기 작가")) Glide.with(this).load(uri).into(spot2); // 새내기 작가일 경우 spot2에 캐릭터 위치
-            else if(nickname.getText().toString().equals("베테랑 작가")) Glide.with(this).load(uri).into(spot3); // 베테랑 작가일 경우 spot2에 캐릭터 위치
-            else if(nickname.getText().toString().equals("마스터 작가")) Glide.with(this).load(uri).into(spot3); // 마스터 작가일 경우 spot2에 캐릭터 위치
+            if (nickname.getText().toString().equals("새내기 작가")) Glide.with(this).load(uri).into(spot2);     // 새내기 작가일 경우
+            else if(nickname.getText().toString().equals("베테랑 작가")) Glide.with(this).load(uri).into(spot3); // 베테랑 작가일 경우
+            else if(nickname.getText().toString().equals("마스터 작가")) Glide.with(this).load(uri).into(spot3); // 마스터 작가일 경우
             else Glide.with(this).load(uri).into(spot1); // 기본적으로 spot1에 캐릭터 위치
         });
 
@@ -83,13 +90,28 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
             startActivity(intent);
         }
         else if(v.getId() == R.id.ib_homebutton) {
-            Intent intent = new Intent(this, HomeActivity.class);
+            Intent intent;
+            if (!isInArray(from, activities)) {
+                intent = new Intent(this, HomeActivity.class);
+            } else {
+                intent = new Intent(this, Home2Activity.class);
+            }
             startActivity(intent);
         }
         else if(v.getId() == R.id.ib_edit) {
             Intent intent = new Intent(this, SettingActivity.class);
             startActivity(intent);
         }
+    }
+
+    // 배열에서 값을 확인
+    private boolean isInArray(String value, String[] array) {
+        for (String item : array) {
+            if (item.equals(value)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.example.holymoly;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -9,12 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 public class Home2Activity extends AppCompatActivity implements UserInfoLoader {
     private ImageButton btntrophy, btnsetting, btnmaking, btnalbum, btngame, btnfairy;
@@ -49,7 +42,9 @@ public class Home2Activity extends AppCompatActivity implements UserInfoLoader {
         btntrophy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 Intent intent = new Intent(Home2Activity.this, TrophyActivity.class);
+                intent.putExtra("from", "Home2Activity");
                 startActivity(intent);
             }
         });

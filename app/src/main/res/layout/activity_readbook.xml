@@ -74,15 +74,6 @@
         app:layout_constraintTop_toTopOf="@id/tv_page"
         app:layout_constraintLeft_toLeftOf="parent" />
 
-    <ImageButton
-        android:id="@+id/ib_pause"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="235dp"
-        android:background="@drawable/ib_pause"
-        app:layout_constraintTop_toTopOf="@id/tv_page"
-        app:layout_constraintLeft_toLeftOf="parent" />
-
     <TextView
         android:id="@+id/tv_pageText"
         android:layout_width="550dp"

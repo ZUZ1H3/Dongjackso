@@ -89,7 +89,6 @@
         android:id="@+id/radioGroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:checkedButton="@+id/ib_sunny"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -105,8 +104,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="8dp"
             android:background="@drawable/radio_button_sunny"
-            android:button="@android:color/transparent"
-            android:src="@drawable/weather_sunny" />
+            android:button="@android:color/transparent" />
 
         <RadioButton
             android:id="@+id/ib_suncloudy"
@@ -130,8 +128,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="8dp"
             android:background="@drawable/radio_button_rainy"
-            android:button="@android:color/transparent"
-            android:src="@drawable/weather_rainy" />
+            android:button="@android:color/transparent" />
 
         <RadioButton
             android:id="@+id/ib_snowy"
