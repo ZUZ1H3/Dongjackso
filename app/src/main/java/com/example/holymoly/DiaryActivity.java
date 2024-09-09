@@ -181,7 +181,6 @@ public class DiaryActivity extends AppCompatActivity {
 
     private void handleMoreButtonClick() {
         sound();
-        //isConversationEnded = false; // 대화가 계속 진행되도록 플래그 업데이트
         // UI 업데이트: 대화 입력 필드와 버튼을 보이도록 설정
         sendButton.setVisibility(View.VISIBLE);
         userInput.setVisibility(View.VISIBLE);
@@ -189,7 +188,7 @@ public class DiaryActivity extends AppCompatActivity {
         makeDiaryButton.setVisibility(View.INVISIBLE);
         moreButton.setVisibility(View.INVISIBLE);
         // 대화 재개 메시지 또는 설정을 추가할 수 있습니다.
-        Message moreConversationMessage = new Message("좋아! 나랑 더 이야기하자!😊 동화를 만들러 가고 싶다면 언제든지 OK 버튼을 눌러줘.", Message.TYPE_BOT);
+        Message moreConversationMessage = new Message("좋아! 나랑 더 이야기하자!😊 동화를 만들러 가고 싶다면 언제든지 화살표 버튼을 눌러줘.", Message.TYPE_BOT);
         messageList.add(moreConversationMessage);
         messageAdapter.notifyItemInserted(messageList.size() - 1);
         recyclerView.scrollToPosition(messageList.size() - 1);

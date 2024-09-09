@@ -118,22 +118,7 @@ public class MakeStoryActivity extends AppCompatActivity {
 
         makeStory.generateInitialStory();//동화 도입부 생성
 
-        selectMic1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MakeStoryActivity.this, VoiceActivity.class);
-                startActivity(intent);
-            }
-        });
 
-        selectMic2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sound();
-                Intent intent = new Intent(MakeStoryActivity.this, VoiceActivity.class);
-                startActivity(intent);
-            }
-        });
 
         selectText1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,32 +181,51 @@ public class MakeStoryActivity extends AppCompatActivity {
             }
         });
 
-        selectMic3.setOnClickListener(new View.OnClickListener() {
+        selectMic2.setOnClickListener(new View.OnClickListener() { //마이크 모양
             @Override
             public void onClick(View v) {
-                nextStory.setVisibility(View.INVISIBLE);
-                selectImage1.setVisibility(View.INVISIBLE);
-                selectImage2.setVisibility(View.INVISIBLE);
-                selectText1.setVisibility(View.INVISIBLE);
-                selectText2.setVisibility(View.INVISIBLE);
-                selectMic1.setVisibility(View.INVISIBLE);
-                selectMic2.setVisibility(View.INVISIBLE);
-                selectMic3.setVisibility(View.INVISIBLE);
+                sound();
+                Intent intent = new Intent(MakeStoryActivity.this, VoiceActivity.class);
+                byte[] imageBytes = (byte[]) nextBtn.getTag();
+                intent.putExtra("backgroundImageBytes", imageBytes);
+                startActivity(intent);
+            }
+        });
 
+        selectMic3.setOnClickListener(new View.OnClickListener() { //텍스트뷰
+            @Override
+            public void onClick(View v) {
+                sound();
                 String selectedChoice = selectMic3.getText().toString(); // 선택지2 가져오기
+                if (!(selectedChoice.equals(""))) {
+                    nextStory.setVisibility(View.INVISIBLE);
+                    selectImage1.setVisibility(View.INVISIBLE);
+                    selectImage2.setVisibility(View.INVISIBLE);
+                    selectText1.setVisibility(View.INVISIBLE);
+                    selectText2.setVisibility(View.INVISIBLE);
+                    selectMic1.setVisibility(View.INVISIBLE);
+                    selectMic2.setVisibility(View.INVISIBLE);
+                    selectMic3.setVisibility(View.INVISIBLE);
 
-                if (num < 6) {
-                    // 현재 페이지 내용, 선택지 저장
-                    pageContents.set(num - 1, storyTextView.getText().toString() + selectedChoice);
+                    if (num < 6) {
+                        // 현재 페이지 내용, 선택지 저장
+                        pageContents.set(num - 1, storyTextView.getText().toString() + selectedChoice);
 
-                    if (num < 5) {
-                        makeStory.generateNextStoryPart(selectedChoice, num);
-                    } else if (num == 5) {
-                        makeStory.generateEndStoryPart(selectedChoice);
+                        if (num < 5) {
+                            makeStory.generateNextStoryPart(selectedChoice, num);
+                        } else if (num == 5) {
+                            makeStory.generateEndStoryPart(selectedChoice);
+                        }
+                        ++num;
                     }
-                    ++num;
+                    if (num > 5) nextBtn.setVisibility(View.VISIBLE);
                 }
-                if (num > 5) nextBtn.setVisibility(View.VISIBLE);
+                else{
+                    Intent intent = new Intent(MakeStoryActivity.this, VoiceActivity.class);
+                    byte[] imageBytes = (byte[]) nextBtn.getTag();
+                    intent.putExtra("backgroundImageBytes", imageBytes);
+                    startActivity(intent);
+                }
             }
         });
 
