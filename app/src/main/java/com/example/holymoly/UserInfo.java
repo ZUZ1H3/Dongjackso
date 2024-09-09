@@ -49,7 +49,7 @@ public class UserInfo implements UserInfoLoader {
                 });
     }
 
-    public void loadUserInfo(ImageView profile) {
+    public void loadUserInfo(TextView name, ImageView profile) {
         // 캐릭터 이미지 가져오기
         final long MEGABYTE = 1024 * 1024; // 1MB
         characterRef.getBytes(MEGABYTE).addOnSuccessListener(bytes -> {
@@ -57,6 +57,15 @@ public class UserInfo implements UserInfoLoader {
             Bitmap cBitmap = cropImage(bitmap);
             profile.setImageBitmap(cBitmap);
         });
+
+        db.collection("users").document(user.getUid())
+                .get()
+                .addOnSuccessListener(document -> {
+                    if (document.exists()) {
+                        String userName = document.getString("name");
+                        name.setText(userName);
+                    }
+                });
     }
     // 이미지 확대
     private Bitmap cropImage(Bitmap bm) {

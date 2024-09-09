@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -14,22 +12,16 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.Collections;
 import java.util.List;
 
 public class AchieveActivity extends AppCompatActivity implements UserInfoLoader {
@@ -96,7 +88,9 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
 
         // 테마별 개수 알아내기
         countThema();
-        // 퍼즐 개수 알아내기
+        // 이긴 빙고 횟수 알아내기
+        countBingo();
+        // 완성된 퍼즐 개수 알아내기
         countPuzzle();
         //UI설정
         settingUI();
@@ -191,6 +185,15 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             public void onClick(View v) {
                 // 버튼 클릭 시 onRewardButtonClicked 호출
                 onRewardButtonClicked("커스텀");
+                sound();
+            }
+        });
+
+        bingoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 버튼 클릭 시 onRewardButtonClicked 호출
+                onRewardButtonClicked("빙고");
                 sound();
             }
         });
@@ -447,7 +450,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             currentCount = bingoCount;
             currentIndex = bingoIndex;
             goalTextView = bingo;
-            percentageTextView = puzzlePercent;
+            percentageTextView = bingoPercent;
         } else if (thema.equals("퍼즐")) {
             currentCount = puzzleCount;
             currentIndex = puzzleIndex;
@@ -626,6 +629,20 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             }
         });
     }
+
+    // 완성된 빙고 개수
+    private void countBingo() {
+        db.collection("bingo").document(uid)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if(documentSnapshot.exists()) {
+                        int index = documentSnapshot.getLong("win").intValue();
+                        bingoCount = Math.addExact(bingoCount, index);  // 현재 개수와 완성된 개수 비교해 더 큰 값 저장
+                        updateUI("빙고");  // UI 업데이트
+                    }
+                });
+    }
+
     // 완성된 퍼즐 개수
     private void countPuzzle() {
         // 컬렉션 가져오기

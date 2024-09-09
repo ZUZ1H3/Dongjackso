@@ -10,6 +10,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class WordGameActivity extends AppCompatActivity {
@@ -24,6 +31,7 @@ public class WordGameActivity extends AppCompatActivity {
     private static final int BINGO_IMAGE_RESOURCE = R.drawable.rect3; // 빙고일 때 사용할 보라색 이미지 리소스
 
     private UserInfo userInfo = new UserInfo(); // 사용자 정보를 관리하는 객체
+    private TextView name;
 
     private boolean[][] userSelected; // 사용자가 선택한 칸을 추적하는 배열
     private boolean[][] aiSelected;   // AI가 선택한 칸을 추적하는 배열
@@ -40,6 +48,12 @@ public class WordGameActivity extends AppCompatActivity {
     private int userBingoCount = 0;  // 사용자 빙고 카운트
     private int aiBingoCount = 0;    // AI 빙고 카운트
 
+    /* DB */
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseUser user = auth.getCurrentUser();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private int userWinCount = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +62,7 @@ public class WordGameActivity extends AppCompatActivity {
 
         // 사용자 프로필 및 정보 표시용 TextView 초기화
         profile = findViewById(R.id.mini_profile);
+        name = findViewById(R.id.mini_name);  // 사용자 이름
         userTextView = findViewById(R.id.userTextView);
         aiTextView = findViewById(R.id.AITextView);
         aiBingo = findViewById(R.id.AIbingo);
@@ -265,7 +280,7 @@ public class WordGameActivity extends AppCompatActivity {
 
         // 빙고가 3개 이상일 때 게임 종료
         if (bingoCount >= 3) {
-            endGame("사용자");
+            endGame(name.getText().toString());
         }
     }
 
@@ -342,11 +357,8 @@ public class WordGameActivity extends AppCompatActivity {
 
         // 확인 버튼 클릭 시 동작 설정
         builder.setPositiveButton("확인", (dialog, which) -> {
-            // 메인 화면으로 돌아가거나 게임을 재시작하는 동작을 설정할 수 있음
-            finish(); // 현재 액티비티를 종료하고 메인 화면으로 돌아감
-            // 또는 다른 동작을 원하면 아래와 같은 Intent로 새 게임을 시작할 수도 있음
-            // Intent intent = new Intent(this, MainActivity.class);
-            // startActivity(intent);
+            if(winner.equals(name.getText().toString())) countWin();
+            finish();
         });
 
         // 다이얼로그 보여주기
@@ -405,12 +417,31 @@ public class WordGameActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        loadUserInfo(profile); // 사용자 정보 로드
+        loadUserInfo(name, profile); // 사용자 정보 로드
     }
 
+    private void countWin() {
+        Map<String, Object> winData = new HashMap<>();
 
-    public void loadUserInfo(ImageView profile) {
-        userInfo.loadUserInfo(profile);
+        db.collection("bingo").document(user.getUid())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        // 데이터가 존재하면 이긴 횟수 업데이트
+                        userWinCount = documentSnapshot.getLong("win") != null ? documentSnapshot.getLong("win").intValue() : 0;
+                        userWinCount++;
+                        db.collection("bingo").document(user.getUid()).update("win", userWinCount);
+                    } else {
+                        // 데이터가 없으면 새로 추가
+                        userWinCount = 1;
+                        winData.put("win", userWinCount);
+                        db.collection("bingo").document(user.getUid()).set(winData);
+                    }
+                });
+    }
+
+    public void loadUserInfo(TextView name, ImageView profile) {
+        userInfo.loadUserInfo(name, profile);
     }
 
     public void sound() {
