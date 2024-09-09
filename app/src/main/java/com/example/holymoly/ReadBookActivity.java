@@ -41,7 +41,7 @@ import java.util.List;
 
 public class ReadBookActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView storyTextView, pageTextView;
-    private ImageButton stopReadingBtn, backBtn, nextBtn, play, pause, resume;
+    private ImageButton stopReadingBtn, backBtn, nextBtn, play, resume;
     private ImageView backgroundImageView;
     private int currentPage = 1;
     private long backPressedTime = 0;
@@ -82,7 +82,6 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
         backBtn = findViewById(R.id.ib_backStep);
         nextBtn = findViewById(R.id.ib_nextStep);
         play = findViewById(R.id.ib_play);
-        pause = findViewById(R.id.ib_pause);
         resume = findViewById(R.id.ib_resume);
         storyTextView.setMovementMethod(new ScrollingMovementMethod());
 
@@ -90,7 +89,6 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
         nextBtn.setOnClickListener(this);
         stopReadingBtn.setOnClickListener(this);
         play.setOnClickListener(this);
-        pause.setOnClickListener(this);
         resume.setOnClickListener(this);
         resume.setVisibility(View.INVISIBLE); // 버튼 숨기기
 
@@ -115,8 +113,14 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onClick(View v) {
         sound();
-        if(v.getId() == R.id.ib_backStep) { backPage();}        // 이전 페이지로
-        else if(v.getId() == R.id.ib_nextStep) { nextPage(); }  // 다음 페이지로
+        if(v.getId() == R.id.ib_backStep) {
+            backPage();     // 이전 페이지로
+            stopSpeech();
+        }
+        else if(v.getId() == R.id.ib_nextStep) {
+            nextPage();     // 다음 페이지로
+            stopSpeech();
+        }
         else if(v.getId() == R.id.ib_stopReading) { // 그만 읽기
             if (System.currentTimeMillis() - backPressedTime >= 2000) {
                 backPressedTime = System.currentTimeMillis();
@@ -127,6 +131,7 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
         }
         else if(v.getId() == R.id.ib_play) {
             readCurrentPage(); // 현재 페이지 읽기
+            stopService(new Intent(this, MusicService.class));
             play.setVisibility(View.INVISIBLE); // play 버튼 숨기기
             resume.setVisibility(View.VISIBLE); // resume 버튼 보이기
         }
@@ -135,12 +140,6 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
             play.setVisibility(View.VISIBLE);     // play 버튼 보이기
             resume.setVisibility(View.INVISIBLE); // resume 버튼 숨기기
         }
-        else if(v.getId() == R.id.ib_pause) {
-            stopSpeech();
-            play.setVisibility(View.VISIBLE);     // play 버튼 보이기
-            resume.setVisibility(View.INVISIBLE); // resume 버튼 숨기기
-        }
-
     }
     private void loadImage(String imgName) {
         String[] parts = imgName.split("_");
@@ -257,7 +256,7 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
     }
     // 텍스트를 음성으로 변환
     public void synthesizeSpeech(String text) {
-        String ssmlText = "<speak><prosody rate=\"80%\">" + text + "</prosody></speak>";
+        String ssmlText = "<speak>" + text + "</speak>";
 
         SynthesizeSpeechRequest synthReq = new SynthesizeSpeechRequest()
                 .withText(ssmlText) // SSML 텍스트 사용
@@ -278,7 +277,7 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
 
     // 음성 스트림 재생
     private void playAudioStream(InputStream stream) throws Exception {
-        int sampleRate = 22050;
+        int sampleRate = 16000;
         int bufferSize = AudioTrack.getMinBufferSize(
                 sampleRate,
                 AudioFormat.CHANNEL_OUT_MONO,
@@ -319,6 +318,9 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
 
     // 음성 중단
     public void stopSpeech() {
+        play.setVisibility(View.VISIBLE);     // play 버튼 보이기
+        resume.setVisibility(View.INVISIBLE); // resume 버튼 숨기기
+
         if (audioTrack != null) {
             audioTrack.stop();
             audioTrack.release();
