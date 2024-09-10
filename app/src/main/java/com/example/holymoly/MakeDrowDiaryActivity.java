@@ -198,14 +198,15 @@ public class MakeDrowDiaryActivity extends AppCompatActivity {
 
         // bitmap을 png로 압축 및 저장
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 80, baos);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] data = baos.toByteArray();
 
         // 업로드 시작
         UploadTask uploadTask = imageRef.putBytes(data);
         uploadTask.addOnSuccessListener(taskSnapshot -> {
             Toast.makeText(this, "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
-            Intent intent2 = new Intent(MakeDrowDiaryActivity.this, AlbumDiaryActivity.class);
+            Intent intent2 = new Intent(this, MakeDiaryActivity.class);
+            intent2.putExtra("from", "drow");
             startActivity(intent2);
             finish();
         });

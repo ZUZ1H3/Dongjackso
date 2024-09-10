@@ -1,4 +1,5 @@
 package com.example.holymoly;
+
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -25,10 +26,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView calendar, leftTV, rightTV;
@@ -122,7 +126,7 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
                         currentIndex = filteredDiaries.size() - 2; // 마지막 페이지로 설정
                         displayImages();
                     } else {
-                        Toast.makeText(this, "일기가 없습니다.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "첫 번째 페이지입니다.", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(this, "첫 번째 페이지입니다.", Toast.LENGTH_SHORT).show();
@@ -142,7 +146,7 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
                         currentIndex = 0; // 첫 페이지로 설정
                         displayImages();
                     } else {
-                        Toast.makeText(this, "일기가 없습니다.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "마지막 페이지입니다.", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(this, "마지막 페이지입니다.", Toast.LENGTH_SHORT).show();
@@ -153,7 +157,7 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
                 backPressedTime = System.currentTimeMillis();
                 Toast.makeText(this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
             } else {
-                finish(); // 현재 액티비티 종료
+                finish(); // 2초 이내에 다시 누르면 종료
             }
         } else if (v.getId() == R.id.leftImage) { // 왼쪽 이미지
             // yyyyMMdd 형식의 날짜 가져오기
@@ -161,16 +165,28 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
             Intent intent = new Intent(this, MakeDiaryActivity.class);
             intent.putExtra("date", date);
             startActivity(intent);
+            finish();
         } else if (v.getId() == R.id.rightImage) { // 오른쪽 이미지
-            // 이미지와 텍스트가 비어있는 경우
-            if (rightTV.getText().toString().isEmpty()) {
+            // 오늘 날짜 가져오기
+            String todayDate = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date());
+            // 현재 인덱스에서 오늘 날짜의 일기 작성 여부 확인
+            String currentDiaryDate = filteredDiaries.get(currentIndex).getDate();
+
+            // 오늘 일기가 작성되지 않은 경우
+            if (todayDate.equals(currentDiaryDate) && leftTV.getText().toString().isEmpty()) {
+                Toast.makeText(this, "오늘 일기를 작성하세요.", Toast.LENGTH_SHORT).show();
+            }
+            // 일기가 작성된 경우
+            else if (rightTV.getText().toString().isEmpty()) {
                 Toast.makeText(this, "내일 일기를 작성하세요.", Toast.LENGTH_SHORT).show();
-            } else {
+            }
+            else {
                 // yyyyMMdd 형식의 날짜 가져오기
                 String date = filteredDiaries.get(currentIndex + 1).getDate();
                 Intent intent = new Intent(this, MakeDiaryActivity.class);
                 intent.putExtra("date", date);
                 startActivity(intent);
+                finish();
             }
         } else if (v.getId() == R.id.calendar) { // 달력 클릭 시 월 변경
             showMonthPickerDialog();

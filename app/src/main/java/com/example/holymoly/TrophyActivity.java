@@ -1,30 +1,18 @@
 package com.example.holymoly;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.auth.api.signin.internal.Storage;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -79,9 +67,9 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
         StorageReference imgRef = storageRef.child("characters/" + user.getUid() + "_1.png");
         // 이미지 로드
         imgRef.getDownloadUrl().addOnSuccessListener(uri -> {
-            if (nickname.getText().toString().equals("새내기 작가")) Glide.with(this).load(uri).into(spot2);     // 새내기 작가일 경우
-            else if(nickname.getText().toString().equals("베테랑 작가")) Glide.with(this).load(uri).into(spot3); // 베테랑 작가일 경우
-            else if(nickname.getText().toString().equals("마스터 작가")) Glide.with(this).load(uri).into(spot3); // 마스터 작가일 경우
+            if (nickname.getText().toString().equals("새내기 작가")) Glide.with(this).load(uri).into(spot2);     // 새내기 작가
+            else if(nickname.getText().toString().equals("베테랑 작가")) Glide.with(this).load(uri).into(spot3); // 베테랑 작가
+            else if(nickname.getText().toString().equals("마스터 작가")) Glide.with(this).load(uri).into(spot4); // 마스터 작가
             else Glide.with(this).load(uri).into(spot1); // 기본적으로 spot1에 캐릭터 위치
         });
 
@@ -108,6 +96,30 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
             Intent intent = new Intent(this, SettingActivity.class);
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        loadUserInfo(profile, name, nickname); // 미니 프로필 불러오기
+        loadChangeImage();
+    }
+
+    private void loadChangeImage() {
+        // 이미지 로드 전에 기존 이미지를 지우기
+        Glide.with(this).clear(spot1);
+        Glide.with(this).clear(spot2);
+        Glide.with(this).clear(spot3);
+        Glide.with(this).clear(spot4);
+
+        StorageReference imgRef = storageRef.child("characters/" + user.getUid() + "_1.png");
+        imgRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            if (nickname.getText().toString().equals("새내기 작가")) Glide.with(this).load(uri).into(spot2);     // 새내기 작가
+            else if(nickname.getText().toString().equals("베테랑 작가")) Glide.with(this).load(uri).into(spot3); // 베테랑 작가
+            else if(nickname.getText().toString().equals("마스터 작가")) Glide.with(this).load(uri).into(spot4); // 마스터 작가
+            else Glide.with(this).load(uri).into(spot1); // 기본적으로 spot1에 캐릭터 위치
+        });
     }
 
     // 배열에서 값을 확인

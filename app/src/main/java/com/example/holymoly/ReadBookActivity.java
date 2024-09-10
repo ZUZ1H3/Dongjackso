@@ -8,19 +8,13 @@ import android.media.AudioTrack;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.amazonaws.auth.CognitoCachingCredentialsProvider;
 import com.amazonaws.regions.Regions;
@@ -31,14 +25,11 @@ import com.amazonaws.services.polly.model.SynthesizeSpeechRequest;
 import com.amazonaws.services.polly.model.SynthesizeSpeechResult;
 import com.amazonaws.services.polly.model.VoiceId;
 import com.bumptech.glide.Glide;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ReadBookActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView storyTextView, pageTextView;
@@ -260,11 +251,9 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
     }
     // 텍스트를 음성으로 변환
     public void synthesizeSpeech(String text) {
-        String ssmlText = "<speak>" + text + "</speak>";
-
         SynthesizeSpeechRequest synthReq = new SynthesizeSpeechRequest()
-                .withText(ssmlText) // SSML 텍스트 사용
-                .withTextType("ssml") // 텍스트 타입을 SSML로 설정
+                .withText(text) // SSML 텍스트 사용
+                .withTextType("text") // 텍스트 타입을 SSML로 설정
                 .withVoiceId(VoiceId.Seoyeon)
                 .withOutputFormat(OutputFormat.Pcm);
 
