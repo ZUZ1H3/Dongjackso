@@ -20,7 +20,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.HolyMoly"
         tools:targetApi="31">
-
+        <activity
+            android:name=".DrawStoryAlone"
+            android:exported="true" />
+        <activity
+            android:name=".StoryWorldActivity"
+            android:exported="true" />
         <activity
             android:name=".MakeStoryAloneActivity"
             android:exported="true" />
