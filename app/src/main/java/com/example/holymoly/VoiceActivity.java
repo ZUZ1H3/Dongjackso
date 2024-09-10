@@ -161,6 +161,7 @@ public class VoiceActivity extends AppCompatActivity {
         @Override
         public void onEvent(int eventType, Bundle params) {}
     };
+
     public void sound() {
         Intent intent = new Intent(this, SoundService.class);
         startService(intent);

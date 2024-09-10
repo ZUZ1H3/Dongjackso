@@ -153,13 +153,33 @@
             android:layout_gravity="center"
             android:hint="여기에 동화를 작성하세요"
             android:background="@null"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.792"
-            app:layout_constraintVertical_bias="0.5"
-            android:visibility="visible"/>
+            android:visibility="invisible"/>
+    </ScrollView>
+
+    <ScrollView
+        android:id="@+id/sv_voice"
+        android:layout_width="400dp"
+        android:layout_height="450dp"
+        android:contentDescription="이야기"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.792"
+        app:layout_constraintVertical_bias="0.5" >
+    <TextView
+        android:id="@+id/tv_voice_script"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/hakgyoansim"
+        android:textSize="30dp"
+        android:lineSpacingExtra="25dp"
+        android:padding="20dp"
+        android:layout_gravity="center"
+        android:hint="여기에 동화가 작성돼요."
+        android:textColorHint="@color/black"
+        android:background="@null"
+        android:visibility="invisible" />
     </ScrollView>
 
     <ImageView
@@ -173,6 +193,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.25"
         app:layout_constraintVertical_bias="0.55"
+        android:visibility="invisible" />
+
+    <ImageButton
+        android:id="@+id/ib_mic_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_mini_ok"
+        android:backgroundTint="#0000"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.44"
+        app:layout_constraintVertical_bias="0.84"
         android:visibility="invisible" />
 
     <com.example.holymoly.StrokeText
@@ -252,7 +286,7 @@
         app:layout_constraintVertical_bias="0.367"
         app:flexWrap="wrap"
         app:alignItems="flex_start"
-        android:visibility="gone" >
+        android:visibility="visible" >
     </com.google.android.flexbox.FlexboxLayout>
 
     <ImageButton

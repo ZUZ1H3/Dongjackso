@@ -1,30 +1,45 @@
 package com.example.holymoly;
 
+import android.Manifest;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
+import android.speech.RecognitionListener;
+import android.speech.SpeechRecognizer;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.google.android.flexbox.FlexboxLayout;
 
-public class MakeStoryAloneActivity extends AppCompatActivity {
+import java.util.ArrayList;
 
-    ImageView Mic, alertIc, scriptBg, touch;
-    ImageButton before, next, stop, again, create;
-    TextView howabout, alertTxt, scriptTxt;
-    RadioButton bookmark_AI, bookmark_Mic, bookmark_OK, bookmark_write;
-    EditText story_txt;
-    FlexboxLayout keywordsLayout;
+public class MakeStoryAloneActivity extends AppCompatActivity {
+    private Gemini gemini;
+    private SpeechRecognizer mRecognizer;
+    private Typeface typeface;
+    private StringBuilder recognizedText = new StringBuilder();
+
+    private ImageView Mic, alertIc, scriptBg, touch;
+    private ImageButton before, next, stop, again, create, micStop;
+    private TextView howabout, alertTxt, scriptTxt, voiceTxt;
+    private RadioButton bookmark_AI, bookmark_Mic, bookmark_OK, bookmark_write;
+    private EditText story_txt;
+    private FlexboxLayout keywordsLayout;
+
+    private final int PERMISSION = 1;
+    private ArrayList<String> selectedKeywords = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +47,61 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_make_story_alone);
 
+        initializeUI();
+        initializePermissions();
+
+        bookmark_write.setOnClickListener(view -> {
+            sound();
+            setButtonVisibility(View.VISIBLE, View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
+        });
+
+        bookmark_AI.setOnClickListener(view -> {
+            sound();
+            setButtonVisibility(View.INVISIBLE, View.VISIBLE, View.VISIBLE, View.VISIBLE, View.INVISIBLE);
+            requestKeywordsFromGemini();
+        });
+
+        bookmark_Mic.setOnClickListener(view -> {
+            sound();
+            setButtonVisibility(View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.VISIBLE);
+        });
+
+        bookmark_OK.setOnClickListener(view -> {
+            sound();
+            Intent intent = new Intent(MakeStoryAloneActivity.this, HomeActivity.class);
+            startActivity(intent);
+        });
+
+        create.setOnClickListener(view -> {
+            sound();
+            if (!selectedKeywords.isEmpty()) {
+                requestStoryFromGemini(selectedKeywords);
+            } else {
+                Toast.makeText(MakeStoryAloneActivity.this, "키워드를 선택해주세요.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        Mic.setOnClickListener(v -> {
+            sound();
+            startVoiceRecognition();
+        });
+
+        micStop.setOnClickListener(v -> {
+            sound();
+            stopVoiceRecognition();
+        });
+
+        before.setOnClickListener(v -> {
+            sound();
+            
+        });
+
+        next.setOnClickListener(v -> {
+            sound();
+        });
+    }
+
+    private void initializeUI() {
         bookmark_write = findViewById(R.id.rb_bookmark_write);
         bookmark_AI = findViewById(R.id.rb_bookmark_ai);
         bookmark_Mic = findViewById(R.id.rb_bookmark_mic);
@@ -50,98 +120,158 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         scriptTxt = findViewById(R.id.tv_create_txt);
         keywordsLayout = findViewById(R.id.fl_keywords);
         touch = findViewById(R.id.iv_touch);
+        voiceTxt = findViewById(R.id.tv_voice_script);
+        micStop = findViewById(R.id.ib_mic_stop);
+    }
 
-        bookmark_write.setOnClickListener(new View.OnClickListener() {
+    private void initializePermissions() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            ActivityCompat.requestPermissions(this, new String[]{
+                    Manifest.permission.INTERNET,
+                    Manifest.permission.RECORD_AUDIO}, PERMISSION);
+        }
+    }
+
+    private void setButtonVisibility(int writeVisibility, int aiVisibility, int createVisibility, int keywordsVisibility, int micVisibility) {
+        // Write 모드
+        story_txt.setVisibility(writeVisibility);
+        touch.setVisibility(writeVisibility);
+        // AI 모드
+        howabout.setVisibility(aiVisibility);
+        alertIc.setVisibility(aiVisibility);
+        alertTxt.setVisibility(aiVisibility);
+        again.setVisibility(aiVisibility);
+        create.setVisibility(createVisibility);
+        keywordsLayout.setVisibility(keywordsVisibility);
+        // Mic 모드
+        Mic.setVisibility(micVisibility);
+        voiceTxt.setVisibility(micVisibility);
+        micStop.setVisibility(micVisibility);
+    }
+
+    private void startVoiceRecognition() {
+        mRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        mRecognizer.setRecognitionListener(new RecognitionListener() {
             @Override
-            public void onClick(View view) {
-                sound();
-                // ai
-                howabout.setVisibility(View.INVISIBLE);
-                alertIc.setVisibility(View.INVISIBLE);
-                alertTxt.setVisibility(View.INVISIBLE);
-                howabout.setVisibility(View.INVISIBLE);
-                again.setVisibility(View.INVISIBLE);
-                create.setVisibility(View.INVISIBLE);
-                keywordsLayout.setVisibility(View.INVISIBLE);
-                // ai-create
-                scriptBg.setVisibility(View.INVISIBLE);
-                scriptTxt.setVisibility(View.INVISIBLE);
-                // mic
-                Mic.setVisibility(View.INVISIBLE);
-                // write
-                touch.setVisibility(View.VISIBLE);
-                story_txt.setVisibility(View.VISIBLE);
+            public void onReadyForSpeech(Bundle params) {
+                Toast.makeText(getApplicationContext(), "음성인식을 시작합니다.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onBeginningOfSpeech() { }
+            @Override
+            public void onRmsChanged(float rmsdB) { }
+            @Override
+            public void onBufferReceived(byte[] buffer) { }
+            @Override
+            public void onEndOfSpeech() { }
+            @Override
+            public void onPartialResults(Bundle partialResults) { }
+            @Override
+            public void onEvent(int eventType, Bundle params) { }
+
+            @Override
+            public void onError(int error) {
+                String message = "에러 발생: " + getErrorText(error);
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResults(Bundle results) {
+                ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                if (matches != null) {
+                    for (String match : matches) {
+                        recognizedText.append(match).append(" ");
+                    }
+                    voiceTxt.setText(recognizedText.toString());
+                }
             }
         });
+        mRecognizer.startListening(new Intent());
+    }
 
-        bookmark_AI.setOnClickListener(new View.OnClickListener() {
+    private void stopVoiceRecognition() {
+        if (mRecognizer != null) {
+            mRecognizer.stopListening();
+            mRecognizer.destroy();
+            mRecognizer = null;
+            voiceTxt.setText(recognizedText.toString());
+        }
+    }
+
+    private String getErrorText(int errorCode) {
+        switch (errorCode) {
+            case SpeechRecognizer.ERROR_AUDIO: return "오디오 에러";
+            case SpeechRecognizer.ERROR_CLIENT: return "클라이언트 에러";
+            case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS: return "퍼미션 없음";
+            case SpeechRecognizer.ERROR_NETWORK: return "네트워크 에러";
+            case SpeechRecognizer.ERROR_NO_MATCH: return "일치하는 결과 없음";
+            default: return "알 수 없는 에러";
+        }
+    }
+
+    private void requestKeywordsFromGemini() {
+        String prompt = "Generate 6 creative and engaging keywords for a children's story theme. Provide them as a comma-separated list.";
+        gemini.generateText(prompt, new Gemini.Callback() {
             @Override
-            public void onClick(View v) {
-                sound();
-                // write
-                touch.setVisibility(View.INVISIBLE);
-                story_txt.setVisibility(View.INVISIBLE);
-                // mic
-                Mic.setVisibility(View.INVISIBLE);
-                // ai
-                howabout.setVisibility(View.VISIBLE);
-                alertIc.setVisibility(View.VISIBLE);
-                alertTxt.setVisibility(View.VISIBLE);
-                howabout.setVisibility(View.VISIBLE);
-                again.setVisibility(View.VISIBLE);
-                create.setVisibility(View.VISIBLE);
-                keywordsLayout.setVisibility(View.VISIBLE);
+            public void onSuccess(String text) {
+                runOnUiThread(() -> displayKeywords(text));
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                runOnUiThread(() -> Toast.makeText(MakeStoryAloneActivity.this, "키워드 생성 실패: " + t.getMessage(), Toast.LENGTH_SHORT).show());
             }
         });
+    }
 
-        bookmark_Mic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sound();
-                // write
-                touch.setVisibility(View.INVISIBLE);
-                story_txt.setVisibility(View.INVISIBLE);
-                // ai
-                howabout.setVisibility(View.INVISIBLE);
-                alertIc.setVisibility(View.INVISIBLE);
-                alertTxt.setVisibility(View.INVISIBLE);
-                howabout.setVisibility(View.INVISIBLE);
-                again.setVisibility(View.INVISIBLE);
-                create.setVisibility(View.INVISIBLE);
-                keywordsLayout.setVisibility(View.INVISIBLE);
-                // ai-create
-                scriptBg.setVisibility(View.INVISIBLE);
-                scriptTxt.setVisibility(View.INVISIBLE);
-                //mic
-                Mic.setVisibility(View.VISIBLE);
+    private void displayKeywords(String keywordText) {
+        keywordsLayout.removeAllViews();
+        selectedKeywords.clear();
+
+        String[] keywords = keywordText.split(",");
+        for (String keyword : keywords) {
+            TextView keywordView = createKeywordTextView(keyword.trim());
+            keywordsLayout.addView(keywordView);
+        }
+    }
+
+    private TextView createKeywordTextView(String keyword) {
+        TextView keywordView = new TextView(this);
+        keywordView.setText(keyword);
+        keywordView.setPadding(5, 5, 5, 5);
+        keywordView.setTextColor(Color.parseColor("#9F9F9F"));
+        keywordView.setTextSize(16);
+        keywordView.setTypeface(ResourcesCompat.getFont(this, R.font.ssurround));
+
+        keywordView.setOnClickListener(v -> {
+            if (selectedKeywords.contains(keyword)) {
+                selectedKeywords.remove(keyword);
+                keywordView.setTextColor(Color.parseColor("#9F9F9F"));
+            } else {
+                selectedKeywords.add(keyword);
+                keywordView.setTextColor(Color.parseColor("#639699"));
             }
         });
+        return keywordView;
+    }
 
-        bookmark_OK.setOnClickListener(new View.OnClickListener() {
+    private void requestStoryFromGemini(ArrayList<String> selectedKeywords) {
+        String prompt = "Using these keywords: " + String.join(", ", selectedKeywords) + ", write a creative 3-sentence story for children.";
+        gemini.generateText(prompt, new Gemini.Callback() {
             @Override
-            public void onClick(View v) {
-                sound();
+            public void onSuccess(String text) {
+                runOnUiThread(() -> {
+                    scriptTxt.setVisibility(View.VISIBLE);
+                    scriptTxt.setText(text);
+                });
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                runOnUiThread(() -> Toast.makeText(MakeStoryAloneActivity.this, "Failed to generate story: " + t.getMessage(), Toast.LENGTH_SHORT).show());
             }
         });
-
-        create.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sound();
-                // create
-                scriptBg.setVisibility(View.VISIBLE);
-                scriptTxt.setVisibility(View.VISIBLE);
-            }
-        });
-
-        stop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sound();
-
-            }
-        });
-
     }
 
     // 효과음
