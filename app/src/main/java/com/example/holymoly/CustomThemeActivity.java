@@ -1,6 +1,7 @@
 package com.example.holymoly;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -19,10 +20,15 @@ public class CustomThemeActivity extends AppCompatActivity implements UserInfoLo
 
     private UserInfo userInfo = new UserInfo();
 
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_custom_theme);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         editTextTheme = findViewById(R.id.customTheme);
         btnOk = findViewById(R.id.ib_nextStep);
@@ -52,5 +58,13 @@ public class CustomThemeActivity extends AppCompatActivity implements UserInfoLo
     @Override
     public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
         userInfo.loadUserInfo(profile, name, nickname);
+    }
+
+    // 효과음
+    public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
+        Intent intent = new Intent(this, SoundService.class);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

@@ -1,6 +1,7 @@
 package com.example.holymoly;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -17,10 +18,15 @@ public class WordGameReadyActivity extends AppCompatActivity {
     private TextView AITextView;
     private Gemini gemini;
 
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word_game_ready);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         // EditText 배열 초기화
         editTexts = new EditText[]{
@@ -98,4 +104,11 @@ public class WordGameReadyActivity extends AppCompatActivity {
         });
     }
 
+    // 효과음
+    public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
+        Intent intent = new Intent(this, SoundService.class);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
+    }
 }

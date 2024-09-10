@@ -1,6 +1,7 @@
 package com.example.holymoly;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -35,12 +36,17 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
     private ImageButton back, next, stop;
     private long backPressedTime = 0;
 
+    /* DB */
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef = storage.getReference();
     private String uid = user.getUid();
+
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
 
     private List<Diary> diaries = new ArrayList<>();
     private List<Diary> filteredDiaries = new ArrayList<>();
@@ -51,6 +57,7 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album_diary);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         // UI 요소 초기화
         calendar = findViewById(R.id.calendar);
@@ -368,7 +375,9 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
 
     // 효과음
     public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }
