@@ -3,6 +3,7 @@ package com.example.holymoly;
 import static java.lang.Math.abs;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
@@ -53,15 +54,21 @@ public class StartPuzzleActivity extends AppCompatActivity implements View.OnCli
     private Handler handler = new Handler();
     private int countdownTime = 5; // 카운트다운 초
 
+    /* DB */
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String uid = user.getUid();  // 사용자의 uid
 
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_puzzle);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         layout = findViewById(R.id.layout);
         imageView = findViewById(R.id.imageView);
@@ -400,7 +407,9 @@ public class StartPuzzleActivity extends AppCompatActivity implements View.OnCli
 
     // 효과음
     public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

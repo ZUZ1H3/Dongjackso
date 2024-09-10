@@ -40,6 +40,10 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
     private StorageReference storageRef = storage.getReference();
     private String uid = user.getUid(); // 현재 접속한 사용자
 
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
+
     //완료된 동화 테마 개수
     private int seaTrophyCount = 0, forestTrophyCount = 0,
                 castleTrophyCount = 0, villageTrophyCount = 0,
@@ -77,6 +81,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_achieve);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         name = findViewById(R.id.mini_name);
         nickname = findViewById(R.id.mini_nickname);
@@ -703,9 +708,12 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
     public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
         userInfo.loadUserInfo(profile, name, nickname);
     }
+
     // 효과음
     public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

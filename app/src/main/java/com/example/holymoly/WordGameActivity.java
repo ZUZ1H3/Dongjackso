@@ -1,6 +1,7 @@
 package com.example.holymoly;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -54,10 +55,15 @@ public class WordGameActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private int userWinCount = 0;
 
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word_game); // 레이아웃 설정
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
         gemini = new Gemini(); // Gemini API 객체 초기화
 
         // 사용자 프로필 및 정보 표시용 TextView 초기화
@@ -444,8 +450,11 @@ public class WordGameActivity extends AppCompatActivity {
         userInfo.loadUserInfo(name, profile);
     }
 
+    // 효과음
     public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

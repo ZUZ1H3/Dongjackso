@@ -25,10 +25,15 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
     private static final String PREFS_NAME = "UserPrefs";
     private static final String KEY_USER_NAME = "userPref";
 
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         start = (ImageButton) findViewById(R.id.btn_good);
         nope = (ImageButton) findViewById(R.id.nope);
@@ -85,9 +90,12 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                     }
                 });
     }
+
     // 효과음
     public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

@@ -1,6 +1,7 @@
 package com.example.holymoly;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -47,10 +48,15 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
     private Spinner spinnerNav;
     private PuzzleAdapter puzzleAdapter;
 
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_puzzle);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         btnhome = findViewById(R.id.ib_homebutton);
         btntrophy = findViewById(R.id.ib_trophy);
@@ -144,7 +150,7 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
 
         for (String theme : items) {
             // "전체"와 "내 사진"은 Storage에 없는 폴더이므로 제외
-            if (!theme.equals("전체") && !theme.equals("내 사진")) {
+            if (!theme.equals("전체")) {
                 StorageReference themeRef = storageRef.child("background").child(theme);
 
                 themeRef.listAll().addOnSuccessListener(listResult -> {
@@ -195,7 +201,9 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
 
     // 효과음
     public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

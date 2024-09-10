@@ -1,6 +1,7 @@
 package com.example.holymoly;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -54,10 +55,16 @@ public class MakeDiaryActivity extends AppCompatActivity {
     private StorageReference storageRef = storage.getReference();
     private String uid = user.getUid();
 
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_diary);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
+
         Intent intent = getIntent();
         story = intent.getStringExtra("story");
         name = intent.getStringExtra("name");
@@ -249,9 +256,12 @@ public class MakeDiaryActivity extends AppCompatActivity {
                     }
                 });
     }
+
     // 효과음
     public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

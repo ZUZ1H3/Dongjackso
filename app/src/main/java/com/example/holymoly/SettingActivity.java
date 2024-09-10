@@ -44,7 +44,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private ArrayAdapter<String> adapter;
 
     private SharedPreferences pref;
-    private boolean isBgmOn;
+    private boolean isBgmOn, isSoundOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +73,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
         pref = getSharedPreferences("music", MODE_PRIVATE);
         isBgmOn = pref.getBoolean("on&off", true); // 기본값 켜짐
+        isSoundOn = pref.getBoolean("on&off2", true); // 기본값 켜짐
 
         // 사용자 기존 정보 로딩
         loadUserInfo();
@@ -102,10 +103,13 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         rb_sound_on = findViewById(R.id.rb_sound_on);
         rb_sound_off = findViewById(R.id.rb_sound_off);
 
-        // 라디오 버튼 기본 선택값 설정
+        // 배경음 라디오 버튼 기본 선택값 설정
         rb_bgm_on.setChecked(isBgmOn);
         rb_bgm_off.setChecked(!isBgmOn);
-        rb_sound_on.setChecked(true);
+
+        // 효과음 라디오 버튼 기본 선택값 설정
+        rb_sound_on.setChecked(isSoundOn);
+        rb_sound_off.setChecked(!isSoundOn);
 
         // 배경 음악 라디오 그룹 리스너 설정
         rgBgm.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -122,6 +126,15 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         if (isBgmOn) {
             startService(new Intent(this, MusicService.class));
         }
+
+        // 효과음 라디오 그룹 리스너 설정
+        rgSound.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checked) {
+                if (checked == R.id.rb_sound_on) isSoundOn = true;
+                else isSoundOn = false;
+            }
+        });
     }
 
     @Override
@@ -165,8 +178,12 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
         // 설정 저장
         SharedPreferences.Editor editor = getSharedPreferences("music", MODE_PRIVATE).edit();
+        // 배경음
         boolean isBgmOn = rb_bgm_on.isChecked();
         editor.putBoolean("on&off", isBgmOn);
+        // 효과음
+        boolean isSoundOn = rb_sound_on.isChecked();
+        editor.putBoolean("on&off2", isSoundOn);
         editor.apply();
     }
 
@@ -188,9 +205,9 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                             spinnerPosition = 1;
                             genderSpinner.setSelection(spinnerPosition);
                         }
-                        else {
+                        else { // 여자일 때
                             spinnerPosition = 2;
-                                    genderSpinner.setSelection(spinnerPosition);
+                            genderSpinner.setSelection(spinnerPosition);
                         }
                     }
                 });
@@ -212,8 +229,10 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         return Bitmap.createBitmap(bm, cropW, cropH, newWidth, newHeight);
     }
 
+    // 효과음
     public void sound() {
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

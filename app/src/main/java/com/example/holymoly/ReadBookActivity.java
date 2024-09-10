@@ -1,6 +1,7 @@
 package com.example.holymoly;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
@@ -65,14 +66,17 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
     private AmazonPolly pollyClient;
 
     private AudioTrack audioTrack;      // audioTrack 변수
-    private boolean isPaused = false;   // 음성이 멈췄는지 여부 확인
-    private long pausePosition = 0;     // 멈춘 위치 저장
     private InputStream audioStream;    // 음성 스트림 저장
+
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_readbook);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         // UI 요소 초기화
         storyTextView = findViewById(R.id.tv_pageText);
@@ -321,7 +325,9 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
 
     // 효과음
     public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

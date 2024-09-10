@@ -2,6 +2,7 @@ package com.example.holymoly;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -48,10 +49,15 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
     private String from;
     private String[] activities = {"Home2Activity", "SelectGameActivity", "PuzzleActivity", "SelectPuzzleActivity"};
 
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trophy);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         name = findViewById(R.id.mini_name);
         nickname = findViewById(R.id.mini_nickname);
@@ -119,8 +125,11 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
         userInfo.loadUserInfo(profile, name, nickname);
     }
 
+    // 효과음
     public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

@@ -5,6 +5,7 @@ import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
@@ -33,10 +34,15 @@ public class VoiceActivity extends AppCompatActivity {
     final int PERMISSION = 1;
     private StringBuilder recognizedText = new StringBuilder();
 
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_voice);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         if (Build.VERSION.SDK_INT >= 23) {
             // 퍼미션 체크
@@ -161,8 +167,12 @@ public class VoiceActivity extends AppCompatActivity {
         @Override
         public void onEvent(int eventType, Bundle params) {}
     };
+
+    // 효과음
     public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

@@ -1,6 +1,7 @@
 package com.example.holymoly;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -43,9 +44,14 @@ public class DiaryActivity extends AppCompatActivity {
     private String story = ""; // 사용자가 작성한 메시지를 저장할 변수
     private boolean isConversationEnded = false; // 대화 종료 여부를 체크하는 플래그
 
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diary);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         recyclerView = findViewById(R.id.recyclerView);
         userInput = findViewById(R.id.userInput);
@@ -377,7 +383,9 @@ public class DiaryActivity extends AppCompatActivity {
 
     // 효과음
     public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }
