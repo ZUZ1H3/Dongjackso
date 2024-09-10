@@ -97,16 +97,12 @@ public class VoiceActivity extends AppCompatActivity {
         public void onReadyForSpeech(Bundle params) {
             Toast.makeText(getApplicationContext(), "음성인식을 시작합니다.", Toast.LENGTH_SHORT).show();
         }
-
         @Override
         public void onBeginningOfSpeech() {}
-
         @Override
         public void onRmsChanged(float rmsdB) {}
-
         @Override
         public void onBufferReceived(byte[] buffer) {}
-
         @Override
         public void onEndOfSpeech() {}
 
