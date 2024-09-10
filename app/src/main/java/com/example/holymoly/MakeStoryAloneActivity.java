@@ -41,8 +41,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
 
     private final int PERMISSION = 1;
     private ArrayList<String> selectedKeywords = new ArrayList<>();
-
-    /* 효과음 */
+    
     private SharedPreferences pref;
     private boolean isSoundOn;
 
@@ -53,31 +52,38 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         setContentView(R.layout.activity_make_story_alone);
         pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
+        gemini = new Gemini();
+
         initializeUI();
         initializePermissions();
 
+        // 쓰기 모드
         bookmark_write.setOnClickListener(view -> {
             sound();
             setButtonVisibility(View.VISIBLE, View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
         });
 
+        // AI랑 쓰기 모드
         bookmark_AI.setOnClickListener(view -> {
             sound();
             setButtonVisibility(View.INVISIBLE, View.VISIBLE, View.VISIBLE, View.VISIBLE, View.INVISIBLE);
             requestKeywordsFromGemini();
         });
 
+        // 음성으로 쓰기 모드
         bookmark_Mic.setOnClickListener(view -> {
             sound();
             setButtonVisibility(View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.VISIBLE);
         });
 
+        // 완성 후 저장 모드(임시임.)
         bookmark_OK.setOnClickListener(view -> {
             sound();
             Intent intent = new Intent(MakeStoryAloneActivity.this, HomeActivity.class);
             startActivity(intent);
         });
 
+        // 키워드 가지고 AI가 동화 생성하기 버튼
         create.setOnClickListener(view -> {
             sound();
             if (!selectedKeywords.isEmpty()) {
@@ -87,21 +93,25 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             }
         });
 
+        // 음성 인식 시작 버튼
         Mic.setOnClickListener(v -> {
             sound();
             startVoiceRecognition();
         });
 
+        // 음성 인식 멈춤 버튼
         micStop.setOnClickListener(v -> {
             sound();
             stopVoiceRecognition();
         });
 
+        // 이전 장 버튼
         before.setOnClickListener(v -> {
             sound();
             
         });
 
+        // 이후 장 버튼
         next.setOnClickListener(v -> {
             sound();
         });
@@ -130,6 +140,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         micStop = findViewById(R.id.ib_mic_stop);
     }
 
+    // 음성 퍼미션
     private void initializePermissions() {
         if (Build.VERSION.SDK_INT >= 23) {
             ActivityCompat.requestPermissions(this, new String[]{
@@ -138,6 +149,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         }
     }
 
+    // 모드마다 아이콘 VISIBLE 설정
     private void setButtonVisibility(int writeVisibility, int aiVisibility, int createVisibility, int keywordsVisibility, int micVisibility) {
         // Write 모드
         story_txt.setVisibility(writeVisibility);
@@ -155,6 +167,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         micStop.setVisibility(micVisibility);
     }
 
+    // 음성 인식 시작
     private void startVoiceRecognition() {
         mRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         mRecognizer.setRecognitionListener(new RecognitionListener() {
@@ -196,6 +209,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         mRecognizer.startListening(new Intent());
     }
 
+    // 음성 인식 멈춤
     private void stopVoiceRecognition() {
         if (mRecognizer != null) {
             mRecognizer.stopListening();
@@ -205,6 +219,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         }
     }
 
+    // 음성 인식 오류(신경 안 써도 됨)
     private String getErrorText(int errorCode) {
         switch (errorCode) {
             case SpeechRecognizer.ERROR_AUDIO: return "오디오 에러";
@@ -216,8 +231,9 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         }
     }
 
+    // AI한테 키워드 뽑아달라고 요청
     private void requestKeywordsFromGemini() {
-        String prompt = "Generate 6 creative and engaging keywords for a children's story theme. Provide them as a comma-separated list.";
+        String prompt = "동화 주제에 대한 창의적이고 매력적인 키워드 6개를 생성해주세요. '";
         gemini.generateText(prompt, new Gemini.Callback() {
             @Override
             public void onSuccess(String text) {
@@ -231,6 +247,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         });
     }
 
+    // 키워드 체크박스 생성
     private void displayKeywords(String keywordText) {
         keywordsLayout.removeAllViews();
         selectedKeywords.clear();
@@ -242,6 +259,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         }
     }
 
+    // 키워드 배치
     private TextView createKeywordTextView(String keyword) {
         TextView keywordView = new TextView(this);
         keywordView.setText(keyword);
@@ -262,6 +280,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         return keywordView;
     }
 
+    // 키워드 토대로 짧은 이야기 생성 요청
     private void requestStoryFromGemini(ArrayList<String> selectedKeywords) {
         String prompt = "Using these keywords: " + String.join(", ", selectedKeywords) + ", write a creative 3-sentence story for children.";
         gemini.generateText(prompt, new Gemini.Callback() {
