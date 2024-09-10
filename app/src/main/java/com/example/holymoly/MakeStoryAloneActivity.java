@@ -34,7 +34,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
 
     private ImageView Mic, alertIc, scriptBg, touch;
     private ImageButton before, next, stop, again, create, micStop;
-    private TextView howabout, alertTxt, scriptTxt, voiceTxt;
+    private TextView howabout, alertTxt, scriptTxt;
     private RadioButton bookmark_AI, bookmark_Mic, bookmark_OK, bookmark_write;
     private EditText story_txt;
     private FlexboxLayout keywordsLayout;
@@ -67,7 +67,9 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         bookmark_AI.setOnClickListener(view -> {
             sound();
             setButtonVisibility(View.INVISIBLE, View.VISIBLE, View.VISIBLE, View.VISIBLE, View.INVISIBLE);
-            requestKeywordsFromGemini();
+            if (keywordsLayout.getChildCount() == 0) {
+                requestKeywordsFromGemini();
+            }
         });
 
         // 음성으로 쓰기 모드
@@ -136,7 +138,6 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         scriptTxt = findViewById(R.id.tv_create_txt);
         keywordsLayout = findViewById(R.id.fl_keywords);
         touch = findViewById(R.id.iv_touch);
-        voiceTxt = findViewById(R.id.tv_voice_script);
         micStop = findViewById(R.id.ib_mic_stop);
     }
 
@@ -158,12 +159,12 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         howabout.setVisibility(aiVisibility);
         alertIc.setVisibility(aiVisibility);
         alertTxt.setVisibility(aiVisibility);
+        scriptBg.setVisibility(aiVisibility);
         again.setVisibility(aiVisibility);
         create.setVisibility(createVisibility);
         keywordsLayout.setVisibility(keywordsVisibility);
         // Mic 모드
         Mic.setVisibility(micVisibility);
-        voiceTxt.setVisibility(micVisibility);
         micStop.setVisibility(micVisibility);
     }
 
@@ -202,7 +203,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
                     for (String match : matches) {
                         recognizedText.append(match).append(" ");
                     }
-                    voiceTxt.setText(recognizedText.toString());
+                    story_txt.setText(recognizedText.toString());
                 }
             }
         });
@@ -215,7 +216,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             mRecognizer.stopListening();
             mRecognizer.destroy();
             mRecognizer = null;
-            voiceTxt.setText(recognizedText.toString());
+            story_txt.setText(recognizedText.toString());
         }
     }
 
@@ -233,7 +234,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
 
     // AI한테 키워드 뽑아달라고 요청
     private void requestKeywordsFromGemini() {
-        String prompt = "동화 주제에 대한 창의적이고 매력적인 키워드 6개를 생성해주세요. '";
+        String prompt = "동화 주제에 대한 키워드 6개를 생성해주세요. 단답형으로 작성해주세요. 단어와 단어 사이에 ','로 연결해주세요.'";
         gemini.generateText(prompt, new Gemini.Callback() {
             @Override
             public void onSuccess(String text) {
@@ -253,36 +254,43 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         selectedKeywords.clear();
 
         String[] keywords = keywordText.split(",");
+
+        // 각 키워드마다 커스텀 체크박스를 생성하여 레이아웃에 추가합니다.
         for (String keyword : keywords) {
-            TextView keywordView = createKeywordTextView(keyword.trim());
-            keywordsLayout.addView(keywordView);
+            createKeywordTextView(keyword.trim());
         }
     }
 
     // 키워드 배치
-    private TextView createKeywordTextView(String keyword) {
-        TextView keywordView = new TextView(this);
-        keywordView.setText(keyword);
-        keywordView.setPadding(5, 5, 5, 5);
-        keywordView.setTextColor(Color.parseColor("#9F9F9F"));
-        keywordView.setTextSize(16);
-        keywordView.setTypeface(ResourcesCompat.getFont(this, R.font.ssurround));
+    private void createKeywordTextView(String keyword) {
+        // item_checkbox.xml 레이아웃을 인플레이트하여 View로 가져옵니다.
+        View keywordView = getLayoutInflater().inflate(R.layout.item_checkbox, null);
 
+        // 인플레이트된 View에서 TextView를 찾고 키워드를 설정합니다.
+        TextView keywordTextView = keywordView.findViewById(R.id.messageTextView);
+        keywordTextView.setText(keyword);
+
+        // 클릭 리스너를 설정하여 체크 여부를 확인하고 선택된 키워드 리스트를 업데이트합니다.
         keywordView.setOnClickListener(v -> {
             if (selectedKeywords.contains(keyword)) {
                 selectedKeywords.remove(keyword);
-                keywordView.setTextColor(Color.parseColor("#9F9F9F"));
+                keywordTextView.setTextColor(Color.parseColor("#9F9F9F")); // 체크 해제된 경우 회색
+                keywordTextView.setBackgroundResource(R.drawable.checkbox_background); // 배경을 변경
             } else {
                 selectedKeywords.add(keyword);
-                keywordView.setTextColor(Color.parseColor("#639699"));
+                keywordTextView.setTextColor(Color.parseColor("#639699")); // 체크된 경우 검정색
+                keywordTextView.setBackgroundResource(R.drawable.checkbox_background2); // 배경을 변경
+
             }
         });
-        return keywordView;
+
+        // FlexboxLayout에 추가합니다.
+        keywordsLayout.addView(keywordView);
     }
 
     // 키워드 토대로 짧은 이야기 생성 요청
     private void requestStoryFromGemini(ArrayList<String> selectedKeywords) {
-        String prompt = "Using these keywords: " + String.join(", ", selectedKeywords) + ", write a creative 3-sentence story for children.";
+        String prompt = String.join(", ", selectedKeywords) + "키위드를 가지고 동화 도입부 한 줄을 생성해주세요.";
         gemini.generateText(prompt, new Gemini.Callback() {
             @Override
             public void onSuccess(String text) {
