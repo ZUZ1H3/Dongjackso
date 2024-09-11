@@ -2,32 +2,23 @@ package com.example.holymoly;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.text.method.PasswordTransformationMethod;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidUserException;
-import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.AuthResult;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -39,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private CheckBox auto;
 
     private FirebaseAuth mAuth;
-    private SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences, pref;
+    private boolean isBgmOn, isSoundOn;
     private SharedPreferences.Editor editor;
 
     private boolean autoLogin = true; // 체크 버튼 상태
@@ -53,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
-        // "r_state"라는 이름으로 파일생성, MODE_PRIVATE는 자기 앱에서만 사용하도록 설정하는 기본값
         sharedPreferences = getSharedPreferences("r_state", MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
@@ -68,9 +59,11 @@ public class MainActivity extends AppCompatActivity {
         // 자동 로그인 체크 박스 상태 설정
         auto.setChecked(sharedPreferences.getBoolean("autoLogin", false));
 
-        // 액티비티가 시작될 때 MusicService를 시작
-        Intent startIntent = new Intent(this, MusicService.class);
-        startService(startIntent);
+        pref = getSharedPreferences("music", MODE_PRIVATE);
+        isBgmOn = pref.getBoolean("on&off", true);
+        Intent intent = new Intent(this, MusicService.class);
+        if (isBgmOn) startService(intent);  // 브금이 on이면 배경음 재생
+        else stopService(intent);           // 브금이 off 이면 배경음 재생 안 함
 
         // 비밀번호 숨기기 및 표시
         btnToggle.setOnClickListener(new View.OnClickListener() {
@@ -176,7 +169,9 @@ public class MainActivity extends AppCompatActivity {
 
     // 효과음
     public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

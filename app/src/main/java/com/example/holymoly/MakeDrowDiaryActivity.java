@@ -2,6 +2,7 @@ package com.example.holymoly;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -52,10 +53,15 @@ public class MakeDrowDiaryActivity extends AppCompatActivity {
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef = storage.getReference();
 
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
+
         setContentView(R.layout.activity_make_drow_diary);
         rainbow = findViewById(R.id.rainbow); // rainbow 버튼 초기화
         drawView = findViewById(R.id.drawing); // XML에서 정의된 ID로 초기화
@@ -192,16 +198,25 @@ public class MakeDrowDiaryActivity extends AppCompatActivity {
 
         // bitmap을 png로 압축 및 저장
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 80, baos);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] data = baos.toByteArray();
 
         // 업로드 시작
         UploadTask uploadTask = imageRef.putBytes(data);
         uploadTask.addOnSuccessListener(taskSnapshot -> {
             Toast.makeText(this, "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
-            Intent intent2 = new Intent(MakeDrowDiaryActivity.this, AlbumDiaryActivity.class);
+            Intent intent2 = new Intent(this, MakeDiaryActivity.class);
+            intent2.putExtra("from", "drow");
             startActivity(intent2);
             finish();
         });
+    }
+
+    // 효과음
+    public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
+        Intent intent = new Intent(this, SoundService.class);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

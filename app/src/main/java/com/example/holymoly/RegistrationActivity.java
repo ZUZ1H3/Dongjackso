@@ -47,6 +47,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private ImageView ivHair, ivEyesColor, ivClothes, ivFace;
     private boolean isOriginalColor = true;
 
+    /* DB */
     private FirebaseAuth auth;
     private FirebaseUser user;
     private FirebaseFirestore db;
@@ -54,11 +55,15 @@ public class RegistrationActivity extends AppCompatActivity {
     private StorageReference storageRef;
 
     private SharedPreferences sharedPreferences;
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -416,9 +421,12 @@ public class RegistrationActivity extends AppCompatActivity {
                     }
                 });
     }
+
     // 효과음
     public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

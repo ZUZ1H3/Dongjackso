@@ -1,31 +1,18 @@
 package com.example.holymoly;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,17 +43,20 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
     private List<String> allImageUrls = new ArrayList<>();
     private List<String> imageUrls = new ArrayList<>();
 
-    private String[] items = { "전체", "바다", "궁전", "숲", "마을", "우주", "사막", "커스텀", "내 사진" };
+    private String[] items = { "전체", "바다", "궁전", "숲", "마을", "우주", "사막", "커스텀" };
     private RecyclerView recyclerView;
     private Spinner spinnerNav;
     private PuzzleAdapter puzzleAdapter;
 
-    private static final int REQUEST_IMAGE_PICK = 1;
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_puzzle);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         btnhome = findViewById(R.id.ib_homebutton);
         btntrophy = findViewById(R.id.ib_trophy);
@@ -101,13 +91,10 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         spinnerNav.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                sound();
                 selectSection(position);  // 선택된 섹션으로 설정
                 String selectedTheme = items[position];
-                if (selectedTheme.equals("내 사진")) {
-                    openGallery();  // "내 사진" 선택 시 갤러리 열기
-                } else {
-                    filterByTheme(selectedTheme);  // 다른 테마는 필터링
-                }
+                filterByTheme(selectedTheme);  // 테마에 맞게 필터링
             }
 
             @Override
@@ -116,6 +103,7 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
         puzzleAdapter.setOnItemClickListener(imageUrl -> {
+            sound();
             Intent intent = new Intent(this, SelectPuzzleActivity.class);
             intent.putExtra("selectedImage", imageUrl);
             startActivity(intent);
@@ -133,6 +121,7 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         }
         else if(v.getId() == R.id.ib_trophy) {
             Intent intent = new Intent(this, TrophyActivity.class);
+            intent.putExtra("from", "PuzzleActivity");
             startActivity(intent);
         }
         else if(v.getId() == R.id.ib_setting) {
@@ -152,7 +141,6 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
             case 5: secTitle.setText("- 우주 -"); break;
             case 6: secTitle.setText("- 사막 -"); break;
             case 7: secTitle.setText("- 커스텀 -"); break;
-            case 8: secTitle.setText("- 내 사진 -"); break;
         }
     }
 
@@ -162,7 +150,7 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
 
         for (String theme : items) {
             // "전체"와 "내 사진"은 Storage에 없는 폴더이므로 제외
-            if (!theme.equals("전체") && !theme.equals("내 사진")) {
+            if (!theme.equals("전체")) {
                 StorageReference themeRef = storageRef.child("background").child(theme);
 
                 themeRef.listAll().addOnSuccessListener(listResult -> {
@@ -206,24 +194,6 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
         puzzleAdapter.notifyDataSetChanged();
     }
 
-    // 갤러리에서 이미지 선택
-    private void openGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, REQUEST_IMAGE_PICK);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_IMAGE_PICK && resultCode == RESULT_OK && data != null) {
-            Uri selectedImageUri = data.getData();
-            if (selectedImageUri != null) {
-                imageUrls.add(selectedImageUri.toString());
-                puzzleAdapter.notifyDataSetChanged();
-            }
-        }
-    }
-
     @Override
     public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
         userInfo.loadUserInfo(profile, name, nickname);
@@ -231,7 +201,9 @@ public class PuzzleActivity extends AppCompatActivity implements View.OnClickLis
 
     // 효과음
     public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

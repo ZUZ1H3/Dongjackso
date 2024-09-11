@@ -1,15 +1,22 @@
 package com.example.holymoly;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.speech.RecognitionListener;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.*;
 
 import com.google.ai.client.generativeai.GenerativeModel;
@@ -24,11 +31,13 @@ import java.util.*;
 import java.util.concurrent.*;
 
 public class DiaryActivity extends AppCompatActivity {
+    private Intent intent;
+    private SpeechRecognizer mRecognizer;
     private GenerativeModel model;
     private ChatFutures chat;
     private EditText userInput;
     private ImageView rectangles;
-    private ImageButton stopMakingBtn, sendButton, makeDiaryButton, moreButton, miniArrow;
+    private ImageButton stopMakingBtn, sendButton, makeDiaryButton, moreButton, miniArrow, miniMic;
     private long backPressedTime = 0;
     private RecyclerView recyclerView;
     private MessageAdapter messageAdapter;
@@ -43,9 +52,17 @@ public class DiaryActivity extends AppCompatActivity {
     private String story = ""; // 사용자가 작성한 메시지를 저장할 변수
     private boolean isConversationEnded = false; // 대화 종료 여부를 체크하는 플래그
 
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
+
+    final int PERMISSION = 1;
+    private StringBuilder recognizedText = new StringBuilder();
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diary);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         recyclerView = findViewById(R.id.recyclerView);
         userInput = findViewById(R.id.userInput);
@@ -62,6 +79,17 @@ public class DiaryActivity extends AppCompatActivity {
         how = findViewById(R.id.how);
         why = findViewById(R.id.why);
         mood = findViewById(R.id.mood);
+        miniMic = findViewById(R.id.ib_mini_mic);
+
+        if (Build.VERSION.SDK_INT >= 23) {
+            // 퍼미션 체크
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.INTERNET,
+                    Manifest.permission.RECORD_AUDIO}, PERMISSION);
+        }
+
+        intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getPackageName());
+        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR");
 
         // RecyclerView 설정
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -147,6 +175,7 @@ public class DiaryActivity extends AppCompatActivity {
         moreButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 handleMoreButtonClick();
                 miniArrow.setVisibility(View.VISIBLE);
             }
@@ -167,6 +196,71 @@ public class DiaryActivity extends AppCompatActivity {
                 handleMakeDiaryButtonClick();
             }
         });
+
+        // 음성 인식 버튼
+        miniMic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sound();
+                startVoiceRecognition();
+            }
+        });
+    }
+
+    // 음성 인식 시작
+    private void startVoiceRecognition() {
+        recognizedText.setLength(0);
+
+        mRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        mRecognizer.setRecognitionListener(new RecognitionListener() {
+            @Override
+            public void onReadyForSpeech(Bundle params) {
+                Toast.makeText(getApplicationContext(), "음성인식을 시작합니다.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onBeginningOfSpeech() { }
+            @Override
+            public void onRmsChanged(float rmsdB) { }
+            @Override
+            public void onBufferReceived(byte[] buffer) { }
+            @Override
+            public void onEndOfSpeech() { }
+            @Override
+            public void onPartialResults(Bundle partialResults) { }
+            @Override
+            public void onEvent(int eventType, Bundle params) { }
+
+            @Override
+            public void onError(int error) {
+                String message = "에러 발생: " + getErrorText(error);
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResults(Bundle results) {
+                ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                if (matches != null) {
+                    for (String match : matches) {
+                        recognizedText.append(match).append(" ");
+                    }
+                    userInput.setText(recognizedText.toString());
+                }
+            }
+        });
+        mRecognizer.startListening(new Intent());
+    }
+
+    // 음성 인식 시 필요한 에러 텍스트
+    private String getErrorText(int errorCode) {
+        switch (errorCode) {
+            case SpeechRecognizer.ERROR_AUDIO: return "오디오 에러";
+            case SpeechRecognizer.ERROR_CLIENT: return "클라이언트 에러";
+            case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS: return "퍼미션 없음";
+            case SpeechRecognizer.ERROR_NETWORK: return "네트워크 에러";
+            case SpeechRecognizer.ERROR_NO_MATCH: return "일치하는 결과 없음";
+            default: return "알 수 없는 에러";
+        }
     }
 
     private void showFirstMessageWithDelay() {
@@ -181,7 +275,6 @@ public class DiaryActivity extends AppCompatActivity {
 
     private void handleMoreButtonClick() {
         sound();
-        //isConversationEnded = false; // 대화가 계속 진행되도록 플래그 업데이트
         // UI 업데이트: 대화 입력 필드와 버튼을 보이도록 설정
         sendButton.setVisibility(View.VISIBLE);
         userInput.setVisibility(View.VISIBLE);
@@ -189,7 +282,7 @@ public class DiaryActivity extends AppCompatActivity {
         makeDiaryButton.setVisibility(View.INVISIBLE);
         moreButton.setVisibility(View.INVISIBLE);
         // 대화 재개 메시지 또는 설정을 추가할 수 있습니다.
-        Message moreConversationMessage = new Message("좋아! 나랑 더 이야기하자!😊 동화를 만들러 가고 싶다면 언제든지 OK 버튼을 눌러줘.", Message.TYPE_BOT);
+        Message moreConversationMessage = new Message("좋아! 나랑 더 이야기하자!😊 동화를 만들러 가고 싶다면 언제든지 화살표 버튼을 눌러줘.", Message.TYPE_BOT);
         messageList.add(moreConversationMessage);
         messageAdapter.notifyItemInserted(messageList.size() - 1);
         recyclerView.scrollToPosition(messageList.size() - 1);
@@ -378,7 +471,9 @@ public class DiaryActivity extends AppCompatActivity {
 
     // 효과음
     public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

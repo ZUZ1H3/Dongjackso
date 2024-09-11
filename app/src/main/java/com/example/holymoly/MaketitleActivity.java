@@ -1,6 +1,7 @@
 package com.example.holymoly;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -30,14 +31,21 @@ public class MaketitleActivity extends AppCompatActivity {
     private Gemini gemini;
     private String selectedTheme;
     private ArrayList<String> selectedCharacters, story;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    /* DB */
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maketitle);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         gemini = new Gemini();
         backgroundImageView = findViewById(R.id.background_image_view);
@@ -118,7 +126,9 @@ public class MaketitleActivity extends AppCompatActivity {
 
     // 효과음
     public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

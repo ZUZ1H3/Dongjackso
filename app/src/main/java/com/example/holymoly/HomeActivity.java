@@ -1,6 +1,7 @@
 package com.example.holymoly;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -29,10 +30,14 @@ public class HomeActivity extends AppCompatActivity implements UserInfoLoader {
     private TextView name, nickname;
 
     private UserInfo userInfo = new UserInfo();
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         name = findViewById(R.id.mini_name);
         nickname = findViewById(R.id.mini_nickname);
@@ -120,7 +125,9 @@ public class HomeActivity extends AppCompatActivity implements UserInfoLoader {
     }
     // 효과음
     public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

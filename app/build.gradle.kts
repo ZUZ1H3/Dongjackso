@@ -76,4 +76,7 @@ dependencies {
 
     //나 혼자 만들기 레이아웃
     implementation ("com.google.android.flexbox:flexbox:3.0.0")
+
+    // Amazon Polly
+    implementation ("com.amazonaws:aws-android-sdk-polly:2.22.2")
 }

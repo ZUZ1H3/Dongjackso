@@ -1,6 +1,7 @@
 package com.example.holymoly;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -44,10 +45,15 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
     private Handler emailCheckHandler = new Handler(); // 이메일 확인 handler
     private Runnable emailCheckRunnable;        // 이메일 확인 runnable
 
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resetpassword);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         etEmail = (EditText) findViewById(R.id.et_email);
         etPwd = (EditText) findViewById(R.id.et_pwd);
@@ -202,8 +208,11 @@ public class ResetPasswordActivity extends AppCompatActivity implements View.OnC
         return pattern.matcher(password).matches();
     }
 
+    // 효과음
     public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

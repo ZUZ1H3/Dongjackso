@@ -1,6 +1,7 @@
 package com.example.holymoly;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
@@ -18,17 +19,12 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -43,6 +39,8 @@ public class MakeDiaryActivity extends AppCompatActivity {
     private ImageView backgroundimageview;
 
     private boolean isGenerated = false;
+    private boolean isLoadDB = false; // DB에서 내용 갖고 왔는지 확인
+    private boolean isChangeWeather = false; // 날씨 바꿨는지
 
     private RadioGroup radioGroup;
 
@@ -54,10 +52,16 @@ public class MakeDiaryActivity extends AppCompatActivity {
     private StorageReference storageRef = storage.getReference();
     private String uid = user.getUid();
 
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_diary);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
+
         Intent intent = getIntent();
         story = intent.getStringExtra("story");
         name = intent.getStringExtra("name");
@@ -69,16 +73,21 @@ public class MakeDiaryActivity extends AppCompatActivity {
         backgroundimageview= findViewById(R.id.background_image_view);
         radioGroup = findViewById(R.id.radioGroup);
 
-        String currentDate = getCurrentDate();
+        String currentDate = getCurrentDate();   // M D E 버전
+        String currentDate2 = getCurrentDate2(); // YYYYMMDD 버전
         String date = getIntent().getStringExtra("date");
+        String from = intent.getStringExtra("from");
 
         day.setText(currentDate);
 
+        // 앨범에서 선택한 일기 불러오기
         if (date != null) {
             loadImage(date);   // 이미지 불러오기
             loadTxt(date);     // 텍스트 불러오기
             loadWeather(date); // 날씨 불러오기
+            isLoadDB = true;
         }
+
         if (story != null) {
             if(!isGenerated) {
                 generateFairyTale(story);
@@ -90,38 +99,65 @@ public class MakeDiaryActivity extends AppCompatActivity {
             storyTextView.setText("스토리가 없습니다.");
         }
 
+        // 그림 그린 후 현재 이미지 불러오기
+        if ("drow".equals(from)) {
+            loadImage(currentDate2);
+            loadTxt(currentDate2);
+        }
+
         stopMakingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sound();
-                if (System.currentTimeMillis() - backPressedTime >= 2000) {
-                    backPressedTime = System.currentTimeMillis();
-                    Toast.makeText(MakeDiaryActivity.this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
-
-                    int selected = radioGroup.getCheckedRadioButtonId();
-                    intent.putExtra("selected", selected);
-                    Intent intent = new Intent(MakeDiaryActivity.this, AlbumDiaryActivity.class);
-                    startActivity(intent);
+                int checkedId = radioGroup.getCheckedRadioButtonId();
+                if (checkedId == -1) {
+                    Toast.makeText(MakeDiaryActivity.this, "날씨를 선택해주세요.", Toast.LENGTH_SHORT).show();
                 } else {
-                    finish();
+                    if (System.currentTimeMillis() - backPressedTime >= 2000) {
+                        backPressedTime = System.currentTimeMillis();
+                        Toast.makeText(MakeDiaryActivity.this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (!isLoadDB || isChangeWeather) {
+                            // 현재 선택된 ID와 이전 선택된 ID가 다를 때만 저장
+                            int currentCheckedId = radioGroup.getCheckedRadioButtonId();
+                            if (isLoadDB) {
+                                DocumentReference weatherRef = db.collection("weather").document(uid).collection("dates").document(getIntent().getStringExtra("date"));
+                                weatherRef.get().addOnSuccessListener(document -> {
+                                    if (document.exists()) {
+                                        int savedId = document.getLong("selectedId").intValue();
+                                        if (savedId != currentCheckedId) {
+                                            saveWeather(getIntent().getStringExtra("date"), currentCheckedId);
+                                        }
+                                    }
+                                });
+                            } else {
+                                saveWeather(getCurrentDate2(), checkedId);
+                            }
+                        }
+
+                        Intent intent = new Intent(MakeDiaryActivity.this, AlbumDiaryActivity.class);
+                        startActivity(intent);
+                        finish(); // 2초 이내에 다시 누르면 종료
+                    }
                 }
             }
         });
+
         backgroundimageview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 sound();
                 Intent intent = new Intent(MakeDiaryActivity.this, MakeDrowDiaryActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
-        // 라디오 버튼 선택 리스너
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                // 선택된 라디오 버튼 ID를 날짜와 함께 저장
-                saveWeather(date, checkedId);
+                sound();
+                isChangeWeather = true;
             }
         });
     }
@@ -158,6 +194,12 @@ public class MakeDiaryActivity extends AppCompatActivity {
 
     private String getCurrentDate() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("M월 d일 E", Locale.KOREAN);
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
+    private String getCurrentDate2() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
         Date date = new Date();
         return dateFormat.format(date);
     }
@@ -228,30 +270,35 @@ public class MakeDiaryActivity extends AppCompatActivity {
         // 데이터 저장
         weatherRef.set(Collections.singletonMap("selectedId", selectedId))
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(MakeDiaryActivity.this, "날씨 정보 저장 성공", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MakeDiaryActivity.this, "날씨 정보 저장", Toast.LENGTH_SHORT).show();
                 });
     }
+
     // 날씨 불러오기
     private void loadWeather(String date) {
         DocumentReference weatherRef = db.collection("weather").document(uid).collection("dates").document(date);
 
-        weatherRef.get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            int selectedId = document.getLong("selectedId").intValue();
-                            RadioButton savedButton = findViewById(selectedId);
-                            if (savedButton != null) {
-                                savedButton.setChecked(true);
-                            }
-                        }
+        weatherRef.get().addOnSuccessListener(document -> {
+            if (document.exists()) {
+                int savedId = document.getLong("selectedId").intValue();
+                RadioButton savedButton = findViewById(savedId);
+                if (savedButton != null) {
+                    savedButton.setChecked(true);
+                    // 저장된 ID와 현재 선택된 ID 비교
+                    int checkedId = radioGroup.getCheckedRadioButtonId();
+                    if (savedId != checkedId) {
+                        isChangeWeather = true;
                     }
-                });
+                }
+            }
+        });
     }
+
     // 효과음
     public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

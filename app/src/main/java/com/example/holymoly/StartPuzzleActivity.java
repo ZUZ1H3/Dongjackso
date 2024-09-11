@@ -2,25 +2,24 @@ package com.example.holymoly;
 
 import static java.lang.Math.abs;
 
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.ExifInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
@@ -28,12 +27,18 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
-import com.bumptech.glide.request.target.Target;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class StartPuzzleActivity extends AppCompatActivity implements View.OnClickListener {
@@ -42,19 +47,37 @@ public class StartPuzzleActivity extends AppCompatActivity implements View.OnCli
     private int rows, cols;
 
     private RelativeLayout layout;
-    private ImageButton stop;
+    private ImageView imageView;
+    private TextView count;
+    private ImageButton stop, hint;
     private long backPressedTime = 0;
+    private Handler handler = new Handler();
+    private int countdownTime = 5; // 카운트다운 초
+
+    /* DB */
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseUser user = auth.getCurrentUser();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private String uid = user.getUid();  // 사용자의 uid
+
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_puzzle);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         layout = findViewById(R.id.layout);
-        ImageView imageView = findViewById(R.id.imageView);
+        imageView = findViewById(R.id.imageView);
+        count = findViewById(R.id.count);
         stop = findViewById(R.id.ib_stop);
+        hint = findViewById(R.id.ib_hint);
 
         stop.setOnClickListener(this);
+        hint.setOnClickListener(this);
 
         // Intent로 전달받은 데이터 추출
         Intent intent = getIntent();
@@ -68,12 +91,20 @@ public class StartPuzzleActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
+        sound();
         if (v.getId() == R.id.ib_stop) {
             if (System.currentTimeMillis() - backPressedTime >= 2000) {
                 backPressedTime = System.currentTimeMillis();
                 Toast.makeText(this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
-               finish();
+                finish();
             }
+        }
+        else if (v.getId() == R.id.ib_hint) {
+            // hint 클릭시 이미지 보임
+            countdown();
+            imageView.setVisibility(View.VISIBLE);
+            // 5초 후에 이미지 안 보임
+            new Handler().postDelayed(() -> imageView.setVisibility(View.INVISIBLE), 5000);
         }
     }
 
@@ -82,26 +113,26 @@ public class StartPuzzleActivity extends AppCompatActivity implements View.OnCli
         Glide.with(this)
                 .asBitmap()
                 .load(imageUrl)
-                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL) // 원본 크기로 로드
                 .into(new CustomTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
                         // 이미지를 로드한 후, 올바른 방향으로 회전시킴
                         imageView.setImageBitmap(resource);
+                        imageView.setVisibility(View.INVISIBLE);
 
-                        // 이미지가 로드된 후, 퍼즐 조각을 나누기 위해 post() 메소드를 사용
+                        // 이미지 불러온 후, 퍼즐 조각으로 분리
                         imageView.post(() -> {
                             pieces = splitImage();
                             PuzzleTouchListener touchListener = new PuzzleTouchListener(StartPuzzleActivity.this);
                             Collections.shuffle(pieces); // 순서 섞기
-                            int marginAdjustment = 40; // 각 측면에서 줄일 마진 크기
+                            int marginAdjustment = 40;   // 하단에 줄일 마진 크기
 
                             layout.removeAllViews(); // 이전 뷰 제거
                             for (PuzzlePiece piece : pieces) {
                                 piece.setOnTouchListener(touchListener);
                                 layout.addView(piece);
 
-                                // 이미지 아래에 무작위 배치
+                                // 이미지 아래에 퍼즐 조각 랜덤 배치
                                 RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) piece.getLayoutParams();
                                 lParams.leftMargin = marginAdjustment + new Random().nextInt(layout.getWidth() - piece.pieceWidth - 2 * marginAdjustment);
 
@@ -113,9 +144,7 @@ public class StartPuzzleActivity extends AppCompatActivity implements View.OnCli
                     }
 
                     @Override
-                    public void onLoadCleared(Drawable placeholder) {
-                        // Placeholder 처리
-                    }
+                    public void onLoadCleared(Drawable placeholder) { }
 
                     @Override
                     public void onLoadFailed(Drawable errorDrawable) {
@@ -298,6 +327,42 @@ public class StartPuzzleActivity extends AppCompatActivity implements View.OnCli
     // 게임 오버 확인
     public void checkGameOver() {
         if (isGameOver()) {
+            // Firestore에 저장할 데이터
+            Map<String, Object> data = new HashMap<>();
+            data.put("imageUrl", image);  // 퍼즐 이미지 URL
+
+            // 사용자 문서의 'completed' 컬렉션에서 동일한 Url이 있는지 확인
+            db.collection("puzzles").document(uid).collection("completed")
+                    .whereEqualTo("imageUrl", image) // imageUrl이 같은 문서 검색
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot querySnapshot = task.getResult();
+
+                            if (!querySnapshot.isEmpty()) {
+                                // 동일한 Url이 존재하면 해당 문서의 rows 배열에 새로운 값을 추가
+                                for (QueryDocumentSnapshot document : querySnapshot) {
+                                    db.collection("puzzles").document(uid)
+                                            .collection("completed")
+                                            .document(document.getId())
+                                            // arrayUnion을 이용해 중복 없이 값 추가
+                                            .update("rows", FieldValue.arrayUnion(rows)) // rows 값 배열에 추가
+                                            .addOnSuccessListener(aVoid -> { });
+                                }
+                            } else {
+                                // 동일한 Url이 없으면 새로 추가하고 rows 필드를 배열로 설정
+                                data.put("rows", Collections.singletonList(rows)); // 배열로 rows 값 설정
+                                db.collection("puzzles").document(uid)
+                                        .collection("completed")
+                                        .add(data)
+                                        .addOnSuccessListener(documentReference -> {
+                                            Toast.makeText(this, "퍼즐 데이터가 저장되었습니다.", Toast.LENGTH_SHORT).show();
+                                        });
+                            }
+                        }
+                    });
+
+            // 퍼즐 완성 알림 다이얼로그 표시
             AlertDialog completion = new AlertDialog.Builder(this)
                     .setTitle("완성했습니다")
                     .setMessage("퍼즐을 완성했습니다.\n 다른 퍼즐을 맞추시겠습니까?")
@@ -322,5 +387,29 @@ public class StartPuzzleActivity extends AppCompatActivity implements View.OnCli
             }
         }
         return true;
+    }
+
+    // 카운트다운
+    private void countdown() {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (countdownTime > 0) {
+                    count.setVisibility(View.VISIBLE);
+                    count.setText(String.valueOf(countdownTime)); // 남은 시간 텍스트에 표시
+                    countdownTime--;
+                    handler.postDelayed(this, 1000); // 1초마다
+                }
+                else count.setVisibility(View.INVISIBLE);
+            }
+        }, 0);
+    }
+
+    // 효과음
+    public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
+        Intent intent = new Intent(this, SoundService.class);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

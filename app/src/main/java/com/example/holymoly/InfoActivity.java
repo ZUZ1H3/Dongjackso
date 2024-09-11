@@ -1,6 +1,7 @@
 package com.example.holymoly;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
 
     private String selectedGender = ""; // 성별 선택
 
+    /* DB */
     private FirebaseAuth mAuth;     // firebase 사용자 인증
     private FirebaseFirestore db;   // firestore DB
     private FirebaseUser user;      // firebase 사용자
@@ -47,10 +49,15 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
     private StorageReference storageRef;
     private StorageReference characterRef; // Storage 캐릭터 이미지 참조
 
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         name = (EditText) findViewById(R.id.et_name);
         age = (EditText) findViewById(R.id.et_age);
@@ -173,7 +180,9 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
 
     // 효과음
     public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

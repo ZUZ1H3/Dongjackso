@@ -1,54 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MakeStoryAloneActivity"
-    android:background="@drawable/bg_makestoryalone" >
+    android:background="@drawable/bg_makestoryalone"
+    tools:context=".MakeStoryAloneActivity">
 
     <ImageButton
         android:id="@+id/ib_before"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_before_btn"
         android:backgroundTint="#0000"
         android:contentDescription="이전버튼"
-        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ic_before_btn"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.005"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5" />
 
     <ImageButton
         android:id="@+id/ib_next"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_next_btn"
         android:backgroundTint="#0000"
         android:contentDescription="다음버튼"
-        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ic_next_btn"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.995"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5" />
 
     <ImageButton
         android:id="@+id/ib_stop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_stopmaking"
         android:backgroundTint="#0000"
         android:contentDescription="그만버튼"
-        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ic_stopmaking"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.985"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.02" />
 
     <ImageView
@@ -56,11 +55,11 @@
         android:layout_width="1050dp"
         android:layout_height="700dp"
         android:src="@drawable/ic_bigbook"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.8" />
 
     <ImageView
@@ -68,24 +67,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_touch2"
-        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.2"
-        app:layout_constraintVertical_bias="0.5"
-        android:visibility="invisible"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
 
     <ImageView
         android:id="@+id/iv_bookmark_null"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_bookmark_null"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.338"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0735" />
 
     <RadioGroup
@@ -93,224 +92,214 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.43"
-        app:layout_constraintVertical_bias="0.046" >
-            <RadioButton
-                android:id="@+id/rb_bookmark_write"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/selector_bookmark_write"
-                android:button="@null"
-                android:checked="true" />
-            <RadioButton
-                android:id="@+id/rb_bookmark_ai"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/selector_bookmark_ai"
-                android:button="@null" />
-            <RadioButton
-                android:id="@+id/rb_bookmark_mic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/selector_bookmark_mic"
-                android:button="@null"
-                android:layout_marginLeft="110dp"
-                android:layout_marginTop="9dp"/>
-            <RadioButton
-                android:id="@+id/rb_bookmark_ok"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/selector_bookmark_ok"
-                android:button="@null"
-                android:layout_marginLeft="325dp"
-                android:layout_marginTop="4dp"/>
-    </RadioGroup>
-
-    <ScrollView
-        android:id="@+id/sv_story"
-        android:layout_width="400dp"
-        android:layout_height="450dp"
-        android:contentDescription="이야기"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.792"
-        app:layout_constraintVertical_bias="0.5" >
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.046">
 
-        <EditText
-            android:id="@+id/et_story_txt"
+        <RadioButton
+            android:id="@+id/rb_bookmark_write"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/hakgyoansim"
-            android:textSize="30dp"
-            android:lineSpacingExtra="25dp"
-            android:padding="20dp"
-            android:layout_gravity="center"
-            android:hint="여기에 동화를 작성하세요"
-            android:background="@null"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.792"
-            app:layout_constraintVertical_bias="0.5"
-            android:visibility="visible"/>
-    </ScrollView>
+            android:background="@drawable/selector_bookmark_write"
+            android:button="@null"
+            android:checked="true" />
+
+        <RadioButton
+            android:id="@+id/rb_bookmark_ai"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_bookmark_ai"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/rb_bookmark_mic"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="110dp"
+            android:layout_marginTop="9dp"
+            android:background="@drawable/selector_bookmark_mic"
+            android:button="@null" />
+
+        <RadioButton
+            android:id="@+id/rb_bookmark_ok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="325dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/selector_bookmark_ok"
+            android:button="@null" />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/et_story_txt"
+        android:layout_width="408dp"
+        android:layout_height="485dp"
+        android:background="@null"
+        android:fontFamily="@font/hakgyoansim"
+        android:hint="여기에 동화를 작성하세요"
+        android:lineSpacingExtra="25dp"
+        android:textSize="30dp"
+        android:visibility="visible"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.792"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
 
     <ImageView
         android:id="@+id/iv_alone_mic"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_story_alone_mic"
-        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.25"
-        app:layout_constraintVertical_bias="0.55"
-        android:visibility="invisible" />
+        app:layout_constraintHorizontal_bias="0.23"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.55" />
+
+    <ImageButton
+        android:id="@+id/ib_mic_stop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#0000"
+        android:src="@drawable/ic_mini_ok"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.44"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.84" />
 
     <com.example.holymoly.StrokeText
         android:id="@+id/tv_howabout"
         android:layout_width="340dp"
         android:layout_height="wrap_content"
-        android:text="이런 이야기는 어때요?"
-        android:padding="10dp"
-        android:gravity="center"
         android:fontFamily="@font/ssurround"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="이런 이야기는 어때요?"
         android:textColor="@color/white"
         android:textSize="32sp"
-        app:textStroke="true"
-        app:textStrokeColor="#6B9FA3"
-        app:textStrokeWidth="17"
-        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.18"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.19"
-        android:visibility="invisible" />
+        app:textStroke="true"
+        app:textStrokeColor="#6B9FA3"
+        app:textStrokeWidth="17" />
 
     <ImageView
         android:id="@+id/iv_alert"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_alert"
-        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.145"
-        app:layout_constraintVertical_bias="0.27"
-        android:visibility="invisible" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.27" />
 
     <TextView
         android:id="@+id/tv_alert"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="시작이 어렵다면 AI가 1장을 만들어 드릴게요!\n아래 이야기를 적용하려면 적용버튼을 눌러주세요"
         android:fontFamily="@font/ssurround"
+        android:text="시작이 어렵다면 AI가 1장을 만들어 드릴게요!\n아래 이야기를 적용하려면 적용버튼을 눌러주세요"
         android:textColor="#A6A6A6"
-        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.21"
-        app:layout_constraintVertical_bias="0.265"
-        android:visibility="invisible" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.265" />
 
     <ImageButton
         android:id="@+id/ib_again"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_again"
         android:backgroundTint="#0000"
         android:contentDescription="다시"
-        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ic_again"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.45"
-        app:layout_constraintVertical_bias="0.27"
-        android:visibility="invisible" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.27" />
 
     <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/fl_keywords"
         android:layout_width="415dp"
         android:layout_height="111dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="visible"
+        app:alignItems="flex_start"
+        app:flexWrap="wrap"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.21"
-        app:layout_constraintVertical_bias="0.367"
-        app:flexWrap="wrap"
-        app:alignItems="flex_start"
-        android:visibility="gone" >
-    </com.google.android.flexbox.FlexboxLayout>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.367"></com.google.android.flexbox.FlexboxLayout>
 
     <ImageButton
         android:id="@+id/ib_create"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_create"
-        android:contentDescription="생성버튼"
         android:backgroundTint="#0000"
-        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="생성버튼"
+        android:src="@drawable/ic_create"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.43"
-        app:layout_constraintVertical_bias="0.498"
-        android:visibility="invisible" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.498" />
 
     <ImageView
         android:id="@+id/iv_create_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_create_back"
-        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.205"
-        app:layout_constraintVertical_bias="0.76"
-        android:visibility="invisible" />
-
-    <ScrollView
-        android:id="@+id/sv_create_bg"
-        android:layout_width="380dp"
-        android:layout_height="180dp"
-        android:contentDescription="배경"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.217"
-        app:layout_constraintVertical_bias="0.742"
-        android:visibility="invisible" >
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.76" />
 
-        <TextView
-            android:id="@+id/tv_create_txt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/hakgyoansim"
-            android:textSize="24sp"
-            android:lineSpacingExtra="17dp"
-            android:padding="15dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.215"
-            app:layout_constraintVertical_bias="0.752"
-            android:visibility="invisible" >
-        </TextView>
-    </ScrollView>
+    <TextView
+        android:id="@+id/tv_create_txt"
+        android:layout_width="371dp"
+        android:layout_height="172dp"
+        android:fontFamily="@font/hakgyoansim"
+        android:gravity="center"
+        android:lineSpacingExtra="17dp"
+        android:padding="15dp"
+        android:text=""
+        android:textSize="20sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.227"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.74"></TextView>
 </androidx.constraintlayout.widget.ConstraintLayout>

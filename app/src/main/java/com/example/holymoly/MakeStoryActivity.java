@@ -1,6 +1,7 @@
 package com.example.holymoly;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -45,7 +46,7 @@ import java.util.Locale;
 public class MakeStoryActivity extends AppCompatActivity {
     private boolean isImageLoaded = false; // 이미지 로드 상태를 추적하는 변수
     private TextView storyTextView, pageTextView, selectText1, selectText2, selectMic3;
-    private ImageButton stopMakingBtn, nextBtn;
+    private ImageButton stopMakingBtn, nextBtn, retryBtn;
     private ImageView backgroundImageView, loading, selectImage1, selectImage2, selectMic1, selectMic2, nextStory;
     private String selectedTheme;
     private ArrayList<String> selectedCharacters;
@@ -68,10 +69,15 @@ public class MakeStoryActivity extends AppCompatActivity {
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef = storage.getReference();
 
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_makestory);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         // UI 요소 초기화
         storyTextView = findViewById(R.id.tv_pageText);
@@ -88,6 +94,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         nextStory = findViewById(R.id.iv_nextstory);
         stopMakingBtn = findViewById(R.id.ib_stopMaking);
         nextBtn = findViewById(R.id.ib_nextStep);
+        retryBtn = findViewById(R.id.ib_retry);
 
         storyTextView.setMovementMethod(new ScrollingMovementMethod()); //스크롤 가능하도록
         MainActivity mainActivity = new MainActivity();
@@ -118,22 +125,6 @@ public class MakeStoryActivity extends AppCompatActivity {
 
         makeStory.generateInitialStory();//동화 도입부 생성
 
-        selectMic1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MakeStoryActivity.this, VoiceActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        selectMic2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sound();
-                Intent intent = new Intent(MakeStoryActivity.this, VoiceActivity.class);
-                startActivity(intent);
-            }
-        });
 
         selectText1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,32 +187,50 @@ public class MakeStoryActivity extends AppCompatActivity {
             }
         });
 
-        selectMic3.setOnClickListener(new View.OnClickListener() {
+        selectMic2.setOnClickListener(new View.OnClickListener() { //마이크 모양
             @Override
             public void onClick(View v) {
-                nextStory.setVisibility(View.INVISIBLE);
-                selectImage1.setVisibility(View.INVISIBLE);
-                selectImage2.setVisibility(View.INVISIBLE);
-                selectText1.setVisibility(View.INVISIBLE);
-                selectText2.setVisibility(View.INVISIBLE);
-                selectMic1.setVisibility(View.INVISIBLE);
-                selectMic2.setVisibility(View.INVISIBLE);
-                selectMic3.setVisibility(View.INVISIBLE);
+                sound();
+                Intent intent = new Intent(MakeStoryActivity.this, VoiceActivity.class);
+                byte[] imageBytes = (byte[]) nextBtn.getTag();
+                intent.putExtra("backgroundImageBytes", imageBytes);
+                startActivity(intent);
+            }
+        });
 
+        selectMic3.setOnClickListener(new View.OnClickListener() { //텍스트뷰
+            @Override
+            public void onClick(View v) {
+                sound();
                 String selectedChoice = selectMic3.getText().toString(); // 선택지2 가져오기
+                if (!(selectedChoice.equals(""))) {
+                    nextStory.setVisibility(View.INVISIBLE);
+                    selectImage1.setVisibility(View.INVISIBLE);
+                    selectImage2.setVisibility(View.INVISIBLE);
+                    selectText1.setVisibility(View.INVISIBLE);
+                    selectText2.setVisibility(View.INVISIBLE);
+                    selectMic1.setVisibility(View.INVISIBLE);
+                    selectMic2.setVisibility(View.INVISIBLE);
+                    selectMic3.setVisibility(View.INVISIBLE);
 
-                if (num < 6) {
-                    // 현재 페이지 내용, 선택지 저장
-                    pageContents.set(num - 1, storyTextView.getText().toString() + selectedChoice);
+                    if (num < 6) {
+                        // 현재 페이지 내용, 선택지 저장
+                        pageContents.set(num - 1, storyTextView.getText().toString() + selectedChoice);
 
-                    if (num < 5) {
-                        makeStory.generateNextStoryPart(selectedChoice, num);
-                    } else if (num == 5) {
-                        makeStory.generateEndStoryPart(selectedChoice);
+                        if (num < 5) {
+                            makeStory.generateNextStoryPart(selectedChoice, num);
+                        } else if (num == 5) {
+                            makeStory.generateEndStoryPart(selectedChoice);
+                        }
+                        ++num;
                     }
-                    ++num;
+                    if (num > 5) nextBtn.setVisibility(View.VISIBLE);
+                } else {
+                    Intent intent = new Intent(MakeStoryActivity.this, VoiceActivity.class);
+                    byte[] imageBytes = (byte[]) nextBtn.getTag();
+                    intent.putExtra("backgroundImageBytes", imageBytes);
+                    startActivity(intent);
                 }
-                if (num > 5) nextBtn.setVisibility(View.VISIBLE);
             }
         });
 
@@ -244,7 +253,7 @@ public class MakeStoryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 sound();
                 if (num == 6) {
-                    pageContents.set(num -1, storyTextView.getText().toString());
+                    pageContents.set(num - 1, storyTextView.getText().toString());
                 }
                 if (isImageLoaded) {
                     byte[] imageBytes = (byte[]) nextBtn.getTag();
@@ -264,6 +273,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         });
 
     }
+
     // 선택한 테마와 캐릭터를 번역 하는 함수. 이미지를 만들 때 사용함
     public void translate(final String storyText) {
         //선택한 테마 번역
@@ -380,12 +390,21 @@ public class MakeStoryActivity extends AppCompatActivity {
                             storyTextView.setText(storyText);
                             textFullyDisplayed[0] = true; // 전체 텍스트 표시 상태로 플래그 설정
 
-                            if (isImageLoaded && num <= 5) {
-                                makeStory.generateChoices(num); // 선택지 생성
-                            }
+                            //if (isImageLoaded && num <= 5) {
+                            //    makeStory.generateChoices(num); // 선택지 생성
+                            //}
                             return true;
                         }
                         return false;
+                    }
+                });
+
+                retryBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if (isImageLoaded && num <= 5) {
+                            makeStory.generateChoices(num); // 선택지 생성
+                        }
                     }
                 });
             }
@@ -516,6 +535,7 @@ public class MakeStoryActivity extends AppCompatActivity {
             });
         });
     }
+
     // 업로드된 이미지 삭제
     private void deleteImage() {
         StorageReference themeRef = storageRef.child(themePath);
@@ -593,9 +613,12 @@ public class MakeStoryActivity extends AppCompatActivity {
             showToast("파일 읽기 실패: " + e.getMessage());
         }
     }
+
     // 효과음
     public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }

@@ -1,6 +1,7 @@
 package com.example.holymoly;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -49,10 +50,15 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
     private List<String> allImageUrls, allTitles, allImgNames;
     // 이미지의 url, 제목, 파일명
     private List<String> imageUrls, titles, imgNames;
+
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
     
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         name = findViewById(R.id.mini_name);
         nickname = findViewById(R.id.mini_nickname);
@@ -167,7 +173,6 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
                 tvMakeFirst.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
             }
-
             // 파일 이름을 기준으로 정렬
             Collections.sort(items, new Comparator<StorageReference>() {
                 @Override
@@ -204,8 +209,6 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
     // 파일 이름에 따라 '_'로 분할해 숫자를 알아냄
     private int extractIndex(String fileName) {
         try {
-            fileName.startsWith(user.getUid());
-            // 파일 이름을 "_"로 분할하여 숫자 추출
             String[] parts = fileName.split("_");
             return Integer.parseInt(parts[2]);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
@@ -262,7 +265,9 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
 
     // 효과음
     public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
         Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
     }
 }
