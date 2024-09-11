@@ -17,7 +17,7 @@
         android:contentDescription="@string/background_image_description"
         android:foregroundGravity=""
         android:scaleType="centerCrop"
-        android:src="@drawable/bg_main"
+        android:src="@drawable/bg_makestoryalone"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -26,6 +26,94 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
+    <ImageView
+        android:id="@+id/iv_writingZone"
+        android:layout_width="640dp"
+        android:layout_height="match_parent"
+        android:src="@drawable/pic_writingzone"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/tv_pageText"
+        android:layout_width="550dp"
+        android:layout_height="530dp"
+        android:fontFamily="@font/ssurround"
+        android:gravity="left"
+        android:lineSpacingExtra="16dp"
+        android:scrollbars="vertical"
+        android:text="이야기를 만드는 중입니다..."
+        android:textColor="@color/white"
+        android:textSize="30dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.052"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.724" />
+
+
+    <LinearLayout
+        android:id="@+id/loadingLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        android:layout_marginTop="650dp"
+        android:layout_marginLeft="290dp">
+
+        <ImageView
+            android:id="@+id/characterImage"
+            android:layout_width="66dp"
+            android:layout_height="50dp"
+            android:layout_above="@id/progressBar"
+            android:layout_marginLeft="130dp"
+            android:src="@drawable/ic_duck" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="3dp"
+                android:fontFamily="@font/ssurround"
+                android:gravity="center"
+                android:text="80%"
+                android:textColor="@color/white"
+                android:textSize="38dp" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                android:layout_width="580dp"
+                android:layout_height="50dp"
+                android:layout_below="@+id/textView"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/progress_bar_background"
+                android:indeterminate="false"
+                android:max="100"
+                android:padding="10dp"
+                android:progress="1"
+                android:progressDrawable="@drawable/curved_progress_bar" />
+        </LinearLayout>
+    </LinearLayout>
+
     <ImageButton
         android:id="@+id/ib_retry"
         android:layout_width="wrap_content"
@@ -33,6 +121,7 @@
         android:backgroundTint="#0000"
         android:contentDescription="새로고침"
         android:src="@drawable/ic_retry"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.924"
@@ -47,6 +136,7 @@
         android:backgroundTint="#0000"
         android:contentDescription="그만만들기"
         android:src="@drawable/ic_stopmaking"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.986"
@@ -54,51 +144,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.036" />
 
-    <!--글자있는 반투명한 검은 사각형-->
-
-
-    <!--다음장으로 버튼-->
-
-    <!-- <ImageButton
-        android:id="@+id/ib_nextPageButton"
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
-        android:backgroundTint="#0000"
-        android:contentDescription="다음장으로"
-        android:src="@drawable/ic_nextpagebutton"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.364"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
-        -->
-
-    <ImageView
-        android:id="@+id/iv_writingZone"
-        android:layout_width="640dp"
-        android:layout_height="match_parent"
-        android:src="@drawable/pic_writingzone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <ImageView
-        android:id="@+id/ib_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#0000"
-        android:contentDescription="그만만들기"
-        android:src="@drawable/ic_loading"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.8"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5" />
 
     <TextView
         android:id="@+id/tv_page"
@@ -118,136 +163,119 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.08" />
 
-    <TextView
-        android:id="@+id/tv_pageText"
-        android:layout_width="550dp"
-        android:layout_height="530dp"
-        android:fontFamily="@font/ssurround"
-        android:gravity="left"
-        android:lineSpacingExtra="16dp"
-        android:scrollbars="vertical"
-        android:text="이야기를 만드는 중입니다..."
-        android:textColor="@color/white"
-        android:textSize="30dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.052"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.724" />
 
     <ImageView
         android:id="@+id/iv_nextstory"
         android:layout_width="400dp"
         android:layout_height="100dp"
         android:src="@drawable/ic_nextstory"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.885"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.12"
-        android:visibility="invisible" />
+        app:layout_constraintVertical_bias="0.12" />
 
     <ImageView
         android:id="@+id/iv_select1"
         android:layout_width="560dp"
         android:layout_height="120dp"
         android:background="@drawable/ic_selectbox"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.961"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3"
-        android:visibility="invisible" />
+        app:layout_constraintVertical_bias="0.3" />
 
     <TextView
         android:id="@+id/tv_select1"
         android:layout_width="550dp"
         android:layout_height="120dp"
         android:fontFamily="@font/ssurround"
-        android:textSize="32sp"
-        android:textColor="@color/white"
         android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.961"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3"
-        android:visibility="invisible" />
+        app:layout_constraintVertical_bias="0.3" />
 
     <ImageView
         android:id="@+id/iv_select2"
         android:layout_width="560dp"
         android:layout_height="120dp"
         android:background="@drawable/ic_selectbox"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.961"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.58"
-        android:visibility="invisible" />
+        app:layout_constraintVertical_bias="0.58" />
 
     <TextView
         android:id="@+id/tv_select2"
         android:layout_width="550dp"
         android:layout_height="120dp"
         android:fontFamily="@font/ssurround"
-        android:textSize="32sp"
-        android:textColor="@color/white"
         android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.961"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.58"
-        android:visibility="invisible" />
+        app:layout_constraintVertical_bias="0.58" />
 
     <ImageView
         android:id="@+id/iv_mic1"
         android:layout_width="560dp"
         android:layout_height="120dp"
         android:background="@drawable/ic_selectbox"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.961"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.85"
-        android:visibility="invisible" />
+        app:layout_constraintVertical_bias="0.85" />
 
     <ImageView
         android:id="@+id/iv_mic2"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:background="@drawable/ic_bigmic"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.78"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.83"
-        android:visibility="invisible" />
+        app:layout_constraintVertical_bias="0.83" />
 
     <TextView
         android:id="@+id/iv_mic3"
         android:layout_width="550dp"
         android:layout_height="120dp"
         android:fontFamily="@font/ssurround"
-        android:textSize="32sp"
-        android:textColor="@color/white"
         android:gravity="center"
+        android:textColor="@color/white"
+        android:textSize="32sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.96"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.85"
-        android:visibility="invisible" />
+        app:layout_constraintVertical_bias="0.85" />
 
     <ImageButton
         android:id="@+id/ib_nextStep"
@@ -256,11 +284,11 @@
         android:backgroundTint="#0000"
         android:contentDescription="다음"
         android:src="@drawable/ic_nextstep"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.98"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.99"
-        android:visibility="invisible" />
+        app:layout_constraintVertical_bias="0.99" />
 </androidx.constraintlayout.widget.ConstraintLayout>

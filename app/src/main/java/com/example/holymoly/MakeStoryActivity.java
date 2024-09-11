@@ -14,6 +14,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,10 +46,20 @@ import java.util.List;
 import java.util.Locale;
 
 public class MakeStoryActivity extends AppCompatActivity {
+    private LinearLayout loadingLayout;
+    private ProgressBar progressBar;
+    TextView progresstextView;
+    private ImageView character;
+    private int progressStatus = 0;
+    private float characterPosition = 0f;  // 캐릭터의 X축 위치를 저장할 변수
+    private final int progressBarUpdateInterval = 200;  // ProgressBar 업데이트 주기 (ms)
+    private final int characterMoveInterval = 7;      // 캐릭터 이동 주기 (ms)
+    private final float screenLimit = 900f;            // 화면의 최대 X 좌표
+    private final float initialPosition = 0f;          // 캐릭터의 초기 위치
     private boolean isImageLoaded = false; // 이미지 로드 상태를 추적하는 변수
     private TextView storyTextView, pageTextView, selectText1, selectText2, selectMic3;
     private ImageButton stopMakingBtn, nextBtn, retryBtn;
-    private ImageView backgroundImageView, loading, selectImage1, selectImage2, selectMic1, selectMic2, nextStory;
+    private ImageView backgroundImageView, selectImage1, selectImage2, selectMic1, selectMic2, nextStory, background;
     private String selectedTheme;
     private ArrayList<String> selectedCharacters;
     private Handler handler = new Handler();
@@ -83,7 +95,6 @@ public class MakeStoryActivity extends AppCompatActivity {
         storyTextView = findViewById(R.id.tv_pageText);
         pageTextView = findViewById(R.id.tv_page);
         backgroundImageView = findViewById(R.id.background_image_view);
-        loading = findViewById(R.id.ib_loading);
         selectText1 = findViewById(R.id.tv_select1);
         selectText2 = findViewById(R.id.tv_select2);
         selectImage1 = findViewById(R.id.iv_select1);
@@ -95,18 +106,18 @@ public class MakeStoryActivity extends AppCompatActivity {
         stopMakingBtn = findViewById(R.id.ib_stopMaking);
         nextBtn = findViewById(R.id.ib_nextStep);
         retryBtn = findViewById(R.id.ib_retry);
-
+        background = findViewById(R.id.iv_writingZone);
+        progressBar = findViewById(R.id.progressBar);
+        progresstextView = findViewById(R.id.textView);
+        character = findViewById(R.id.characterImage);
         storyTextView.setMovementMethod(new ScrollingMovementMethod()); //스크롤 가능하도록
         MainActivity mainActivity = new MainActivity();
+        loadingLayout = findViewById(R.id.loadingLayout);
 
         //지금까지 ArrayList에 저장한 액티비티 전부를 for문을 돌려서 finish한다.
         for (int i = 0; i < mainActivity.actList().size(); i++) {
             mainActivity.actList().get(i).finish();
         }
-
-        //로딩중 화면을 만듦
-        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
-        loading.setAnimation(animation);
 
         // Intent로부터 데이터 가져오기
         Intent intent = getIntent();
@@ -125,6 +136,62 @@ public class MakeStoryActivity extends AppCompatActivity {
 
         makeStory.generateInitialStory();//동화 도입부 생성
 
+        // ProgressBar 업데이트를 위한 Thread
+        new Thread(new Runnable() {
+            public void run() {
+                while (progressStatus < 100) {
+                    progressStatus += 1;
+
+                    handler.post(new Runnable() {
+                        public void run() {
+                            // ProgressBar 업데이트
+                            progressBar.setProgress(progressStatus);
+                            progresstextView.setText(progressStatus + "%");
+                        }
+                    });
+                    try {
+                        // ProgressBar 업데이트 주기
+                        Thread.sleep(progressBarUpdateInterval);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                // 캐릭터 이동 멈추기
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        character.setTranslationX(characterPosition); // 마지막 위치 고정
+                    }
+                });
+
+            }
+        }).start();
+
+        // 캐릭터 이동을 위한 Thread
+        new Thread(new Runnable() {
+            public void run() {
+                while (progressStatus < 100) {
+                    try {
+                        // 캐릭터 이동 주기
+                        Thread.sleep(characterMoveInterval);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    handler.post(new Runnable() {
+                        public void run() {
+                            // 캐릭터의 X축 이동
+                            characterPosition += 2f; // 원하는 이동 속도
+
+                            // 캐릭터가 화면의 최대 X 좌표를 넘으면 초기 위치로 이동
+                            if (characterPosition > screenLimit) {
+                                characterPosition = initialPosition; // 초기 위치로 리셋
+                            }
+                            character.setTranslationX(characterPosition); // X축 위치 업데이트
+                        }
+                    });
+                }
+            }
+        }).start();
 
         selectText1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -316,11 +383,12 @@ public class MakeStoryActivity extends AppCompatActivity {
                             public void run() {
                                 if (bitmap != null) {
                                     backgroundImageView.setImageBitmap(bitmap);
-                                    loading.getAnimation().cancel();
-                                    loading.clearAnimation();
-                                    loading.setVisibility(View.INVISIBLE);
                                     isImageLoaded = true;
-
+                                    storyTextView.setVisibility(View.VISIBLE);
+                                    retryBtn.setVisibility(View.VISIBLE);
+                                    stopMakingBtn.setVisibility(View.VISIBLE);
+                                    background.setVisibility(View.VISIBLE);
+                                    loadingLayout.setVisibility(View.INVISIBLE);
                                     uploadImage(bitmap); // Storage에 배경 업로드
                                     displayStoryText(storyText); //동화 출력
 
