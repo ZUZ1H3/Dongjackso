@@ -9,11 +9,6 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
 public class SelectGameActivity extends AppCompatActivity {
     private ImageButton btnhome, btntrophy, btnsetting;
     private ImageButton ibSelectBingo, ibSelectPuzzle;
