@@ -9,7 +9,6 @@ import android.os.Build;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
-import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -176,11 +175,11 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             startVoiceRecognition();
         });
 
-//        // 음성 인식 멈춤 버튼
-//        micStop.setOnClickListener(v -> {
-//            sound();
-//            stopVoiceRecognition();
-//        });
+        // 음성 인식 멈춤 버튼
+        micStop.setOnClickListener(v -> {
+            sound();
+            stopVoiceRecognition();
+        });
 
         // 이전 장 버튼
         before.setOnClickListener(v -> {
@@ -203,7 +202,6 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             pageNumber.setText(String.valueOf(num)); // 페이지 번호 증가
             loadImage(num);
             loadTxt(num);
-            story_txt.setText("");
         });
 
         // 종료 버튼
@@ -244,6 +242,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         pageNumber = findViewById(R.id.pageNumber);
         keywordsLayout = findViewById(R.id.fl_keywords);
         touch = findViewById(R.id.iv_touch);
+        micStop = findViewById(R.id.ib_mic_stop);
     }
 
     // 음성 퍼미션
@@ -275,15 +274,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
 
     // 음성 인식 시작
     private void startVoiceRecognition() {
-        // 음성 인식 시작 시 이전 음성 인식 텍스트 초기화
-        recognizedText.setLength(0); // StringBuilder 초기화 (기존 음성 인식 내용 삭제)
-
-        if (mRecognizer != null) {
-            mRecognizer.destroy(); // 이전 인스턴스가 있을 경우 해제
-            mRecognizer = null; // 참조 초기화
-        }
-
-        mRecognizer = SpeechRecognizer.createSpeechRecognizer(this); // 새 인스턴스 생성
+        mRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
         mRecognizer.setRecognitionListener(new RecognitionListener() {
             @Override
             public void onReadyForSpeech(Bundle params) {
@@ -316,30 +307,22 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
                     for (String match : matches) {
                         recognizedText.append(match).append(" ");
                     }
-                    // 이전에 저장된 텍스트를 지우지 않고 음성 인식된 텍스트만 추가
-                    story_txt.append(recognizedText.toString());
+                    story_txt.setText(recognizedText.toString());
                 }
             }
         });
-
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getPackageName());
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR");
-
-        mRecognizer.startListening(intent); // 음성 인식 시작
+        mRecognizer.startListening(new Intent());
     }
-
 
     // 음성 인식 멈춤
     private void stopVoiceRecognition() {
         if (mRecognizer != null) {
-            mRecognizer.stopListening(); // 음성 인식 중지
-            mRecognizer.destroy(); // 리소스 해제
-            mRecognizer = null; // 인스턴스 초기화
-            story_txt.setText(recognizedText.toString()); // 인식된 텍스트 화면에 표시
+            mRecognizer.stopListening();
+            mRecognizer.destroy();
+            mRecognizer = null;
+            story_txt.setText(recognizedText.toString());
         }
     }
-
 
     // 음성 인식 오류(신경 안 써도 됨)
     private String getErrorText(int errorCode) {
