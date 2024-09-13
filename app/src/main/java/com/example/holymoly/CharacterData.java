@@ -26,7 +26,7 @@ public class CharacterData {
                 new CharacterInfo("공주", R.drawable.ic_castle1),
                 new CharacterInfo("왕자", R.drawable.ic_castle2),
                 new CharacterInfo("왕", R.drawable.ic_castle3),
-                new CharacterInfo("여왕", R.drawable.ic_castle4),
+                new CharacterInfo("왕비", R.drawable.ic_castle4),
                 new CharacterInfo("고양이", R.drawable.ic_castle5),
                 new CharacterInfo("기사", R.drawable.ic_castle6),
                 new CharacterInfo("마법사", R.drawable.ic_castle7),

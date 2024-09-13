@@ -45,6 +45,7 @@ public class StrokeText extends AppCompatTextView {
            getPaint().setStyle(Paint.Style.STROKE);
            getPaint().setStrokeJoin(Paint.Join.ROUND);
            getPaint().setStrokeWidth(strokeWidth);
+           getPaint().setTextSize(getTextSize());
            setTextColor(strokeColor);
            super.onDraw(canvas); // 외곽선 그리기
 

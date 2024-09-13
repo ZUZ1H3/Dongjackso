@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:gravity="center"
     android:layout_margin="21dp">
@@ -12,14 +13,17 @@
         android:layout_height="190dp"
         android:src="@drawable/ic_bluecircle" /> <!-- 예시 이미지 -->
 
-    <TextView
+    <com.example.holymoly.StrokeText
         android:id="@+id/radio_text"
         android:layout_marginTop="6dp"
-        android:layout_width="wrap_content"
+        android:layout_width="190dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ssurround"
         android:text="바다"
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="40sp" />
+        android:textSize="40sp"
+        app:textStroke="true"
+        app:textStrokeColor="#639699"
+        app:textStrokeWidth="16"/>
 </LinearLayout>
