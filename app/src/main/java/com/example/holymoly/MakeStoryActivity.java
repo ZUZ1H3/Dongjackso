@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +14,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,10 +46,20 @@ import java.util.List;
 import java.util.Locale;
 
 public class MakeStoryActivity extends AppCompatActivity {
+    private LinearLayout loadingLayout;
+    private ProgressBar progressBar;
+    TextView progresstextView;
+    private ImageView character;
+    private int progressStatus = 0;
+    private float characterPosition = 0f;  // 캐릭터의 X축 위치를 저장할 변수
+    private final int progressBarUpdateInterval = 200;  // ProgressBar 업데이트 주기 (ms)
+    private final int characterMoveInterval = 7;      // 캐릭터 이동 주기 (ms)
+    private final float screenLimit = 900f;            // 화면의 최대 X 좌표
+    private final float initialPosition = 0f;          // 캐릭터의 초기 위치
     private boolean isImageLoaded = false; // 이미지 로드 상태를 추적하는 변수
     private TextView storyTextView, pageTextView, selectText1, selectText2, selectMic3;
     private ImageButton stopMakingBtn, nextBtn, retryBtn;
-    private ImageView backgroundImageView, loading, selectImage1, selectImage2, selectMic1, selectMic2, nextStory;
+    private ImageView backgroundImageView, selectImage1, selectImage2, selectMic1, selectMic2, nextStory, background;
     private String selectedTheme;
     private ArrayList<String> selectedCharacters;
     private Handler handler = new Handler();
@@ -79,12 +90,10 @@ public class MakeStoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_makestory);
         pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
-
         // UI 요소 초기화
         storyTextView = findViewById(R.id.tv_pageText);
         pageTextView = findViewById(R.id.tv_page);
         backgroundImageView = findViewById(R.id.background_image_view);
-        loading = findViewById(R.id.ib_loading);
         selectText1 = findViewById(R.id.tv_select1);
         selectText2 = findViewById(R.id.tv_select2);
         selectImage1 = findViewById(R.id.iv_select1);
@@ -96,18 +105,19 @@ public class MakeStoryActivity extends AppCompatActivity {
         stopMakingBtn = findViewById(R.id.ib_stopMaking);
         nextBtn = findViewById(R.id.ib_nextStep);
         retryBtn = findViewById(R.id.ib_retry);
-
+        background = findViewById(R.id.iv_writingZone);
+        progressBar = findViewById(R.id.progressBar);
+        progresstextView = findViewById(R.id.textView);
+        character = findViewById(R.id.characterImage);
         storyTextView.setMovementMethod(new ScrollingMovementMethod()); //스크롤 가능하도록
         MainActivity mainActivity = new MainActivity();
+        loadingLayout = findViewById(R.id.loadingLayout);
+
 
         //지금까지 ArrayList에 저장한 액티비티 전부를 for문을 돌려서 finish한다.
         for (int i = 0; i < mainActivity.actList().size(); i++) {
             mainActivity.actList().get(i).finish();
         }
-
-        //로딩중 화면을 만듦
-        Animation animation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.rotate);
-        loading.setAnimation(animation);
 
         // Intent로부터 데이터 가져오기
         Intent intent = getIntent();
@@ -126,14 +136,62 @@ public class MakeStoryActivity extends AppCompatActivity {
 
         makeStory.generateInitialStory();//동화 도입부 생성
 
-        // VoiceActivity에서 전달된 recognizedText를 받아오기
-        intent = getIntent();
-        String recognizedText = intent.getStringExtra("recognizedText");
+        // ProgressBar 업데이트를 위한 Thread
+        new Thread(new Runnable() {
+            public void run() {
+                while (progressStatus < 100) {
+                    progressStatus += 1;
 
-        // recognizedText가 null이 아니면 selectMic3에 텍스트 설정
-        if (recognizedText != null && !recognizedText.isEmpty()) {
-            selectMic3.setText(recognizedText);  // 음성 인식 텍스트를 텍스트뷰에 설정
-        }
+                    handler.post(new Runnable() {
+                        public void run() {
+                            // ProgressBar 업데이트
+                            progressBar.setProgress(progressStatus);
+                            progresstextView.setText(progressStatus + "%");
+                        }
+                    });
+                    try {
+                        // ProgressBar 업데이트 주기
+                        Thread.sleep(progressBarUpdateInterval);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                // 캐릭터 이동 멈추기
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        character.setTranslationX(characterPosition); // 마지막 위치 고정
+                    }
+                });
+
+            }
+        }).start();
+
+        // 캐릭터 이동을 위한 Thread
+        new Thread(new Runnable() {
+            public void run() {
+                while (progressStatus < 100) {
+                    try {
+                        // 캐릭터 이동 주기
+                        Thread.sleep(characterMoveInterval);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    handler.post(new Runnable() {
+                        public void run() {
+                            // 캐릭터의 X축 이동
+                            characterPosition += 2f; // 원하는 이동 속도
+
+                            // 캐릭터가 화면의 최대 X 좌표를 넘으면 초기 위치로 이동
+                            if (characterPosition > screenLimit) {
+                                characterPosition = initialPosition; // 초기 위치로 리셋
+                            }
+                            character.setTranslationX(characterPosition); // X축 위치 업데이트
+                        }
+                    });
+                }
+            }
+        }).start();
 
         selectText1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,6 +211,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                 if (num < 6) {
                     // 현재 페이지 내용, 선택지 저장
                     pageContents.set(num - 1, storyTextView.getText().toString() + selectedChoice);
+
                     if (num < 5) {
                         makeStory.generateNextStoryPart(selectedChoice, num);
                     } else if (num == 5) {
@@ -183,6 +242,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                 if (num < 6) {
                     // 현재 페이지 내용, 선택지 저장
                     pageContents.set(num - 1, storyTextView.getText().toString() + selectedChoice);
+
                     if (num < 5) {
                         makeStory.generateNextStoryPart(selectedChoice, num);
                     } else if (num == 5) {
@@ -194,30 +254,23 @@ public class MakeStoryActivity extends AppCompatActivity {
             }
         });
 
-        selectMic2.setOnClickListener(new View.OnClickListener() {
+        selectMic2.setOnClickListener(new View.OnClickListener() { //마이크 모양
             @Override
             public void onClick(View v) {
                 sound();
                 Intent intent = new Intent(MakeStoryActivity.this, VoiceActivity.class);
-
-                // 이미지 데이터 전달
                 byte[] imageBytes = (byte[]) nextBtn.getTag();
                 intent.putExtra("backgroundImageBytes", imageBytes);
-
                 startActivity(intent);
             }
         });
 
-        selectMic3.setOnClickListener(new View.OnClickListener() {
+        selectMic3.setOnClickListener(new View.OnClickListener() { //텍스트뷰
             @Override
             public void onClick(View v) {
-                sound(); // 효과음
-
-                // recognizedText 가져오기
-                String selectedChoice = selectMic3.getText().toString();
-
-                // recognizedText가 null이거나 빈 문자열일 경우 처리
-                if (!TextUtils.isEmpty(selectedChoice)) {
+                sound();
+                String selectedChoice = selectMic3.getText().toString(); // 선택지2 가져오기
+                if (!(selectedChoice.equals(""))) {
                     nextStory.setVisibility(View.INVISIBLE);
                     selectImage1.setVisibility(View.INVISIBLE);
                     selectImage2.setVisibility(View.INVISIBLE);
@@ -227,10 +280,10 @@ public class MakeStoryActivity extends AppCompatActivity {
                     selectMic2.setVisibility(View.INVISIBLE);
                     selectMic3.setVisibility(View.INVISIBLE);
 
-                    // num에 따라 다음 스토리 생성
                     if (num < 6) {
-                        // 현재 페이지 내용 저장
+                        // 현재 페이지 내용, 선택지 저장
                         pageContents.set(num - 1, storyTextView.getText().toString() + selectedChoice);
+
                         if (num < 5) {
                             makeStory.generateNextStoryPart(selectedChoice, num);
                         } else if (num == 5) {
@@ -238,17 +291,11 @@ public class MakeStoryActivity extends AppCompatActivity {
                         }
                         ++num;
                     }
-                    // num이 5보다 클 때 nextBtn 표시
                     if (num > 5) nextBtn.setVisibility(View.VISIBLE);
                 } else {
-                    // recognizedText가 비어 있으면 음성 인식 재시작
                     Intent intent = new Intent(MakeStoryActivity.this, VoiceActivity.class);
-
-                    // 이미지 데이터가 있는 경우 전달
                     byte[] imageBytes = (byte[]) nextBtn.getTag();
-                    if (imageBytes != null) {
-                        intent.putExtra("backgroundImageBytes", imageBytes);
-                    }
+                    intent.putExtra("backgroundImageBytes", imageBytes);
                     startActivity(intent);
                 }
             }
@@ -336,11 +383,12 @@ public class MakeStoryActivity extends AppCompatActivity {
                             public void run() {
                                 if (bitmap != null) {
                                     backgroundImageView.setImageBitmap(bitmap);
-                                    loading.getAnimation().cancel();
-                                    loading.clearAnimation();
-                                    loading.setVisibility(View.INVISIBLE);
                                     isImageLoaded = true;
-
+                                    storyTextView.setVisibility(View.VISIBLE);
+                                    retryBtn.setVisibility(View.VISIBLE);
+                                    stopMakingBtn.setVisibility(View.VISIBLE);
+                                    background.setVisibility(View.VISIBLE);
+                                    loadingLayout.setVisibility(View.INVISIBLE);
                                     uploadImage(bitmap); // Storage에 배경 업로드
                                     displayStoryText(storyText); //동화 출력
 
@@ -409,12 +457,8 @@ public class MakeStoryActivity extends AppCompatActivity {
                             handler.removeCallbacksAndMessages(null);
                             storyTextView.setText(storyText);
                             textFullyDisplayed[0] = true; // 전체 텍스트 표시 상태로 플래그 설정
-
-                            //if (isImageLoaded && num <= 5) {
-                            //    makeStory.generateChoices(num); // 선택지 생성
-                            //}
-                            return true;
                         }
+                        // false를 반환하여 기본 스크롤 동작을 허용
                         return false;
                     }
                 });
@@ -433,10 +477,6 @@ public class MakeStoryActivity extends AppCompatActivity {
 
     //선택지를 화면에 띄움
     public void showChoices(String choicesText) {
-        // selectMic3에 텍스트가 있는지 확인하고, 있다면 비움
-        if (!TextUtils.isEmpty(selectMic3.getText())) {
-            selectMic3.setText(""); // 텍스트 지움
-        }
         String[] choices = choicesText.split("/");
         if (choices.length >= 2) {
             selectText1.setText(choices[0].trim());
@@ -610,21 +650,6 @@ public class MakeStoryActivity extends AppCompatActivity {
             }
         });
     }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-
-        // VoiceActivity에서 전달된 recognizedText를 받아오기
-        String recognizedText = intent.getStringExtra("recognizedText");
-
-        // selectMic3 텍스트뷰에 반영
-        if (recognizedText != null && !recognizedText.isEmpty()) {
-            selectMic3.setText(recognizedText);
-        }
-        selectMic2.setVisibility(View.INVISIBLE);
-    }
-
 
     // Firebase Storage에 파일 업로드
     private void uploadFile(String fileName) {

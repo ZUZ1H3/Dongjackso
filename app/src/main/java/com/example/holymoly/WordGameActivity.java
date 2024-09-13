@@ -31,12 +31,15 @@ public class WordGameActivity extends AppCompatActivity {
     private static final int SELECTED_IMAGE_RESOURCE = R.drawable.rect2;  // 선택된 이미지를 나타내는 리소스
     private static final int BINGO_IMAGE_RESOURCE = R.drawable.rect3; // 빙고일 때 사용할 보라색 이미지 리소스
 
+
     private UserInfo userInfo = new UserInfo(); // 사용자 정보를 관리하는 객체
     private TextView name;
 
     private boolean[][] userSelected; // 사용자가 선택한 칸을 추적하는 배열
     private boolean[][] aiSelected;   // AI가 선택한 칸을 추적하는 배열
-    private boolean userTurn;         // 현재 턴이 사용자인지 AI인지 관리하는 변수
+    private boolean userTurn = true;
+    private boolean gameOver = false; // 게임 종료 상태 변수 추가
+
     // 각 행, 열, 대각선의 빙고 상태를 추적하는 변수들
     private boolean[] userRowBingo = new boolean[4];
     private boolean[] userColBingo = new boolean[4];
@@ -76,7 +79,6 @@ public class WordGameActivity extends AppCompatActivity {
         // 사용자와 AI의 선택 상태를 추적할 배열 초기화
         userSelected = new boolean[4][4];
         aiSelected = new boolean[4][4];
-        userTurn = true; // 게임 시작 시 사용자가 먼저 선택
 
         // 사용자 빙고판의 TextView 및 ImageView 배열 초기화
         userTextViews = new TextView[][]{
@@ -175,7 +177,9 @@ public class WordGameActivity extends AppCompatActivity {
         checkAIBingo();
 
         userTurn = false; // 턴을 AI로 변경
-        new Handler().postDelayed(this::aiTurn, 3000);  // 2.5초 후 AI의 턴 실행
+        if (!gameOver) {
+            new Handler().postDelayed(this::aiTurn, 3000);  // 2.5초 후 AI의 턴 실행
+        }
     }
 
 
@@ -200,7 +204,7 @@ public class WordGameActivity extends AppCompatActivity {
 
         // AI가 선택한 단어에 해당하는 사용자의 텍스트뷰도 선택된 것으로 표시
         String selectedWord = aiWords[row][col];
-        aiTextView.setText(selectedWord +"!");
+        aiTextView.setText(selectedWord + "!");
 
         // Handler를 사용하여 지연 작업을 설정
         new Handler().postDelayed(() -> {
@@ -356,6 +360,7 @@ public class WordGameActivity extends AppCompatActivity {
 
 
     public void endGame(String winner) {
+        gameOver = true;
         // AlertDialog 생성
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("게임 종료");
@@ -363,7 +368,7 @@ public class WordGameActivity extends AppCompatActivity {
 
         // 확인 버튼 클릭 시 동작 설정
         builder.setPositiveButton("확인", (dialog, which) -> {
-            if(winner.equals(name.getText().toString())) countWin();
+            if (winner.equals(name.getText().toString())) countWin();
             finish();
         });
 
@@ -371,6 +376,7 @@ public class WordGameActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
     private boolean checkLine(boolean[] line) {
         for (boolean cell : line) {
             if (!cell) {

@@ -82,16 +82,32 @@ public class WordGameReadyActivity extends AppCompatActivity {
         return false;
     }
 
-    public void generateAIWords(String theme) { // Gemini에 전달할 프롬프트 생성
-        String prompt = "사용자는 " + theme + "를 주제로 빙고게임을 하려고 합니다. 그런데 단어가 생각이 안 난다고 합니다. " +
-                "주제에 맞는 단어를 랜덤으로 2가지 추천해주세요. 단답으로 대답하세요." +
-                "단어와 단어 사이에는 ', '로 띄어주세요. ";
+    public void generateAIWords(String theme) {
+        StringBuilder existingWords = new StringBuilder();
+        for (EditText editText : editTexts) {
+            String word = editText.getText().toString().trim();
+            if (!word.isEmpty()) {
+                existingWords.append(word).append(", ");
+            }
+        }
+
+        // Remove the last comma and space
+        if (existingWords.length() > 0) {
+            existingWords.setLength(existingWords.length() - 2);
+        }
+
+        // Create prompt for AI
+        String prompt = "사용자는 " + theme + "를 주제로 빙고게임을 하려고 합니다. " +
+                "그런데 단어가 생각이 안 난다고 합니다. " +
+                "다음 단어들을 제외한 주제에 맞는 단어를 랜덤으로 2가지 추천해주세요. " +
+                "추천할 단어는 '" + existingWords.toString() + "'을 제외해야 합니다. 단답으로 대답하세요. " +
+                "단어와 단어 사이에는 ', '로 띄어주세요.";
 
         gemini.generateText(prompt, new Gemini.Callback() {
             @Override
             public void onSuccess(String text) {
                 runOnUiThread(() ->
-                       AITextView.setText("이런 단어는 어때? \n" + text)
+                        AITextView.setText("이런 단어는 어때? \n" + text)
                 );
             }
 
@@ -103,6 +119,7 @@ public class WordGameReadyActivity extends AppCompatActivity {
             }
         });
     }
+
 
     // 효과음
     public void sound() {
