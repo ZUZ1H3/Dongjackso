@@ -1,30 +1,33 @@
 package com.example.holymoly;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import yuku.ambilwarna.AmbilWarnaDialog;
 
-public class DrawStoryAlone extends AppCompatActivity {
+public class DrawStoryActivity extends AppCompatActivity {
 
     private CustomView drawView;
     private ImageButton pen, erase, undo, rainbow, remove, ok, AI, stop;
@@ -34,7 +37,6 @@ public class DrawStoryAlone extends AppCompatActivity {
     private Map<Integer, String> colorCodeMap = new HashMap<>();
     private String selectedColorCode = "#303030"; // 기본 색상 코드 (검정색)
     private SeekBar penSeekBar; // 추가된 SeekBar
-    private String bookTitle = "";
     private String selectedTheme;
     private ArrayList<String> selectedCharacters;
     private Karlo karlo;
@@ -46,11 +48,18 @@ public class DrawStoryAlone extends AppCompatActivity {
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef = storage.getReference();
 
+    /* 효과음 */
+    private SharedPreferences pref;
+    private boolean isSoundOn;
+
+    private int index;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_draw_story_alone);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         // 버튼 초기화
         pen = findViewById(R.id.ib_pen);
@@ -63,6 +72,8 @@ public class DrawStoryAlone extends AppCompatActivity {
         ok = findViewById(R.id.ib_ok);
         AI = findViewById(R.id.ib_AI);
         stop = findViewById(R.id.ib_stopMaking);
+
+        index = getIntent().getIntExtra("index", 1);
 
         // 색상 버튼과 리소스 매핑
         int[] colorButtonIds = {
@@ -135,7 +146,7 @@ public class DrawStoryAlone extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sound();
-                //uploadImage();
+                uploadImage();
             }
         });
 
@@ -266,10 +277,43 @@ public class DrawStoryAlone extends AppCompatActivity {
         }
     }
 
-    // 효과음
-    public void sound() {
-        Intent intent = new Intent(this, SoundService.class);
-        startService(intent);
+    private void uploadImage() {
+        // CustomView에서 Bitmap 생성
+        Bitmap bitmap = Bitmap.createBitmap(drawView.getWidth(), drawView.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawView.draw(canvas);
+
+        // 표지 만들 때 저장될 경로
+        StorageReference backgroundRef = storageRef.child("background/개인/");
+
+        // 경로에 있는 파일 목록 가져오기
+        backgroundRef.listAll().addOnSuccessListener(listResult -> {
+
+            // 혼자일 때의 filename 변수
+            String aloneFileName = user.getUid() + "_none_" + index + ".png";
+
+            // 이미지가 저장될 경로 설정
+            StorageReference aloneRef = backgroundRef.child(aloneFileName);
+
+            // bitmap을 png로 압축 및 저장
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 80, baos);
+            byte[] data = baos.toByteArray();
+
+            // 업로드 시작
+            UploadTask aloneUploadTask = aloneRef.putBytes(data);
+            aloneUploadTask.addOnSuccessListener(taskSnapshot -> {
+                Toast.makeText(this, "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
+                finish();
+            });
+        });
     }
 
+    // 효과음
+    public void sound() {
+        isSoundOn = pref.getBoolean("on&off2", true);
+        Intent intent = new Intent(this, SoundService.class);
+        if (isSoundOn) startService(intent); // 효과음 on
+        else stopService(intent);            // 효과음 off
+    }
 }

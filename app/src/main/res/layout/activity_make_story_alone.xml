@@ -64,8 +64,8 @@
 
     <ImageView
         android:id="@+id/iv_touch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="432dp"
+        android:layout_height="540dp"
         android:src="@drawable/ic_touch2"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -151,6 +151,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5" />
 
+    <TextView
+        android:id="@+id/pageNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:textSize="30dp"
+        android:fontFamily="@font/hakgyoansim"
+        android:layout_marginTop="638dp"
+        android:layout_marginLeft="890dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
     <ImageView
         android:id="@+id/iv_alone_mic"
         android:layout_width="wrap_content"
@@ -163,21 +175,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.55" />
-
-    <ImageButton
-        android:id="@+id/ib_mic_stop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#0000"
-        android:src="@drawable/ic_mini_ok"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.44"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.84" />
-
+    
     <com.example.holymoly.StrokeText
         android:id="@+id/tv_howabout"
         android:layout_width="340dp"

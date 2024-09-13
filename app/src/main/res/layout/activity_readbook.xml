@@ -28,6 +28,15 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
+        android:id="@+id/background"
+        android:layout_width="640dp"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:layout_marginLeft="640dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <ImageView
         android:id="@+id/iv_writingZone"
         android:layout_width="640dp"
         android:layout_height="match_parent"

@@ -25,6 +25,8 @@ import com.amazonaws.services.polly.model.SynthesizeSpeechRequest;
 import com.amazonaws.services.polly.model.SynthesizeSpeechResult;
 import com.amazonaws.services.polly.model.VoiceId;
 import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -34,7 +36,7 @@ import java.util.ArrayList;
 public class ReadBookActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView storyTextView, pageTextView;
     private ImageButton stopReadingBtn, backBtn, nextBtn, play, resume;
-    private ImageView backgroundImageView;
+    private ImageView backgroundImageView, background;
     private int currentPage = 1;
     private long backPressedTime = 0;
     private String imgName;
@@ -42,8 +44,11 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
     private ArrayList<String> pageContents = new ArrayList<>();
 
     /* firebase 초기화 */
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseUser user = auth.getCurrentUser();
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef = storage.getReference();
+    private String uid = user.getUid();
 
     /* 텍스트 표시 변수 */
     private Handler textHandler;
@@ -73,6 +78,7 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
         storyTextView = findViewById(R.id.tv_pageText);
         pageTextView = findViewById(R.id.tv_page);
         backgroundImageView = findViewById(R.id.background_image_view);
+        background = findViewById(R.id.background);
         stopReadingBtn = findViewById(R.id.ib_stopReading);
         backBtn = findViewById(R.id.ib_backStep);
         nextBtn = findViewById(R.id.ib_nextStep);
@@ -92,8 +98,18 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
         imgName = getIntent().getStringExtra("imgName");
 
         // 이미지 및 텍스트 로드
-        loadImage(imgName);
-        loadText(imgName);
+        if(imgName.contains("개인")) {
+            backgroundImageView.setVisibility(View.INVISIBLE);
+            background.setVisibility(View.VISIBLE);
+            loadImage(imgName, currentPage);
+            loadText(imgName);
+        }
+        else {
+            backgroundImageView.setVisibility(View.VISIBLE);
+            background.setVisibility(View.INVISIBLE);
+            loadImage(imgName);
+            loadText(imgName);
+        }
     }
 
     @Override
@@ -136,6 +152,7 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
             resume.setVisibility(View.INVISIBLE); // resume 버튼 숨기기
         }
     }
+    // AI와 만들 때의 이미지 로드
     private void loadImage(String imgName) {
         String[] parts = imgName.split("_");
         String uid = parts[0];
@@ -149,10 +166,29 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
             Glide.with(this).load(uri).into(backgroundImageView);
         });
     }
+
+    // 혼자 만들기일 때의 이미지 로드
+    private void loadImage(String imgName, int num) {
+        String[] parts = imgName.split("_");
+        String uid = parts[0];
+        String theme = parts[1];
+        String title = parts[3].replace(".png", "");
+
+        String fileName = uid + "_" + title + "_" + num + ".png";
+
+        StorageReference aloneRef = storageRef.child("background/" + theme + "/" + fileName);
+
+        // 이미지 로드
+        aloneRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            Glide.with(this).load(uri).into(background);
+        });
+    }
+
     // 이전 페이지로 이동
     private void backPage() {
         if (currentPage > 1) {
             currentPage--;
+            loadImage(imgName, currentPage);
             showPage(currentPage); // 페이지 내용 업데이트
         } else {
             Toast.makeText(this, "첫 번째 페이지입니다.", Toast.LENGTH_SHORT).show();
@@ -162,6 +198,7 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
     private void nextPage() {
         if (currentPage < pageContents.size()) {
             currentPage++;
+            loadImage(imgName, currentPage);
             showPage(currentPage); // 페이지 내용 업데이트
         } else {
             Toast.makeText(this, "마지막 페이지입니다.", Toast.LENGTH_SHORT).show();
@@ -169,16 +206,29 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
     }
     // Storage에서 텍스트 로드
     private void loadText(String imgName) {
-        String uidThemeIndex = compareFiles(imgName);
-        // Storage에서 txt 파일 목록 가져오기
-        StorageReference txtRef = storageRef.child("stories/" + uidThemeIndex);
-        txtRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(bytes -> {
-            String textContent = new String(bytes);
-            bookTextContent(textContent);
-            showPage(currentPage);
-        });
+        if(imgName.contains("개인")) {
+            String uidThemeIndex = aloneFiles(imgName);
+            // Storage에서 txt 파일 목록 가져오기
+            StorageReference txtRef = storageRef.child("stories/" + uidThemeIndex);
+
+            txtRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(bytes -> {
+                String textContent = new String(bytes);
+                bookTextContent(textContent);
+                showPage(currentPage);
+            });
+        }
+        else {
+            String uidThemeIndex = compareFiles(imgName);
+            // Storage에서 txt 파일 목록 가져오기
+            StorageReference txtRef = storageRef.child("stories/" + uidThemeIndex);
+            txtRef.getBytes(Long.MAX_VALUE).addOnSuccessListener(bytes -> {
+                String textContent = new String(bytes);
+                bookTextContent(textContent);
+                showPage(currentPage);
+            });
+        }
     }
-    // imgName으로 파일명을 txt 파일로 반환
+    // AI와 함께 imgName으로 파일명을 txt 파일로 변환
     private String compareFiles(String imgName) {
         String[] parts = imgName.split("_");
         String uid = parts[0];
@@ -186,6 +236,17 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
         String index = parts[2];
 
         return uid + "_" + theme + "_" + index + ".txt";
+    }
+
+    // 개인 imgName으로 파일명을 txt 파일로 변환
+    private String aloneFiles(String imgName) {
+        String[] parts = imgName.split("_");
+        String uid = parts[0];
+        String theme = parts[1];
+        String index = parts[2];
+        String title = parts[3].replace(".png", "");
+
+        return uid + "_" + theme + "_" + index + "_" + title + ".txt";
     }
     // 전체 텍스트를 페이지 + 숫자 별로 분리
     private void bookTextContent(String textContent) {
@@ -252,8 +313,8 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
     // 텍스트를 음성으로 변환
     public void synthesizeSpeech(String text) {
         SynthesizeSpeechRequest synthReq = new SynthesizeSpeechRequest()
-                .withText(text) // SSML 텍스트 사용
-                .withTextType("text") // 텍스트 타입을 SSML로 설정
+                .withText(text)
+                .withTextType("text")
                 .withVoiceId(VoiceId.Seoyeon)
                 .withOutputFormat(OutputFormat.Pcm);
 
@@ -295,8 +356,19 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
             audioTrack.write(buffer, 0, readBytes);
         }
 
-        audioTrack.stop();
-        audioTrack.release();
+        // 음성 스트림이 끝났을 때 음성 중단
+        if (audioTrack != null) {
+            audioTrack.stop();
+            audioTrack.release();
+            audioTrack = null;
+        }
+
+        // 음성 스트림이 끝났을 때 UI 업데이트
+        runOnUiThread(() -> {
+            play.setVisibility(View.VISIBLE);     // play 버튼 보이기
+            resume.setVisibility(View.INVISIBLE); // resume 버튼 숨기기
+        });
+
         stream.close();
     }
 
