@@ -480,6 +480,9 @@ public class MakeStoryActivity extends AppCompatActivity {
                             handler.removeCallbacksAndMessages(null);
                             storyTextView.setText(storyText);
                             textFullyDisplayed[0] = true; // 전체 텍스트 표시 상태로 플래그 설정
+                            if (isImageLoaded && num <= 5) {
+                                makeStory.generateChoices(num);
+                            }
                         }
                         // false를 반환하여 기본 스크롤 동작을 허용
                         return false;
