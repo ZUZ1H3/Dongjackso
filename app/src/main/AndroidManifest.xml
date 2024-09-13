@@ -21,8 +21,9 @@
         android:theme="@style/Theme.HolyMoly"
         tools:targetApi="31">
         <activity
-            android:name=".progressbarActivity"
+            android:name=".WordGameThemeActivity"
             android:exported="true" />
+
         <activity
             android:name=".DrawStoryAlone"
             android:exported="true" />

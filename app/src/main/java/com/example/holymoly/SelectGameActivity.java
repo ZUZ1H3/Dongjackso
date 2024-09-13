@@ -81,7 +81,7 @@ public class SelectGameActivity extends AppCompatActivity implements UserInfoLoa
             @Override
             public void onClick(View v) {
                 sound();
-                Intent intent = new Intent(SelectGameActivity.this, WordGameReadyActivity.class);
+                Intent intent = new Intent(SelectGameActivity.this, WordGameThemeActivity.class);
                 startActivity(intent);
             }
         });
