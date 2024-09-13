@@ -2,6 +2,12 @@ package com.example.holymoly;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BlurMaskFilter;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -10,13 +16,27 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
 public class SelectGameActivity extends AppCompatActivity implements UserInfoLoader {
     private ImageButton btnhome, btntrophy, btnsetting;
     private ImageButton ibSelectBingo, ibSelectPuzzle;
-    private ImageView profile;
+    private ImageView profile, userImage, userImage2;
     private TextView name, nickname;
 
     private UserInfo userInfo = new UserInfo();
+
+    /* DB */
+    private FirebaseAuth auth = FirebaseAuth.getInstance();
+    private FirebaseUser user = auth.getCurrentUser();
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private StorageReference storageRef = storage.getReference();
 
     /* 효과음 */
     private SharedPreferences pref;
@@ -30,6 +50,8 @@ public class SelectGameActivity extends AppCompatActivity implements UserInfoLoa
         name = findViewById(R.id.mini_name);
         nickname = findViewById(R.id.mini_nickname);
         profile = findViewById(R.id.mini_profile);
+        userImage = findViewById(R.id.userImage);
+        userImage2 = findViewById(R.id.userImage2);
 
         btnhome = findViewById(R.id.ib_homebutton);
         btntrophy = findViewById(R.id.ib_trophy);
@@ -94,6 +116,46 @@ public class SelectGameActivity extends AppCompatActivity implements UserInfoLoa
                 startActivity(intent);
             }
         });
+
+        // 이미지 불러오기
+        StorageReference imgRef = storageRef.child("characters/" + user.getUid() + ".png");
+        imgRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            Glide.with(this)
+                    .asBitmap()
+                    .load(uri)
+                    .into(new CustomTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, Transition<? super Bitmap> transition) {
+                            Bitmap bitmap = createShadow(resource);
+                            userImage.setImageBitmap(bitmap); // ImageView에 설정
+                            userImage2.setImageBitmap(bitmap);
+                        }
+
+                        @Override
+                        public void onLoadCleared(Drawable placeholder) {}
+                    });
+        });
+    }
+
+    // 그림자 생성
+    private Bitmap createShadow(Bitmap bitmap) {
+        // 기존 이미지 크기와 동일한 새 Bitmap 생성
+        Bitmap shadowBitmap = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(shadowBitmap);
+
+        // 그림자 효과를 위한 Paint 설정
+        Paint shadowPaint = new Paint();
+        shadowPaint.setAntiAlias(true);    // 경계선이 부드럽게
+        shadowPaint.setColor(Color.BLACK); // 그림자 색상
+        shadowPaint.setAlpha(150);         // 투명도 설정
+        shadowPaint.setMaskFilter(new BlurMaskFilter(15f, BlurMaskFilter.Blur.NORMAL));
+
+        // 그림자 그리기
+        canvas.drawBitmap(bitmap.extractAlpha(), 10, 15, shadowPaint);
+        // 원본 이미지 그리기
+        canvas.drawBitmap(bitmap, 0, 0, null);
+
+        return shadowBitmap;
     }
 
     @Override

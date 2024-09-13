@@ -533,6 +533,54 @@
                                 android:textSize="25sp" />
                         </FrameLayout>
 
+                        <FrameLayout
+                            android:id="@+id/aloneTrophyLayout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/ic_trophy_achievement_background" />
+
+                            <TextView
+                                android:id="@+id/tv_aloneTrophy"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:layout_marginLeft="40dp"
+                                android:layout_marginTop="25dp"
+                                android:fontFamily="@font/ssurround"
+                                android:text="홀로 동화 1개 만들기"
+                                android:textColor="#000000"
+                                android:textSize="35sp" />
+
+                            <ImageButton
+                                android:id="@+id/ib_aloneTrophy"
+                                android:layout_width="wrap_content"
+                                android:layout_height="48dp"
+                                android:layout_gravity="right"
+                                android:layout_marginTop="15dp"
+                                android:layout_marginRight="110dp"
+                                android:background="@null"
+                                android:contentDescription="홀로 동화 보상 버튼"
+                                android:src="@drawable/ic_btn_rewardbutton" />
+
+                            <TextView
+                                android:id="@+id/tv_aloneTrophyPercent"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right"
+                                android:layout_marginTop="27dp"
+                                android:layout_marginRight="155dp"
+                                android:fontFamily="@font/ssurround"
+                                android:text="0%"
+                                android:textColor="#000000"
+                                android:textSize="25sp" />
+                        </FrameLayout>
+
+
                         <!-- 일기 동화 -->
                         <FrameLayout
                             android:id="@+id/diaryTrophyLayout"

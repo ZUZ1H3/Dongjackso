@@ -48,8 +48,8 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
     private int seaTrophyCount = 0, forestTrophyCount = 0,
                 castleTrophyCount = 0, villageTrophyCount = 0,
                 universeTrophyCount = 0, desertTrophyCount = 0,
-                customTrophyCount = 0, diaryCount = 0,
-                bingoCount = 0, puzzleCount = 0;
+                customTrophyCount = 0, aloneCount = 0,
+                diaryCount = 0, bingoCount = 0, puzzleCount = 0;
 
     //동화 업적 텍스트뷰
     private TextView tvSeaTrophy, tvSeaTrophyPercent,
@@ -59,16 +59,17 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             tvUniverseTrophy, tvUniverseTrophyPercent,
             tvDesertTrophy, tvDesertTrophyPercent,
             tvCustomTrophy, tvCustomTrophyPercent,
+            alone, alonePercent,
             diary, diaryPercent,
             bingo, bingoPercent,
             puzzle, puzzlePercent;
 
     //목표 개수 리스트 설정
     private int[] trophyGoals = {1, 5, 10, 20, 50};
-    private int seaTrophyIndex=0, forestTrophyIndex=0, castleTrophyIndex=0, villageTrophyIndex=0,
-                universeTrophyIndex=0, desertTrophyIndex=0, customTrophyIndex=0, diaryIndex=0, bingoIndex=0, puzzleIndex=0;
-    private ImageButton seaButton, forestButton, villageButton, castleButton, universeButton,
-                        desertButton, customButton, diaryButton, bingoButton, puzzleButton;
+    private int seaTrophyIndex=0, forestTrophyIndex=0, castleTrophyIndex=0, villageTrophyIndex=0, universeTrophyIndex=0,
+            desertTrophyIndex=0, customTrophyIndex=0, aloneIndex=0, diaryIndex=0, bingoIndex=0, puzzleIndex=0;
+    private ImageButton seaButton, forestButton, villageButton, castleButton, universeButton, desertButton, customButton,
+            aloneButton, diaryButton, bingoButton, puzzleButton;
 
     //작가호칭 - 프로그래스바 목표
     private int totalTrophyCount=0;
@@ -196,6 +197,15 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             }
         });
 
+        aloneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 버튼 클릭 시 onRewardButtonClicked 호출
+                onRewardButtonClicked("홀로");
+                sound();
+            }
+        });
+
         diaryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -279,6 +289,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         universeTrophyCount = sharedPreferences.getInt("universeTrophyCount", 0);
         desertTrophyCount = sharedPreferences.getInt("desertTrophyCount", 0);
         customTrophyCount = sharedPreferences.getInt("customTrophyCount", 0);
+        aloneCount = sharedPreferences.getInt("aloneCount", 0);
         diaryCount = sharedPreferences.getInt("diaryCount", 0);
         bingoCount = sharedPreferences.getInt("bingoCount", 0);
         puzzleCount = sharedPreferences.getInt("puzzleCount", 0);
@@ -290,6 +301,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         universeTrophyIndex = sharedPreferences.getInt("universeTrophyIndex", 0);
         desertTrophyIndex = sharedPreferences.getInt("desertTrophyIndex", 0);
         customTrophyIndex = sharedPreferences.getInt("customTrophyIndex", 0);
+        aloneIndex = sharedPreferences.getInt("aloneIndex", 0);
         diaryIndex = sharedPreferences.getInt("diaryIndex", 0);
         bingoIndex = sharedPreferences.getInt("bingoIndex", 0);
         puzzleIndex = sharedPreferences.getInt("puzzleIndex", 0);
@@ -309,6 +321,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         editor.putInt("universeTrophyCount", universeTrophyCount);
         editor.putInt("desertTrophyCount", desertTrophyCount);
         editor.putInt("customTrophyCount", customTrophyCount);
+        editor.putInt("aloneCount", aloneCount);
         editor.putInt("diaryCount", diaryCount);
         editor.putInt("bingoCount", bingoCount);
         editor.putInt("puzzleCount", puzzleCount);
@@ -320,6 +333,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         editor.putInt("universeTrophyIndex", universeTrophyIndex);
         editor.putInt("desertTrophyIndex", desertTrophyIndex);
         editor.putInt("customTrophyIndex", customTrophyIndex);
+        editor.putInt("aloneIndex", aloneIndex);
         editor.putInt("diaryIndex", diaryIndex);
         editor.putInt("bingoIndex", bingoIndex);
         editor.putInt("puzzleIndex", puzzleIndex);
@@ -466,6 +480,11 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             currentIndex = customTrophyIndex;
             goalTextView = tvCustomTrophy;
             percentageTextView = tvCustomTrophyPercent;
+        } else if (thema.equals("홀로")) {
+            currentCount = aloneCount;
+            currentIndex = aloneIndex;
+            goalTextView = alone;
+            percentageTextView = alonePercent;
         } else if (thema.equals("일기")) {
             currentCount = diaryCount;
             currentIndex = diaryIndex;
@@ -523,6 +542,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             case "우주": return tvUniverseTrophyPercent;
             case "사막": return tvDesertTrophyPercent;
             case "커스텀": return tvCustomTrophyPercent;
+            case "홀로": return alonePercent;
             case "일기": return diaryPercent;
             case "빙고": return bingoPercent;
             case "퍼즐": return puzzlePercent;
@@ -539,6 +559,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
             case "우주": universeTrophyIndex++; break;
             case "사막": desertTrophyIndex++; break;
             case "커스텀": customTrophyIndex++; break;
+            case "홀로": aloneIndex++; break;
             case "일기": diaryIndex++; break;
             case "빙고": bingoIndex++; break;
             case "퍼즐": puzzleIndex++; break;
@@ -567,6 +588,8 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         tvDesertTrophyPercent = findViewById(R.id.tv_desertTrophyPercent);
         tvCustomTrophy = findViewById(R.id.tv_customTrophy);
         tvCustomTrophyPercent = findViewById(R.id.tv_customTrophyPercent);
+        alone = findViewById(R.id.tv_aloneTrophy);
+        alonePercent = findViewById(R.id.tv_aloneTrophyPercent);
         diary = findViewById(R.id.tv_diaryTrophy);
         diaryPercent = findViewById(R.id.tv_diaryTrophyPercent);
         bingo = findViewById(R.id.tv_bingoTrophy);
@@ -582,6 +605,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         universeButton = findViewById(R.id.ib_universeTrophy);
         desertButton = findViewById(R.id.ib_desertTrophy);
         customButton = findViewById(R.id.ib_customTrophy);
+        aloneButton = findViewById(R.id.ib_aloneTrophy);
         diaryButton = findViewById(R.id.ib_diaryTrophy);
         bingoButton = findViewById(R.id.ib_bingoTrophy);
         puzzleButton = findViewById(R.id.ib_puzzleTrophy);
@@ -652,6 +676,10 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
                         case "커스텀":
                             customTrophyCount = Math.max(customTrophyCount, index);
                             updateUI("커스텀");
+                            break;
+                        case "개인":
+                            aloneCount = Math.max(aloneCount, index);
+                            updateUI("홀로");
                             break;
                     }
 

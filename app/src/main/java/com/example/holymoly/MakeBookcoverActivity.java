@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -15,8 +16,10 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -26,6 +29,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -52,6 +56,7 @@ public class MakeBookcoverActivity extends AppCompatActivity {
     /* firebase 초기화 */
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef = storage.getReference();
 
@@ -362,21 +367,35 @@ public class MakeBookcoverActivity extends AppCompatActivity {
                 // AI와 만들기
                 UploadTask uploadTask = withAIRef.putBytes(data);
                 uploadTask.addOnSuccessListener(taskSnapshot -> {
-                    Toast.makeText(this, "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(this, AlbumActivity.class);
-                    intent.putExtra("booktitle", bookTitle);
-                    startActivity(intent);
-                    finish();
-                });
+                    Map<String, Object> fileData = new HashMap<>();
+                    fileData.put("timestamp", new Timestamp(new Date()));
+
+                    db.collection("covers").document(user.getUid()).collection("filename").document(withAIFileName)
+                            .set(fileData)
+                            .addOnSuccessListener(documentReference -> {
+                                Toast.makeText(this, "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(this, AlbumActivity.class);
+                                intent.putExtra("booktitle", bookTitle);
+                                startActivity(intent);
+                                finish();
+                            });
+                    });
             }
-            if(from.equals("개인")) {
+            else if(from.equals("개인")) {
                 // 혼자 만들기
                 UploadTask aloneUploadTask = aloneRef.putBytes(data);
                 aloneUploadTask.addOnSuccessListener(taskSnapshot -> {
-                    Intent intent = new Intent(this, AlbumActivity.class);
-                    Toast.makeText(this, "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
-                    startActivity(intent);
-                    finish();
+                    Map<String, Object> fileData = new HashMap<>();
+                    fileData.put("timestamp", new Timestamp(new Date()));
+
+                    db.collection("covers").document(user.getUid()).collection("filename").document(aloneFileName)
+                            .set(fileData)
+                            .addOnSuccessListener(documentReference -> {
+                                Toast.makeText(this, "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(this, AlbumActivity.class);
+                                startActivity(intent);
+                                finish();
+                            });
                 });
             }
         });
