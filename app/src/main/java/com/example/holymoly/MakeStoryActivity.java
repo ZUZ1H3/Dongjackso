@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
 import android.view.MotionEvent;
 import android.view.View;
@@ -136,6 +137,15 @@ public class MakeStoryActivity extends AppCompatActivity {
 
         makeStory.generateInitialStory();//동화 도입부 생성
 
+        // VoiceActivity에서 전달된 recognizedText를 받아오기
+        intent = getIntent();
+        String recognizedText = intent.getStringExtra("recognizedText");
+
+        // recognizedText가 null이 아니면 selectMic3에 텍스트 설정
+        if (recognizedText != null && !recognizedText.isEmpty()) {
+            selectMic3.setText(recognizedText);  // 음성 인식 텍스트를 텍스트뷰에 설정
+        }
+
         // ProgressBar 업데이트를 위한 Thread
         new Thread(new Runnable() {
             public void run() {
@@ -254,23 +264,30 @@ public class MakeStoryActivity extends AppCompatActivity {
             }
         });
 
-        selectMic2.setOnClickListener(new View.OnClickListener() { //마이크 모양
+        selectMic2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sound();
                 Intent intent = new Intent(MakeStoryActivity.this, VoiceActivity.class);
+
+                // 이미지 데이터 전달
                 byte[] imageBytes = (byte[]) nextBtn.getTag();
                 intent.putExtra("backgroundImageBytes", imageBytes);
+
                 startActivity(intent);
             }
         });
 
-        selectMic3.setOnClickListener(new View.OnClickListener() { //텍스트뷰
+        selectMic3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                sound();
-                String selectedChoice = selectMic3.getText().toString(); // 선택지2 가져오기
-                if (!(selectedChoice.equals(""))) {
+                sound(); // 효과음
+
+                // recognizedText 가져오기
+                String selectedChoice = selectMic3.getText().toString();
+
+                // recognizedText가 null이거나 빈 문자열일 경우 처리
+                if (!TextUtils.isEmpty(selectedChoice)) {
                     nextStory.setVisibility(View.INVISIBLE);
                     selectImage1.setVisibility(View.INVISIBLE);
                     selectImage2.setVisibility(View.INVISIBLE);
@@ -280,10 +297,10 @@ public class MakeStoryActivity extends AppCompatActivity {
                     selectMic2.setVisibility(View.INVISIBLE);
                     selectMic3.setVisibility(View.INVISIBLE);
 
+                    // num에 따라 다음 스토리 생성
                     if (num < 6) {
-                        // 현재 페이지 내용, 선택지 저장
+                        // 현재 페이지 내용 저장
                         pageContents.set(num - 1, storyTextView.getText().toString() + selectedChoice);
-
                         if (num < 5) {
                             makeStory.generateNextStoryPart(selectedChoice, num);
                         } else if (num == 5) {
@@ -291,11 +308,17 @@ public class MakeStoryActivity extends AppCompatActivity {
                         }
                         ++num;
                     }
+                    // num이 5보다 클 때 nextBtn 표시
                     if (num > 5) nextBtn.setVisibility(View.VISIBLE);
                 } else {
+                    // recognizedText가 비어 있으면 음성 인식 재시작
                     Intent intent = new Intent(MakeStoryActivity.this, VoiceActivity.class);
+
+                    // 이미지 데이터가 있는 경우 전달
                     byte[] imageBytes = (byte[]) nextBtn.getTag();
-                    intent.putExtra("backgroundImageBytes", imageBytes);
+                    if (imageBytes != null) {
+                        intent.putExtra("backgroundImageBytes", imageBytes);
+                    }
                     startActivity(intent);
                 }
             }
@@ -477,6 +500,10 @@ public class MakeStoryActivity extends AppCompatActivity {
 
     //선택지를 화면에 띄움
     public void showChoices(String choicesText) {
+        // selectMic3에 텍스트가 있는지 확인하고, 있다면 비움
+        if (!TextUtils.isEmpty(selectMic3.getText())) {
+            selectMic3.setText(""); // 텍스트 지움
+        }
         String[] choices = choicesText.split("/");
         if (choices.length >= 2) {
             selectText1.setText(choices[0].trim());
@@ -649,6 +676,20 @@ public class MakeStoryActivity extends AppCompatActivity {
                 showToast("파일 저장 실패: " + e.getMessage());
             }
         });
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        // VoiceActivity에서 전달된 recognizedText를 받아오기
+        String recognizedText = intent.getStringExtra("recognizedText");
+
+        // selectMic3 텍스트뷰에 반영
+        if (recognizedText != null && !recognizedText.isEmpty()) {
+            selectMic3.setText(recognizedText);
+        }
+        selectMic2.setVisibility(View.INVISIBLE);
     }
 
     // Firebase Storage에 파일 업로드
