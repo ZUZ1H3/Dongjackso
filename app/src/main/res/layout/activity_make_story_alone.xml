@@ -175,7 +175,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.55" />
-    
+
     <com.example.holymoly.StrokeText
         android:id="@+id/tv_howabout"
         android:layout_width="340dp"

@@ -1,3 +1,4 @@
+
 package com.example.holymoly;
 
 import android.Manifest;
@@ -51,7 +52,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
     private StringBuilder recognizedText = new StringBuilder();
 
     private ImageView Mic, alertIc, scriptBg, touch;
-    private ImageButton before, next, stop, again, create, micStop;
+    private ImageButton before, next, stop, again, create;
     private TextView howabout, alertTxt, scriptTxt, pageNumber;
     private RadioButton bookmark_AI, bookmark_Mic, bookmark_OK, bookmark_write;
     private EditText story_txt;
@@ -59,7 +60,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
 
     private final int PERMISSION = 1;
     private ArrayList<String> selectedKeywords = new ArrayList<>();
-    
+
     private SharedPreferences pref;
     private boolean isSoundOn;
 
@@ -270,7 +271,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         keywordsLayout.setVisibility(keywordsVisibility);
         // Mic 모드
         Mic.setVisibility(micVisibility);
-        micStop.setVisibility(micVisibility);
+        //micStop.setVisibility(micVisibility);
     }
 
     // 음성 인식 시작
