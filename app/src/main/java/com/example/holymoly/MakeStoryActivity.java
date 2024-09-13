@@ -90,7 +90,6 @@ public class MakeStoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_makestory);
         pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
-
         // UI 요소 초기화
         storyTextView = findViewById(R.id.tv_pageText);
         pageTextView = findViewById(R.id.tv_page);
@@ -113,6 +112,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         storyTextView.setMovementMethod(new ScrollingMovementMethod()); //스크롤 가능하도록
         MainActivity mainActivity = new MainActivity();
         loadingLayout = findViewById(R.id.loadingLayout);
+
 
         //지금까지 ArrayList에 저장한 액티비티 전부를 for문을 돌려서 finish한다.
         for (int i = 0; i < mainActivity.actList().size(); i++) {
@@ -457,12 +457,8 @@ public class MakeStoryActivity extends AppCompatActivity {
                             handler.removeCallbacksAndMessages(null);
                             storyTextView.setText(storyText);
                             textFullyDisplayed[0] = true; // 전체 텍스트 표시 상태로 플래그 설정
-
-                            //if (isImageLoaded && num <= 5) {
-                            //    makeStory.generateChoices(num); // 선택지 생성
-                            //}
-                            return true;
                         }
+                        // false를 반환하여 기본 스크롤 동작을 허용
                         return false;
                     }
                 });

@@ -21,6 +21,9 @@
         android:theme="@style/Theme.HolyMoly"
         tools:targetApi="31">
         <activity
+            android:name=".progressbarActivity"
+            android:exported="true" />
+        <activity
             android:name=".DrawStoryAlone"
             android:exported="true" />
         <activity
@@ -40,7 +43,7 @@
             android:exported="true" />
         <activity
             android:name=".MakeDrowDiaryActivity"
-            android:exported="true"/>
+            android:exported="true" />
         <activity
             android:name=".AlbumDiaryActivity"
             android:exported="true" />
