@@ -5,23 +5,8 @@
     android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VoiceActivity" >
-
-    <!-- 배경 이미지 -->
-    <ImageView
-        android:id="@+id/iv_background"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:contentDescription="Background Image" />
-
-    <ImageView
-        android:id="@+id/iv_dark"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerCrop"
-        android:src="@drawable/pic_writingzone_big"
-        android:contentDescription="Background" />
+    tools:context=".VoiceActivity"
+    android:background="@color/black" >
 
     <TextView
         android:id="@+id/tv_sayit"
