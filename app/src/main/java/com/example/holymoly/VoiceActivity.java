@@ -6,6 +6,8 @@ import androidx.core.app.ActivityCompat;
 import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
@@ -23,7 +25,7 @@ public class VoiceActivity extends AppCompatActivity {
     Karlo karlo;
     Gemini gemini;
     SpeechRecognizer mRecognizer;
-    ImageView micImage;
+    ImageView micImage, backgroundImageView, darkbackground;
     TextView scriptView;
     ImageButton nextBtn;
     private String selectedTheme;
@@ -44,15 +46,11 @@ public class VoiceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_voice);
         pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
-        if (Build.VERSION.SDK_INT >= 23) {
-            // 퍼미션 체크
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET,
-                    Manifest.permission.RECORD_AUDIO}, PERMISSION);
-        }
-
         scriptView = findViewById(R.id.tv_script);
         micImage = findViewById(R.id.iv_mic);
         nextBtn = findViewById(R.id.ib_next);
+        backgroundImageView = findViewById(R.id.iv_background);
+        darkbackground = findViewById(R.id.iv_dark);
 
         intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getPackageName());
@@ -65,9 +63,28 @@ public class VoiceActivity extends AppCompatActivity {
         selectedTheme = intent.getStringExtra("selectedTheme");
         selectedCharacters = intent.getStringArrayListExtra("selectedCharacters");
 
+        // 배경화면 MakeStoryActivity에서 가져옴
+        byte[] imageBytes = intent.getByteArrayExtra("backgroundImageBytes");
+
+        if (imageBytes != null) {
+            // byte[] 데이터를 Bitmap으로 변환
+            Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
+            if (bitmap != null) {
+                // Bitmap을 ImageView에 설정
+                backgroundImageView.setImageBitmap(bitmap);
+            }
+        }
+
         // 이미지 누르면 음성 인식 시작
         micImage.setOnClickListener(v -> {
             sound();
+
+            if (Build.VERSION.SDK_INT >= 23) {
+                // 퍼미션 체크
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET,
+                        Manifest.permission.RECORD_AUDIO}, PERMISSION);
+            }
+
             mRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
             mRecognizer.setRecognitionListener(listener);
             mRecognizer.startListening(intent);
@@ -84,10 +101,13 @@ public class VoiceActivity extends AppCompatActivity {
                 String finalText = recognizedText.toString();
                 scriptView.setText(finalText); // 최종 텍스트 화면에 표시
 
-                // MakeStoryActivity로 인식된 텍스트를 전달
+                // MakeStoryActivity로 인식된 텍스트를 전달하고 기존 액티비티로 이동
                 Intent makeStoryIntent = new Intent(VoiceActivity.this, MakeStoryActivity.class);
                 makeStoryIntent.putExtra("recognizedText", finalText);
-                startActivity(makeStoryIntent); // MakeStoryActivity 시작
+
+                // 플래그 설정: 이미 실행 중인 MakeStoryActivity가 있다면 해당 액티비티를 최상위로 가져옴
+                makeStoryIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+                startActivity(makeStoryIntent); // MakeStoryActivity로 이동
             }
         });
     }
