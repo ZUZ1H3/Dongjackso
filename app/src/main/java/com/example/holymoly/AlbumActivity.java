@@ -129,7 +129,7 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
         });
 
         // 스피너 설정
-        String[] items = { "전체", "바다", "궁전", "숲", "마을", "우주", "사막", "커스텀" };
+        String[] items = { "전체", "바다", "궁전", "숲", "마을", "우주", "사막", "커스텀" , "개인"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.thema_text, items);
         adapter.setDropDownViewResource(R.layout.thema_text);
         spinnerNav.setAdapter(adapter);

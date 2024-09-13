@@ -41,6 +41,7 @@ public class CustomThemeActivity extends AppCompatActivity implements UserInfoLo
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                sound();
                 String customTheme = editTextTheme.getText().toString().trim();
                 if (customTheme.isEmpty()) {
                     Toast.makeText(CustomThemeActivity.this, "테마를 입력하세요!", Toast.LENGTH_SHORT).show();

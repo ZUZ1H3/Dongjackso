@@ -17,7 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -43,10 +42,12 @@ public class MakeBookcoverActivity extends AppCompatActivity {
     private String selectedColorCode = "#303030"; // 기본 색상 코드 (검정색)
     private SeekBar penSeekBar; // 추가된 SeekBar
     private String bookTitle = "";
-    private String selectedTheme;
+    private String aloneTitle ="";
+    private String selectedTheme, from;
     private ArrayList<String> selectedCharacters;
     private Karlo karlo;
     private Gemini gemini;
+    private long backPressedTime = 0;
 
     /* firebase 초기화 */
     private FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -71,6 +72,8 @@ public class MakeBookcoverActivity extends AppCompatActivity {
         gemini = new Gemini();
         selectedTheme = intent.getStringExtra("selectedTheme");
         selectedCharacters = intent.getStringArrayListExtra("selectedCharacters");
+        from = intent.getStringExtra("from"); // Alone인지 WithAI인지 확인하는 변수
+        aloneTitle = intent.getStringExtra("title"); // alone에서의 title
 
         // 버튼 초기화
         pen = findViewById(R.id.ib_pen);
@@ -168,6 +171,15 @@ public class MakeBookcoverActivity extends AppCompatActivity {
             }
         });
 
+        // 종료 버튼
+        stop.setOnClickListener(v -> {
+            if (System.currentTimeMillis() - backPressedTime >= 2000) {
+                backPressedTime = System.currentTimeMillis();
+                Toast.makeText(this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+            } else {
+                finish(); // 2초 이내에 다시 누르면 종료
+            }
+        });
 
         // SeekBar의 값을 펜 굵기에 설정하는 리스너 설정
         penSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -306,10 +318,7 @@ public class MakeBookcoverActivity extends AppCompatActivity {
         Canvas canvas = new Canvas(bitmap);
         drawView.draw(canvas);
 
-        // Intent로부터 데이터 가져오기
-        Intent intent = getIntent();
-        String theme = intent.getStringExtra("selectedTheme");
-        // cover 별로 저장된 경로
+        // 표지 만들 때 저장될 경로
         StorageReference coverRef = storageRef.child("covers/");
 
         // 경로에 있는 파일 목록 가져오기
@@ -321,15 +330,27 @@ public class MakeBookcoverActivity extends AppCompatActivity {
                 String userId = item.getName();
                 String itemName = item.getName();
                 String[] parts = itemName.split("_");
-                if (userId.startsWith(user.getUid()) && parts.length > 2 && parts[1].equals(theme))
+                if (userId.startsWith(user.getUid()) && parts.length > 2 && parts[1].equals(selectedTheme))
                     themeCount++;
             }
             int index = themeCount + 1;
-            // index가 아니라 책 표지 제목으로 변경할 것.
-            String fileName = user.getUid() + "_" + theme + "_" + index + "_" + bookTitle + ".png";
+
+            int aloneIndex = 1;
+            for (StorageReference item : listResult.getItems()) {
+                String fileName = item.getName();
+
+                if (fileName.startsWith(user.getUid()) && fileName.contains("none"))
+                    aloneIndex++;
+            }
+
+            // AI와 함께일 때의 filename 변수
+            String withAIFileName = user.getUid() + "_" + selectedTheme + "_" + index + "_" + bookTitle + ".png";
+            // 혼자일 때의 filename 변수
+            String aloneFileName = user.getUid() + "_" + from + "_" + aloneIndex + "_" + aloneTitle + ".png";
 
             // 이미지가 저장될 경로 설정
-            StorageReference imageRef = coverRef.child(fileName);
+            StorageReference withAIRef = coverRef.child(withAIFileName); // AI와 만들기
+            StorageReference aloneRef = coverRef.child(aloneFileName);   // 혼자 만들기
 
             // bitmap을 png로 압축 및 저장
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -337,14 +358,27 @@ public class MakeBookcoverActivity extends AppCompatActivity {
             byte[] data = baos.toByteArray();
 
             // 업로드 시작
-            UploadTask uploadTask = imageRef.putBytes(data);
-            uploadTask.addOnSuccessListener(taskSnapshot -> {
-                Toast.makeText(this, "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
-                Intent intent2 = new Intent(MakeBookcoverActivity.this, AlbumActivity.class);
-                intent2.putExtra("booktitle", bookTitle);
-                startActivity(intent2);
-                finish();
-            });
+            if(from.equals("AI")) {
+                // AI와 만들기
+                UploadTask uploadTask = withAIRef.putBytes(data);
+                uploadTask.addOnSuccessListener(taskSnapshot -> {
+                    Toast.makeText(this, "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(this, AlbumActivity.class);
+                    intent.putExtra("booktitle", bookTitle);
+                    startActivity(intent);
+                    finish();
+                });
+            }
+            if(from.equals("개인")) {
+                // 혼자 만들기
+                UploadTask aloneUploadTask = aloneRef.putBytes(data);
+                aloneUploadTask.addOnSuccessListener(taskSnapshot -> {
+                    Intent intent = new Intent(this, AlbumActivity.class);
+                    Toast.makeText(this, "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
+                    startActivity(intent);
+                    finish();
+                });
+            }
         });
     }
 
