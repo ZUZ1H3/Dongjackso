@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#0000"
-        android:contentDescription="그만만들기"
+        android:contentDescription="동화제작하러가기"
         android:src="@drawable/ic_miniarrow"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

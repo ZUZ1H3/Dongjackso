@@ -51,11 +51,8 @@ public class DiaryActivity extends AppCompatActivity {
     private FirebaseUser user = auth.getCurrentUser();
     private String story = ""; // 사용자가 작성한 메시지를 저장할 변수
     private boolean isConversationEnded = false; // 대화 종료 여부를 체크하는 플래그
-
-    /* 효과음 */
     private SharedPreferences pref;
     private boolean isSoundOn;
-
     final int PERMISSION = 1;
     private StringBuilder recognizedText = new StringBuilder();
 
@@ -64,22 +61,9 @@ public class DiaryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_diary);
         pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
-        recyclerView = findViewById(R.id.recyclerView);
-        userInput = findViewById(R.id.userInput);
-        rectangles = findViewById(R.id.rectangles);
-        stopMakingBtn = findViewById(R.id.ib_stopMaking);
-        sendButton = findViewById(R.id.sendButton);
-        makeDiaryButton = findViewById(R.id.makeDiary);
-        miniArrow = findViewById(R.id.ib_makingDiary);
-        moreButton = findViewById(R.id.more);
-        who = findViewById(R.id.who);
-        when = findViewById(R.id.when);
-        where = findViewById(R.id.where);
-        what = findViewById(R.id.what);
-        how = findViewById(R.id.how);
-        why = findViewById(R.id.why);
-        mood = findViewById(R.id.mood);
-        miniMic = findViewById(R.id.ib_mini_mic);
+        initViews();
+        setupClickListeners();
+        fetchUserName(); // 데이터베이스에서 이름을 가져옴
 
         if (Build.VERSION.SDK_INT >= 23) {
             // 퍼미션 체크
@@ -96,14 +80,10 @@ public class DiaryActivity extends AppCompatActivity {
         messageAdapter = new MessageAdapter(messageList);
         recyclerView.setAdapter(messageAdapter);
 
-        SafetySetting harassmentSafety = new SafetySetting(HarmCategory.HARASSMENT,
-                BlockThreshold.NONE);
-
-        SafetySetting hateSpeechSafety = new SafetySetting(HarmCategory.HATE_SPEECH,
-                BlockThreshold.NONE);
-
-        SafetySetting hateDangerousSafety = new SafetySetting(HarmCategory.DANGEROUS_CONTENT,
-                BlockThreshold.NONE);
+        //AI 대화 수위 조절
+        SafetySetting harassmentSafety = new SafetySetting(HarmCategory.HARASSMENT, BlockThreshold.NONE);
+        SafetySetting hateSpeechSafety = new SafetySetting(HarmCategory.HATE_SPEECH, BlockThreshold.NONE);
+        SafetySetting hateDangerousSafety = new SafetySetting(HarmCategory.DANGEROUS_CONTENT, BlockThreshold.NONE);
 
         // GenerativeModel 초기화 및 이전 채팅 기록 설정
         model = new GenerativeModel("gemini-1.5-flash", "AIzaSyB5Vf0Nk67nJOKk4BADvPDQhRGNyYTVxjU", null,
@@ -114,15 +94,18 @@ public class DiaryActivity extends AppCompatActivity {
         // 이전 채팅 기록 생성
         Content.Builder userContentBuilder = new Content.Builder();
         userContentBuilder.setRole("user");
-        userContentBuilder.addText("당신이 대화할 대상은 어린이입니다. 다정한 반말 말투로 말해주세요." +
+        userContentBuilder.addText("당신의 대화 대상은 유치원에서 초등학생 정도의 어린이입니다. 어린이는 자신이 오늘 있었던 이야기를 육하원칙에 맞게 말해야 하며," +
+                "당신은 육하원칙에 맞게 말하는 것을 도와주는 교육용 로봇입니다. 다정하고 친절한 반말 말투로 말해주세요." +
                 "만약 사용자가 욕을 사용하거나 성적인 말 등 적절하지 않은 말을 사용한다면, 그런 말 쓰지 말라고 따끔하게 혼내주세요." +
-                "사용자가 오늘 있었던 일에 대해 이야기한다면. 리액션과 함께 그 경험에 대해 구체적으로 대답할 수 있도록 물어봐주세요." +
+                "사용자가 오늘 있었던 일에 대해 이야기한다면 리액션과 함께 그 경험에 대해 구체적으로 대답할 수 있도록 물어봐주세요." +
                 "사용자가 '누구와 함께했는지, 언제, 어디서, 무엇을, 어떻게, 왜'에 대한 이야기를 하지 않았다면, 이 중 한가지에 대해 물어봐주세요." +
                 "감정도 함께 이야기할 수 있도록 유도해주세요. 답장은 한 번에 한가지만 질문해주세요." +
-                "누군가와 함께 했는지, 혼자했는지 여부를 알 수 없다면, 함께한 사람이 있었는지 물어봐주세요." +
+                "누군가와 함께 했는지, 혼자였는지 여부를 알 수 없다면, 함께한 사람이 있었는지 물어봐주세요." +
                 "그러나 질문만 계속 하지는 말고 가끔 주제에 맞는 재밌는 이야기도 하며 수다를 떨어주세요." +
-                "'ㅋㅋㅋ', 'ㅎㅎ'와 같은 초성으로 대화하지 마세요. 표준어를 사용해주세요..." +
-                "2~4문장 정도로 대답해주세요.");
+                "'ㅋㅋㅋ', 'ㅎㅎ'와 같은 초성으로 대화하지 마세요. 표준어를 사용하세요." +
+                "2~4문장 정도로 대답해주세요.\n" +
+                "예시)사용자: 나 오늘 도서관에서 공부했어.\n" +
+                "당신: 오늘 도서관에서 공부를 했구나! 힘들었을텐데 정말 대단하다. 도서관에는 언제 갔니? 낮에 간거야?\n");
         Content userContent = userContentBuilder.build();
         Content.Builder modelContentBuilder = new Content.Builder();
         modelContentBuilder.setRole("model");
@@ -131,137 +114,82 @@ public class DiaryActivity extends AppCompatActivity {
         List<Content> history = Arrays.asList(userContent, modelContent);
         chat = modelFutures.startChat(history);
 
-        // 데이터베이스에서 이름을 가져옴
+    }
+
+    private void initViews() {
+        pref = getSharedPreferences("music", MODE_PRIVATE);
+        recyclerView = findViewById(R.id.recyclerView);
+        userInput = findViewById(R.id.userInput);
+        rectangles = findViewById(R.id.rectangles);
+        stopMakingBtn = findViewById(R.id.ib_stopMaking);
+        sendButton = findViewById(R.id.sendButton);
+        makeDiaryButton = findViewById(R.id.makeDiary);
+        miniArrow = findViewById(R.id.ib_makingDiary);
+        moreButton = findViewById(R.id.more);
+        who = findViewById(R.id.who);
+        when = findViewById(R.id.when);
+        where = findViewById(R.id.where);
+        what = findViewById(R.id.what);
+        how = findViewById(R.id.how);
+        why = findViewById(R.id.why);
+        mood = findViewById(R.id.mood);
+        miniMic = findViewById(R.id.ib_mini_mic);
+    }
+
+    private void setupClickListeners() {
+        sendButton.setOnClickListener(v -> {
+            sound();
+            sendMessage();
+        });
+
+        stopMakingBtn.setOnClickListener(v -> {
+            sound();
+            handleBackPress();
+        });
+
+        moreButton.setOnClickListener(v -> {
+            sound();
+            handleMoreButtonClick();
+        });
+
+        makeDiaryButton.setOnClickListener(v -> {
+            sound();
+            handleMakeDiaryButtonClick();
+        });
+
+        miniArrow.setOnClickListener(v -> {
+            sound();
+            handleMakeDiaryButtonClick();
+        });
+
+        miniMic.setOnClickListener(v -> {
+            sound();
+            startVoiceRecognition();
+        });
+    }
+
+    private void fetchUserName() {
         db.collection("users").document(user.getUid())
                 .get()
                 .addOnSuccessListener(document -> {
-                    if (document.exists()) {
-                        String userName = document.getString("name");
-                        name = userName;
-                        showFirstMessageWithDelay();
-                    } else {
-                        name = ""; // 이름을 가져오는 데 실패했을 때 기본 이름으로 설정
-                        showFirstMessageWithDelay();
-                    }
+                    name = document.exists() ? document.getString("name") : "";
+                    showFirstMessageWithDelay();
                 })
                 .addOnFailureListener(e -> {
-                    name = "";// 이름을 가져오는 데 실패했을 때 기본 이름으로 설정
+                    name = "";
                     showFirstMessageWithDelay();
                 });
-
-        // 버튼 클릭 리스너 설정
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sound();
-                sendMessage();
-            }
-        });
-
-        stopMakingBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sound();
-                if (System.currentTimeMillis() - backPressedTime >= 2000) {
-                    backPressedTime = System.currentTimeMillis();
-                    Toast.makeText(DiaryActivity.this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
-                } else {
-                    finish();
-                }
-            }
-        });
-
-        // 더 대화하기 버튼 클릭 리스너 설정
-        moreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sound();
-                handleMoreButtonClick();
-                miniArrow.setVisibility(View.VISIBLE);
-            }
-        });
-
-        // 동화 제작 버튼 클릭 리스너 설정
-        makeDiaryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleMakeDiaryButtonClick();
-            }
-        });
-
-        // 동화 제작 버튼 클릭 리스너 설정
-        miniArrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleMakeDiaryButtonClick();
-            }
-        });
-
-        // 음성 인식 버튼
-        miniMic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sound();
-                startVoiceRecognition();
-            }
-        });
     }
 
-    // 음성 인식 시작
-    private void startVoiceRecognition() {
-        recognizedText.setLength(0);
-
-        mRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
-        mRecognizer.setRecognitionListener(new RecognitionListener() {
-            @Override
-            public void onReadyForSpeech(Bundle params) {
-                Toast.makeText(getApplicationContext(), "음성인식을 시작합니다.", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onBeginningOfSpeech() { }
-            @Override
-            public void onRmsChanged(float rmsdB) { }
-            @Override
-            public void onBufferReceived(byte[] buffer) { }
-            @Override
-            public void onEndOfSpeech() { }
-            @Override
-            public void onPartialResults(Bundle partialResults) { }
-            @Override
-            public void onEvent(int eventType, Bundle params) { }
-
-            @Override
-            public void onError(int error) {
-                String message = "에러 발생: " + getErrorText(error);
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onResults(Bundle results) {
-                ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-                if (matches != null) {
-                    for (String match : matches) {
-                        recognizedText.append(match).append(" ");
-                    }
-                    userInput.setText(recognizedText.toString());
-                }
-            }
-        });
-        mRecognizer.startListening(new Intent());
-    }
-
-    // 음성 인식 시 필요한 에러 텍스트
-    private String getErrorText(int errorCode) {
-        switch (errorCode) {
-            case SpeechRecognizer.ERROR_AUDIO: return "오디오 에러";
-            case SpeechRecognizer.ERROR_CLIENT: return "클라이언트 에러";
-            case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS: return "퍼미션 없음";
-            case SpeechRecognizer.ERROR_NETWORK: return "네트워크 에러";
-            case SpeechRecognizer.ERROR_NO_MATCH: return "일치하는 결과 없음";
-            default: return "알 수 없는 에러";
+    private void handleBackPress() {
+        if (System.currentTimeMillis() - backPressedTime >= 2000) {
+            backPressedTime = System.currentTimeMillis();
+            Toast.makeText(this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+        } else {
+            finish();
         }
     }
+
 
     private void showFirstMessageWithDelay() {
         String firstBotMessageText = "안녕, " + name + " 꼬마 작가님! 오늘 어떤 일이 있었어?";
@@ -275,13 +203,12 @@ public class DiaryActivity extends AppCompatActivity {
 
     private void handleMoreButtonClick() {
         sound();
-        // UI 업데이트: 대화 입력 필드와 버튼을 보이도록 설정
         sendButton.setVisibility(View.VISIBLE);
         userInput.setVisibility(View.VISIBLE);
         rectangles.setVisibility(View.VISIBLE);
+        miniMic.setVisibility(View.VISIBLE);
         makeDiaryButton.setVisibility(View.INVISIBLE);
         moreButton.setVisibility(View.INVISIBLE);
-        // 대화 재개 메시지 또는 설정을 추가할 수 있습니다.
         Message moreConversationMessage = new Message("좋아! 나랑 더 이야기하자!😊 동화를 만들러 가고 싶다면 언제든지 화살표 버튼을 눌러줘.", Message.TYPE_BOT);
         messageList.add(moreConversationMessage);
         messageAdapter.notifyItemInserted(messageList.size() - 1);
@@ -308,43 +235,79 @@ public class DiaryActivity extends AppCompatActivity {
         recyclerView.scrollToPosition(messageList.size() - 1);
         // 스토리에 메시지를 추가하지 않을 경우 처리
         if (!isConversationEnded) {
-            story += userMessageText + "\n"; // 각 메시지를 줄 바꿈으로 구분
+            story += "user: " + userMessageText + "\n"; // 각 메시지를 줄 바꿈으로 구분
         }
+
         // 사용자 메시지 생성
         Content.Builder userMessageBuilder = new Content.Builder();
         userMessageBuilder.setRole("user");
         userMessageBuilder.addText(userMessageText.replace("\n", " ")); // 줄 바꿈 문자 제거
-        Content userMessageContent = userMessageBuilder.build();
+        //Content userMessageContent = userMessageBuilder.build();
+
         if (!isConversationEnded) {
-            // 메시지 분석 (Gemini를 활용)
             analyzeUserMessageWithGemini(userMessageText);
         } else {
             // 대화가 종료된 상태에서는 메시지 분석을 하지 않음
-            sendBotMessage(userMessageText, false);
+            sendBotMessage(userMessageText);
         }
         // 입력 필드 비우기
         userInput.setText("");
     }
 
     private void analyzeUserMessageWithGemini(String message) {
-        String prompt = "아래 문장에서 육하원칙 즉, '누구와', '언제', '어디서', '무엇을', '어떻게', '왜, 그리고 '기분'에 해당하는 정보가 있을 경우, " +
-                "','로 분리하여 키워드를 뽑아 단답으로 답변하세요.\n" +
-                " ex) 문장:친구와 아침에 만났는데 즐거웠다.\n" +
-                "답변:누구와:친구,언제:아침,어디서: ,무엇을:만남,어떻게: ,왜: ,기분:즐거움\n" +
-                "키워드가 없을 경우 공백으로 나타냅니다. 단, 인사하는 것은 감정이 아닙니다." +
+        String prompt = "당신은 채팅 메시지에 육하원칙 및 감정이 존재하는지 분석하는 역할입니다." +
+                "아래의 채팅에서 육하원칙('누구와', '언제', '어디서', '무엇을', '어떻게', '왜') 그리고 '기분'에 해당하는 정보가 있다면, " +
+                "','로 구분하여 키워드를 뽑아 단답으로 답변하세요.\n" +
+                "ex) 문장:안녕? 나 오늘 친구와 만났는데 즐거웠어.\n" +
+                "답변:누구와:친구,언제: ,어디서: ,무엇을:만남,어떻게: ,왜: ,기분:즐거움\n" +
+                "정보가 없는 항목은 공백으로 남깁니다.  단, 인사하는 것은 감정이 아닙니다." +
                 "'누구와' 정보에 대해 누구와 함께했는지, 혹은 혼자였는지에 대한 언급이 없으면, 공백입니다. 혼자 했다고 말할 경우 키워드는 '혼자'입니다." +
-                "'언제' 정보에 대해 '오늘', '어제', '내일'등은 포함되지 않습니다. '언제'는 특정 시각, 아침, 낮, 저녁 등 구체적인 시간대에 대한 언급이 없으면, 공백입니다." +
-                "이모지를 사용하지 마세요. 'ㅋㅋㅋ', 'ㅎㅎ' 등 초성을 사용하지 마세요.\n" +
-                "ex)사용자: 나 오늘 도서관에서 공부했어.\n" +
-                "당신: 오늘 도서관에서 공부를 했구나! 힘들었을텐데 정말 대단하다. 도서관에는 언제 갔니? 낮에 간거야?\n" +
-                "이제 아래의 문장에 대해 답변해주세요." +
-                " \n문장: " + message;
+                "'언제' 정보에 대해 '오늘', '어제', '내일'등은 포함하지 않습니다. '언제'는 특정 시각, 아침, 낮, 저녁 등 구체적인 시간대에 대한 언급이 없으면, 공백입니다." +
+                "이제 아래 문장에 대해 분석하세요." +
+                "\n문장: " + message;
         gemini.generateText(prompt, new Gemini.Callback() {
             @Override
             public void onSuccess(String resultText) {
                 Log.d("AnalyzeResult", "분석 결과: " + resultText);
                 // 분석된 결과를 추가적으로 처리
                 processGeminiResult(resultText);
+                // transformedMessage 설정
+                StringBuilder transformedMessageBuilder = new StringBuilder();
+                List<String> missingQuestions = new ArrayList<>();
+
+                if (!hasWho) {
+                    missingQuestions.add("누구와");
+                }
+                if (!hasWhen) {
+                    missingQuestions.add("언제");
+                }
+                if (!hasWhere) {
+                    missingQuestions.add("어디서");
+                }
+                if (!hasWhat) {
+                    missingQuestions.add("무엇을");
+                }
+                if (!hasHow) {
+                    missingQuestions.add("어떻게");
+                }
+                if (!hasWhy) {
+                    missingQuestions.add("왜");
+                }
+                if (!hasMood) {
+                    missingQuestions.add("감정");
+                }
+
+                if (missingQuestions.size() > 0) {
+                    transformedMessageBuilder.append("'")
+                            .append(String.join(", ", missingQuestions))
+                            .append("는 현재까지 사용자가 한 번도 이야기한 적 없는 정보입니다. 대화의 흐름에 맞는 경우, 이 중 한가지를 질문해주세요." +
+                                    "그러나 반드시 질문할 필요는 없습니다. 사용자와 즐거운 이야기를 나누는 것도 중요합니다. \n문장: ");
+                }
+
+                transformedMessageBuilder.append(message);
+                String transformedMessage = transformedMessageBuilder.toString();
+                sendBotMessage(transformedMessage);
+
             }
 
             @Override
@@ -408,15 +371,11 @@ public class DiaryActivity extends AppCompatActivity {
                     }
                 }
             }
-            if (hasWho && hasWhen && hasWhere && hasWhat && hasHow && hasWhy && hasMood && !isConversationEnded) {
-                sendBotMessage(resultText, true);
-            } else {
-                sendBotMessage(resultText, false);
-            }
+
         });
     }
 
-    private void sendBotMessage(String userMessageText, boolean shouldEndConversation) {
+    private void sendBotMessage(String userMessageText) {
         // 사용자 메시지 생성
         Content.Builder userMessageBuilder = new Content.Builder();
         userMessageBuilder.setRole("user");
@@ -437,10 +396,13 @@ public class DiaryActivity extends AppCompatActivity {
                     messageList.add(botMessage);
                     messageAdapter.notifyItemInserted(messageList.size() - 1);
                     recyclerView.scrollToPosition(messageList.size() - 1);
-
-                    if (shouldEndConversation) {
-                        endConversation();
+                    if (!isConversationEnded) {
+                        story += "AI: " + resultText + "\n";
+                        if (hasWho && hasWhen && hasWhere && hasWhat && hasHow && hasWhy && hasMood && !isConversationEnded) {
+                            endConversation();
+                        }
                     }
+
                 });
             }
 
@@ -454,19 +416,93 @@ public class DiaryActivity extends AppCompatActivity {
 
     private void endConversation() {
         runOnUiThread(() -> {
+            isConversationEnded = true;
             String endMessage = "너의 이야기를 동화로 제작할 준비가 끝났어! 이제 만들러 가볼까?";
             Message endBotMessage = new Message(endMessage, Message.TYPE_BOT);
             messageList.add(endBotMessage);
             messageAdapter.notifyItemInserted(messageList.size() - 1);
             recyclerView.scrollToPosition(messageList.size() - 1);
-            Log.d("Story", "사용자가 작성한 전체 스토리:\n" + story);
+            Log.d("Story", "대화 내역:\n" + story);
             makeDiaryButton.setVisibility(View.VISIBLE);
             moreButton.setVisibility(View.VISIBLE);
+            miniMic.setVisibility(View.INVISIBLE);
             rectangles.setVisibility(View.INVISIBLE);
+            miniArrow.setVisibility(View.VISIBLE);
             sendButton.setVisibility(View.INVISIBLE);
             userInput.setVisibility(View.INVISIBLE);
-            isConversationEnded = true;
         });
+    }
+
+    // 음성 인식 시작
+    private void startVoiceRecognition() {
+        recognizedText.setLength(0);
+        mRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
+        mRecognizer.setRecognitionListener(new RecognitionListener() {
+            @Override
+            public void onReadyForSpeech(Bundle params) {
+                Toast.makeText(getApplicationContext(), "음성인식을 시작합니다.", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onBeginningOfSpeech() {
+            }
+
+            @Override
+            public void onRmsChanged(float rmsdB) {
+            }
+
+            @Override
+            public void onBufferReceived(byte[] buffer) {
+            }
+
+            @Override
+            public void onEndOfSpeech() {
+            }
+
+            @Override
+            public void onPartialResults(Bundle partialResults) {
+            }
+
+            @Override
+            public void onEvent(int eventType, Bundle params) {
+            }
+
+            @Override
+            public void onError(int error) {
+                String message = "에러 발생: " + getErrorText(error);
+                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResults(Bundle results) {
+                ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+                if (matches != null) {
+                    for (String match : matches) {
+                        recognizedText.append(match).append(" ");
+                    }
+                    userInput.setText(recognizedText.toString());
+                }
+            }
+        });
+        mRecognizer.startListening(new Intent());
+    }
+
+    // 음성 인식 시 필요한 에러 텍스트
+    private String getErrorText(int errorCode) {
+        switch (errorCode) {
+            case SpeechRecognizer.ERROR_AUDIO:
+                return "오디오 에러";
+            case SpeechRecognizer.ERROR_CLIENT:
+                return "클라이언트 에러";
+            case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
+                return "퍼미션 없음";
+            case SpeechRecognizer.ERROR_NETWORK:
+                return "네트워크 에러";
+            case SpeechRecognizer.ERROR_NO_MATCH:
+                return "일치하는 결과 없음";
+            default:
+                return "알 수 없는 에러";
+        }
     }
 
     // 효과음
