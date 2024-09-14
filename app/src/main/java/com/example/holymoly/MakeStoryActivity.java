@@ -70,6 +70,7 @@ public class MakeStoryActivity extends AppCompatActivity {
     private int num = 1;
     private long backPressedTime = 0;
     private String recognizedText;
+    private boolean choicesVisible = false;
 
     // 테마 경로 및 최종적으로 선택된 테마
     private String themePath, finalSelectedTheme, fileName;
@@ -206,6 +207,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         selectText1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                choicesVisible = false;
                 sound();
                 nextStory.setVisibility(View.INVISIBLE);
                 selectImage1.setVisibility(View.INVISIBLE);
@@ -237,6 +239,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         selectText2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                choicesVisible = false;
                 sound();
                 nextStory.setVisibility(View.INVISIBLE);
                 selectImage1.setVisibility(View.INVISIBLE);
@@ -267,6 +270,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         selectMic2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                choicesVisible = false;
                 sound();
                 Intent intent = new Intent(MakeStoryActivity.this, VoiceActivity.class);
 
@@ -281,8 +285,8 @@ public class MakeStoryActivity extends AppCompatActivity {
         selectMic3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                choicesVisible = false;
                 sound(); // 효과음
-
                 // recognizedText 가져오기
                 String selectedChoice = selectMic3.getText().toString();
 
@@ -480,7 +484,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                             handler.removeCallbacksAndMessages(null);
                             storyTextView.setText(storyText);
                             textFullyDisplayed[0] = true; // 전체 텍스트 표시 상태로 플래그 설정
-                            if (isImageLoaded && num <= 5) {
+                            if (isImageLoaded && num <= 5 && !choicesVisible) {
                                 makeStory.generateChoices(num);
                             }
                         }
@@ -503,6 +507,7 @@ public class MakeStoryActivity extends AppCompatActivity {
 
     //선택지를 화면에 띄움
     public void showChoices(String choicesText) {
+        choicesVisible = true;
         // selectMic3에 텍스트가 있는지 확인하고, 있다면 비움
         if (!TextUtils.isEmpty(selectMic3.getText())) {
             selectMic3.setText(""); // 텍스트 지움

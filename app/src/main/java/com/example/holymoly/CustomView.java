@@ -56,7 +56,7 @@ public class CustomView extends View {
                 break;
             case android.view.MotionEvent.ACTION_UP:
                 drawCanvas.drawPath(path, paint);
-                paths.push(new DrawCommand(new Path(path), currentColor, penWidth)); // 현재 경로를 저장
+                paths.push(new DrawCommand(new Path(path), currentColor, penWidth, false)); // 현재 경로를 저장
                 path.reset();
                 break;
             default:
@@ -78,10 +78,11 @@ public class CustomView extends View {
     // Undo 기능 추가
     public void undo() {
         if (!paths.isEmpty()) {
-            undonePaths.push(paths.pop()); // 최근 경로를 undonePaths에 저장
+            undonePaths.push(paths.pop()); // Recent command to undonePaths
             redraw();
         }
     }
+
     // 그림 전체 지우기
     public void clearCanvas() {
         paths.clear();
@@ -90,26 +91,43 @@ public class CustomView extends View {
         invalidate();
     }
 
-    // Redraw all paths
     private void redraw() {
         drawCanvas.drawColor(Color.TRANSPARENT, android.graphics.PorterDuff.Mode.CLEAR); // Clear the canvas
         for (DrawCommand command : paths) {
-            paint.setColor(command.color);
-            paint.setStrokeWidth(command.width);
-            drawCanvas.drawPath(command.path, paint); // 재드로잉
+            if (command.isFillCommand) {
+                drawCanvas.drawColor(command.color);
+            } else {
+                paint.setColor(command.color);
+                paint.setStrokeWidth(command.width);
+                drawCanvas.drawPath(command.path, paint); // Draw path
+            }
         }
         invalidate();
     }
+
     private class DrawCommand {
         Path path;
         int color;
         float width;
-        DrawCommand(Path path, int color, float width) {
-            this.path = path;
+        boolean isFillCommand;
+
+        DrawCommand(Path path, int color, float width, boolean isFillCommand) {
+            this.path = new Path(path);
             this.color = color;
             this.width = width;
+            this.isFillCommand = isFillCommand;
         }
     }
+
+
+    public void fillCanvas(String color) {
+        int fillColor = Color.parseColor(color);
+        drawCanvas.drawColor(fillColor);
+        paths.push(new DrawCommand(new Path(), fillColor, 0, true)); // 채운 색상만 저장
+        invalidate();
+    }
+
+
     public void drawBitmapOnCanvas(Bitmap bitmap) {
         if (bitmap != null) {
             // 캔버스의 너비와 높이를 가져옵니다.

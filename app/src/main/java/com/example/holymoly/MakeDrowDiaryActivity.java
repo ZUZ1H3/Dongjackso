@@ -37,15 +37,13 @@ import java.util.Map;
 import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class MakeDrowDiaryActivity extends AppCompatActivity {
-
     private CustomView drawView;
-    private ImageButton selectedColorButton, undo, remove, rainbow, ok;
+    private ImageButton selectedColorButton, undo, remove, rainbow, paint, ok;
     private Map<ImageButton, Integer> colorButtonMap = new HashMap<>();
     private Map<ImageButton, Integer> colorCheckMap = new HashMap<>();
     private Map<Integer, String> colorCodeMap = new HashMap<>();
     private String selectedColorCode = "#CE6868"; // 기본 색상 코드 (검정색)
     private SeekBar penSeekBar; // 추가된 SeekBar
-
 
     /* firebase 초기화 */
     private FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -57,79 +55,46 @@ public class MakeDrowDiaryActivity extends AppCompatActivity {
     private SharedPreferences pref;
     private boolean isSoundOn;
 
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
-
         setContentView(R.layout.activity_make_drow_diary);
-        rainbow = findViewById(R.id.rainbow); // rainbow 버튼 초기화
-        drawView = findViewById(R.id.drawing); // XML에서 정의된 ID로 초기화
+        initUI();  // UI 초기화 메소드
+        setupColorButtons(); // 색상 버튼 설정 메소드
+        setupListeners();  // 리스너 설정 메소드
+    }
+
+    private void initUI() {
+        drawView = findViewById(R.id.drawing);
         undo = findViewById(R.id.ib_back);
         remove = findViewById(R.id.ib_remove);
         ok = findViewById(R.id.ib_ok);
-        penSeekBar = findViewById(R.id.pen_seekbar); // SeekBar 초기화
-        int[] colorButtonIds = {
-                R.id.red, R.id.orange, R.id.yellow, R.id.green, R.id.blue,
-                R.id.purple, R.id.rainbow
-        };
+        penSeekBar = findViewById(R.id.pen_seekbar);
+        paint = findViewById(R.id.ib_paint);
+        pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
+    }
 
-        String [] colorCodes ={
-          "#CE6868", "#EBB661", "#F7DF29", "#53C856", "#6295DB", "#847AB8","#FFFFFF"
-        };
-
-        int[] colorImages ={
-                R.drawable.color_red2, R.drawable.color_orange2, R.drawable.color_yellow2,
-                R.drawable.color_green2, R.drawable.color_blue2,R.drawable.color_purple2, R.drawable.color_rainbow2
-        };
-
-        int[] colorCheckedImages = {
-                R.drawable.color_red3, R.drawable.color_orange3, R.drawable.color_yellow3,
-                R.drawable.color_green3, R.drawable.color_blue3,R.drawable.color_purple3, R.drawable.color_rainbow3
-        };
-
-        for (int i = 0; i < colorButtonIds.length; i++) {
-            ImageButton button = findViewById(colorButtonIds[i]);
-            colorButtonMap.put(button, colorImages[i]);
-            colorCheckMap.put(button, colorCheckedImages[i]);
-            colorCodeMap.put(colorButtonIds[i], colorCodes[i]);
-
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    handleColorButtonClick(button);
-                }
-            });
-        }
-
-        // Undo 버튼 클릭 리스너 설정
-        undo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawView.undo(); // Undo 기능 호출
-            }
+    private void setupListeners() {
+        undo.setOnClickListener(v -> {
+            sound(); // 효과음 재생
+            drawView.undo();
+        });
+        remove.setOnClickListener(v -> {
+            sound(); // 효과음 재생
+            drawView.clearCanvas();
+        });
+        ok.setOnClickListener(v -> {
+            sound(); // 효과음 재생
+            uploadImage();
+        });
+        paint.setOnClickListener(v -> {
+            sound(); // 효과음 재생
+            applyPaintBucket();
         });
 
-        remove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawView.clearCanvas(); // 그림을 모두 지움
-            }
-        });
-
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) { uploadImage(); }
-        });
-
-
-        // SeekBar의 값을 펜 굵기에 설정하는 리스너 설정
         penSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                // 예: progress가 0일 때 15
-                float penWidth = 15 + (progress * 9);
-                drawView.setPenWidth(penWidth);
+                drawView.setPenWidth(15 + (progress * 9));  // 펜 굵기 조정
             }
 
             @Override
@@ -142,41 +107,65 @@ public class MakeDrowDiaryActivity extends AppCompatActivity {
         });
     }
 
-    private void handleColorButtonClick(ImageButton button) {
-        // Rainbow 버튼 클릭 시 AmbilWarnaDialog 호출
-        if (button.getId() == R.id.rainbow) {
-            AmbilWarnaDialog colorPicker = new AmbilWarnaDialog(this,
-                    Color.parseColor(selectedColorCode), new AmbilWarnaDialog.OnAmbilWarnaListener() {
-                @Override
-                public void onOk(AmbilWarnaDialog dialog, int color) {
-                    selectedColorCode = String.format("#%06X", (0xFFFFFF & color));
-                    drawView.setColor(selectedColorCode);
+    // 색상 버튼 설정
+    private void setupColorButtons() {
+        int[] colorButtonIds = {R.id.red, R.id.orange, R.id.yellow, R.id.green, R.id.blue, R.id.purple, R.id.rainbow};
+        String[] colorCodes = {"#CE6868", "#EBB661", "#F7DF29", "#53C856", "#6295DB", "#847AB8", "#FFFFFF"};
+        int[] colorImages = {R.drawable.color_red2, R.drawable.color_orange2, R.drawable.color_yellow2,
+                R.drawable.color_green2, R.drawable.color_blue2, R.drawable.color_purple2, R.drawable.color_rainbow2};
+        int[] colorCheckedImages = {R.drawable.color_red3, R.drawable.color_orange3, R.drawable.color_yellow3,
+                R.drawable.color_green3, R.drawable.color_blue3, R.drawable.color_purple3, R.drawable.color_rainbow3};
 
-                    // Rainbow 버튼의 이미지 업데이트
-                    if (selectedColorButton != null) {
-                        selectedColorButton.setImageResource(colorButtonMap.get(selectedColorButton));
-                    }
-                    selectedColorButton = rainbow;
-                    selectedColorButton.setImageResource(colorCheckMap.get(rainbow));
-                }
+        for (int i = 0; i < colorButtonIds.length; i++) {
+            ImageButton button = findViewById(colorButtonIds[i]);
+            colorButtonMap.put(button, colorImages[i]);
+            colorCheckMap.put(button, colorCheckedImages[i]);
+            colorCodeMap.put(colorButtonIds[i], colorCodes[i]);
 
-                @Override
-                public void onCancel(AmbilWarnaDialog dialog) {
-                    // 취소 버튼을 누른 경우 처리할 작업
-                }
-            });
-
-            colorPicker.show();
-        } else {
-            if (selectedColorButton != null) {
-                selectedColorButton.setImageResource(colorButtonMap.get(selectedColorButton));
-            }
-            selectedColorButton = button;
-            selectedColorButton.setImageResource(colorCheckMap.get(button));
-            selectedColorCode = colorCodeMap.get(button.getId());
-            drawView.setColor(selectedColorCode);
+            button.setOnClickListener(v -> handleColorButtonClick(button));
         }
     }
+
+    // 색상 버튼 클릭 처리
+    private void handleColorButtonClick(ImageButton button) {
+        if (button.getId() == R.id.rainbow) {
+            showColorPicker();
+        } else {
+            updateSelectedColor(button);
+        }
+    }
+
+    private void showColorPicker() {
+        new AmbilWarnaDialog(this, Color.parseColor(selectedColorCode), new AmbilWarnaDialog.OnAmbilWarnaListener() {
+            @Override
+            public void onOk(AmbilWarnaDialog dialog, int color) {
+                selectedColorCode = String.format("#%06X", (0xFFFFFF & color));
+                drawView.setColor(selectedColorCode);
+                updateColorButtonSelection(findViewById(R.id.rainbow));
+            }
+
+            @Override
+            public void onCancel(AmbilWarnaDialog dialog) {
+            }
+        }).show();
+    }
+
+    // 선택된 색상 및 버튼 업데이트
+    private void updateSelectedColor(ImageButton button) {
+        updateColorButtonSelection(button);
+        selectedColorCode = colorCodeMap.get(button.getId());
+        drawView.setColor(selectedColorCode);
+    }
+
+    // 색상 버튼의 선택 상태 업데이트
+    private void updateColorButtonSelection(ImageButton button) {
+        if (selectedColorButton != null) {
+            selectedColorButton.setImageResource(colorButtonMap.get(selectedColorButton));
+        }
+        selectedColorButton = button;
+        selectedColorButton.setImageResource(colorCheckMap.get(button));
+    }
+
 
     private void uploadImage() {
         // CustomView에서 Bitmap 생성
@@ -210,6 +199,11 @@ public class MakeDrowDiaryActivity extends AppCompatActivity {
             startActivity(intent2);
             finish();
         });
+    }
+
+    private void applyPaintBucket() {
+        // 페인트통 색상으로 전체 캔버스를 채움
+        drawView.fillCanvas(selectedColorCode);
     }
 
     // 효과음
