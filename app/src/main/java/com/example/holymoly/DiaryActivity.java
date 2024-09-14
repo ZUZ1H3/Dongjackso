@@ -51,11 +51,8 @@ public class DiaryActivity extends AppCompatActivity {
     private FirebaseUser user = auth.getCurrentUser();
     private String story = ""; // 사용자가 작성한 메시지를 저장할 변수
     private boolean isConversationEnded = false; // 대화 종료 여부를 체크하는 플래그
-
-    /* 효과음 */
     private SharedPreferences pref;
     private boolean isSoundOn;
-
     final int PERMISSION = 1;
     private StringBuilder recognizedText = new StringBuilder();
 
@@ -64,22 +61,9 @@ public class DiaryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_diary);
         pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
-        recyclerView = findViewById(R.id.recyclerView);
-        userInput = findViewById(R.id.userInput);
-        rectangles = findViewById(R.id.rectangles);
-        stopMakingBtn = findViewById(R.id.ib_stopMaking);
-        sendButton = findViewById(R.id.sendButton);
-        makeDiaryButton = findViewById(R.id.makeDiary);
-        miniArrow = findViewById(R.id.ib_makingDiary);
-        moreButton = findViewById(R.id.more);
-        who = findViewById(R.id.who);
-        when = findViewById(R.id.when);
-        where = findViewById(R.id.where);
-        what = findViewById(R.id.what);
-        how = findViewById(R.id.how);
-        why = findViewById(R.id.why);
-        mood = findViewById(R.id.mood);
-        miniMic = findViewById(R.id.ib_mini_mic);
+        initViews();
+        setupClickListeners();
+        fetchUserName(); // 데이터베이스에서 이름을 가져옴
 
         if (Build.VERSION.SDK_INT >= 23) {
             // 퍼미션 체크
@@ -96,14 +80,10 @@ public class DiaryActivity extends AppCompatActivity {
         messageAdapter = new MessageAdapter(messageList);
         recyclerView.setAdapter(messageAdapter);
 
-        SafetySetting harassmentSafety = new SafetySetting(HarmCategory.HARASSMENT,
-                BlockThreshold.NONE);
-
-        SafetySetting hateSpeechSafety = new SafetySetting(HarmCategory.HATE_SPEECH,
-                BlockThreshold.NONE);
-
-        SafetySetting hateDangerousSafety = new SafetySetting(HarmCategory.DANGEROUS_CONTENT,
-                BlockThreshold.NONE);
+        //AI 대화 수위 조절
+        SafetySetting harassmentSafety = new SafetySetting(HarmCategory.HARASSMENT, BlockThreshold.NONE);
+        SafetySetting hateSpeechSafety = new SafetySetting(HarmCategory.HATE_SPEECH, BlockThreshold.NONE);
+        SafetySetting hateDangerousSafety = new SafetySetting(HarmCategory.DANGEROUS_CONTENT, BlockThreshold.NONE);
 
         // GenerativeModel 초기화 및 이전 채팅 기록 설정
         model = new GenerativeModel("gemini-1.5-flash", "AIzaSyB5Vf0Nk67nJOKk4BADvPDQhRGNyYTVxjU", null,
@@ -131,80 +111,72 @@ public class DiaryActivity extends AppCompatActivity {
         List<Content> history = Arrays.asList(userContent, modelContent);
         chat = modelFutures.startChat(history);
 
-        // 데이터베이스에서 이름을 가져옴
+    }
+
+    private void initViews() {
+        pref = getSharedPreferences("music", MODE_PRIVATE);
+        recyclerView = findViewById(R.id.recyclerView);
+        userInput = findViewById(R.id.userInput);
+        rectangles = findViewById(R.id.rectangles);
+        stopMakingBtn = findViewById(R.id.ib_stopMaking);
+        sendButton = findViewById(R.id.sendButton);
+        makeDiaryButton = findViewById(R.id.makeDiary);
+        miniArrow = findViewById(R.id.ib_makingDiary);
+        moreButton = findViewById(R.id.more);
+        who = findViewById(R.id.who);
+        when = findViewById(R.id.when);
+        where = findViewById(R.id.where);
+        what = findViewById(R.id.what);
+        how = findViewById(R.id.how);
+        why = findViewById(R.id.why);
+        mood = findViewById(R.id.mood);
+        miniMic = findViewById(R.id.ib_mini_mic);
+    }
+
+    private void setupClickListeners() {
+        sendButton.setOnClickListener(v -> {
+            sound();
+            sendMessage();
+        });
+
+        stopMakingBtn.setOnClickListener(v -> {
+            sound();
+            handleBackPress();
+        });
+
+        moreButton.setOnClickListener(v -> {
+            sound();
+            handleMoreButtonClick();
+        });
+
+        makeDiaryButton.setOnClickListener(v -> handleMakeDiaryButtonClick());
+        miniArrow.setOnClickListener(v -> handleMakeDiaryButtonClick());
+        miniMic.setOnClickListener(v -> {
+            sound();
+            startVoiceRecognition();
+        });
+    }
+
+    private void fetchUserName() {
         db.collection("users").document(user.getUid())
                 .get()
                 .addOnSuccessListener(document -> {
-                    if (document.exists()) {
-                        String userName = document.getString("name");
-                        name = userName;
-                        showFirstMessageWithDelay();
-                    } else {
-                        name = ""; // 이름을 가져오는 데 실패했을 때 기본 이름으로 설정
-                        showFirstMessageWithDelay();
-                    }
+                    name = document.exists() ? document.getString("name") : "";
+                    showFirstMessageWithDelay();
                 })
                 .addOnFailureListener(e -> {
-                    name = "";// 이름을 가져오는 데 실패했을 때 기본 이름으로 설정
+                    name = "";
                     showFirstMessageWithDelay();
                 });
+    }
 
-        // 버튼 클릭 리스너 설정
-        sendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sound();
-                sendMessage();
-            }
-        });
-
-        stopMakingBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sound();
-                if (System.currentTimeMillis() - backPressedTime >= 2000) {
-                    backPressedTime = System.currentTimeMillis();
-                    Toast.makeText(DiaryActivity.this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
-                } else {
-                    finish();
-                }
-            }
-        });
-
-        // 더 대화하기 버튼 클릭 리스너 설정
-        moreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sound();
-                handleMoreButtonClick();
-                miniArrow.setVisibility(View.VISIBLE);
-            }
-        });
-
-        // 동화 제작 버튼 클릭 리스너 설정
-        makeDiaryButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleMakeDiaryButtonClick();
-            }
-        });
-
-        // 동화 제작 버튼 클릭 리스너 설정
-        miniArrow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleMakeDiaryButtonClick();
-            }
-        });
-
-        // 음성 인식 버튼
-        miniMic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                sound();
-                startVoiceRecognition();
-            }
-        });
+    private void handleBackPress() {
+        if (System.currentTimeMillis() - backPressedTime >= 2000) {
+            backPressedTime = System.currentTimeMillis();
+            Toast.makeText(this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+        } else {
+            finish();
+        }
     }
 
     // 음성 인식 시작
@@ -219,17 +191,28 @@ public class DiaryActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onBeginningOfSpeech() { }
+            public void onBeginningOfSpeech() {
+            }
+
             @Override
-            public void onRmsChanged(float rmsdB) { }
+            public void onRmsChanged(float rmsdB) {
+            }
+
             @Override
-            public void onBufferReceived(byte[] buffer) { }
+            public void onBufferReceived(byte[] buffer) {
+            }
+
             @Override
-            public void onEndOfSpeech() { }
+            public void onEndOfSpeech() {
+            }
+
             @Override
-            public void onPartialResults(Bundle partialResults) { }
+            public void onPartialResults(Bundle partialResults) {
+            }
+
             @Override
-            public void onEvent(int eventType, Bundle params) { }
+            public void onEvent(int eventType, Bundle params) {
+            }
 
             @Override
             public void onError(int error) {
@@ -254,12 +237,18 @@ public class DiaryActivity extends AppCompatActivity {
     // 음성 인식 시 필요한 에러 텍스트
     private String getErrorText(int errorCode) {
         switch (errorCode) {
-            case SpeechRecognizer.ERROR_AUDIO: return "오디오 에러";
-            case SpeechRecognizer.ERROR_CLIENT: return "클라이언트 에러";
-            case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS: return "퍼미션 없음";
-            case SpeechRecognizer.ERROR_NETWORK: return "네트워크 에러";
-            case SpeechRecognizer.ERROR_NO_MATCH: return "일치하는 결과 없음";
-            default: return "알 수 없는 에러";
+            case SpeechRecognizer.ERROR_AUDIO:
+                return "오디오 에러";
+            case SpeechRecognizer.ERROR_CLIENT:
+                return "클라이언트 에러";
+            case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
+                return "퍼미션 없음";
+            case SpeechRecognizer.ERROR_NETWORK:
+                return "네트워크 에러";
+            case SpeechRecognizer.ERROR_NO_MATCH:
+                return "일치하는 결과 없음";
+            default:
+                return "알 수 없는 에러";
         }
     }
 
@@ -275,7 +264,6 @@ public class DiaryActivity extends AppCompatActivity {
 
     private void handleMoreButtonClick() {
         sound();
-        // UI 업데이트: 대화 입력 필드와 버튼을 보이도록 설정
         sendButton.setVisibility(View.VISIBLE);
         userInput.setVisibility(View.VISIBLE);
         rectangles.setVisibility(View.VISIBLE);
@@ -297,7 +285,7 @@ public class DiaryActivity extends AppCompatActivity {
     }
 
     private void sendMessage() {
-        String userMessageText = userInput.getText().toString();
+        String userMessageText = userInput.getText().toString();    // 사용자가 입력한 메시지를 문자열로 가져옴
         if (userMessageText.isEmpty()) {
             return; // 입력이 비어있으면 아무것도 하지 않음
         }
