@@ -29,6 +29,12 @@ public class StrokeText extends AppCompatTextView {
         init(attrs);
     }
 
+    /* 동적으로 */
+    public void setStroke(boolean stroke) {
+        this.stroke = stroke;
+        invalidate(); // 뷰를 다시 그리도록 요청
+    }
+
     private void init(AttributeSet attrs) {
         // attrs.xml에서 정의한 속성을 가져옴
         TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.StrokeText);
