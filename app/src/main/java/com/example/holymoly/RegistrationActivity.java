@@ -35,6 +35,8 @@ public class RegistrationActivity extends AppCompatActivity {
     //추가
     private static final String PREFS_NAME = "CharacterPrefs";
     private static final String KEY_HAIR = "selectedHair";
+    private static final String KEY_HAIR1 = "selectedHair1";
+    private static final String KEY_HAIR2 = "selectedHair2";
     private static final String KEY_CLOTHES = "selectedClothes";
     private static final String KEY_EYES = "selectedEyes";
     private static final String KEY_HAIR_COLOR = "hairColor";
@@ -43,7 +45,7 @@ public class RegistrationActivity extends AppCompatActivity {
     public final MutableLiveData<Integer> radioChecked = new MutableLiveData<>();
 
     private ImageButton ibNext;
-    private RadioGroup rgCategory, rgHair, rgClothes, rgHairColor, rgEyesColor;
+    private RadioGroup rgCategory, rgHair, rgHair2, rgClothes, rgHairColor, rgEyesColor;
     private ImageView ivHair, ivEyesColor, ivClothes, ivFace;
     private boolean isOriginalColor = true;
 
@@ -81,7 +83,13 @@ public class RegistrationActivity extends AppCompatActivity {
         ibNext = findViewById(R.id.ib_next);
 
         //머리/옷/염색 종류 라디오그룹 - 선택된 것을 캐릭터에 입히고 색깔도 변하게함 / 중복선택x
-        rgHair = findViewById(R.id.rg_hair);
+        rgHair = (RadioGroup) findViewById(R.id.rg_hair);
+        rgHair.clearCheck();
+        rgHair.setOnCheckedChangeListener(listener1);
+        rgHair2 = (RadioGroup) findViewById(R.id.rg_hair2);
+        rgHair2.clearCheck();
+        rgHair2.setOnCheckedChangeListener(listener2);
+
         rgClothes = findViewById(R.id.rg_clothes);
         rgHairColor = findViewById(R.id.rg_hairColor);
         rgEyesColor = findViewById(R.id.rg_eyesColor);
@@ -132,40 +140,6 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
 
-        //헤어 버튼 누를때 맞는 헤어를 입혀주는 체크체인지리스너
-        rgHair.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                sound();
-                // 예외 처리 또는 기본 행동
-                if (checkedId == R.id.rb_g_long) {
-                    ivHair.setImageResource(R.drawable.iv_hair_long);
-                } else if (checkedId == R.id.rb_b_hook) {
-                    ivHair.setImageResource(R.drawable.iv_hair_hook);
-                } else if (checkedId == R.id.rb_g_pigtails) {
-                    ivHair.setImageResource(R.drawable.iv_hair_pigtails);
-                } else if (checkedId == R.id.rb_b_hedgehog) {
-                    ivHair.setImageResource(R.drawable.iv_hair_hedgehog);
-                } else if (checkedId == R.id.rb_g_twinbuns) {
-                    ivHair.setImageResource(R.drawable.iv_hair_twinbuns);
-                } else if (checkedId == R.id.rb_b_broccoli) {
-                    ivHair.setImageResource(R.drawable.iv_hair_broccoli);
-                } else if (checkedId == R.id.rb_g_short) {
-                    ivHair.setImageResource(R.drawable.iv_hair_short);
-                } else if (checkedId == R.id.rb_b_gourd) {
-                    ivHair.setImageResource(R.drawable.iv_hair_gourd);
-                } else if (checkedId == R.id.rb_g_twintail) {
-                    ivHair.setImageResource(R.drawable.iv_hair_twintail);
-                } else if (checkedId == R.id.rb_b_chestnut) {
-                    ivHair.setImageResource(R.drawable.iv_hair_chestnut);
-                } else if (checkedId == R.id.rb_hair_g_ponytail) {
-                    ivHair.setImageResource(R.drawable.iv_hair_ponytail);
-                } else if (checkedId == R.id.rb_hair_b_twohooks) {
-                    ivHair.setImageResource(R.drawable.iv_hair_twohooks);
-                }
-                saveSelection(KEY_HAIR, checkedId);
-            }
-        });
 
         //눈동자 색깔 바꿔주는 체크체인지리스너
         rgEyesColor.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -242,8 +216,41 @@ public class RegistrationActivity extends AppCompatActivity {
                 saveSelection(KEY_CLOTHES, checkedId);
             }
         });
+
         restoreSelection();
     }
+
+    //rgHair 리스너
+    private RadioGroup.OnCheckedChangeListener listener1 = new RadioGroup.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(RadioGroup group, int checkedId) {
+            if(checkedId != -1) {
+                rgHair2.setOnCheckedChangeListener(null);
+                rgHair2.clearCheck();
+                rgHair2.setOnCheckedChangeListener(listener2);
+            }
+
+            applyHairStyle(checkedId);
+            saveSelection(KEY_HAIR1, checkedId);
+            saveSelection(KEY_HAIR, checkedId); // 마지막으로 선택된 머리 스타일 저장
+        }
+    };
+
+    //rgHair2 리스너
+    private RadioGroup.OnCheckedChangeListener listener2 = new RadioGroup.OnCheckedChangeListener() {
+        @Override
+        public void onCheckedChanged(RadioGroup group, int checkedId) {
+            if(checkedId != -1) {
+                rgHair.setOnCheckedChangeListener(null);
+                rgHair.clearCheck();
+                rgHair.setOnCheckedChangeListener(listener1);
+            }
+
+            applyHairStyle(checkedId);
+            saveSelection(KEY_HAIR2, checkedId);
+            saveSelection(KEY_HAIR, checkedId); // 마지막으로 선택된 머리 스타일 저장
+        }
+    };
 
     //추가
     private void saveSelection(String key, int checkedId) {
@@ -259,9 +266,18 @@ public class RegistrationActivity extends AppCompatActivity {
     }
 
     private void restoreSelection() {
-        int savedHairId = sharedPreferences.getInt(KEY_HAIR, -1);
-        if (savedHairId != -1) {
-            rgHair.check(savedHairId);
+        // rg_hair 복원
+        int savedHairId1 = sharedPreferences.getInt(KEY_HAIR1, -1);
+        int savedHairId2 = sharedPreferences.getInt(KEY_HAIR2, -1);
+        int finalHairId = sharedPreferences.getInt(KEY_HAIR, -1); // 마지막으로 선택된 머리 스타일을 ivHair에 적용
+
+        if (finalHairId != -1) {
+            if (savedHairId1 == finalHairId) {
+                rgHair.check(finalHairId);
+            } else if (savedHairId2 == finalHairId) {
+                rgHair2.check(finalHairId);
+            }
+            applyHairStyle(finalHairId);
         }
 
         int savedClothesId = sharedPreferences.getInt(KEY_CLOTHES, -1);
@@ -277,6 +293,36 @@ public class RegistrationActivity extends AppCompatActivity {
         int savedHairColor = sharedPreferences.getInt(KEY_HAIR_COLOR, Color.TRANSPARENT);
         if (savedHairColor != Color.TRANSPARENT) {
             ivHair.setColorFilter(savedHairColor, PorterDuff.Mode.SRC_ATOP);
+        }
+    }
+
+    //ivHair를 바꿔주는 함수
+    private void applyHairStyle(int checkedId) {
+        // 선택된 머리 스타일에 따라 ivHair의 이미지를 설정
+        if (checkedId == R.id.rb_g_long) {
+            ivHair.setImageResource(R.drawable.iv_hair_long);
+        } else if (checkedId == R.id.rb_g_pigtails) {
+            ivHair.setImageResource(R.drawable.iv_hair_pigtails);
+        } else if (checkedId == R.id.rb_g_twinbuns) {
+            ivHair.setImageResource(R.drawable.iv_hair_twinbuns);
+        } else if (checkedId == R.id.rb_g_short) {
+            ivHair.setImageResource(R.drawable.iv_hair_short);
+        } else if (checkedId == R.id.rb_g_twintail) {
+            ivHair.setImageResource(R.drawable.iv_hair_twintail);
+        } else if (checkedId == R.id.rb_hair_g_ponytail) {
+            ivHair.setImageResource(R.drawable.iv_hair_ponytail);
+        } else if (checkedId == R.id.rb_b_hook) {
+            ivHair.setImageResource(R.drawable.iv_hair_hook);
+        } else if (checkedId == R.id.rb_b_hedgehog) {
+            ivHair.setImageResource(R.drawable.iv_hair_hedgehog);
+        } else if (checkedId == R.id.rb_b_broccoli) {
+            ivHair.setImageResource(R.drawable.iv_hair_broccoli);
+        } else if (checkedId == R.id.rb_b_gourd) {
+            ivHair.setImageResource(R.drawable.iv_hair_gourd);
+        } else if (checkedId == R.id.rb_b_chestnut) {
+            ivHair.setImageResource(R.drawable.iv_hair_chestnut);
+        } else if (checkedId == R.id.rb_hair_b_twohooks) {
+            ivHair.setImageResource(R.drawable.iv_hair_twohooks);
         }
     }
 
