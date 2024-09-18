@@ -2,6 +2,7 @@ package com.example.holymoly;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,6 +16,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -151,28 +154,28 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
     }
     // 이미지 가져옴
     private void loadImages() {
-        CollectionReference imagesRef = db.collection("covers").document(user.getUid()).collection("filename");
+        CollectionReference imagesRef = db.collection("covers").document(uid).collection("filename");
 
-        // Firestore에서 timestamp을 통해 최신순으로 정렬
+        // 저장된 timestamp을 통해 최신순으로 정렬
         imagesRef.orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<String> sortedImageNames = new ArrayList<>();
 
-                    // 정렬된 파일 이름 저장
+                    // 정렬된 파일 저장
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         if (document.contains("timestamp")) {
-                            String fileName = document.getId();  // 파일 이름
+                            String fileName = document.getId();
                             sortedImageNames.add(fileName);
                         }
                     }
 
-                    // 해당 이름으로 이미지 URL 가져오기
+                    // 모든 이미지 URL을 가져옴
                     storageRef.listAll().addOnSuccessListener(listResult -> {
                         List<StorageReference> items = listResult.getItems();
                         boolean hasUserImages = false;
 
-                        // 사용자의 id로 시작하는 이미지가 있는지 확인
+                        // 현재 접속 중인 사용자 id로 시작하는 이미지가 있는지 확인
                         for (StorageReference item : items) {
                             if (item.getName().startsWith(uid)) {
                                 hasUserImages = true;
@@ -180,7 +183,7 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
                             }
                         }
 
-                        // 사용자 id로 시작하는 이미지가 있으면 TextView를 숨기고 RecyclerView 보이게 설정
+                        // TextView를 숨기고 RecyclerView 보이게 설정
                         if (hasUserImages) {
                             tvNone.setVisibility(View.GONE);
                             tvPush.setVisibility(View.GONE);
@@ -188,33 +191,53 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
                             recyclerView.setVisibility(View.VISIBLE);
                         }
 
-                        // Firestore에서 정렬된 순서에 맞춰 이미지 로드
+                        // Storage에서 이미지가 없는 파일을 체크
+                        List<String> missingFiles = new ArrayList<>(sortedImageNames);
+                        for (StorageReference item : items) {
+                            String img = item.getName();
+                            if (missingFiles.contains(img)) {
+                                missingFiles.remove(img);
+                            }
+                        }
+
+                        // Storage와 firestore를 비교해 알맞는 이미지가 없으면 firestore 삭제
+                        for (String missingFile : missingFiles) {
+                            imagesRef.document(missingFile).delete();
+                        }
+
+                        // Firebase Storage에서 이미지 다운로드 URL을 가져오는 Task 생성
+                        List<Task<Uri>> downloadTasks = new ArrayList<>();
                         for (String sortedImageName : sortedImageNames) {
                             for (StorageReference item : items) {
                                 String img = item.getName();
-                                // 파일 이름이 현재 사용자의 ID로 시작하고, timestamp로 정렬된 이름에 포함된 경우
-                                if (img.startsWith(uid) && img.equals(sortedImageName)) {
-                                    item.getDownloadUrl().addOnSuccessListener(uri -> {
-                                        String url = uri.toString();
-                                        String title = extractTitle(img); // 파일 이름에서 제목 추출
-
-                                        // URL이 리스트에 없으면 추가 (중복 방지)
-                                        if (!allImageUrls.contains(url)) {
-                                            allImageUrls.add(url);
-                                            allTitles.add(title);
-                                            allImgNames.add(img);
-                                        }
-
-                                        // 테마별로 필터링 및 정렬
-                                        filterImagesByTheme(spinnerNav.getSelectedItem().toString());
-                                    });
+                                // timestamp로 정렬된 이름에 포함된 경우
+                                if (img.equals(sortedImageName)) {
+                                    downloadTasks.add(item.getDownloadUrl());
                                 }
                             }
                         }
+
+                        // 모든 다운로드 작업이 완료된 후 URL을 처리
+                        Tasks.whenAllSuccess(downloadTasks).addOnSuccessListener(results -> {
+                            for (int i = 0; i < results.size(); i++) {
+                                Uri uri = (Uri) results.get(i);
+                                String url = uri.toString();
+                                String title = extractTitle(sortedImageNames.get(i)); // 파일 이름에서 제목 추출
+
+                                // URL이 리스트에 없으면 추가 (중복 방지)
+                                if (!allImageUrls.contains(url)) {
+                                    allImageUrls.add(url);
+                                    allTitles.add(title);
+                                    allImgNames.add(sortedImageNames.get(i));
+                                }
+                            }
+
+                            // 테마별로 필터링 및 정렬
+                            filterImagesByTheme(spinnerNav.getSelectedItem().toString());
+                        });
                     });
                 });
     }
-
 
     // 파일 이름에 따라 '_'로 분할해 숫자를 알아냄
     private int extractIndex(String fileName) {

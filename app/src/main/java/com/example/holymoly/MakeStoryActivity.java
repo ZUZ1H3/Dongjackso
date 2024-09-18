@@ -71,6 +71,7 @@ public class MakeStoryActivity extends AppCompatActivity {
     private long backPressedTime = 0;
     private String recognizedText;
     private boolean choicesVisible = false;
+    private boolean isTextLoaded = false; // 텍스트 다 호출됐는지 확인
 
     // 테마 경로 및 최종적으로 선택된 테마
     private String themePath, finalSelectedTheme, fileName;
@@ -349,7 +350,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                 if (num == 6) {
                     pageContents.set(num - 1, storyTextView.getText().toString());
                 }
-                if (isImageLoaded) {
+                if (isImageLoaded && isTextLoaded) {
                     byte[] imageBytes = (byte[]) nextBtn.getTag();
                     Intent intent = new Intent(MakeStoryActivity.this, MaketitleActivity.class);
                     intent.putExtra("backgroundImageBytes", imageBytes);
@@ -359,7 +360,12 @@ public class MakeStoryActivity extends AppCompatActivity {
                     intent.putStringArrayListExtra("story", pageContents);
                     saveStory(); // 내용 저장
                     startActivity(intent);
-                } else {
+                }
+                else if(!isTextLoaded) {
+                    showToast("이야기가 진행 중입니다.");
+                    return;
+                }
+                else {
                     showToast("이미지가 로드되지 않았습니다.");
                 }
                 finish();
@@ -470,6 +476,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                                 if (isImageLoaded && num <= 5) { //5장 이하일 때
                                     makeStory.generateChoices(num); // 이미지가 로드된 후에 선택지 생성
                                 }
+                                if(num == 6) isTextLoaded = true;
                             }
                         }
                     }, delay * i);
@@ -487,6 +494,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                             if (isImageLoaded && num <= 5 && !choicesVisible) {
                                 makeStory.generateChoices(num);
                             }
+                            if(num == 6) isTextLoaded = true;
                         }
                         // false를 반환하여 기본 스크롤 동작을 허용
                         return false;

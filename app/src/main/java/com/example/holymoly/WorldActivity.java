@@ -1077,7 +1077,7 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
 
         imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
             Glide.with(this).load(uri).into(cover); // 이미지 로드
-            title.setText(imageTitle); // 제목 설정
+            title.setText("< " + imageTitle + " >"); // 제목 설정
 
             db.collection("users").document(userId)
                     .get().addOnCompleteListener(task -> {

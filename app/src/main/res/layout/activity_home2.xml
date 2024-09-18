@@ -96,7 +96,7 @@
         android:layout_height="wrap_content"
         android:backgroundTint="#0000"
         android:contentDescription="일기 나라"
-        android:src="@drawable/ic_fiaryhome"
+        android:src="@drawable/ic_fairyhome"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.986"
