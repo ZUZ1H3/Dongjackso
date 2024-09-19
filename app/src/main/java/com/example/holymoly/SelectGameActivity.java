@@ -95,6 +95,7 @@ public class SelectGameActivity extends AppCompatActivity implements UserInfoLoa
             public void onClick(View v) {
                 sound();
                 Intent intent = new Intent(SelectGameActivity.this, SettingActivity.class);
+                intent.putExtra("from", "SelectGameActivity");
                 startActivity(intent);
             }
         });

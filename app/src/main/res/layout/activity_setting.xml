@@ -5,6 +5,7 @@
     android:background="@drawable/bg_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/background"
     tools:context=".SettingActivity">
 
     <TextView
@@ -113,18 +114,26 @@
         android:layout_width="110dp"
         android:layout_height="85dp"
         android:background="@drawable/db_spinner_background"
-        android:padding="15dp"
-        android:spinnerMode="dropdown"
-        android:dropDownWidth="wrap_content"
+        android:popupBackground="#639699"
+        android:dropDownWidth="80dp"
         android:dropDownHorizontalOffset="10dp"
         android:dropDownVerticalOffset="10dp"
-        android:textAlignment="center"
+        android:padding="10dp"
+        android:spinnerMode="dropdown"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/et_name"
-        app:layout_constraintVertical_bias="0.19" />
+        app:layout_constraintVertical_bias="0.189" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="70dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/ic_down_arrow"
+        app:layout_constraintTop_toTopOf="@id/spinner_gender"
+        app:layout_constraintLeft_toLeftOf="@id/spinner_gender" />
 
     <EditText
         android:id="@+id/et_age"
@@ -283,8 +292,7 @@
         android:layout_width="289dp"
         android:layout_height="71dp"
         android:layout_marginBottom="108dp"
-        android:backgroundTint="#0000"
-        android:src="@drawable/ic_pwdedit"
+        android:background="@drawable/ic_pwdedit"
         android:contentDescription="비밀번호 재설정"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -298,8 +306,7 @@
         android:layout_width="194dp"
         android:layout_height="71dp"
         android:layout_marginBottom="108dp"
-        android:backgroundTint="#0000"
-        android:src="@drawable/ic_logout"
+        android:background="@drawable/ic_logout"
         android:contentDescription="로그아웃"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -312,8 +319,7 @@
         android:id="@+id/ib_ok"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#0000"
-        android:src="@drawable/ic_ok"
+        android:background="@drawable/ic_ok"
         android:contentDescription="ok"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

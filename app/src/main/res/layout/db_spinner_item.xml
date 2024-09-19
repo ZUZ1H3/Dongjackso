@@ -3,11 +3,8 @@
     android:layout_width="80dp"
     android:layout_height="60dp"
     android:gravity="center"
-    android:padding="2dp"
-    android:background="#639699"
-    android:backgroundTint="#639699"
     android:layout_gravity="center"
-    android:text="성별"
+    android:padding="2dp"
     android:fontFamily="@font/ssurround"
     android:textColor="@color/white"
-    android:textSize="35dp" />
+    android:textSize="35sp" />

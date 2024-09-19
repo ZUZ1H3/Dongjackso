@@ -1,8 +1,0 @@
-<resources>
-    <string-array name="gender_array">
-        <item>남</item>
-        <item>여</item>
-    </string-array>
-
-</resources>
-
