@@ -2,6 +2,7 @@ package com.example.holymoly;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -1094,7 +1095,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
                     // Palette로 이미지의 색상 추출
                     Palette.from(resource).generate(palette -> {
                         int dominantColor = palette.getDominantColor(Color.BLACK);
-                        title.setTextColor(dominantColor); // 추출된 색상을 TextView의 색상으로 설정
+                        explain.setTextColor(dominantColor); // 추출된 색상을 TextView의 색상으로 설정
+                        book.setBackgroundTintList(ColorStateList.valueOf(dominantColor)); // 배경 색상 설정
                     });
 
                     db.collection("users").document(userId)
