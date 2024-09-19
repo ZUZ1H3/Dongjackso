@@ -79,4 +79,6 @@ dependencies {
 
     // Amazon Polly
     implementation ("com.amazonaws:aws-android-sdk-polly:2.22.2")
+
+    implementation ("androidx.palette:palette:1.0.0")
 }

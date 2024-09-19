@@ -2,7 +2,11 @@ package com.example.holymoly;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Pair;
 import android.view.View;
@@ -13,9 +17,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.Timestamp;
@@ -109,6 +117,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             updatePage(currentPage);  // 페이지 업데이트
         });
         Top3Images(); // 명예의 전당 배너 이미지
+
+
     }
 
     // 초기화
@@ -1076,20 +1086,38 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
         StorageReference imageRef = storageRef.child(subDocId);
 
         imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-            Glide.with(this).load(uri).into(cover); // 이미지 로드
-            title.setText("< " + imageTitle + " >"); // 제목 설정
+            Glide.with(this).asBitmap().load(uri).into(new CustomTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> transition) {
+                    cover.setImageBitmap(resource); // 이미지 로드
+                    title.setText("< " + imageTitle + " >"); // 제목 설정
 
-            db.collection("users").document(userId)
-                    .get().addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            // 사용자의 이름과 작가 호칭 알아냄
-                            String userName = task.getResult().getString("name");
-                            String userNickname = task.getResult().getString("nickname");
-                            writer.setText(userName + " " + userNickname + "의");
-                        }
+                    // Palette로 이미지의 색상 추출
+                    Palette.from(resource).generate(palette -> {
+                        int dominantColor = palette.getDominantColor(Color.BLACK);
+                        explain.setTextColor(dominantColor); // 추출된 색상을 TextView의 색상으로 설정
+                        book.setBackgroundTintList(ColorStateList.valueOf(dominantColor)); // 배경 색상 설정
                     });
+
+                    db.collection("users").document(userId)
+                            .get().addOnCompleteListener(task -> {
+                                if (task.isSuccessful()) {
+                                    // 사용자의 이름과 작가 호칭 알아냄
+                                    String userName = task.getResult().getString("name");
+                                    String userNickname = task.getResult().getString("nickname");
+                                    writer.setText(userName + " " + userNickname + "의");
+                                }
+                            });
+                }
+
+                @Override
+                public void onLoadCleared(@Nullable Drawable placeholder) {
+                    // 필요 시 처리
+                }
+            });
         });
     }
+
 
     // 효과음
     public void sound() {
