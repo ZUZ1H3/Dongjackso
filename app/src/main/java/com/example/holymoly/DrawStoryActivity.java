@@ -83,8 +83,8 @@ public class DrawStoryActivity extends AppCompatActivity {
         };
 
         String[] colorCodes = {
-                "#CE6868", "#9ED4E0", "#EBB661", "#847AB8",
-                "#F7DF29", "#EC96B0", "#53C856", "#303030",
+                "#E86767", "#89DBED", "#FCBF5B", "#8577CB",
+                "#FFE62A", "#EF8EAB", "#53C856", "#303030",
                 "#6295DB", "#FFFFFF" // Example color code for rainbow
         };
 

@@ -110,7 +110,7 @@ public class MakeDrowDiaryActivity extends AppCompatActivity {
     // 색상 버튼 설정
     private void setupColorButtons() {
         int[] colorButtonIds = {R.id.red, R.id.orange, R.id.yellow, R.id.green, R.id.blue, R.id.purple, R.id.rainbow};
-        String[] colorCodes = {"#CE6868", "#EBB661", "#F7DF29", "#53C856", "#6295DB", "#847AB8", "#FFFFFF"};
+        String[] colorCodes = {"#E86767", "#FCBF5B", "#FFE62A", "#53C856", "#6295DB", "#8577CB", "#FFFFFF"};
         int[] colorImages = {R.drawable.color_red2, R.drawable.color_orange2, R.drawable.color_yellow2,
                 R.drawable.color_green2, R.drawable.color_blue2, R.drawable.color_purple2, R.drawable.color_rainbow2};
         int[] colorCheckedImages = {R.drawable.color_red3, R.drawable.color_orange3, R.drawable.color_yellow3,
