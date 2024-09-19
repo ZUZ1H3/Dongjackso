@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -24,13 +23,9 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
-public class AchieveActivity extends AppCompatActivity implements UserInfoLoader {
+public class AchieveActivity extends AppCompatActivity {
     private RadioGroup rgTrophyCategory;
     private ImageButton ibCloseWindow;
-    private ImageView profile;
-    private TextView name, nickname;
-
-    private UserInfo userInfo = new UserInfo();
 
     /* DB */
     private FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -83,11 +78,6 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_achieve);
         pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
-
-        name = findViewById(R.id.mini_name);
-        nickname = findViewById(R.id.mini_nickname);
-        profile = findViewById(R.id.mini_profile);
-        loadUserInfo(profile, name, nickname);
 
         //디폴트 상태 설정 - 처음에 키면 동화업적이 띄워져있는걸로함
         findViewById(R.id.fairytaleAchievementLayout).setVisibility(View.VISIBLE);
@@ -249,9 +239,7 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
 
                 db.collection("users").document(uid)
                         .update("nickname", nickName)
-                        .addOnCompleteListener(task -> {
-                            nickname.setText(nickName);
-                        });
+                        .addOnCompleteListener(task -> { });
                 Toast.makeText(this, "작가 호칭 선택완료!", Toast.LENGTH_SHORT).show();
             });
         }
@@ -730,11 +718,6 @@ public class AchieveActivity extends AppCompatActivity implements UserInfoLoader
                     puzzleCount = Math.max(puzzleCount, index);  // 퍼즐 인덱스 업데이트
                     updateUI("퍼즐");  // UI 업데이트
                 });
-    }
-
-    @Override
-    public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
-        userInfo.loadUserInfo(profile, name, nickname);
     }
 
     // 효과음
