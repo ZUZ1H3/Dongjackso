@@ -21,6 +21,9 @@
         android:theme="@style/Theme.HolyMoly"
         tools:targetApi="31">
         <activity
+            android:name=".ChooseMyStory"
+            android:exported="true" />
+        <activity
             android:name=".MyPageActivity"
             android:exported="true" />
         <activity

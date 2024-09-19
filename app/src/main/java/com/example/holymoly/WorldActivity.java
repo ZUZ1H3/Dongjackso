@@ -260,7 +260,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             startActivity(intent);
         }
         else if(v.getId() == R.id.ib_mypage) {
-
+            Intent intent = new Intent(this, MyPageActivity.class);
+            startActivity(intent);
         }
         else if(v.getId() == R.id.backPage) {
             if(bannerPage > 1) {
