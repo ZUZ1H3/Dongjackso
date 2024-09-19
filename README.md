@@ -39,7 +39,7 @@ Google Cloud Speech : 동화, 일기 제작 시 음성 인식을 통해 더욱 �
 
 ## 🎨 Figma 구경하기
 <a href="https://www.figma.com/design/4Koc32K9nLXDxRoosE0UXA/Untitled?node-id=0-1&t=z8qKo2yH3CFQMyam-1" target="_blank">
-    <img src="https://github.com/user-attachments/assets/a609ee0b-f966-4969-b358-eb08f1b3cc15" alt="image" style="width: 250px"/>
+    <img src="https://github.com/user-attachments/assets/a609ee0b-f966-4969-b358-eb08f1b3cc15" alt="image" style="width: 300px"/>
 </a>
 
 
