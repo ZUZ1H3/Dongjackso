@@ -20,9 +20,6 @@ import java.util.List;
 
 public class TrophyActivity extends AppCompatActivity implements View.OnClickListener, UserInfoLoader{
     /* 좌측 상단 프로필 초기화 */
-    private TextView name, nickname;
-    private ImageButton trophy, home, edit;
-    private ImageView profile;
     private UserInfo userInfo = new UserInfo();
 
     /* firebase 초기화 */
@@ -47,35 +44,24 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_trophy);
         pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
-        name = findViewById(R.id.mini_name);
-        nickname = findViewById(R.id.mini_nickname);
-        trophy = findViewById(R.id.ib_bictrophy);
-        home = findViewById(R.id.ib_homebutton);
-        edit = findViewById(R.id.ib_edit);
-        profile = findViewById(R.id.mini_profile);
-
         spot1 = findViewById(R.id.iv_spot1);
         spot2 = findViewById(R.id.iv_spot2);
         spot3 = findViewById(R.id.iv_spot3);
         spot4 = findViewById(R.id.iv_spot4);
 
-        loadUserInfo(profile, name, nickname); // 미니 프로필 불러오기
 
         // 이전 액티비티 정보 받기
         from = getIntent().getStringExtra("from");
 
         StorageReference imgRef = storageRef.child("characters/" + user.getUid() + "_1.png");
         // 이미지 로드
-        imgRef.getDownloadUrl().addOnSuccessListener(uri -> {
+        /* imgRef.getDownloadUrl().addOnSuccessListener(uri -> {
             if (nickname.getText().toString().equals("새내기 작가")) Glide.with(this).load(uri).into(spot2);     // 새내기 작가
             else if(nickname.getText().toString().equals("베테랑 작가")) Glide.with(this).load(uri).into(spot3); // 베테랑 작가
             else if(nickname.getText().toString().equals("마스터 작가")) Glide.with(this).load(uri).into(spot4); // 마스터 작가
             else Glide.with(this).load(uri).into(spot1); // 기본적으로 spot1에 캐릭터 위치
-        });
+        });*/
 
-        trophy.setOnClickListener(this);
-        home.setOnClickListener(this);
-        edit.setOnClickListener(this);
     }
     public void onClick(View v) {
         sound();
@@ -102,7 +88,6 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
     protected void onResume() {
         super.onResume();
 
-        loadUserInfo(profile, name, nickname); // 미니 프로필 불러오기
         loadChangeImage();
     }
 
@@ -114,12 +99,12 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
         Glide.with(this).clear(spot4);
 
         StorageReference imgRef = storageRef.child("characters/" + user.getUid() + "_1.png");
-        imgRef.getDownloadUrl().addOnSuccessListener(uri -> {
+        /*imgRef.getDownloadUrl().addOnSuccessListener(uri -> {
             if (nickname.getText().toString().equals("새내기 작가")) Glide.with(this).load(uri).into(spot2);     // 새내기 작가
             else if(nickname.getText().toString().equals("베테랑 작가")) Glide.with(this).load(uri).into(spot3); // 베테랑 작가
             else if(nickname.getText().toString().equals("마스터 작가")) Glide.with(this).load(uri).into(spot4); // 마스터 작가
             else Glide.with(this).load(uri).into(spot1); // 기본적으로 spot1에 캐릭터 위치
-        });
+        });*/
     }
 
     // 배열에서 값을 확인

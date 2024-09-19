@@ -7,85 +7,20 @@
     android:layout_height="match_parent"
     tools:context=".TrophyActivity"
     android:background="@drawable/bg_trophy">
-    <!-- 상단 프로필 -->
-    <ImageView
-        android:id="@+id/iv_container"
+
+    <ImageButton
+        android:id="@+id/ib_stopMaking"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_contain"
+        android:backgroundTint="#0000"
+        android:contentDescription="그만만들기"
+        android:src="@drawable/ic_stopmaking"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.986"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.022"
-        app:layout_constraintVertical_bias="0.03" />
-
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/mini_profile"
-        android:layout_width="86dp"
-        android:layout_height="86dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/iv_container"
-        app:layout_constraintHorizontal_bias="0.0225"
-        app:layout_constraintVertical_bias="0.0094" />
-
-    <TextView
-        android:id="@+id/mini_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:fontFamily="@font/ssurround"
-        android:hint="어린이"
-        android:textColor="@color/white"
-        android:textSize="24dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/iv_container"
-        app:layout_constraintVertical_bias="0.08"
-        app:layout_constraintHorizontal_bias="0.11" />
-
-    <TextView
-        android:id="@+id/mini_nickname"
-        android:layout_width="130dp"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/ssurround"
-        android:text=" 꼬마 작가"
-        android:textColor="@color/white"
-        android:textSize="24dp"
-        android:layout_marginLeft="10dp"
-        app:layout_constraintStart_toEndOf="@+id/mini_name"
-        app:layout_constraintTop_toTopOf="@id/mini_name" />
-
-    <!--오른쪽 상단에 있는 이미지 버튼들-->
-    <ImageButton
-        android:id="@+id/ib_homebutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_homebutton"
-        android:backgroundTint="#0000"
-        android:contentDescription="홈버튼"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/iv_container"
-        app:layout_constraintVertical_bias="0"
-        app:layout_constraintHorizontal_bias="0.91" />
-
-    <ImageButton
-        android:id="@+id/ib_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_setting"
-        android:backgroundTint="#0000"
-        android:contentDescription="환경설정"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/ib_homebutton"
-        app:layout_constraintTop_toTopOf="@id/ib_homebutton"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintVertical_bias="0" />
+        app:layout_constraintVertical_bias="0.036" />
 
     <ImageButton
         android:id="@+id/ib_bictrophy"
@@ -93,47 +28,48 @@
         android:layout_height="150dp"
         android:backgroundTint="#0000"
         android:contentDescription="트로피"
+        android:src="@drawable/ib_bigtrophy"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.89"
+        app:layout_constraintHorizontal_bias="0.417"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.4" />
+        app:layout_constraintVertical_bias="0.858" />
 
     <ImageView
         android:id="@+id/iv_spot1"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginTop="485dp"
-        android:layout_marginLeft="465dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        android:layout_marginLeft="120dp"
+        android:layout_marginTop="240dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iv_spot2"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginTop="356dp"
-        android:layout_marginLeft="758dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        android:layout_marginLeft="376dp"
+        android:layout_marginTop="168dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iv_spot3"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginTop="240dp"
-        android:layout_marginLeft="466dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        android:layout_marginLeft="732dp"
+        android:layout_marginTop="300dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iv_spot4"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginTop="55dp"
-        android:layout_marginLeft="753dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        android:layout_marginLeft="844dp"
+        android:layout_marginTop="540dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
