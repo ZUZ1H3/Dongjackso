@@ -115,12 +115,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.98" />
 
-    <TextView
+    <com.example.holymoly.StrokeText
         android:id="@+id/choose"
-        android:layout_width="wrap_content"
+        android:layout_width="600dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ssurround"
         android:text="등장인물을 골라주세요"
+        android:gravity="center"
         android:textColor="@color/white"
         android:textSize="53dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -128,7 +129,10 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.13" />
+        app:layout_constraintVertical_bias="0.13"
+        app:textStroke="true"
+        app:textStrokeWidth="16"
+        app:textStrokeColor="#639699"/>
 
     <LinearLayout
         android:id="@+id/hll_first"
