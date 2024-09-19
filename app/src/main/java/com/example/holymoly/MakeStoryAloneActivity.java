@@ -52,7 +52,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
     private StringBuilder recognizedText = new StringBuilder();
 
     private ImageView Mic, alertIc, scriptBg, touch;
-    private ImageButton before, next, stop, again, create;
+    private ImageButton before, next, stop, again, create, apply;
     private TextView howabout, alertTxt, scriptTxt, pageNumber;
     private RadioButton bookmark_AI, bookmark_Mic, bookmark_OK, bookmark_write;
     private EditText story_txt;
@@ -161,6 +161,13 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             dialog.show();
         });
 
+        // 키워드 다시 생성
+        again.setOnClickListener(view -> {
+            sound();
+            scriptTxt.setText("");
+            requestKeywordsFromGemini(); // 새 키워드를 생성
+        });
+
         // 키워드 가지고 AI가 동화 생성하기 버튼
         create.setOnClickListener(view -> {
             sound();
@@ -171,17 +178,27 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             }
         });
 
+        // AI가 만든 동화 텍스트에 적용
+        apply.setOnClickListener(view -> {
+            sound();
+            // scriptTxt에 이미 생성된 내용이 있는지 확인
+            String generatedStory = scriptTxt.getText().toString();
+
+            if (!generatedStory.isEmpty()) {
+                // story_txt에 이미 있는 텍스트를 가져오기
+                String existingText = story_txt.getText().toString();
+                // 기존 텍스트 뒤에 새로운 이야기를 추가하여 설정
+                story_txt.setText(existingText + "\n" + generatedStory);
+            } else {
+                Toast.makeText(MakeStoryAloneActivity.this, "생성된 이야기가 없습니다.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         // 음성 인식 시작 버튼
         Mic.setOnClickListener(v -> {
             sound();
             startVoiceRecognition();
         });
-
-//        // 음성 인식 멈춤 버튼
-//        micStop.setOnClickListener(v -> {
-//            sound();
-//            stopVoiceRecognition();
-//        });
 
         // 이전 장 버튼
         before.setOnClickListener(v -> {
@@ -245,6 +262,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         pageNumber = findViewById(R.id.pageNumber);
         keywordsLayout = findViewById(R.id.fl_keywords);
         touch = findViewById(R.id.iv_touch);
+        apply = findViewById(R.id.ib_apply);
     }
 
     // 음성 퍼미션
@@ -266,6 +284,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         alertIc.setVisibility(aiVisibility);
         alertTxt.setVisibility(aiVisibility);
         scriptBg.setVisibility(aiVisibility);
+        apply.setVisibility(aiVisibility);
         again.setVisibility(aiVisibility);
         create.setVisibility(createVisibility);
         keywordsLayout.setVisibility(keywordsVisibility);
@@ -341,7 +360,6 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         }
     }
 
-
     // 음성 인식 오류(신경 안 써도 됨)
     private String getErrorText(int errorCode) {
         switch (errorCode) {
@@ -405,26 +423,38 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
 
             }
         });
-
         // FlexboxLayout에 추가합니다.
         keywordsLayout.addView(keywordView);
     }
 
     // 키워드 토대로 짧은 이야기 생성 요청
     private void requestStoryFromGemini(ArrayList<String> selectedKeywords) {
-        String prompt = String.join(", ", selectedKeywords) + "키위드를 가지고 동화 도입부 한 줄을 생성해주세요.";
+        // story_txt에 이미 내용이 있는지 확인
+        String existingText = story_txt.getText().toString();
+        String prompt;
+
+        if (!existingText.isEmpty()) {
+            // 기존 텍스트가 있으면 그 텍스트와 키워드를 합쳐서 동화 생성
+            prompt = existingText + " 이어서 " + String.join(", ", selectedKeywords) + " 키워드를 활용하여 2문장의 이야기를 이어서 만들어주세요.";
+        } else {
+            // 기존 텍스트가 없으면 키워드만 가지고 이야기 생성
+            prompt = String.join(", ", selectedKeywords) + " 키워드를 가지고 동화 도입부 한 줄을 생성해주세요.";
+        }
+
+        // AI로부터 텍스트 생성 요청
         gemini.generateText(prompt, new Gemini.Callback() {
             @Override
             public void onSuccess(String text) {
                 runOnUiThread(() -> {
                     scriptTxt.setVisibility(View.VISIBLE);
+                    // 새로운 이야기를 scriptTxt에 추가
                     scriptTxt.setText(text);
                 });
             }
 
             @Override
             public void onFailure(Throwable t) {
-                runOnUiThread(() -> Toast.makeText(MakeStoryAloneActivity.this, "Failed to generate story: " + t.getMessage(), Toast.LENGTH_SHORT).show());
+                runOnUiThread(() -> Toast.makeText(MakeStoryAloneActivity.this, "동화 생성 실패: " + t.getMessage(), Toast.LENGTH_SHORT).show());
             }
         });
     }
