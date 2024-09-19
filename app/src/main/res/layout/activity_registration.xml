@@ -303,7 +303,7 @@
         android:id="@+id/iv_accessory_head"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/iv_accessory_head_bee"
+        android:src="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -315,7 +315,7 @@
         android:id="@+id/iv_accessory_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/iv_accessory_back_bee"
+        android:src="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.091"
@@ -327,7 +327,7 @@
         android:id="@+id/iv_character_clothes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/iv_clothes_princessdress"
+        android:src="@drawable/iv_clothes_rabbit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -369,7 +369,6 @@
         android:layout_width="700dp"
         android:layout_height="475dp"
         android:orientation="vertical"
-        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.883"
@@ -485,6 +484,14 @@
                     android:layout_margin="10dp"
                     android:background="@drawable/rb_clothes_cherry"
                     android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/rb_clothes_bee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/rb_clothes_bee"
+                    android:button="@null" />
             </RadioGroup>
         </HorizontalScrollView>
     </LinearLayout>
@@ -494,8 +501,9 @@
         android:id="@+id/accessoryLayout"
         android:layout_width="700dp"
         android:layout_height="475dp"
-        android:orientation="vertical"
         android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.883"
@@ -520,8 +528,8 @@
                     android:id="@+id/rb_accessory_head_bee"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
                     android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/rb_accessory_head_bee"
                     android:button="@null" />
 
@@ -529,8 +537,8 @@
                     android:id="@+id/rb_accessory_head_angel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
                     android:layout_marginLeft="65dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/rb_accessory_head_angel"
                     android:button="@null" />
 
@@ -538,8 +546,8 @@
                     android:id="@+id/rb_accessory_head_puppy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
                     android:layout_marginLeft="65dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/rb_accessory_head_puppy"
                     android:button="@null" />
 
@@ -547,8 +555,8 @@
                     android:id="@+id/rb_accessory_head_cat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
                     android:layout_marginLeft="65dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/rb_accessory_head_cat"
                     android:button="@null" />
 
@@ -556,8 +564,8 @@
                     android:id="@+id/rb_accessory_head_rabbit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
                     android:layout_marginLeft="65dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/rb_accessory_head_rabbit"
                     android:button="@null" />
 
@@ -565,8 +573,8 @@
                     android:id="@+id/rb_accessory_head_ribbon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
                     android:layout_marginLeft="65dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/rb_accessory_head_ribbon"
                     android:button="@null" />
 
@@ -574,8 +582,8 @@
                     android:id="@+id/rb_accessory_head_hat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
                     android:layout_marginLeft="65dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/rb_accessory_head_hat"
                     android:button="@null" />
 
@@ -583,8 +591,8 @@
                     android:id="@+id/rb_accessory_head_marin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
                     android:layout_marginLeft="65dp"
+                    android:layout_marginTop="20dp"
                     android:layout_marginRight="20dp"
                     android:background="@drawable/rb_accessory_head_marin"
                     android:button="@null" />
@@ -633,15 +641,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:background="@drawable/rb_accessory_head_cat"
+                    android:background="@drawable/rb_accessory_back_cat"
                     android:button="@null" />
 
                 <RadioButton
-                    android:id="@+id/rb_accessory_head_wing"
+                    android:id="@+id/rb_accessory_back_wing"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:background="@drawable/rb_accessory_head_wing"
+                    android:background="@drawable/rb_accessory_back_wing"
                     android:button="@null" />
             </RadioGroup>
         </HorizontalScrollView>

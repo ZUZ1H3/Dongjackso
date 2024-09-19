@@ -42,15 +42,19 @@ public class RegistrationActivity extends AppCompatActivity {
     private static final String KEY_CLOTHES1 = "selectedClothes1";
     private static final String KEY_CLOTHES2 = "selectedClothes2";
 
+    private static final String KEY_ACCESSORY_HEAD = "selectedAccessoryHead";
+    private static final String KEY_ACCESSORY_BACK = "selectedAccessoryBack";
+
     private static final String KEY_EYES = "selectedEyes";
     private static final String KEY_HAIR_COLOR = "hairColor";
+    private static final String KEY_HAIR_COLOR2 = "hairColor2";
 
     //라디오두줄
     public final MutableLiveData<Integer> radioChecked = new MutableLiveData<>();
 
     private ImageButton ibNext;
-    private RadioGroup rgCategory, rgHair, rgHair2, rgClothes, rgClothes2, rgHairColor, rgEyesColor;
-    private ImageView ivHair, ivEyesColor, ivClothes, ivFace;
+    private RadioGroup rgCategory, rgHair, rgHair2, rgClothes, rgClothes2, rgHairColor, rgEyesColor, rgAccessoryHead, rgAccessoryBack;
+    private ImageView ivHair, ivEyesColor, ivClothes, ivFace, ivAccessoryHead, ivAccessoryBack;
     private boolean isOriginalColor = true;
 
     /* DB */
@@ -61,6 +65,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private StorageReference storageRef;
 
     private SharedPreferences sharedPreferences;
+
     /* 효과음 */
     private SharedPreferences pref;
     private boolean isSoundOn;
@@ -101,6 +106,9 @@ public class RegistrationActivity extends AppCompatActivity {
         rgClothes2.clearCheck();
         rgClothes2.setOnCheckedChangeListener(clothesListener2);
 
+        rgAccessoryHead = findViewById(R.id.rg_accessory_head);
+        rgAccessoryBack = findViewById(R.id.rg_accessory_back);
+
         rgHairColor = findViewById(R.id.rg_hairColor);
         rgEyesColor = findViewById(R.id.rg_eyesColor);
 
@@ -109,12 +117,15 @@ public class RegistrationActivity extends AppCompatActivity {
         findViewById(R.id.clothLayout).setVisibility(View.GONE);
         findViewById(R.id.hairColorLayout).setVisibility(View.GONE);
         findViewById(R.id.eyesColorLayout).setVisibility(View.GONE);
+        findViewById(R.id.accessoryLayout).setVisibility(View.GONE);
 
         //착용된 헤어, 눈동자 선언
         ivHair = findViewById(R.id.iv_hair);
         ivEyesColor = findViewById(R.id.iv_character_eyes);
         ivClothes = findViewById(R.id.iv_character_clothes);
         ivFace = findViewById(R.id.iv_character_face);
+        ivAccessoryHead = findViewById(R.id.iv_accessory_head);
+        ivAccessoryBack = findViewById(R.id.iv_accessory_back);
 
         rgCategory.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -125,18 +136,28 @@ public class RegistrationActivity extends AppCompatActivity {
                     findViewById(R.id.clothLayout).setVisibility(View.GONE);
                     findViewById(R.id.hairColorLayout).setVisibility(View.GONE);
                     findViewById(R.id.eyesColorLayout).setVisibility(View.GONE);
+                    findViewById(R.id.accessoryLayout).setVisibility(View.GONE);
                 }
                 else if (checkedId == R.id.rb_clothesCategory) {
                     findViewById(R.id.hairLayout).setVisibility(View.GONE);
                     findViewById(R.id.clothLayout).setVisibility(View.VISIBLE);
                     findViewById(R.id.hairColorLayout).setVisibility(View.GONE);
                     findViewById(R.id.eyesColorLayout).setVisibility(View.GONE);
+                    findViewById(R.id.accessoryLayout).setVisibility(View.GONE);
+                }
+                else if (checkedId == R.id.rb_accessoryCategory) {
+                    findViewById(R.id.hairLayout).setVisibility(View.GONE);
+                    findViewById(R.id.clothLayout).setVisibility(View.GONE);
+                    findViewById(R.id.hairColorLayout).setVisibility(View.GONE);
+                    findViewById(R.id.eyesColorLayout).setVisibility(View.GONE);
+                    findViewById(R.id.accessoryLayout).setVisibility(View.VISIBLE);
                 }
                 else if (checkedId == R.id.rb_colorCategory) {
                     findViewById(R.id.hairLayout).setVisibility(View.GONE);
                     findViewById(R.id.clothLayout).setVisibility(View.GONE);
                     findViewById(R.id.hairColorLayout).setVisibility(View.VISIBLE);
                     findViewById(R.id.eyesColorLayout).setVisibility(View.VISIBLE);
+                    findViewById(R.id.accessoryLayout).setVisibility(View.GONE);
                 }
             }
         });
@@ -150,6 +171,55 @@ public class RegistrationActivity extends AppCompatActivity {
             }
         });
 
+        // 머리 악세사리 리스너
+        rgAccessoryHead.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                sound();
+                // 예외 처리 또는 기본 행동
+                if (checkedId == R.id.rb_accessory_head_bee) {
+                    ivAccessoryHead.setImageResource(R.drawable.iv_accessory_head_bee);
+                } else if (checkedId == R.id.rb_accessory_head_angel) {
+                    ivAccessoryHead.setImageResource(R.drawable.iv_accessory_haed_angel);
+                } else if (checkedId == R.id.rb_accessory_head_puppy) {
+                    ivAccessoryHead.setImageResource(R.drawable.iv_accessory_head_puppy);
+                } else if (checkedId == R.id.rb_accessory_head_cat) {
+                    ivAccessoryHead.setImageResource(R.drawable.iv_accessory_head_cat);
+                } else if (checkedId == R.id.rb_accessory_head_ribbon) {
+                    ivAccessoryHead.setImageResource(R.drawable.iv_accessory_head_ribbon);
+                } else if (checkedId == R.id.rb_accessory_head_rabbit) {
+                    ivAccessoryHead.setImageResource(R.drawable.iv_accessory_head_rabbit);
+                } else if (checkedId == R.id.rb_accessory_head_hat) {
+                    ivAccessoryHead.setImageResource(R.drawable.iv_accessory_head_hat);
+                } else if (checkedId == R.id.rb_accessory_head_marin) {
+                    ivAccessoryHead.setImageResource(R.drawable.iv_accessory_head_marin);
+                }
+
+                saveSelection(KEY_ACCESSORY_HEAD, checkedId);
+            }
+        });
+
+        // 등 악세사리 리스너
+        rgAccessoryBack.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                sound();
+                // 예외 처리 또는 기본 행동
+                if (checkedId == R.id.rb_accessory_back_bee) {
+                    ivAccessoryBack.setImageResource(R.drawable.iv_accessory_back_bee);
+                } else if (checkedId == R.id.rb_accessory_back_angel) {
+                    ivAccessoryBack.setImageResource(R.drawable.iv_accessory_back_angel);
+                } else if (checkedId == R.id.rb_accessory_back_puppy) {
+                    ivAccessoryBack.setImageResource(R.drawable.iv_accessory_back_puppy);
+                } else if (checkedId == R.id.rb_accessory_back_cat) {
+                    ivAccessoryBack.setImageResource(R.drawable.iv_accessory_back_cat);
+                } else if (checkedId == R.id.rb_accessory_back_wing) {
+                    ivAccessoryBack.setImageResource(R.drawable.iv_accessory_back_wing);
+                }
+
+                saveSelection(KEY_ACCESSORY_BACK, checkedId);
+            }
+        });
 
         //눈동자 색깔 바꿔주는 체크체인지리스너
         rgEyesColor.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -194,6 +264,7 @@ public class RegistrationActivity extends AppCompatActivity {
             }
             ivHair.setColorFilter(colorFilter, PorterDuff.Mode.SRC_ATOP);
             saveColorFilter(colorFilter);
+            saveSelection(KEY_HAIR_COLOR2, checkedId);
         });
 
         restoreSelection();
@@ -293,7 +364,7 @@ public class RegistrationActivity extends AppCompatActivity {
         }
     };
 
-    //ivHair를 바꿔주는 함수
+    //ivClothes를 바꿔주는 함수
     private void applyClothesStyle(int checkedId) {
         // 선택된 머리 스타일에 따라 ivHair의 이미지를 설정
         if (checkedId == R.id.rb_clothes_princessdress) {
@@ -316,6 +387,8 @@ public class RegistrationActivity extends AppCompatActivity {
             ivClothes.setImageResource(R.drawable.iv_clothes_stripe);
         } else if (checkedId == R.id.rb_clothes_cherry) {
             ivClothes.setImageResource(R.drawable.iv_clothes_cherry);
+        } else if (checkedId == R.id.rb_clothes_bee) {
+            ivClothes.setImageResource(R.drawable.iv_clothes_bee);
         }
     }
 
@@ -360,6 +433,16 @@ public class RegistrationActivity extends AppCompatActivity {
             applyClothesStyle(finalClothesId);
         }
 
+        int savedAccessoryHead = sharedPreferences.getInt(KEY_ACCESSORY_HEAD, -1);
+        if (savedAccessoryHead != -1) {
+            rgAccessoryHead.check(savedAccessoryHead);
+        }
+
+        int savedAccessoryBack = sharedPreferences.getInt(KEY_ACCESSORY_BACK, -1);
+        if (savedAccessoryBack != -1) {
+            rgAccessoryBack.check(savedAccessoryBack);
+        }
+
         int savedEyesId = sharedPreferences.getInt(KEY_EYES, -1);
         if (savedEyesId != -1) {
             rgEyesColor.check(savedEyesId);
@@ -368,6 +451,11 @@ public class RegistrationActivity extends AppCompatActivity {
         int savedHairColor = sharedPreferences.getInt(KEY_HAIR_COLOR, Color.TRANSPARENT);
         if (savedHairColor != Color.TRANSPARENT) {
             ivHair.setColorFilter(savedHairColor, PorterDuff.Mode.SRC_ATOP);
+        }
+
+        int savedHairColor2 = sharedPreferences.getInt(KEY_HAIR_COLOR2, -1);
+        if(savedHairColor2 != -1) {
+            rgHairColor.check(savedHairColor2);
         }
     }
 
