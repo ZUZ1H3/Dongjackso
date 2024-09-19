@@ -32,7 +32,7 @@ public class WordGameThemeActivity extends AppCompatActivity {
 
     private void setClickListener(TextView textView) {
         textView.setOnClickListener(view -> {
-            Intent intent = new Intent(WordGameThemeActivity.this, WordGameReadyActivity.class);
+            Intent intent = new Intent(WordGameThemeActivity.this, WordGameActivity.class);
             intent.putExtra("Theme", textView.getText().toString());
             startActivity(intent);
         });

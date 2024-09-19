@@ -142,8 +142,8 @@ public class WordGameReadyActivity extends AppCompatActivity {
         }
 
         String words = wordsBuilder.toString();
-        String prompt = "다음 단어들이 주제 '" + theme + "'와 관련이 있는지 확인해 주세요: " + words +
-                "관련이 없는 단어가 있을 경우, '주제와 관련되지 않은 단어가 있어!' 라고 대답한 뒤 어떤 단어가 관련 없는지 말해주세요.";
+        String prompt = "다음 단어들이 주제 '" + theme + "'와 관련이 있는지 확인해 주세요: '" + words +
+                "'\n관련이 없는 단어가 있을 경우, '주제와 관련되지 않은 단어가 있어!' 라고 대답한 뒤 어떤 단어가 관련 없는지 말해주세요.";
 
 
         gemini.generateText(prompt, new Gemini.Callback() {
