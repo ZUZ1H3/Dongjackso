@@ -59,6 +59,7 @@ public class Home2Activity extends AppCompatActivity implements UserInfoLoader {
             public void onClick(View v) {
                 sound();
                 Intent intent = new Intent(Home2Activity.this, SettingActivity.class);
+                intent.putExtra("from", "Home2Activity");
                 startActivity(intent);
             }
         });

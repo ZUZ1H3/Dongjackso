@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -15,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,11 +31,13 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
-    EditText name, age;
-    RadioButton rb_bgm_on, rb_bgm_off, rb_sound_on, rb_sound_off;
-    CircleImageView profile;
-    ImageButton logout, pwdEdit, ok;
+    private EditText name, age;
+    private RadioButton rb_bgm_on, rb_bgm_off, rb_sound_on, rb_sound_off;
+    private CircleImageView profile;
+    private ImageButton logout, pwdEdit, ok;
+    private ConstraintLayout background;
 
+    /* DB */
     private FirebaseAuth auth;
     private FirebaseUser user;
     private FirebaseFirestore db;
@@ -43,14 +48,20 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private Spinner genderSpinner;
     private ArrayAdapter<String> adapter;
 
+    /* 효과음 */
     private SharedPreferences pref;
     private boolean isBgmOn, isSoundOn;
+
+    // 이전 액티비티 정보
+    private String from;
+    private String[] activities = {"Home2Activity", "SelectGameActivity", "PuzzleActivity", "SelectPuzzleActivity"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
+        background = findViewById(R.id.background);
         name = (EditText) findViewById(R.id.et_name);
         age = (EditText) findViewById(R.id.et_age);
         profile = (CircleImageView) findViewById(R.id.img_profile);
@@ -75,20 +86,25 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         isBgmOn = pref.getBoolean("on&off", true); // 기본값 켜짐
         isSoundOn = pref.getBoolean("on&off2", true); // 기본값 켜짐
 
+        // 이전 액티비티 정보 받기
+        from = getIntent().getStringExtra("from");
+        if(isInArray(from, activities)) {
+            background.setBackgroundResource(R.drawable.bg_main2);
+            ok.setBackgroundResource(R.drawable.ic_ok3);
+            logout.setBackgroundResource(R.drawable.ic_logout2);
+            pwdEdit.setBackgroundResource(R.drawable.ic_pwdedit2);
+            genderSpinner.setPopupBackgroundDrawable(new ColorDrawable(Color.parseColor("#1F2C6F")));
+        }
+
         // 사용자 기존 정보 로딩
         loadUserInfo();
 
         String[] genderArray = getResources().getStringArray(R.array.gender_array);
-        String[] genderWithPrompt = new String[genderArray.length + 1];
-        genderWithPrompt[0] = "성별";
-        System.arraycopy(genderArray, 0, genderWithPrompt, 1, genderArray.length);
+        String[] genderWithPrompt = new String[genderArray.length];
+        System.arraycopy(genderArray, 0, genderWithPrompt, 0, genderArray.length);
 
-        adapter = new ArrayAdapter<String>(this, R.layout.db_spinner_item, genderWithPrompt) {
-            @Override
-            public boolean isEnabled(int position) {
-                return position != 0; // '성별' 항목을 선택 불가능하도록 설정
-            }
-        };
+        adapter = new ArrayAdapter<String>(this, R.layout.db_spinner_item, genderWithPrompt);
+
         adapter.setDropDownViewResource(R.layout.db_spinner_item);
         genderSpinner.setAdapter(adapter);
         genderSpinner.setSelection(0); // 기본 선택 항목을 '성별'로 설정
@@ -162,10 +178,10 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         String userName = name.getText().toString();
         Integer userAge = Integer.parseInt(age.getText().toString());
         String userGender = genderSpinner.getSelectedItem().toString();
-        int selectedGen = genderSpinner.getSelectedItemPosition() == 1 ? 1 : 2;
+        int selectedGen = genderSpinner.getSelectedItemPosition() == 0 ? 0 : 1;
 
-        if(selectedGen == 1) userGender = "남자";
-        else if(selectedGen == 2) userGender = "여자";
+        if(selectedGen == 0) userGender = "남자";
+        else if(selectedGen == 1) userGender = "여자";
 
         db.collection("users").document(user.getUid())
                 .update("name", userName, "age", userAge, "gender", userGender)
@@ -202,11 +218,11 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                         age.setText(userAge);
                         int spinnerPosition; // spinner 위치 지정 변수
                         if(userGender.equals("남자")) {
-                            spinnerPosition = 1;
+                            spinnerPosition = 0;
                             genderSpinner.setSelection(spinnerPosition);
                         }
                         else { // 여자일 때
-                            spinnerPosition = 2;
+                            spinnerPosition = 1;
                             genderSpinner.setSelection(spinnerPosition);
                         }
                     }
@@ -227,6 +243,16 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         int newHeight = 450;
 
         return Bitmap.createBitmap(bm, cropW, cropH, newWidth, newHeight);
+    }
+
+    // 배열에서 값을 확인
+    private boolean isInArray(String value, String[] array) {
+        for (String item : array) {
+            if (item.equals(value)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // 효과음

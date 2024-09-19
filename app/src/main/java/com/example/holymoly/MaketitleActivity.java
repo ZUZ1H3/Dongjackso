@@ -77,6 +77,10 @@ public class MaketitleActivity extends AppCompatActivity {
             public void onClick(View view) {
                 sound();
                 bookTitle = title.getText().toString();
+                if(bookTitle.isEmpty()) {
+                    Toast.makeText(MaketitleActivity.this, "제목을 작성해주세요", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent intent = new Intent(MaketitleActivity.this, MakeBookcoverActivity.class);
                 intent.putExtra("bookTitle", bookTitle);
                 intent.putExtra("selectedTheme", selectedTheme); // 작업이 완료되었을 때 MakeBookcoverActivity로 이동

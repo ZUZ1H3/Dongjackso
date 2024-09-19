@@ -3,7 +3,7 @@ package com.example.holymoly;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Bundle;
+import android.os.*;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -11,7 +11,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,6 +38,7 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
     private ImageView profile;
     private ImageButton btnhome, btntrophy, btnsetting;
     private Spinner spinnerNav;
+    private boolean isShowDialog = false;
 
     private UserInfo userInfo = new UserInfo();
 
@@ -124,13 +127,40 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
             }
         });
 
-        bookAdapter.setOnItemClickListener((position, imageUrl) -> {
-            // 클릭된 이미지의 파일명을 인텐트에 추가
-            String imgName = imgNames.get(position);
-            sound();
-            Intent intent = new Intent(AlbumActivity.this, ReadBookActivity.class);
-            intent.putExtra("imgName", imgName);
-            startActivity(intent);
+        bookAdapter.setOnItemClickListener(new BookAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position, String imageUrl) {
+                if(!isShowDialog) {
+                    // 클릭 시 동작
+                    String imgName = imgNames.get(position);
+                    Intent intent = new Intent(AlbumActivity.this, ReadBookActivity.class);
+                    intent.putExtra("imgName", imgName);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onItemLongClick(int position, String imageUrl) {
+                // 2초 이상 클릭 시 다이얼로그 표시
+                isShowDialog = true; // 다이얼로그 표시 중
+                AlertDialog.Builder builder = new AlertDialog.Builder(AlbumActivity.this);
+                builder.setTitle("이미지 삭제")
+                        .setMessage(extractTitle(imgNames.get(position)) + "을(를) 삭제하겠습니까? 영구적으로 이미지가 삭제됩니다.")
+                        .setPositiveButton("네", (dialog, which) -> {
+                            // 이미지 삭제
+                            deleteImage(imgNames.get(position));
+                            isShowDialog = false;
+                            finish();
+                            Intent intent = getIntent();
+                            startActivity(intent);
+                            loadImages();
+                        })
+                        .setNegativeButton("아니요", (dialog, which) -> {
+                            dialog.dismiss();
+                            isShowDialog = false;
+                        });
+                builder.create().show();
+            }
         });
 
         // 스피너 설정
@@ -152,8 +182,17 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
             }
         });
     }
+
     // 이미지 가져옴
     private void loadImages() {
+        // 배열 초기화
+        allImageUrls.clear();
+        allTitles.clear();
+        allImgNames.clear();
+        imageUrls.clear();
+        titles.clear();
+        imgNames.clear();
+
         CollectionReference imagesRef = db.collection("covers").document(uid).collection("filename");
 
         // 저장된 timestamp을 통해 최신순으로 정렬
@@ -325,6 +364,78 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
         }
         bookAdapter.notifyDataSetChanged();
     }
+
+    // 이미지 삭제
+    private void deleteImage(String fileName) {
+        // Firebase Storage에서 파일 삭제
+        StorageReference coverRef = storageRef.child(fileName);
+        String backgroundName = uid + "_" + extractIndex(fileName) + ".png";
+        String storiesName = uid + "_" + fileName.split("_")[1] + "_" + extractIndex(fileName) + ".txt";
+        StorageReference backgroundRef = storage.getReference().child("background/" + fileName.split("_")[1] + "/" + backgroundName);
+        StorageReference storiesRef = storage.getReference().child("stories/" + storiesName);
+
+        // Firebase Storage에서 파일 삭제
+        coverRef.delete().addOnSuccessListener(aVoid -> {
+            // 표지 삭제 후 배경 삭제 진행
+            backgroundRef.delete().addOnSuccessListener(aVoid1 -> {
+                // 배경 삭제 후 이야기 삭제 진행
+                storiesRef.delete().addOnSuccessListener(aVoid2 -> {
+                    // 이야기 삭제 후 Firestore 삭제 및 배열 업데이트
+                    deleteFirestore(fileName);
+                });
+            });
+        });
+    }
+
+    private void deleteFirestore(String fileName) {
+        // Firestore에서 해당 파일 삭제
+        CollectionReference fileRef = db.collection("covers").document(uid).collection("filename");
+        fileRef.document(fileName).delete().addOnSuccessListener(aVoid -> {
+            // Firestore에서 현재 사용자 모든 이미지 파일 이름 가져오기
+            storageRef.listAll().addOnSuccessListener(listResult -> {
+                List<String> currentImageNames = new ArrayList<>();
+                for (StorageReference item : listResult.getItems()) {
+                    if (item.getName().startsWith(uid)) {
+                        currentImageNames.add(item.getName());
+                    }
+                }
+
+                // Firestore에서 모든 이미지 파일 이름 가져오기
+                fileRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
+                    List<String> firestoreImageNames = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        if (document.contains("timestamp")) {
+                            firestoreImageNames.add(document.getId());
+                        }
+                    }
+
+                    // 삭제할 파일 이름 선택
+                    List<String> imagesToRemove = new ArrayList<>(firestoreImageNames);
+                    imagesToRemove.removeAll(currentImageNames);
+
+                    // 이미지 데이터 삭제
+                    for (String fileNameToRemove : imagesToRemove) {
+                        fileRef.document(fileNameToRemove).delete();
+                    }
+
+                    // 최근에 올라온 배열에서 삭제된 이미지 제거
+                    removeImagesFromRecentArray(imagesToRemove);
+                });
+            });
+        });
+    }
+
+    private void removeImagesFromRecentArray(List<String> imagesToRemove) {
+        // 최근에 올라온 배열에서 삭제된 이미지 제거
+        allImageUrls.removeAll(imagesToRemove);
+        allTitles.removeAll(imagesToRemove);
+        allImgNames.removeAll(imagesToRemove);
+
+        // RecyclerView 업데이트
+        filterImagesByTheme(spinnerNav.getSelectedItem().toString());
+    }
+
+
 
     @Override
     public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
