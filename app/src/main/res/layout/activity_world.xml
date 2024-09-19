@@ -98,7 +98,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="118dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="101dp"
             android:background="@drawable/iv_book"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -147,6 +147,7 @@
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textSize="32sp"
+            android:layout_marginLeft="16dp"
             app:layout_constraintStart_toEndOf="@id/bookWriter"
             app:layout_constraintTop_toTopOf="@id/bookWriter" />
 
