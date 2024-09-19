@@ -144,83 +144,77 @@
     <!--헤어레이아웃-->
     <LinearLayout
         android:id="@+id/hairLayout"
-        android:layout_width="715dp"
-        android:layout_height="500dp"
+        android:layout_width="700dp"
+        android:layout_height="475dp"
         android:orientation="vertical"
-        android:gravity="center"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.89"
+        app:layout_constraintHorizontal_bias="0.883"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.83">
+        app:layout_constraintVertical_bias="0.8">
 
         <HorizontalScrollView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:scrollbars="none">
 
-            <LinearLayout
+            <RadioGroup
+                android:id="@+id/rg_hair"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_margin="20dp"
+                android:orientation="horizontal">
 
-                <RadioGroup
-                    android:id="@+id/rg_hair"
+                <RadioButton
+                    android:id="@+id/rb_g_long"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
-                    android:orientation="horizontal">
+                    android:background="@drawable/rb_hair_g_long"
+                    android:button="@null" />
 
-                    <RadioButton
-                        android:id="@+id/rb_g_long"
-                        android:layout_width="155dp"
-                        android:layout_height="140dp"
-                        android:layout_margin="20dp"
-                        android:background="@drawable/rb_hair_g_long"
-                        android:button="@null" />
+                <RadioButton
+                    android:id="@+id/rb_g_pigtails"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/rb_hair_g_pigtails"
+                    android:button="@null" />
 
-                    <RadioButton
-                        android:id="@+id/rb_g_pigtails"
-                        android:layout_width="150dp"
-                        android:layout_height="140dp"
-                        android:layout_margin="20dp"
-                        android:background="@drawable/rb_hair_g_pigtails"
-                        android:button="@null" />
+                <RadioButton
+                    android:id="@+id/rb_g_twinbuns"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/rb_hair_g_twinbuns"
+                    android:button="@null" />
 
-                    <RadioButton
-                        android:id="@+id/rb_g_twinbuns"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:background="@drawable/rb_hair_g_twinbuns"
-                        android:button="@null" />
+                <RadioButton
+                    android:id="@+id/rb_g_short"
+                    android:layout_width="145dp"
+                    android:layout_height="130dp"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/rb_hair_g_short"
+                    android:button="@null" />
 
-                    <RadioButton
-                        android:id="@+id/rb_g_short"
-                        android:layout_width="150dp"
-                        android:layout_height="130dp"
-                        android:layout_margin="20dp"
-                        android:background="@drawable/rb_hair_g_short"
-                        android:button="@null" />
+                <RadioButton
+                    android:id="@+id/rb_g_twintail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/rb_hair_g_twintail"
+                    android:button="@null" />
 
-                    <RadioButton
-                        android:id="@+id/rb_g_twintail"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:background="@drawable/rb_hair_g_twintail"
-                        android:button="@null" />
-
-                    <RadioButton
-                        android:id="@+id/rb_hair_g_ponytail"
-                        android:layout_width="180dp"
-                        android:layout_height="150dp"
-                        android:layout_margin="20dp"
-                        android:background="@drawable/rb_hair_g_ponytail"
-                        android:button="@null" />
-                </RadioGroup>
-            </LinearLayout>
+                <RadioButton
+                    android:id="@+id/rb_hair_g_ponytail"
+                    android:layout_width="180dp"
+                    android:layout_height="140dp"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/rb_hair_g_ponytail"
+                    android:button="@null" />
+            </RadioGroup>
         </HorizontalScrollView>
 
         <HorizontalScrollView
@@ -228,67 +222,61 @@
             android:layout_height="wrap_content"
             android:scrollbars="none">
 
-            <LinearLayout
+            <RadioGroup
+                android:id="@+id/rg_hair2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_margin="20dp"
+                android:orientation="horizontal">
 
-                <RadioGroup
-                    android:id="@+id/rg_hair2"
+                <RadioButton
+                    android:id="@+id/rb_b_hook"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
-                    android:orientation="horizontal">
+                    android:background="@drawable/rb_hair_b_hook"
+                    android:button="@null" />
 
-                    <RadioButton
-                        android:id="@+id/rb_b_hook"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:background="@drawable/rb_hair_b_hook"
-                        android:button="@null" />
+                <RadioButton
+                    android:id="@+id/rb_b_hedgehog"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/rb_hair_b_hedgehog"
+                    android:button="@null" />
 
-                    <RadioButton
-                        android:id="@+id/rb_b_hedgehog"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:background="@drawable/rb_hair_b_hedgehog"
-                        android:button="@null" />
+                <RadioButton
+                    android:id="@+id/rb_b_broccoli"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/rb_hair_b_broccoli"
+                    android:button="@null" />
 
-                    <RadioButton
-                        android:id="@+id/rb_b_broccoli"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:background="@drawable/rb_hair_b_broccoli"
-                        android:button="@null" />
+                <RadioButton
+                    android:id="@+id/rb_b_gourd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/rb_hair_b_gourd"
+                    android:button="@null" />
 
-                    <RadioButton
-                        android:id="@+id/rb_b_gourd"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:background="@drawable/rb_hair_b_gourd"
-                        android:button="@null" />
+                <RadioButton
+                    android:id="@+id/rb_b_chestnut"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/rb_hair_b_chestnut"
+                    android:button="@null" />
 
-                    <RadioButton
-                        android:id="@+id/rb_b_chestnut"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:background="@drawable/rb_hair_b_chestnut"
-                        android:button="@null" />
-
-                    <RadioButton
-                        android:id="@+id/rb_hair_b_twohooks"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:background="@drawable/rb_hair_b_twohooks"
-                        android:button="@null" />
-                </RadioGroup>
-            </LinearLayout>
+                <RadioButton
+                    android:id="@+id/rb_hair_b_twohooks"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/rb_hair_b_twohooks"
+                    android:button="@null" />
+            </RadioGroup>
         </HorizontalScrollView>
     </LinearLayout>
 
@@ -305,12 +293,41 @@
         app:layout_constraintVertical_bias="0.33"
         app:layout_constraintHorizontal_bias="0"/>
 
+    <!--착용되는 머리 악세사리 이미지뷰-->
+
+    <!--착용되는 등 악세사리 이미지뷰-->
+
     <!--캐릭터 옷+몸 이미지뷰 위치수정XXXXXXX 여기선 이상해도 AVD에선 다르게나옴-->
+
+    <ImageView
+        android:id="@+id/iv_accessory_head"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.23"
+        app:layout_constraintHorizontal_bias="0.095"/>
+
+    <ImageView
+        android:id="@+id/iv_accessory_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.091"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.758" />
+
     <ImageView
         android:id="@+id/iv_character_clothes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/iv_clothes_princessdress"
+        android:src="@drawable/iv_clothes_rabbit"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -351,8 +368,7 @@
         android:id="@+id/clothLayout"
         android:layout_width="700dp"
         android:layout_height="475dp"
-        android:orientation="horizontal"
-        android:visibility="invisible"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.883"
@@ -371,18 +387,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.884"
-                app:layout_constraintStart_toStartOf="@id/hairLayout"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.775">
+                android:orientation="horizontal">
 
                 <RadioButton
                     android:id="@+id/rb_clothes_princessdress"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
+                    android:layout_width="170dp"
+                    android:layout_height="155dp"
                     android:layout_margin="10dp"
                     android:background="@drawable/rb_clothes_princessdress"
                     android:button="@null"
@@ -390,76 +400,257 @@
 
                 <RadioButton
                     android:id="@+id/rb_clothes_princedress"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
+                    android:layout_width="175dp"
+                    android:layout_height="165dp"
                     android:layout_margin="10dp"
                     android:background="@drawable/rb_clothes_princedress"
                     android:button="@null" />
 
                 <RadioButton
                     android:id="@+id/rb_clothes_denimskirts"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="@drawable/rb_clothes_denimskirts"
                     android:button="@null" />
 
                 <RadioButton
                     android:id="@+id/rb_clothes_denimjeans"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="@drawable/rb_clothes_denimjeans"
                     android:button="@null" />
 
                 <RadioButton
                     android:id="@+id/rb_clothes_rabbit"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="@drawable/rb_clothes_rabbit"
                     android:button="@null" />
 
                 <RadioButton
                     android:id="@+id/rb_clothes_frog"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="@drawable/rb_clothes_frog"
                     android:button="@null" />
+            </RadioGroup>
+        </HorizontalScrollView>
+
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:scrollbars="none">
+
+            <RadioGroup
+                android:id="@+id/rg_clothes2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:orientation="horizontal">
 
                 <RadioButton
                     android:id="@+id/rb_clothes_flower"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="@drawable/rb_clothes_flower"
                     android:button="@null" />
 
                 <RadioButton
                     android:id="@+id/rb_clothes_marin"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="@drawable/rb_clothes_marin"
                     android:button="@null" />
 
                 <RadioButton
                     android:id="@+id/rb_clothes_stripe"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="@drawable/rb_clothes_stripe"
                     android:button="@null" />
 
                 <RadioButton
                     android:id="@+id/rb_clothes_cherry"
-                    android:layout_width="200dp"
-                    android:layout_height="200dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="@drawable/rb_clothes_cherry"
                     android:button="@null" />
 
+                <RadioButton
+                    android:id="@+id/rb_clothes_bee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/rb_clothes_bee"
+                    android:button="@null" />
+            </RadioGroup>
+        </HorizontalScrollView>
+    </LinearLayout>
+
+    <!-- 악세서리 레이아웃 -->
+    <LinearLayout
+        android:id="@+id/accessoryLayout"
+        android:layout_width="700dp"
+        android:layout_height="475dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.883"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.8">
+
+        <!-- 머리 악세사리 라디오 버튼 그룹 -->
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+            <RadioGroup
+                android:id="@+id/rg_accessory_head"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rb_accessory_head_bee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/rb_accessory_head_bee"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/rb_accessory_head_angel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="65dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/rb_accessory_head_angel"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/rb_accessory_head_puppy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="65dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/rb_accessory_head_puppy"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/rb_accessory_head_cat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="65dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/rb_accessory_head_cat"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/rb_accessory_head_rabbit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="65dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/rb_accessory_head_rabbit"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/rb_accessory_head_ribbon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="65dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/rb_accessory_head_ribbon"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/rb_accessory_head_hat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="65dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/rb_accessory_head_hat"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/rb_accessory_head_marin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="65dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/rb_accessory_head_marin"
+                    android:button="@null" />
+            </RadioGroup>
+        </HorizontalScrollView>
+
+        <!-- 등 악세사리 라디오 버튼 그룹 -->
+        <HorizontalScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+
+            <RadioGroup
+                android:id="@+id/rg_accessory_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rb_accessory_back_bee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/rb_accessory_back_bee"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/rb_accessory_back_angel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/rb_accessory_back_angel"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/rb_accessory_back_puppy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/rb_accessory_back_puppy"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/rb_accessory_back_cat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/rb_accessory_back_cat"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/rb_accessory_back_wing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/rb_accessory_back_wing"
+                    android:button="@null" />
             </RadioGroup>
         </HorizontalScrollView>
     </LinearLayout>
