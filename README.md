@@ -17,8 +17,8 @@
 - 도구 : Android Studio, Firebase
 - API : Karlo, Gemini, Amazon polly, Google Cloud Speech
 <br>
-### 생성형 AI 
 
+### 생성형 AI 
 **1. Karlo** - 사용자의 요청을 실시간으로 반영하여 동화 생성, AI와의 채팅을 통해 상호작용을 진행
 <br>
 **2. Gemini** - 스토리에 맞는 이미지를 실시간으로 생성하여, 시각적 요소를 통해 생동감 있는 이야기 완성
