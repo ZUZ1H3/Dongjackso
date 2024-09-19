@@ -91,6 +91,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
     private Set<String> loadedByLikes = new HashSet<>();
     private Set<String> loadedByLatest = new HashSet<>();
 
+    private Gemini gemini = new Gemini();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -1099,13 +1101,16 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
                         book.setBackgroundTintList(ColorStateList.valueOf(dominantColor)); // 배경 색상 설정
                     });
 
+                    // 사용자의 이름과 작가 호칭 알아내기
                     db.collection("users").document(userId)
                             .get().addOnCompleteListener(task -> {
                                 if (task.isSuccessful()) {
-                                    // 사용자의 이름과 작가 호칭 알아냄
                                     String userName = task.getResult().getString("name");
                                     String userNickname = task.getResult().getString("nickname");
                                     writer.setText(userName + " " + userNickname + "의");
+
+                                    // Fetch the story and generate promotional text
+                                    fetchStoryAndGenerateText(subDocId); // Pass the subDocId or any required identifier here
                                 }
                             });
                 }
@@ -1115,6 +1120,45 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
                     // 필요 시 처리
                 }
             });
+        });
+    }
+
+
+    private void fetchStoryAndGenerateText(String storyDocId) {
+        // Fetch the story from Firebase
+        db.collection("stories").document(storyDocId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                String story = task.getResult().getString("text"); // Assuming the story text is stored under the "text" field
+                if (story != null) {
+                    // Call the method to generate promotional text
+                    generatePromotionalText(story);
+                } else {
+                    // Handle the case where the story text is null
+                    explain.setText("ㅎㅎ");
+                }
+            } else {
+                // Handle the error if the fetch fails
+                explain.setText("ㅎㅎ...");
+            }
+        });
+    }
+
+
+    private void generatePromotionalText(String story) {
+        String prompt = "아래의 동화에 대한 홍보 문구를 20자 이하로 작성하세요. \n: " + story;
+
+        gemini.generateText(prompt, new Gemini.Callback() {
+            @Override
+            public void onSuccess(String text) {
+                // 성공적으로 텍스트를 받아온 경우, TextView에 설정
+                explain.setText(text);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                // 오류 발생 시 처리
+                explain.setText("Failed to generate promotional text.");
+            }
         });
     }
 
