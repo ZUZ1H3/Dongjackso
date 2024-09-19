@@ -13,7 +13,7 @@
 
   이를 통해 아동들은 자유롭게 생각을 표현하고 창작의 즐거움을 경험하며 다양한 **교육적 성장**을 얻을 수 있다. 
 ## 💻구조도
-<img src="https://github.com/user-attachments/assets/6c30f466-d4fb-4ae4-a457-129202aeedc8" width="600" />
+<img src="https://github.com/user-attachments/assets/6c30f466-d4fb-4ae4-a457-129202aeedc8" width="700" />
 
 ## ⚙️적용 기술 / 구조
 **개발 환경** : Android
