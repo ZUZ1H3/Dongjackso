@@ -1,4 +1,4 @@
-## 🌈 동화공작소 - 생성형 AI를 활용한 아동 참여형 동화 창작 앱
+## 동화공작소 - 생성형 AI를 활용한 아동 참여형 동화 창작 앱 🌈
 제20회 한성공학경진대회 팀 HOLY MOLY 의  프로젝트입니다. <br>
 - **대회**: 제20회 한성공학경진대회
 - **프로젝트 명**: 동화공작소
@@ -12,7 +12,7 @@
   아동이 동화의 테마와 등장인물을 선택하면, 생성형 AI인 **Karlo**와 **Gemini**가 실시간으로 동화의 도입부와 그림을 제작해 주며, 이를 바탕으로 자유롭게 이야기를 이어 나간다. 동화의 제목과 표지 또한 직접 만들고, GPT와의 대화를 통해 일기를 작성하며 **자기 생각 및 감정을 표현하는 능력**도 향상시킬 수 있다.
 
   이를 통해 아동들은 자유롭게 생각을 표현하고 창작의 즐거움을 경험하며 다양한 **교육적 성장**을 얻을 수 있다. 
-## 💻 구조도
+## 💻구조도
 <img src="https://github.com/user-attachments/assets/6c30f466-d4fb-4ae4-a457-129202aeedc8" width="600" />
 
 ## ⚙️적용 기술 / 구조
@@ -38,15 +38,18 @@ Google Cloud Speech : 동화, 일기 제작 시 음성 인식을 통해 더욱 �
 ![image](https://github.com/user-attachments/assets/c63032d4-eabf-4de8-ae3b-8f901d7fa120)
 
 ## 🎨 Figma 구경하기
-[**바로가기**](https://www.figma.com/design/4Koc32K9nLXDxRoosE0UXA/Untitled?node-id=0-1&t=z8qKo2yH3CFQMyam-1)
+<a href="https://www.figma.com/design/4Koc32K9nLXDxRoosE0UXA/Untitled?node-id=0-1&t=z8qKo2yH3CFQMyam-1" target="_blank">
+    <img src="https://github.com/user-attachments/assets/a609ee0b-f966-4969-b358-eb08f1b3cc15" alt="image" style="width: 250px"/>
+</a>
 
-## <img src="https://github.com/user-attachments/assets/48b528ae-00ff-40e7-8b4e-09cfde66264c" width="40" /> 개발자들
+
+## 👩‍💻 개발자들
 
 
-| [김민서](https://github.com/sunmay12)| [송희🙂‍↕️](https://github.com/felizsong) | [이주현](https://github.com/hana03030) | [주지혜😼](https://github.com/ZUZ1H3) |
+| [김민서](https://github.com/sunmay12)| [송희](https://github.com/felizsong) | [이주현](https://github.com/hana03030) | [주지혜](https://github.com/ZUZ1H3) |
 | ------------ | ------------- | ------------- | ------------- |
-| 
-| <center></center> | <center></center> | <center></center> | <center></center> |
+| <img src="https://github.com/user-attachments/assets/8c7339a3-7584-4b1e-bc21-2057ce3dce6f" width="160" /> |<img src="https://github.com/user-attachments/assets/e444b6bb-e99a-4b23-b7c0-970ec46ac3b0" width="190" />|<img src="https://github.com/user-attachments/assets/c67c309c-d070-48d0-b814-d45cd01ab4a5" width="214" />|<img src="https://github.com/user-attachments/assets/4cce6e92-d85f-4e77-9ad0-c6afc1318fbe" width="172" />|
+| <center></center> | <center></center> | <center>?</center> | <center></center> |
 
 
 
