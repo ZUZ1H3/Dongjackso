@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Pair;
 import android.view.View;
 import android.widget.EditText;
@@ -34,11 +33,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
-import org.checkerframework.checker.units.qual.N;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -652,8 +648,7 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
         loadedByLikes.clear(); // 중복 방지 초기화
 
         // 상위 컬렉션의 모든 문서 가져오기
-        db.collection("covers")
-                .get()
+        db.collection("covers").get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         List<Task<QuerySnapshot>> subTasks = new ArrayList<>();
@@ -665,8 +660,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
 
                             // 하위 컬렉션에서 하위 문서 가져오기
                             Task<QuerySnapshot> subTask = db.collection("covers")
-                                    .document(docId).collection("filename") // 하위 컬렉션 이름
-                                    .get();
+                                    .document(docId).collection("filename")// 하위 컬렉션 이름
+                                    .whereEqualTo("upload", true).get();
 
                             subTasks.add(subTask);
                         }
@@ -768,7 +763,7 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
                             // 하위 컬렉션에서 하위 문서 가져오기
                             Task<QuerySnapshot> subTask = db.collection("covers")
                                     .document(docId).collection("filename")  // 하위 컬렉션 이름
-                                    .get();
+                                    .whereEqualTo("upload", true).get();
 
                             subTasks.add(subTask);
                         }
