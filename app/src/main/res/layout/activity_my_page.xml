@@ -11,57 +11,38 @@
     <TextView
         android:id="@+id/tv_mini_logo"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="23dp"
+        android:gravity="center"
         android:text="동화공작소"
         android:fontFamily="@font/moyamoya"
         android:textSize="32sp"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.045"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.021" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- 우측 상단 미니 버튼 -->
     <ImageButton
         android:id="@+id/ib_home"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/ic_mypage_home"
-        android:backgroundTint="#0000"
-        android:contentDescription="홈버튼"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.92"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.015" />
-
-    <ImageButton
-        android:id="@+id/ib_my"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/ic_mypage_my"
-        android:backgroundTint="#0000"
-        android:contentDescription="홈버튼"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.96"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.015" />
-
-    <ImageView
-        android:id="@+id/iv_line"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_mypage_line"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.09" />
+        android:layout_marginLeft="1180dp"
+        android:layout_marginTop="23dp"
+        android:backgroundTint="#0000"
+        android:contentDescription="홈버튼"
+        android:src="@drawable/ic_home"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="84dp"
+        android:background="@drawable/iv_line"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/iv_storybox"
@@ -89,20 +70,18 @@
 
     <ImageView
         android:id="@+id/iv_userImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.93"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.77" />
+        android:layout_width="400dp"
+        android:layout_height="400dp"
+        android:layout_marginLeft="830dp"
+        android:layout_marginTop="280dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/iv_koko"
+        android:id="@+id/iv_coco"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_mypage_koko"
+        android:src="@drawable/ic_mypage_coco"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.94"
@@ -139,63 +118,62 @@
 
     <ScrollView
         android:id="@+id/sv_loves"
-        android:layout_width="650dp"
+        android:layout_width="666dp"
         android:layout_height="400dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.155"
+        app:layout_constraintHorizontal_bias="0.17"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.71"
         android:visibility="invisible" >
 
-        <LinearLayout
-            android:id="@+id/ll_loves"
-            android:layout_width="650dp"
-            android:layout_height="400dp"
-            android:orientation="horizontal"
-            android:padding="15dp" >
-        </LinearLayout>
+        <GridLayout
+            android:id="@+id/gl_loves"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnCount="3"
+            android:orientation="horizontal" />
     </ScrollView>
 
     <ScrollView
         android:id="@+id/sv_books"
-        android:layout_width="650dp"
+        android:layout_width="666dp"
         android:layout_height="400dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.155"
+        app:layout_constraintHorizontal_bias="0.17"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.71" >
 
-        <LinearLayout
-            android:id="@+id/ll_books"
-            android:layout_width="650dp"
-            android:layout_height="400dp"
-            android:orientation="horizontal"
-            android:padding="15dp" >
+        <GridLayout
+            android:id="@+id/gl_books"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnCount="3"
+            android:orientation="horizontal" >
 
             <ImageButton
                 android:id="@+id/iv_add_book"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#0000"
-                android:src="@drawable/ic_mypage_add"
+                android:background="@drawable/ic_mypage_add"
+                android:layout_marginEnd="30dp"
                 android:contentDescription="책 추가" />
-        </LinearLayout>
+        </GridLayout>
     </ScrollView>
 
     <com.example.holymoly.StrokeText
         android:id="@+id/st_name"
-        android:layout_width="130dp"
+        android:layout_width="100dp"
         android:layout_height="80dp"
-        android:textSize="32sp"
+        android:textSize="28sp"
         android:fontFamily="@font/ssurround"
         android:textColor="@color/white"
         app:textStroke="true"
         app:textStrokeColor="#6B9FA3"
-        app:textStrokeWidth="17"
+        app:textStrokeWidth="14"
         android:gravity="center"
         android:text="김민서"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -209,12 +187,12 @@
         android:id="@+id/st_writer"
         android:layout_width="150dp"
         android:layout_height="80dp"
-        android:textSize="32sp"
+        android:textSize="28sp"
         android:fontFamily="@font/ssurround"
         android:textColor="@color/white"
         app:textStroke="true"
         app:textStrokeColor="#6B9FA3"
-        app:textStrokeWidth="17"
+        app:textStrokeWidth="14"
         android:gravity="center"
         android:text="꼬마 작가"
         app:layout_constraintBottom_toBottomOf="parent"
