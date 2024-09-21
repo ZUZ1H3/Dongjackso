@@ -219,7 +219,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                     handler.post(new Runnable() {
                         public void run() {
                             // 캐릭터의 X축 이동
-                            characterPosition += 0.5f; // 원하는 이동 속도
+                            characterPosition += 0.6f; // 원하는 이동 속도
 
                             // 캐릭터가 화면의 최대 X 좌표를 넘으면 초기 위치로 이동
                             if (characterPosition > screenLimit) {
