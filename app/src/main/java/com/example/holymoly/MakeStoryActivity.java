@@ -85,7 +85,7 @@ public class MakeStoryActivity extends AppCompatActivity {
     private boolean isTextLoaded = false; // 텍스트 다 호출됐는지 확인
 
     // 테마 경로 및 최종적으로 선택된 테마
-    private String themePath, finalSelectedTheme, fileName;
+    private String themePath, finalSelectedTheme, fileName, storyFileName;
     // 페이지 내용과 선택지를 추적하기 위한 변수 추가
     private ArrayList<String> pageContents = new ArrayList<>();
 
@@ -387,6 +387,8 @@ public class MakeStoryActivity extends AppCompatActivity {
                     intent.putExtra("selectedTheme", finalSelectedTheme);
                     intent.putStringArrayListExtra("selectedCharacters", selectedCharacters);
                     intent.putStringArrayListExtra("story", pageContents);
+                    intent.putExtra("imageFile", fileName);      // 이미지 경로
+
                     saveStory(); // 내용 저장
                     startActivity(intent);
                 }
@@ -584,6 +586,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                 final int delay = 60;
                 final int length = storyText.length();
                 storyTextView.setText("");
+                storyTextView.scrollTo(0, 0);
 
                 for (int i = 0; i <= length; i++) {
                     final int index = i;
@@ -804,14 +807,14 @@ public class MakeStoryActivity extends AppCompatActivity {
             }
 
             int index = themeCount + 1;
-            String fileName = user.getUid() + "_" + finalSelectedTheme + "_" + index + ".txt";
+            storyFileName = user.getUid() + "_" + finalSelectedTheme + "_" + index + ".txt";
 
             // 파일 저장
             try {
-                FileOutputStream fos = openFileOutput(fileName, MODE_PRIVATE);
+                FileOutputStream fos = openFileOutput(storyFileName, MODE_PRIVATE);
                 fos.write(fileContent.toString().getBytes("UTF-8"));  // 한글 인코딩을 위해 UTF-8 사용
                 fos.close();
-                uploadFile(fileName);
+                uploadFile(storyFileName);
             } catch (IOException e) {
                 showToast("파일 저장 실패: " + e.getMessage());
             }
