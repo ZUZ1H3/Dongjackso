@@ -39,7 +39,6 @@ public class DrawStoryActivity extends AppCompatActivity {
     private SeekBar penSeekBar; // 추가된 SeekBar
     private long backPressedTime = 0;
 
-
     /* firebase 초기화 */
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
@@ -49,7 +48,6 @@ public class DrawStoryActivity extends AppCompatActivity {
     /* 효과음 */
     private SharedPreferences pref;
     private boolean isSoundOn;
-
     private int index;
 
     @Override
@@ -58,19 +56,6 @@ public class DrawStoryActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_draw_story);
         pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
-
-        // 버튼 초기화
-        pen = findViewById(R.id.ib_pen);
-        erase = findViewById(R.id.ib_erase);
-        rainbow = findViewById(R.id.ib_rainbow); // rainbow 버튼 초기화
-        remove = findViewById(R.id.ib_remove); // remove 버튼 초기화
-        drawView = findViewById(R.id.drawing);
-        penSeekBar = findViewById(R.id.pen_seekbar); // SeekBar 초기화
-        undo = findViewById(R.id.ib_back); // Undo 버튼 초기화
-        ok = findViewById(R.id.ib_ok);
-        paint = findViewById(R.id.ib_paint);
-        stop = findViewById(R.id.ib_stopMaking);
-
         index = getIntent().getIntExtra("index", 1);
 
         // 색상 버튼과 리소스 매핑
@@ -81,9 +66,9 @@ public class DrawStoryActivity extends AppCompatActivity {
         };
 
         String[] colorCodes = {
-                "#E86767", "#89DBED", "#FCBF5B", "#8577CB",
-                "#FFE62A", "#EF8EAB", "#53C856", "#303030",
-                "#6295DB", "#FFFFFF" // Example color code for rainbow
+                "#CE6868", "#9ED4E0", "#EBB661", "#847AB8",
+                "#F7DF29", "#EC96B0", "#53C856", "#303030",
+                "#6295DB", "#FFFFFF"
         };
 
         int[] colorImages = {
@@ -115,12 +100,64 @@ public class DrawStoryActivity extends AppCompatActivity {
                 }
             });
         }
-        setupSeekBar();
+
+        initializeFields();
         setupButtons();
-        // 앱 실행 시 기본 선택된 도구와 색상 설정
+        setupColorButtons();
+        setupSeekBar();
         selectDefaultToolAndColor();
     }
 
+    private void initializeFields() {
+        Intent intent = getIntent();
+        drawView = findViewById(R.id.drawing);
+        penSeekBar = findViewById(R.id.pen_seekbar);
+        pen = findViewById(R.id.ib_pen);
+        erase = findViewById(R.id.ib_erase);
+        rainbow = findViewById(R.id.ib_rainbow);
+        remove = findViewById(R.id.ib_remove);
+        undo = findViewById(R.id.ib_back);
+        ok = findViewById(R.id.ib_ok);
+        paint = findViewById(R.id.ib_paint);
+        stop = findViewById(R.id.ib_stopMaking);
+    }
+
+    private void setupColorButtons() {
+        int[] colorButtonIds = {
+                R.id.ib_red, R.id.ib_skyblue, R.id.ib_orange, R.id.ib_purple,
+                R.id.ib_yellow, R.id.ib_pink, R.id.ib_green, R.id.ib_black,
+                R.id.ib_blue, R.id.ib_rainbow
+        };
+
+        String[] colorCodes = {
+                "#CE6868", "#9ED4E0", "#EBB661", "#847AB8",
+                "#F7DF29", "#EC96B0", "#53C856", "#303030",
+                "#6295DB", "#FFFFFF"
+        };
+
+        int[] colorImages = {
+                R.drawable.color_red, R.drawable.color_skyblue, R.drawable.color_orange,
+                R.drawable.color_purple, R.drawable.color_yellow, R.drawable.color_pink,
+                R.drawable.color_green, R.drawable.color_black, R.drawable.color_blue,
+                R.drawable.color_rainbow
+        };
+
+        int[] colorCheckedImages = {
+                R.drawable.color_red_check, R.drawable.color_skyblue_check,
+                R.drawable.color_orange_check, R.drawable.color_purple_check,
+                R.drawable.color_yellow_check, R.drawable.color_pink_check,
+                R.drawable.color_green_check, R.drawable.color_black_check,
+                R.drawable.color_blue_check, R.drawable.color_rainbow_check
+        };
+
+        for (int i = 0; i < colorButtonIds.length; i++) {
+            ImageButton button = findViewById(colorButtonIds[i]);
+            colorButtonMap.put(button, colorImages[i]);
+            colorCheckMap.put(button, colorCheckedImages[i]);
+            colorCodeMap.put(colorButtonIds[i], colorCodes[i]);
+            button.setOnClickListener(v -> handleColorButtonClick(button));
+        }
+    }
     private void setupButtons() {
         pen.setOnClickListener(v -> handleToolButtonClick(pen));
         erase.setOnClickListener(v -> {
