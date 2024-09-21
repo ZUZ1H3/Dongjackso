@@ -30,17 +30,14 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 public class DrawStoryActivity extends AppCompatActivity {
 
     private CustomView drawView;
-    private ImageButton pen, erase, undo, rainbow, remove, ok, AI, stop;
+    private ImageButton pen, erase, undo, rainbow, paint, remove, ok, stop;
     private ImageButton selectedColorButton, selectedToolButton;
     private Map<ImageButton, Integer> colorButtonMap = new HashMap<>();
     private Map<ImageButton, Integer> colorCheckMap = new HashMap<>();
     private Map<Integer, String> colorCodeMap = new HashMap<>();
     private String selectedColorCode = "#303030"; // 기본 색상 코드 (검정색)
     private SeekBar penSeekBar; // 추가된 SeekBar
-    private String selectedTheme;
-    private ArrayList<String> selectedCharacters;
-    private Karlo karlo;
-    private Gemini gemini;
+    private long backPressedTime = 0;
 
     /* firebase 초기화 */
     private FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -51,28 +48,14 @@ public class DrawStoryActivity extends AppCompatActivity {
     /* 효과음 */
     private SharedPreferences pref;
     private boolean isSoundOn;
-
     private int index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_draw_story_alone);
+        setContentView(R.layout.activity_draw_story);
         pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
-
-        // 버튼 초기화
-        pen = findViewById(R.id.ib_pen);
-        erase = findViewById(R.id.ib_erase);
-        rainbow = findViewById(R.id.ib_rainbow); // rainbow 버튼 초기화
-        remove = findViewById(R.id.ib_remove); // remove 버튼 초기화
-        drawView = findViewById(R.id.drawing);
-        penSeekBar = findViewById(R.id.pen_seekbar); // SeekBar 초기화
-        undo = findViewById(R.id.ib_back); // Undo 버튼 초기화
-        ok = findViewById(R.id.ib_ok);
-        AI = findViewById(R.id.ib_AI);
-        stop = findViewById(R.id.ib_stopMaking);
-
         index = getIntent().getIntExtra("index", 1);
 
         // 색상 버튼과 리소스 매핑
@@ -83,9 +66,9 @@ public class DrawStoryActivity extends AppCompatActivity {
         };
 
         String[] colorCodes = {
-                "#E86767", "#89DBED", "#FCBF5B", "#8577CB",
-                "#FFE62A", "#EF8EAB", "#53C856", "#303030",
-                "#6295DB", "#FFFFFF" // Example color code for rainbow
+                "#CE6868", "#9ED4E0", "#EBB661", "#847AB8",
+                "#F7DF29", "#EC96B0", "#53C856", "#303030",
+                "#6295DB", "#FFFFFF"
         };
 
         int[] colorImages = {
@@ -118,79 +101,88 @@ public class DrawStoryActivity extends AppCompatActivity {
             });
         }
 
-
-        // 도구 버튼 클릭 리스너 설정
-        pen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sound();
-                handleToolButtonClick(pen);
-                // 도구 변경 시 현재 선택된 색상으로 설정
-                if (selectedColorButton != null) {
-                    drawView.setColor(selectedColorCode);
-                }
-            }
-        });
-
-        erase.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sound();
-                handleToolButtonClick(erase);
-                // 도구 변경 시 흰색으로 설정
-                drawView.setColor("#FFFFFFFF");
-            }
-        });
-
-        ok.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sound();
-                uploadImage();
-            }
-        });
-
-        // SeekBar의 값을 펜 굵기에 설정하는 리스너 설정
-        penSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                // 예: progress가 0일 때 15
-                float penWidth = 15 + (progress * 9);
-                drawView.setPenWidth(penWidth);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                // 터치가 시작될 때 호출됩니다.
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                // 터치가 끝날 때 호출됩니다.
-            }
-        });
-
-        // Remove 버튼 클릭 리스너 설정
-        remove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sound();
-                drawView.clearCanvas(); // 그림을 모두 지움
-            }
-        });
-
-
-        // Undo 버튼 클릭 리스너 설정
-        undo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sound();
-                drawView.undo(); // Undo 기능 호출
-            }
-        });
-
-        // 앱 실행 시 기본 선택된 도구와 색상 설정
+        initializeFields();
+        setupButtons();
+        setupColorButtons();
+        setupSeekBar();
         selectDefaultToolAndColor();
+    }
+
+    private void initializeFields() {
+        Intent intent = getIntent();
+        drawView = findViewById(R.id.drawing);
+        penSeekBar = findViewById(R.id.pen_seekbar);
+        pen = findViewById(R.id.ib_pen);
+        erase = findViewById(R.id.ib_erase);
+        rainbow = findViewById(R.id.ib_rainbow);
+        remove = findViewById(R.id.ib_remove);
+        undo = findViewById(R.id.ib_back);
+        ok = findViewById(R.id.ib_ok);
+        paint = findViewById(R.id.ib_paint);
+        stop = findViewById(R.id.ib_stopMaking);
+    }
+
+    private void setupColorButtons() {
+        int[] colorButtonIds = {
+                R.id.ib_red, R.id.ib_skyblue, R.id.ib_orange, R.id.ib_purple,
+                R.id.ib_yellow, R.id.ib_pink, R.id.ib_green, R.id.ib_black,
+                R.id.ib_blue, R.id.ib_rainbow
+        };
+
+        String[] colorCodes = {
+                "#CE6868", "#9ED4E0", "#EBB661", "#847AB8",
+                "#F7DF29", "#EC96B0", "#53C856", "#303030",
+                "#6295DB", "#FFFFFF"
+        };
+
+        int[] colorImages = {
+                R.drawable.color_red, R.drawable.color_skyblue, R.drawable.color_orange,
+                R.drawable.color_purple, R.drawable.color_yellow, R.drawable.color_pink,
+                R.drawable.color_green, R.drawable.color_black, R.drawable.color_blue,
+                R.drawable.color_rainbow
+        };
+
+        int[] colorCheckedImages = {
+                R.drawable.color_red_check, R.drawable.color_skyblue_check,
+                R.drawable.color_orange_check, R.drawable.color_purple_check,
+                R.drawable.color_yellow_check, R.drawable.color_pink_check,
+                R.drawable.color_green_check, R.drawable.color_black_check,
+                R.drawable.color_blue_check, R.drawable.color_rainbow_check
+        };
+
+        for (int i = 0; i < colorButtonIds.length; i++) {
+            ImageButton button = findViewById(colorButtonIds[i]);
+            colorButtonMap.put(button, colorImages[i]);
+            colorCheckMap.put(button, colorCheckedImages[i]);
+            colorCodeMap.put(colorButtonIds[i], colorCodes[i]);
+            button.setOnClickListener(v -> handleColorButtonClick(button));
+        }
+    }
+    private void setupButtons() {
+        pen.setOnClickListener(v -> handleToolButtonClick(pen));
+        erase.setOnClickListener(v -> {
+            sound();
+            handleToolButtonClick(erase);
+            drawView.setColor("#FFFFFFFF");
+        });
+        ok.setOnClickListener(v -> {
+            sound();
+            uploadImage();
+        });
+
+        stop.setOnClickListener(v -> handleBackPress());
+        remove.setOnClickListener(v -> {
+            sound();
+            drawView.clearCanvas();
+        });
+        paint.setOnClickListener(v -> {
+            sound();
+            applyPaintBucket();
+        });
+        undo.setOnClickListener(v -> {
+            sound();
+            drawView.undo();
+        });
     }
 
     private void selectDefaultToolAndColor() {
@@ -199,6 +191,39 @@ public class DrawStoryActivity extends AppCompatActivity {
         ImageButton defaultColorButton = findViewById(R.id.ib_black); // 기본 색상 버튼
         handleColorButtonClick(defaultColorButton);
     }
+
+    private void handleBackPress() {
+        if (System.currentTimeMillis() - backPressedTime >= 2000) {
+            backPressedTime = System.currentTimeMillis();
+            Toast.makeText(this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
+        } else {
+            finish();
+        }
+    }
+
+    private void setupSeekBar() {
+        penSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                float penWidth = 15 + (progress * 9);
+                drawView.setPenWidth(penWidth);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
+    }
+
+    private void applyPaintBucket() {
+        if (selectedColorButton != null) {
+            drawView.setColor(selectedColorCode);
+        }
+        drawView.fillCanvas(selectedColorCode);
+    }
+
 
     private void handleColorButtonClick(ImageButton button) {
         // Rainbow 버튼 클릭 시 AmbilWarnaDialog 호출
