@@ -37,10 +37,6 @@ public class DrawStoryActivity extends AppCompatActivity {
     private Map<Integer, String> colorCodeMap = new HashMap<>();
     private String selectedColorCode = "#303030"; // 기본 색상 코드 (검정색)
     private SeekBar penSeekBar; // 추가된 SeekBar
-    private String selectedTheme;
-    private ArrayList<String> selectedCharacters;
-    private Karlo karlo;
-    private Gemini gemini;
     private long backPressedTime = 0;
 
 
@@ -119,7 +115,7 @@ public class DrawStoryActivity extends AppCompatActivity {
                 }
             });
         }
-
+        setupSeekBar();
         setupButtons();
         // 앱 실행 시 기본 선택된 도구와 색상 설정
         selectDefaultToolAndColor();
@@ -166,6 +162,22 @@ public class DrawStoryActivity extends AppCompatActivity {
         } else {
             finish();
         }
+    }
+
+    private void setupSeekBar() {
+        penSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                float penWidth = 15 + (progress * 9);
+                drawView.setPenWidth(penWidth);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {}
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {}
+        });
     }
 
     private void applyPaintBucket() {
