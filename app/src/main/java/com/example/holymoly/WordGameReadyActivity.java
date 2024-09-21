@@ -3,6 +3,7 @@ package com.example.holymoly;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -19,7 +20,7 @@ public class WordGameReadyActivity extends AppCompatActivity {
 
     private EditText[] editTexts;
     private ImageButton nextBtn, AI;
-    private TextView AITextView, themeTextView, hintTextView;
+    private TextView AITextView, themeTextView;
     private Gemini gemini;
 
     /* 효과음 */
@@ -48,8 +49,8 @@ public class WordGameReadyActivity extends AppCompatActivity {
         AI = findViewById(R.id.AI);
         AITextView = findViewById(R.id.AITextView);
         themeTextView = findViewById(R.id.theme);
-        hintTextView = findViewById(R.id.hint);
         gemini = new Gemini();
+        AITextView.setMovementMethod(new ScrollingMovementMethod()); //스크롤 가능하도록
 
         String theme = getIntent().getStringExtra("Theme");
 
@@ -74,14 +75,29 @@ public class WordGameReadyActivity extends AppCompatActivity {
                 } else if (checkForDuplicates()) {
                     // 중복 단어가 있을 때 처리
                     Toast.makeText(WordGameReadyActivity.this, "중복된 단어가 있습니다. 수정해 주세요.", Toast.LENGTH_SHORT).show();
-                } else {
-                    // 주제와 관련되지 않은 단어 검사
-                    checkForIrrelevantWords(theme);
+                }// 관련된 단어만 있을 경우
+                else {
+                    StringBuilder wordsBuilder = new StringBuilder();
+                    for (EditText editText : editTexts) {
+                        String word = editText.getText().toString().trim();
+                        if (!word.isEmpty()) {
+                            wordsBuilder.append(word).append(", ");
+                        }
+                    }
+
+                    if (wordsBuilder.length() > 0) {
+                        wordsBuilder.setLength(wordsBuilder.length() - 2);
+                    }
+
+                    String words = wordsBuilder.toString();
+                    Intent intent = new Intent(WordGameReadyActivity.this, WordGameActivity.class);
+                    intent.putExtra("words", words.split(", "));
+                    intent.putExtra("theme", theme);
+                    startActivity(intent);
                 }
             }
         });
     }
-
 
 
     // 하나라도 비어있는 EditText가 있는지 확인하는 메소드
@@ -126,53 +142,6 @@ public class WordGameReadyActivity extends AppCompatActivity {
         return false;
     }
 
-    // 주제와 관련되지 않은 단어를 검사하는 메소드
-    private void checkForIrrelevantWords(String theme) {
-        StringBuilder wordsBuilder = new StringBuilder();
-        for (EditText editText : editTexts) {
-            String word = editText.getText().toString().trim();
-            if (!word.isEmpty()) {
-                wordsBuilder.append(word).append(", ");
-            }
-        }
-
-        // 마지막 쉼표와 공백 제거
-        if (wordsBuilder.length() > 0) {
-            wordsBuilder.setLength(wordsBuilder.length() - 2);
-        }
-
-        String words = wordsBuilder.toString();
-        String prompt = "다음 단어들이 주제 '" + theme + "'와 관련이 있는지 확인해 주세요: '" + words +
-                "'\n관련이 없는 단어가 있을 경우, '주제와 관련되지 않은 단어가 있어!' 라고 대답한 뒤 어떤 단어가 관련 없는지 말해주세요.";
-
-
-        gemini.generateText(prompt, new Gemini.Callback() {
-            @Override
-            public void onSuccess(String text) {
-                runOnUiThread(() -> {
-                    Log.d("WordGameReadyActivity", "단어 목록: " + wordsBuilder.toString());
-
-                    if (text.contains("주제와 관련되지 않은 단어가 있어!")) {
-
-                        AITextView.setText(text);
-                    } else {
-                        // 관련된 단어만 있을 경우
-                        Intent intent = new Intent(WordGameReadyActivity.this, WordGameActivity.class);
-                        intent.putExtra("words", words.split(", "));
-                        startActivity(intent);
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                runOnUiThread(() ->
-                        Toast.makeText(WordGameReadyActivity.this, "단어 검증 실패", Toast.LENGTH_SHORT).show()
-                );
-            }
-        });
-    }
-
 
     public void generateAIWords(String theme) {
         StringBuilder existingWords = new StringBuilder();
@@ -190,12 +159,12 @@ public class WordGameReadyActivity extends AppCompatActivity {
         //프롬프트
         String prompt = "사용자는 " + theme + "를 주제로 빙고게임을 하려고 합니다. " +
                 "그런데 단어가 생각이 안 난다고 합니다. " +
-                "다음 단어들을 제외한 주제에 맞는 단어를 랜덤으로 2개만 추천해주세요." +
+                "주제에 맞는 단어를 2개만 추천해주세요." +
                 "단답으로 대답하세요. " +
-                "단어와 단어 사이에는 ', '로 띄어주세요.";
+                "단어와 단어 사이에는 ', '로 띄어주세요. ";
 
         if (!(existingWords.toString().isEmpty())) {
-            prompt = prompt + "추천할 단어는 '" + existingWords.toString() + "'을 제외해야 합니다.";
+            prompt += existingWords.toString() + "'는 제외해서 추천해주세요.";
         }
 
         //AI가 추천하는 단어 생성

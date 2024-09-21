@@ -24,7 +24,7 @@ public class WordGameActivity extends AppCompatActivity {
 
     private TextView[][] userTextViews, aiTextViews; // 사용자와 AI의 단어를 표시할 TextView 배열
     private ImageView[][] userImageViews, aiImageViews; // 사용자와 AI의 선택된 상태를 표시할 ImageView 배열
-    private TextView userTextView, aiTextView; // 사용자와 AI의 추가적인 정보 표시용 TextView
+    private TextView userTextView, aiTextView, themeTextView; // 사용자와 AI의 추가적인 정보 표시용 TextView
     private ImageView profile, aiBingo, userBingo; // 사용자 프로필을 표시할 ImageView
     private Gemini gemini; // Gemini API와 상호작용을 위한 객체
     private String[][] aiWords;  // Gemini가 생성한 AI 단어들을 저장할 2차원 배열
@@ -68,6 +68,8 @@ public class WordGameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_word_game); // 레이아웃 설정
         pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
         gemini = new Gemini(); // Gemini API 객체 초기화
+        String theme = getIntent().getStringExtra("theme");
+
 
         // 사용자 프로필 및 정보 표시용 TextView 초기화
         profile = findViewById(R.id.mini_profile);
@@ -76,9 +78,15 @@ public class WordGameActivity extends AppCompatActivity {
         aiTextView = findViewById(R.id.AITextView);
         aiBingo = findViewById(R.id.AIbingo);
         userBingo = findViewById(R.id.userbingo);
+        themeTextView = findViewById(R.id.theme);
         // 사용자와 AI의 선택 상태를 추적할 배열 초기화
         userSelected = new boolean[4][4];
         aiSelected = new boolean[4][4];
+
+        // 가져온 테마 값을 TextView에 설정
+        if (theme != null) {
+            themeTextView.setText("제시어 : " + theme);
+        }
 
         // 사용자 빙고판의 TextView 및 ImageView 배열 초기화
         userTextViews = new TextView[][]{
@@ -131,7 +139,7 @@ public class WordGameActivity extends AppCompatActivity {
         }
 
         // AI 단어 생성 요청
-        generateAIWords("과일");
+        generateAIWords(theme);
     }
 
 

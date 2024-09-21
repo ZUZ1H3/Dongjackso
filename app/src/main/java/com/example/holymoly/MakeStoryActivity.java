@@ -108,6 +108,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_makestory);
         pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
+
         // UI 요소 초기화
         nextTextView = findViewById(R.id.nextTextView);
         storyTextView = findViewById(R.id.tv_pageText);
