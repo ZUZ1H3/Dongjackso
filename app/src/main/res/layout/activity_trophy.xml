@@ -51,8 +51,8 @@
         android:id="@+id/iv_spot1"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginLeft="122dp"
-        android:layout_marginTop="240dp"
+        android:layout_marginLeft="120dp"
+        android:layout_marginTop="228dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -60,8 +60,8 @@
         android:id="@+id/iv_spot2"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginLeft="367dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginLeft="366dp"
+        android:layout_marginTop="142dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -69,8 +69,8 @@
         android:id="@+id/iv_spot3"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginLeft="728dp"
-        android:layout_marginTop="320dp"
+        android:layout_marginLeft="727dp"
+        android:layout_marginTop="314dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -78,8 +78,8 @@
         android:id="@+id/iv_spot4"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        android:layout_marginLeft="828dp"
-        android:layout_marginTop="520dp"
+        android:layout_marginLeft="827dp"
+        android:layout_marginTop="518dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

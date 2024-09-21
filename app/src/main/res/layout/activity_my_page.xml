@@ -89,6 +89,16 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.795" />
 
+    <ImageView
+        android:id="@+id/add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/iv_plus"
+        android:layout_marginTop="173dp"
+        android:layout_marginLeft="721dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
+
     <RadioGroup
         android:id="@+id/rg_page"
         android:layout_width="wrap_content"
@@ -154,13 +164,13 @@
             android:columnCount="3"
             android:orientation="horizontal" >
 
-            <ImageButton
+<!--            <ImageButton
                 android:id="@+id/iv_add_book"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ic_mypage_add"
                 android:layout_marginEnd="30dp"
-                android:contentDescription="책 추가" />
+                android:contentDescription="책 추가" />-->
         </GridLayout>
     </ScrollView>
 
@@ -173,7 +183,7 @@
         android:textColor="@color/white"
         app:textStroke="true"
         app:textStrokeColor="#6B9FA3"
-        app:textStrokeWidth="14"
+        app:textStrokeWidth="8"
         android:gravity="center"
         android:text="김민서"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -192,7 +202,7 @@
         android:textColor="@color/white"
         app:textStroke="true"
         app:textStrokeColor="#6B9FA3"
-        app:textStrokeWidth="14"
+        app:textStrokeWidth="8"
         android:gravity="center"
         android:text="꼬마 작가"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -223,7 +233,7 @@
         android:textSize="20sp"
         app:textStroke="true"
         app:textStrokeColor="#6B9FA3"
-        app:textStrokeWidth="17"
+        app:textStrokeWidth="8"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -253,7 +263,7 @@
         android:textSize="20sp"
         app:textStroke="true"
         app:textStrokeColor="#6B9FA3"
-        app:textStrokeWidth="17"
+        app:textStrokeWidth="8"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
