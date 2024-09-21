@@ -4,15 +4,22 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,6 +28,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -45,9 +54,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 public class MakeStoryActivity extends AppCompatActivity {
     private LinearLayout loadingLayout;
+    private ConstraintLayout constraintLayout;
     private ProgressBar progressBar;
     TextView progresstextView;
     private ImageView character;
@@ -88,6 +99,10 @@ public class MakeStoryActivity extends AppCompatActivity {
     private SharedPreferences pref;
     private boolean isSoundOn;
 
+    //bubble제작
+    private int screenWidth, screenHeight;
+    private List<ImageView> bubbles = new ArrayList<>(); // 버블 리스트
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,6 +129,9 @@ public class MakeStoryActivity extends AppCompatActivity {
         character = findViewById(R.id.characterImage);
         storyTextView.setMovementMethod(new ScrollingMovementMethod()); //스크롤 가능하도록
         MainActivity mainActivity = new MainActivity();
+
+        //로딩 레이아웃
+        constraintLayout = findViewById(R.id.constraintLayout);
         loadingLayout = findViewById(R.id.loadingLayout);
 
 
@@ -147,6 +165,15 @@ public class MakeStoryActivity extends AppCompatActivity {
         if (recognizedText != null && !recognizedText.isEmpty()) {
             selectMic3.setText(recognizedText);  // 음성 인식 텍스트를 텍스트뷰에 설정
         }
+
+        //레이아웃 폭 높이 체크 - bubble생성용으로 쓰임
+        constraintLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                // ic_bubble.png 이미지를 10개 추가
+                generateBubbles(); // 이전의 addRandomBubbles를 generateBubbles로 변경
+            }
+        });
 
         // ProgressBar 업데이트를 위한 Thread
         new Thread(new Runnable() {
@@ -192,7 +219,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                     handler.post(new Runnable() {
                         public void run() {
                             // 캐릭터의 X축 이동
-                            characterPosition += 2f; // 원하는 이동 속도
+                            characterPosition += 0.6f; // 원하는 이동 속도
 
                             // 캐릭터가 화면의 최대 X 좌표를 넘으면 초기 위치로 이동
                             if (characterPosition > screenLimit) {
@@ -204,6 +231,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                 }
             }
         }).start();
+
 
         selectText1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -374,6 +402,98 @@ public class MakeStoryActivity extends AppCompatActivity {
 
     }
 
+    //bubble생성
+    private void generateBubbles() {
+        final int[] currentBubbleNumber = {1};
+        int layoutWidth = constraintLayout.getWidth();
+        int layoutHeight = constraintLayout.getHeight();
+
+        int bubbleSize = (int) (140 * getResources().getDisplayMetrics().density); // 버블 크기를 140dp로 설정
+        int spacing = bubbleSize / 4; // 추가 간격을 더 넓게 설정
+
+        List<Rect> placedBubbles = new ArrayList<>(); // 생성된 버블의 위치를 저장
+
+        for (int i = 0; i < 10; i++) {
+            FrameLayout bubbleLayout = new FrameLayout(this);
+            ImageView bubble = new ImageView(this);
+            bubble.setImageResource(R.drawable.ic_bubble);
+
+            // 커스텀 폰트를 불러오기
+            Typeface customFont = ResourcesCompat.getFont(this, R.font.meetme);
+
+            FrameLayout.LayoutParams bubbleParams = new FrameLayout.LayoutParams(bubbleSize, bubbleSize);
+
+            TextView bubbleNumber = new TextView(this);
+            bubbleNumber.setText(String.valueOf(i + 1));
+            bubbleNumber.setTextColor(Color.WHITE);
+            bubbleNumber.setTextSize(70);
+            bubbleNumber.setGravity(Gravity.CENTER);
+
+            // 커스텀 폰트를 적용하는 부분
+            bubbleNumber.setTypeface(customFont);
+
+            FrameLayout.LayoutParams textParams = new FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+            );
+            textParams.gravity = Gravity.CENTER;
+
+            int x, y;
+            Rect newBubbleRect;
+            int attempts = 0;
+
+            // 겹치지 않는 좌표를 찾을 때까지 시도
+            do {
+                x = new Random().nextInt(layoutWidth - bubbleSize - spacing);
+                y = new Random().nextInt((int) (layoutHeight * 0.75) - bubbleSize - spacing); // 60%까지만
+
+                newBubbleRect = new Rect(x, y, x + bubbleSize + spacing, y + bubbleSize + spacing);
+                attempts++;
+
+                if (attempts > 100) {
+                    break; // 너무 많은 시도를 하면 무한 루프 방지
+                }
+            } while (!isNonOverlapping(newBubbleRect, placedBubbles));
+
+            if (attempts > 100) {
+                continue; // 좌표 찾기를 포기하고 넘어감
+            }
+
+            bubbleLayout.setX(x);
+            bubbleLayout.setY(y);
+
+            bubbleLayout.addView(bubble, bubbleParams);
+            bubbleLayout.addView(bubbleNumber, textParams);
+            constraintLayout.addView(bubbleLayout);
+
+            // 클릭 리스너 추가
+            bubbleLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int number = Integer.parseInt(bubbleNumber.getText().toString());
+                    if (number == currentBubbleNumber[0]) {
+                        // 클릭한 숫자가 맞으면 해당 버블을 제거하고 다음 숫자로 증가
+                        sound();
+                        constraintLayout.removeView(bubbleLayout);
+                        currentBubbleNumber[0]++; // 다음 숫자로 증가
+                    }
+                }
+            });
+
+            // 생성된 버블의 위치 저장
+            placedBubbles.add(newBubbleRect);
+        }
+    }
+
+    private boolean isNonOverlapping(Rect newBubbleRect, List<Rect> placedBubbles) {
+        for (Rect existingBubbleRect : placedBubbles) {
+            if (Rect.intersects(newBubbleRect, existingBubbleRect)) {
+                return false; // 겹치면 false 반환
+            }
+        }
+        return true; // 겹치지 않으면 true 반환
+    }
+
     // 선택한 테마와 캐릭터를 번역 하는 함수. 이미지를 만들 때 사용함
     public void translate(final String storyText) {
         //선택한 테마 번역
@@ -421,7 +541,8 @@ public class MakeStoryActivity extends AppCompatActivity {
                                     retryBtn.setVisibility(View.VISIBLE);
                                     stopMakingBtn.setVisibility(View.VISIBLE);
                                     background.setVisibility(View.VISIBLE);
-                                    loadingLayout.setVisibility(View.INVISIBLE);
+                                    //loadingLayout.setVisibility(View.INVISIBLE);
+                                    constraintLayout.setVisibility(View.INVISIBLE);
                                     uploadImage(bitmap); // Storage에 배경 업로드
                                     displayStoryText(storyText); //동화 출력
 
