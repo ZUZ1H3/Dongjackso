@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 
 import com.bumptech.glide.Glide;
@@ -46,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MakeStoryAloneActivity extends AppCompatActivity {
+    private ConstraintLayout aiMode;
     private Gemini gemini;
     private SpeechRecognizer mRecognizer;
     private Typeface typeface;
@@ -101,14 +103,14 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         // 쓰기 모드
         bookmark_write.setOnClickListener(view -> {
             sound();
-            setButtonVisibility(View.VISIBLE, View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.INVISIBLE);
+            setButtonVisibility(View.VISIBLE, View.INVISIBLE, View.INVISIBLE);
             scriptTxt.setVisibility(View.INVISIBLE); // AI가 생성한 text 숨김
         });
 
         // AI랑 쓰기 모드
         bookmark_AI.setOnClickListener(view -> {
             sound();
-            setButtonVisibility(View.INVISIBLE, View.VISIBLE, View.VISIBLE, View.VISIBLE, View.INVISIBLE);
+            setButtonVisibility(View.INVISIBLE, View.VISIBLE,  View.INVISIBLE);
             scriptTxt.setVisibility(View.VISIBLE); // AI가 생성한 text 보이기
             story_txt.setVisibility(View.VISIBLE); // 동화 작성 text 보이기
 
@@ -120,7 +122,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         // 음성으로 쓰기 모드
         bookmark_Mic.setOnClickListener(view -> {
             sound();
-            setButtonVisibility(View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.INVISIBLE, View.VISIBLE);
+            setButtonVisibility(View.INVISIBLE, View.INVISIBLE, View.VISIBLE);
             scriptTxt.setVisibility(View.INVISIBLE); // AI가 생성한 text 숨김
             story_txt.setVisibility(View.VISIBLE);   // 동화 작성 text 보이기
         });
@@ -243,6 +245,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
     }
 
     private void initializeUI() {
+        aiMode = findViewById(R.id.AI);
         bookmark_write = findViewById(R.id.rb_bookmark_write);
         bookmark_AI = findViewById(R.id.rb_bookmark_ai);
         bookmark_Mic = findViewById(R.id.rb_bookmark_mic);
@@ -275,22 +278,14 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
     }
 
     // 모드마다 아이콘 VISIBLE 설정
-    private void setButtonVisibility(int writeVisibility, int aiVisibility, int createVisibility, int keywordsVisibility, int micVisibility) {
+    private void setButtonVisibility(int writeVisibility, int aiVisibility,  int micVisibility) {
         // Write 모드
         story_txt.setVisibility(writeVisibility);
         touch.setVisibility(writeVisibility);
         // AI 모드
-        howabout.setVisibility(aiVisibility);
-        alertIc.setVisibility(aiVisibility);
-        alertTxt.setVisibility(aiVisibility);
-        scriptBg.setVisibility(aiVisibility);
-        apply.setVisibility(aiVisibility);
-        again.setVisibility(aiVisibility);
-        create.setVisibility(createVisibility);
-        keywordsLayout.setVisibility(keywordsVisibility);
+        aiMode.setVisibility(aiVisibility);
         // Mic 모드
         Mic.setVisibility(micVisibility);
-        //micStop.setVisibility(micVisibility);
     }
 
     // 음성 인식 시작
@@ -374,7 +369,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
 
     // AI한테 키워드 뽑아달라고 요청
     private void requestKeywordsFromGemini() {
-        String prompt = "동화 주제에 대한 키워드 6개를 생성해주세요. 단답형으로 작성해주세요. 단어와 단어 사이에 ','로 연결해주세요.'";
+        String prompt = "동화를 쓰려고 하는데 키워드 6개를 추천해주세요. 등장인물 또는 동화를 쓸 만한 주제 등, 단답형으로 작성해주세요. 단어와 단어 사이에 ','로 연결해주세요. ex) 고양이, 모험, 우주, 고래, 숲속, 토끼'";
         gemini.generateText(prompt, new Gemini.Callback() {
             @Override
             public void onSuccess(String text) {

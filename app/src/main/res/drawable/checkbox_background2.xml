@@ -5,6 +5,6 @@
     <padding
         android:left="20dp"
         android:right="20dp"
-        android:top="9dp"
-        android:bottom="9dp"/> <!-- 내부 여백 -->
+        android:top="12dp"
+        android:bottom="12dp"/> <!-- 내부 여백 -->
 </shape>
