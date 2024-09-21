@@ -11,7 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class Karlo {
-    private static final String KARLO_API_KEY = "6191d7ae7edbee42dba70ef2ce2d7643"; // 실제 API 키로 대체하세요.
+    private static final String KARLO_API_KEY = BuildConfig.KARLO_API_KEY; // 실제 API 키로 대체하세요.
     private static final String API_URL = "https://api.kakaobrain.com/v2/inference/karlo/t2i";
 
     public interface Callback {

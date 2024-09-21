@@ -18,7 +18,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class Gemini {
-    private static final String GEMINI_API_KEY = "AIzaSyB5Vf0Nk67nJOKk4BADvPDQhRGNyYTVxjU"; // Gemini API 키
+    private static final String GEMINI_API_KEY = BuildConfig.GEMINI_API_KEY; // Gemini API 키
     private Executor executor = Executors.newSingleThreadExecutor(); // 백그라운드 작업을 위한 Executor
 
     public interface Callback {
