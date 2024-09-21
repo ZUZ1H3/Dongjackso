@@ -1,9 +1,12 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     // Add the Google services Gradle plugin
     id("com.google.gms.google-services")
 }
-
+val properties = Properties()
+properties.load(project.rootProject.file("local.properties").inputStream())
 android {
     namespace = "com.example.holymoly"
     compileSdk = 34
@@ -16,6 +19,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "KARLO_API_KEY", properties.getProperty("karlo"))
+        buildConfigField("String", "GEMINI_API_KEY", properties.getProperty("gemini"))
+        buildConfigField("String", "POLLY_API_KEY", properties.getProperty("polly"))
+
     }
 
     buildTypes {
@@ -30,6 +37,11 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    buildFeatures{
+        buildConfig = true
+        viewBinding = true
     }
 }
 
