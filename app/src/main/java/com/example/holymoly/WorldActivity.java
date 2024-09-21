@@ -357,6 +357,12 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             custom.setStroke(false);
             alone.setStroke(false);
 
+            // 데이터가 비어있는지 체크
+            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
+                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
+                return;  // 메서드 종료
+            }
+
             currentPage = 1;
             if(isBestMode) {
                 bestImages("바다", () -> {
@@ -379,6 +385,12 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             desert.setStroke(false);
             custom.setStroke(false);
             alone.setStroke(false);
+
+            // 데이터가 비어있는지 체크
+            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
+                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
+                return;  // 메서드 종료
+            }
 
             currentPage = 1;
             if(isBestMode) {
@@ -403,6 +415,12 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             custom.setStroke(false);
             alone.setStroke(false);
 
+            // 데이터가 비어있는지 체크
+            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
+                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
+                return;  // 메서드 종료
+            }
+
             currentPage = 1;
             if(isBestMode) {
                 bestImages("숲", () -> {
@@ -425,6 +443,12 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             desert.setStroke(false);
             custom.setStroke(false);
             alone.setStroke(false);
+
+            // 데이터가 비어있는지 체크
+            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
+                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
+                return;  // 메서드 종료
+            }
 
             currentPage = 1;
             if(isBestMode) {
@@ -449,6 +473,12 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             custom.setStroke(false);
             alone.setStroke(false);
 
+            // 데이터가 비어있는지 체크
+            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
+                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
+                return;  // 메서드 종료
+            }
+
             currentPage = 1;
             if(isBestMode) {
                 bestImages("우주", () -> {
@@ -471,6 +501,12 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             desert.setStroke(true);
             custom.setStroke(false);
             alone.setStroke(false);
+
+            // 데이터가 비어있는지 체크
+            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
+                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
+                return;  // 메서드 종료
+            }
 
             currentPage = 1;
             if(isBestMode) {
@@ -495,6 +531,12 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             custom.setStroke(true);
             alone.setStroke(false);
 
+            // 데이터가 비어있는지 체크
+            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
+                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
+                return;  // 메서드 종료
+            }
+
             currentPage = 1;
             if(isBestMode) {
                 bestImages("커스텀", () -> {
@@ -517,6 +559,12 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             desert.setStroke(false);
             custom.setStroke(false);
             alone.setStroke(true);
+
+            // 데이터가 비어있는지 체크
+            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
+                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
+                return;  // 메서드 종료
+            }
 
             currentPage = 1;
             if(isBestMode) {
@@ -970,7 +1018,6 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             Toast.makeText(this, "마지막 페이지입니다", Toast.LENGTH_SHORT).show();
             return;
         }
-
         int count = pageText.size();
         // 현재 페이지 번호가 중앙에 오도록
         int startPage = selected - (count / 2);

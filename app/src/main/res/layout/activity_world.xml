@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="50dp"
             android:layout_marginLeft="50dp"
-            android:layout_marginTop="17dp"
+            android:layout_marginTop="23dp"
             android:fontFamily="@font/moyamoya"
             android:gravity="center"
             android:text="동화공작소"

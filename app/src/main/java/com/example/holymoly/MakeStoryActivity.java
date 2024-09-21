@@ -69,9 +69,9 @@ public class MakeStoryActivity extends AppCompatActivity {
     private final float screenLimit = 900f;            // 화면의 최대 X 좌표
     private final float initialPosition = 0f;          // 캐릭터의 초기 위치
     private boolean isImageLoaded = false; // 이미지 로드 상태를 추적하는 변수
-    private TextView storyTextView, pageTextView, selectText1, selectText2, selectMic3;
+    private TextView nextTextView, storyTextView, pageTextView, selectText1, selectText2, selectMic3;
     private ImageButton stopMakingBtn, nextBtn, retryBtn;
-    private ImageView backgroundImageView, selectImage1, selectImage2, selectMic1, selectMic2, nextStory, background;
+    private ImageView backgroundImageView, selectImage1, selectImage2, selectMic1, selectMic2, background;
     private String selectedTheme;
     private ArrayList<String> selectedCharacters;
     private Handler handler = new Handler();
@@ -109,6 +109,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_makestory);
         pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
         // UI 요소 초기화
+        nextTextView = findViewById(R.id.nextTextView);
         storyTextView = findViewById(R.id.tv_pageText);
         pageTextView = findViewById(R.id.tv_page);
         backgroundImageView = findViewById(R.id.background_image_view);
@@ -119,7 +120,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         selectMic1 = findViewById(R.id.iv_mic1);
         selectMic2 = findViewById(R.id.iv_mic2);
         selectMic3 = findViewById(R.id.iv_mic3);
-        nextStory = findViewById(R.id.iv_nextstory);
+
         stopMakingBtn = findViewById(R.id.ib_stopMaking);
         nextBtn = findViewById(R.id.ib_nextStep);
         retryBtn = findViewById(R.id.ib_retry);
@@ -238,7 +239,7 @@ public class MakeStoryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 choicesVisible = false;
                 sound();
-                nextStory.setVisibility(View.INVISIBLE);
+                nextTextView.setVisibility(View.INVISIBLE);
                 selectImage1.setVisibility(View.INVISIBLE);
                 selectImage2.setVisibility(View.INVISIBLE);
                 selectText1.setVisibility(View.INVISIBLE);
@@ -270,7 +271,7 @@ public class MakeStoryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 choicesVisible = false;
                 sound();
-                nextStory.setVisibility(View.INVISIBLE);
+                nextTextView.setVisibility(View.INVISIBLE);
                 selectImage1.setVisibility(View.INVISIBLE);
                 selectImage2.setVisibility(View.INVISIBLE);
                 selectText1.setVisibility(View.INVISIBLE);
@@ -321,7 +322,7 @@ public class MakeStoryActivity extends AppCompatActivity {
 
                 // recognizedText가 null이거나 빈 문자열일 경우 처리
                 if (!TextUtils.isEmpty(selectedChoice)) {
-                    nextStory.setVisibility(View.INVISIBLE);
+                    nextTextView.setVisibility(View.INVISIBLE);
                     selectImage1.setVisibility(View.INVISIBLE);
                     selectImage2.setVisibility(View.INVISIBLE);
                     selectText1.setVisibility(View.INVISIBLE);
@@ -597,6 +598,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                                 if (isImageLoaded && num <= 5) { //5장 이하일 때
                                     makeStory.generateChoices(num); // 이미지가 로드된 후에 선택지 생성
                                 }
+                                if(num == 1) nextTextView.setVisibility(View.VISIBLE);
                                 if(num == 6) isTextLoaded = true;
                             }
                         }
@@ -615,6 +617,8 @@ public class MakeStoryActivity extends AppCompatActivity {
                             if (isImageLoaded && num <= 5 && !choicesVisible) {
                                 makeStory.generateChoices(num);
                             }
+
+                            if(num == 1) nextTextView.setVisibility(View.VISIBLE);
                             if(num == 6) isTextLoaded = true;
                         }
                         // false를 반환하여 기본 스크롤 동작을 허용
@@ -648,7 +652,6 @@ public class MakeStoryActivity extends AppCompatActivity {
         } else {
             showToast("선택지가 부족합니다.");
         }
-        nextStory.setVisibility(View.VISIBLE);
         selectImage1.setVisibility(View.VISIBLE);
         selectImage2.setVisibility(View.VISIBLE);
         selectText1.setVisibility(View.VISIBLE);

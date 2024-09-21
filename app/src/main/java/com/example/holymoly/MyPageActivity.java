@@ -10,8 +10,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Pair;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
@@ -22,6 +24,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -51,10 +54,10 @@ import java.util.List;
 import java.util.Set;
 
 public class MyPageActivity extends AppCompatActivity {
-    private ImageButton homeBtn, addBtn;
+    private ImageButton homeBtn;
     private RadioButton bookBtn, loveBtn;
     private TextView name, nickname, countLove, countBook;
-    private ImageView userImage;
+    private ImageView userImage, add;
     private ScrollView loves, books;
     private GridLayout gl_book, gl_like;
 
@@ -85,7 +88,7 @@ public class MyPageActivity extends AppCompatActivity {
         pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
 
         homeBtn = findViewById(R.id.ib_home);
-        addBtn = findViewById(R.id.iv_add_book);
+        add = findViewById(R.id.add);
         bookBtn = findViewById(R.id.rb_book);
         loveBtn = findViewById(R.id.rb_love);
         name = findViewById(R.id.st_name);
@@ -133,7 +136,7 @@ public class MyPageActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        addBtn.setOnClickListener(view -> {
+        add.setOnClickListener(view -> {
             sound();
             showDialog();
         });
@@ -320,6 +323,39 @@ public class MyPageActivity extends AppCompatActivity {
 
                             // Glide를 이용해 이미지 로드
                             Glide.with(this).load(uri).into(iv);
+
+                            iv.setOnTouchListener(new View.OnTouchListener() {
+                                private Handler handler = new Handler();
+                                private Runnable longPressRunnable;
+                                private boolean isPressed = false;
+
+                                @Override
+                                public boolean onTouch(View v, MotionEvent event) {
+                                    switch (event.getAction()) {
+                                        case MotionEvent.ACTION_DOWN:
+                                            isPressed = false;
+                                            longPressRunnable = new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    if(!isPressed) {
+                                                        isPressed = true;
+                                                        showDialog(docId); // 다이얼로그
+                                                    }
+                                                }
+                                            };
+                                            handler.postDelayed(longPressRunnable, 2000);
+                                            return true;
+
+                                        case MotionEvent.ACTION_UP: // 롱 클릭 취소
+                                            handler.removeCallbacks(longPressRunnable);
+                                        case MotionEvent.ACTION_CANCEL:
+                                            handler.removeCallbacks(longPressRunnable); // 롱 클릭 취소
+                                            return true;
+                                        default:
+                                            return false;
+                                    }
+                                }
+                            });
                             gl_book.addView(iv);
                         });
                     }
@@ -328,6 +364,32 @@ public class MyPageActivity extends AppCompatActivity {
                 });
     }
 
+    private void showDialog(String docId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("업로드 취소")
+                .setMessage(extractTitle(docId) + "(을)를 삭제합니다.")
+                .setPositiveButton("네", (dialog, which) -> {
+                    // 이미지 삭제 후 재실행
+                    userDoc.collection("filename").document(docId).update("upload", false)
+                            .addOnSuccessListener(aVoid -> {
+                               Intent intent = getIntent();
+                               finish();
+                               startActivity(intent);
+                            });
+                })
+                .setNegativeButton("아니요", (dialog, which) -> {
+                    dialog.dismiss();
+                });
+        builder.create().show();
+    }
+
+    @NonNull
+    // 파일 이름에 따라 '_'로 분할해 제목 알아냄
+    private String extractTitle(@NonNull String fileName) {
+        String[] parts = fileName.split("_");
+        // 제목 부분에서 .png 제거 후 반환
+        return parts[3].replace(".png", "");
+    }
     // 좋아요 누른 이미지 로드
     private void loadLikeImages() {
         likesList.clear();

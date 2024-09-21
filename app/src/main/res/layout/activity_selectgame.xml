@@ -115,7 +115,7 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_marginLeft="380dp"
-        android:layout_marginTop="430dp"
+        android:layout_marginTop="460dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
@@ -137,7 +137,7 @@
         android:layout_width="220dp"
         android:layout_height="220dp"
         android:layout_marginLeft="930dp"
-        android:layout_marginTop="400dp"
+        android:layout_marginTop="430dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
