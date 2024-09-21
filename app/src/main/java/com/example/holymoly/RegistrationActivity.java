@@ -477,7 +477,6 @@ public class RegistrationActivity extends AppCompatActivity {
         uploadTask.addOnSuccessListener(taskSnapshot -> { });
 
         // 기존 이미지 삭제 후 새 파일 업로드
-        //deleteImageAndUpload(finalBitmap);
         uploadImage(finalBitmap);
     }
     // 캐릭터 Bitmap 이미지 제작
@@ -499,16 +498,28 @@ public class RegistrationActivity extends AppCompatActivity {
         Bitmap hairBitmap = Bitmap.createBitmap(ivHair.getDrawingCache());
         ivHair.setDrawingCacheEnabled(false);
 
+        ivAccessoryHead.setDrawingCacheEnabled(true);
+        Bitmap headAccBitmap = Bitmap.createBitmap(ivAccessoryHead.getDrawingCache());
+        ivAccessoryHead.setDrawingCacheEnabled(false);
+
+        ivAccessoryBack.setDrawingCacheEnabled(true);
+        Bitmap backAccBitmap = Bitmap.createBitmap(ivAccessoryBack.getDrawingCache());
+        ivAccessoryBack.setDrawingCacheEnabled(false);
+
         // 구성 요소들 사이즈 맞추기
         Bitmap cFaceBitmap = Bitmap.createScaledBitmap(faceBitmap, 328, 239, true);
         Bitmap cHairBitmap = Bitmap.createScaledBitmap(hairBitmap, 500, 500, true);
         Bitmap cClothesBitmap = Bitmap.createScaledBitmap(clothesBitmap, 276, 308, true);
         Bitmap cEyesBitmap = Bitmap.createScaledBitmap(eyesBitmap, 126, 40, true);
+        Bitmap cHeadAccBitmap = Bitmap.createScaledBitmap(headAccBitmap, 327, 380, true);
+        Bitmap cBackAccBitmap = Bitmap.createScaledBitmap(backAccBitmap, 320, 188, true);
 
         faceBitmap.recycle();
         eyesBitmap.recycle();
         clothesBitmap.recycle();
         hairBitmap.recycle();
+        headAccBitmap.recycle();
+        backAccBitmap.recycle();
 
         // 최종 Bitmap 이미지 생성할 크기 설정 - 너비, 높이, 배경 투명
         Bitmap finalBitmap = Bitmap.createBitmap(600, 600, Bitmap.Config.ARGB_8888);
@@ -516,8 +527,10 @@ public class RegistrationActivity extends AppCompatActivity {
         Canvas canvas = new Canvas(finalBitmap);
         canvas.drawBitmap(cFaceBitmap, 136, 124, null);
         canvas.drawBitmap(cHairBitmap, 50, -7, null);
+        canvas.drawBitmap(cBackAccBitmap, 140, 360, null); // 등 악세사리
         canvas.drawBitmap(cClothesBitmap, 162, 292, null);
         canvas.drawBitmap(cEyesBitmap, 238, 265, null);
+        canvas.drawBitmap(cHeadAccBitmap, 140, -7, null); // 머리 악세사리
 
         return finalBitmap;
     }
@@ -531,9 +544,8 @@ public class RegistrationActivity extends AppCompatActivity {
         Paint strokePaint = new Paint();
         strokePaint.setColor(Color.WHITE); // 테두리 색상
         strokePaint.setStyle(Paint.Style.STROKE); // 테두리만 그리기
-        //strokePaint.setStrokeJoin(Paint.Join.ROUND); // 경로 연결 부분을 둥글게 설정
         strokePaint.setStrokeWidth(10); // 테두리 두께 설정
-        //strokePaint.setAntiAlias(true); // 높은 해상도 설정
+        strokePaint.setAntiAlias(true); // 높은 해상도 설정
 
         // 이미지 및 테두리 그리기
         Path strokePath = createStroke(bitmap);
