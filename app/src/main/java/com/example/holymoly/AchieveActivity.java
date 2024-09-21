@@ -68,7 +68,7 @@ public class AchieveActivity extends AppCompatActivity {
 
     //작가호칭 - 프로그래스바 목표
     private int totalTrophyCount=0;
-    private final int[] totalTrophyGoals = {1, 5, 10, 50};
+    private final int[] totalTrophyGoals = {0, 5, 10, 50};
     private ProgressBar[] pbTrophy = new ProgressBar[4];
     private TextView[] tvTrophy = new TextView[4];
     private ImageButton[] ibTrophy = new ImageButton[4];
@@ -386,7 +386,14 @@ public class AchieveActivity extends AppCompatActivity {
         for(int i=0; i < totalTrophyGoals.length; i++) {
             int goal = totalTrophyGoals[i];
             int current = Math.min(totalTrophyCount, goal); //둘 중 작은걸 선택 - 이미 목표치를 채우면 100퍼만 되게끔하기 위해 사용
-            int percentage = (int) ((current / (float) goal) * 100); //퍼센트 계산 (프로그래스바)
+            int percentage;
+
+            if (goal > 0) {
+                percentage = (int) ((current / (float) goal) * 100); //퍼센트 계산 (프로그래스바)
+            } else {
+                // 목표가 0일 때는 완료로 간주
+                percentage = 100;
+            }
 
             //프로그래스바 없데이트
             pbTrophy[i].setProgress(percentage);

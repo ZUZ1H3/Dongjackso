@@ -57,7 +57,7 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
     private static final long DELAY = 60; // 텍스트 간격
 
     /* Amazon Polly 초기화 */
-    private static final String COGNITO_POOL_ID = "ap-northeast-2:cb62de99-45db-4c5a-955e-18dfe0bab246";
+    private static final String COGNITO_POOL_ID = BuildConfig.POLLY_API_KEY;
     private Regions MY_REGION = Regions.AP_NORTHEAST_2; // 리전 설정
     private AmazonPolly pollyClient;
 

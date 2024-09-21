@@ -116,9 +116,9 @@
         app:layout_constraintVertical_bias="0.98" />
 
     <!--테마를 선택해주세요+테마 text들-->
-    <TextView
+    <com.example.holymoly.StrokeText
         android:id="@+id/tv_chooseChracter"
-        android:layout_width="wrap_content"
+        android:layout_width="600dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/ssurround"
         android:gravity="center"
@@ -130,7 +130,10 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
+        app:layout_constraintVertical_bias="0.3"
+        app:textStroke="true"
+        app:textStrokeWidth="16"
+        app:textStrokeColor="#639699"/>
 
 
     <HorizontalScrollView

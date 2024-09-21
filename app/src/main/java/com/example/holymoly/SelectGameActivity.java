@@ -104,6 +104,10 @@ public class SelectGameActivity extends AppCompatActivity implements UserInfoLoa
             @Override
             public void onClick(View v) {
                 sound();
+                // 버튼 스타일 변경
+                ibSelectBingo.setBackgroundResource(R.drawable.ib_selectgame_bingo_checked);
+                ibSelectPuzzle.setBackgroundResource(R.drawable.ib_selectgame_puzzle);
+
                 Intent intent = new Intent(SelectGameActivity.this, WordGameThemeActivity.class);
                 startActivity(intent);
             }
@@ -113,6 +117,10 @@ public class SelectGameActivity extends AppCompatActivity implements UserInfoLoa
             @Override
             public void onClick(View v) {
                 sound();
+                // 버튼 스타일 변경
+                ibSelectBingo.setBackgroundResource(R.drawable.ib_selectgame_bingo);
+                ibSelectPuzzle.setBackgroundResource(R.drawable.ib_selectgame_puzzle_checked);
+
                 Intent intent = new Intent(SelectGameActivity.this, PuzzleActivity.class);
                 startActivity(intent);
             }

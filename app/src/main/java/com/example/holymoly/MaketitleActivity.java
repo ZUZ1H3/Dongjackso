@@ -17,16 +17,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
 public class MaketitleActivity extends AppCompatActivity {
     private ImageView backgroundImageView;
-    private ImageButton nextBtn;
+    private ImageButton nextBtn, stopBtn;
     private EditText title;
     private static final int MAX_RETRY_COUNT = 3; // 최대 재시도 횟수
     private int retryCount = 0; // 현재 재시도 횟수
-    private String bookTitle;
+    private String bookTitle, imageFile, storyFile;
     private TextView name, AItitle;
     private Gemini gemini;
     private String selectedTheme;
@@ -36,6 +38,9 @@ public class MaketitleActivity extends AppCompatActivity {
     private FirebaseAuth auth = FirebaseAuth.getInstance();
     private FirebaseUser user = auth.getCurrentUser();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private StorageReference imageRef = storage.getReference().child("background/");
+    private StorageReference storyRef = storage.getReference().child("stories/");
 
     /* 효과음 */
     private SharedPreferences pref;
@@ -50,6 +55,7 @@ public class MaketitleActivity extends AppCompatActivity {
         gemini = new Gemini();
         backgroundImageView = findViewById(R.id.background_image_view);
         nextBtn = findViewById(R.id.ib_nextStep);
+        stopBtn = findViewById(R.id.ib_stopMaking);
         title = findViewById(R.id.tv_booktitle);
         name = findViewById(R.id.tv_writername);
         AItitle = findViewById(R.id.tv_AItitle);
@@ -59,6 +65,8 @@ public class MaketitleActivity extends AppCompatActivity {
         story = intent.getStringArrayListExtra("story");
         selectedTheme = intent.getStringExtra("selectedTheme");
         selectedCharacters = intent.getStringArrayListExtra("selectedCharacters");
+        imageFile = intent.getStringExtra("imageFile");
+        storyFile = user.getUid() + "_" + selectedTheme + "_" + imageFile.split("_")[1].replace("png", "txt");
 
         if (imageBytes != null) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.length);
@@ -88,6 +96,21 @@ public class MaketitleActivity extends AppCompatActivity {
                 intent.putStringArrayListExtra("selectedCharacters", selectedCharacters);
                 startActivity(intent);
                 finish();
+            }
+        });
+
+        stopBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sound();
+                // 이미지 파일 삭제
+                imageRef.child(selectedTheme + "/" + imageFile).delete().addOnSuccessListener(aVoid -> {
+                    // 스토리 파일 삭제
+                    storyRef.child(storyFile).delete().addOnSuccessListener(aVoid2 -> {
+                        finish();
+                    });
+                });
+
             }
         });
 

@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Pair;
@@ -30,15 +29,18 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -100,11 +102,6 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
 
         init();
 
-        /*
-        book(책 색상) 색상 backgroundTint로 바뀌게 만들었음
-        그리고, explain은 부가 설명임 이거 두개로 제미나이 쓰면 될듯?
-         */
-
         // 각 페이지 번호를 클릭했을 때
         for (int i = 0; i < pageText.size(); i++) {
             final int index = i;
@@ -119,8 +116,6 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             updatePage(currentPage);  // 페이지 업데이트
         });
         Top3Images(); // 명예의 전당 배너 이미지
-
-
     }
 
     // 초기화
@@ -227,7 +222,10 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
         page_4.setOnClickListener(this);
         page_5.setOnClickListener(this);
 
-        for(int i = 0; i < hearts.length; i ++) {
+        for(int i = 0; i< covers.length; i++) {
+            covers[i].setOnClickListener(this);
+        }
+        for(int i = 0; i < hearts.length; i++) {
             hearts[i].setOnClickListener(this);
         }
     }
@@ -258,7 +256,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             startActivity(intent);
         }
         else if(v.getId() == R.id.ib_mypage) {
-
+            Intent intent = new Intent(this, MyPageActivity.class);
+            startActivity(intent);
         }
         else if(v.getId() == R.id.backPage) {
             if(bannerPage > 1) {
@@ -358,6 +357,12 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             custom.setStroke(false);
             alone.setStroke(false);
 
+            // 데이터가 비어있는지 체크
+            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
+                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
+                return;  // 메서드 종료
+            }
+
             currentPage = 1;
             if(isBestMode) {
                 bestImages("바다", () -> {
@@ -380,6 +385,12 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             desert.setStroke(false);
             custom.setStroke(false);
             alone.setStroke(false);
+
+            // 데이터가 비어있는지 체크
+            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
+                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
+                return;  // 메서드 종료
+            }
 
             currentPage = 1;
             if(isBestMode) {
@@ -404,6 +415,12 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             custom.setStroke(false);
             alone.setStroke(false);
 
+            // 데이터가 비어있는지 체크
+            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
+                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
+                return;  // 메서드 종료
+            }
+
             currentPage = 1;
             if(isBestMode) {
                 bestImages("숲", () -> {
@@ -426,6 +443,12 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             desert.setStroke(false);
             custom.setStroke(false);
             alone.setStroke(false);
+
+            // 데이터가 비어있는지 체크
+            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
+                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
+                return;  // 메서드 종료
+            }
 
             currentPage = 1;
             if(isBestMode) {
@@ -450,6 +473,12 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             custom.setStroke(false);
             alone.setStroke(false);
 
+            // 데이터가 비어있는지 체크
+            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
+                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
+                return;  // 메서드 종료
+            }
+
             currentPage = 1;
             if(isBestMode) {
                 bestImages("우주", () -> {
@@ -472,6 +501,12 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             desert.setStroke(true);
             custom.setStroke(false);
             alone.setStroke(false);
+
+            // 데이터가 비어있는지 체크
+            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
+                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
+                return;  // 메서드 종료
+            }
 
             currentPage = 1;
             if(isBestMode) {
@@ -496,6 +531,12 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             custom.setStroke(true);
             alone.setStroke(false);
 
+            // 데이터가 비어있는지 체크
+            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
+                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
+                return;  // 메서드 종료
+            }
+
             currentPage = 1;
             if(isBestMode) {
                 bestImages("커스텀", () -> {
@@ -518,6 +559,12 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             desert.setStroke(false);
             custom.setStroke(false);
             alone.setStroke(true);
+
+            // 데이터가 비어있는지 체크
+            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
+                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
+                return;  // 메서드 종료
+            }
 
             currentPage = 1;
             if(isBestMode) {
@@ -649,8 +696,7 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
         loadedByLikes.clear(); // 중복 방지 초기화
 
         // 상위 컬렉션의 모든 문서 가져오기
-        db.collection("covers")
-                .get()
+        db.collection("covers").get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         List<Task<QuerySnapshot>> subTasks = new ArrayList<>();
@@ -662,8 +708,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
 
                             // 하위 컬렉션에서 하위 문서 가져오기
                             Task<QuerySnapshot> subTask = db.collection("covers")
-                                    .document(docId).collection("filename") // 하위 컬렉션 이름
-                                    .get();
+                                    .document(docId).collection("filename")// 하위 컬렉션 이름
+                                    .whereEqualTo("upload", true).get();
 
                             subTasks.add(subTask);
                         }
@@ -737,6 +783,13 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
                 });
                 loadedByLikes.add(subDocId); // 중복 리스트에 추가
             });
+
+            // 이미지 클릭 리스너
+            covers[coverIndex].setOnClickListener(v -> {
+                Intent intent = new Intent(this, ReadBookActivity.class);
+                intent.putExtra("imgName", subDocId);
+                startActivity(intent);
+            });
         }
     }
 
@@ -758,7 +811,7 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
                             // 하위 컬렉션에서 하위 문서 가져오기
                             Task<QuerySnapshot> subTask = db.collection("covers")
                                     .document(docId).collection("filename")  // 하위 컬렉션 이름
-                                    .get();
+                                    .whereEqualTo("upload", true).get();
 
                             subTasks.add(subTask);
                         }
@@ -834,6 +887,13 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
                     likes[coverIndex].setText(String.valueOf(cntLikes[coverIndex]));
                 });
                 loadedByLatest.add(subDocId); // 중복 리스트에 추가
+
+                // 이미지 클릭 리스너
+                covers[coverIndex].setOnClickListener(v -> {
+                    Intent intent = new Intent(this, ReadBookActivity.class);
+                    intent.putExtra("imgName", subDocId);
+                    startActivity(intent);
+                });
             });
         }
     }
@@ -958,7 +1018,6 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             Toast.makeText(this, "마지막 페이지입니다", Toast.LENGTH_SHORT).show();
             return;
         }
-
         int count = pageText.size();
         // 현재 페이지 번호가 중앙에 오도록
         int startPage = selected - (count / 2);
@@ -1093,6 +1152,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
                 public void onResourceReady(@NonNull Bitmap resource, Transition<? super Bitmap> transition) {
                     cover.setImageBitmap(resource); // 이미지 로드
                     title.setText("< " + imageTitle + " >"); // 제목 설정
+                    explain.setText("");
+                    fetchStoryAndGenerateText(subDocId); // 부가 설명 설정
 
                     // Palette로 이미지의 색상 추출
                     Palette.from(resource).generate(palette -> {
@@ -1108,9 +1169,6 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
                                     String userName = task.getResult().getString("name");
                                     String userNickname = task.getResult().getString("nickname");
                                     writer.setText(userName + " " + userNickname + "의");
-
-                                    // Fetch the story and generate promotional text
-                                    fetchStoryAndGenerateText(subDocId); // Pass the subDocId or any required identifier here
                                 }
                             });
                 }
@@ -1123,45 +1181,81 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
+    // 스토리 불러와서 텍스트를 string으로 변환
+    private void fetchStoryAndGenerateText(@NonNull String subDocId) {
+        // 파일명 : uid_thema_index.txt 로 바꿈
+        String fileName = subDocId.split("_")[0] + "_" + extractThema(subDocId) + "_" + subDocId.split("_")[2] + ".txt";
+        StorageReference storiesRef = storage.getReference().child("stories/" + fileName);
 
-    private void fetchStoryAndGenerateText(String storyDocId) {
-        // Fetch the story from Firebase
-        db.collection("stories").document(storyDocId).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                String story = task.getResult().getString("text"); // Assuming the story text is stored under the "text" field
-                if (story != null) {
-                    // Call the method to generate promotional text
-                    generatePromotionalText(story);
-                } else {
-                    // Handle the case where the story text is null
-                    explain.setText("ㅎㅎ");
-                }
-            } else {
-                // Handle the error if the fetch fails
-                explain.setText("ㅎㅎ...");
+        final long MEGABYTE = 1024 * 1024;
+        storiesRef.getBytes(MEGABYTE).addOnSuccessListener(bytes -> {
+            String story = "";
+            try {
+                story = new String(bytes, "UTF-8");
+                checkAndGenerateText(subDocId, story);
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
             }
         });
     }
 
+    // Firestore에서 홍보 문구의 생성 여부를 확인하고 필요 시 생성
+    private void checkAndGenerateText(String subDocId, String story) {
+        String mainDoc = extractDocId(subDocId);
+        DocumentReference docRef = db.collection("covers").document(mainDoc).collection("filename").document(subDocId);
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    // 이미 홍보 문구가 생성되어 Firestore에 저장된 경우
+                    String text = document.getString("explain");
+                    Boolean isGemini = document.getBoolean("gemini");
+                    if (isGemini != null && isGemini) {
+                        // Firestore에서 저장된 홍보 문구를 가져와서 설정
+                        explain.setText(text);
+                    } else {
+                        // Firestore에 저장된 텍스트가 없거나 gemini가 false인 경우
+                        generatePromotionalText(docRef, story);
+                    }
+                } else {
+                    // Firestore에 문서가 없는 경우, 텍스트 생성
+                    generatePromotionalText(docRef, story);
+                }
+            }
+        });
+    }
 
-    private void generatePromotionalText(String story) {
-        String prompt = "아래의 동화에 대한 홍보 문구를 20자 이하로 작성하세요. \n: " + story;
+    // 부가 설명 설정
+    private void generatePromotionalText(DocumentReference docRef, String story) {
+        String prompt = "아래의 동화의 스토리를 읽어보시고, 서점에서 이 동화를 판매한다고 생각하면서" +
+                "이 동화에 대한 홍보 문구를 호들갑을 떨면서 20자 이하로 작성하세요. " +
+                "이모지, '#', '*'을 사용하지 마세요. " +
+                "ex) 207명이 열광했다! 동화공작소 개발자가 강력 추천하는 대한민국 No.1 화제의 동화\n: " + story;
 
         gemini.generateText(prompt, new Gemini.Callback() {
             @Override
             public void onSuccess(String text) {
-                // 성공적으로 텍스트를 받아온 경우, TextView에 설정
-                explain.setText(text);
+                runOnUiThread(() -> {
+                    // 성공적으로 텍스트를 받아온 경우, TextView에 설정
+                    explain.setText(text);
+
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("explain", text);
+                    data.put("gemini", true);
+
+                    docRef.update(data).addOnSuccessListener(aVoid -> {
+                        Toast.makeText(WorldActivity.this, "저장했습니다.", Toast.LENGTH_SHORT).show();
+                    });
+                });
             }
 
             @Override
             public void onFailure(Throwable t) {
                 // 오류 발생 시 처리
-                explain.setText("Failed to generate promotional text.");
+                explain.setText("홍보 문구를 생성하지 못했습니다.");
             }
         });
     }
-
 
     // 효과음
     public void sound() {

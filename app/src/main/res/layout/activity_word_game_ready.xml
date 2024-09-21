@@ -79,6 +79,7 @@
         android:id="@+id/AITextView"
         android:layout_width="230dp"
         android:layout_height="130dp"
+        android:scrollbars="vertical"
         android:fontFamily="@font/bitbit"
         android:gravity="center"
         android:text="나를 터치하면 단어를 추천해줄게!"

@@ -69,9 +69,9 @@ public class MakeStoryActivity extends AppCompatActivity {
     private final float screenLimit = 900f;            // 화면의 최대 X 좌표
     private final float initialPosition = 0f;          // 캐릭터의 초기 위치
     private boolean isImageLoaded = false; // 이미지 로드 상태를 추적하는 변수
-    private TextView storyTextView, pageTextView, selectText1, selectText2, selectMic3;
+    private TextView nextTextView, storyTextView, pageTextView, selectText1, selectText2, selectMic3;
     private ImageButton stopMakingBtn, nextBtn, retryBtn;
-    private ImageView backgroundImageView, selectImage1, selectImage2, selectMic1, selectMic2, nextStory, background;
+    private ImageView backgroundImageView, selectImage1, selectImage2, selectMic1, selectMic2, background;
     private String selectedTheme;
     private ArrayList<String> selectedCharacters;
     private Handler handler = new Handler();
@@ -85,7 +85,7 @@ public class MakeStoryActivity extends AppCompatActivity {
     private boolean isTextLoaded = false; // 텍스트 다 호출됐는지 확인
 
     // 테마 경로 및 최종적으로 선택된 테마
-    private String themePath, finalSelectedTheme, fileName;
+    private String themePath, finalSelectedTheme, fileName, storyFileName;
     // 페이지 내용과 선택지를 추적하기 위한 변수 추가
     private ArrayList<String> pageContents = new ArrayList<>();
 
@@ -108,7 +108,9 @@ public class MakeStoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_makestory);
         pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
+
         // UI 요소 초기화
+        nextTextView = findViewById(R.id.nextTextView);
         storyTextView = findViewById(R.id.tv_pageText);
         pageTextView = findViewById(R.id.tv_page);
         backgroundImageView = findViewById(R.id.background_image_view);
@@ -119,7 +121,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         selectMic1 = findViewById(R.id.iv_mic1);
         selectMic2 = findViewById(R.id.iv_mic2);
         selectMic3 = findViewById(R.id.iv_mic3);
-        nextStory = findViewById(R.id.iv_nextstory);
+
         stopMakingBtn = findViewById(R.id.ib_stopMaking);
         nextBtn = findViewById(R.id.ib_nextStep);
         retryBtn = findViewById(R.id.ib_retry);
@@ -238,7 +240,7 @@ public class MakeStoryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 choicesVisible = false;
                 sound();
-                nextStory.setVisibility(View.INVISIBLE);
+                nextTextView.setVisibility(View.INVISIBLE);
                 selectImage1.setVisibility(View.INVISIBLE);
                 selectImage2.setVisibility(View.INVISIBLE);
                 selectText1.setVisibility(View.INVISIBLE);
@@ -270,7 +272,7 @@ public class MakeStoryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 choicesVisible = false;
                 sound();
-                nextStory.setVisibility(View.INVISIBLE);
+                nextTextView.setVisibility(View.INVISIBLE);
                 selectImage1.setVisibility(View.INVISIBLE);
                 selectImage2.setVisibility(View.INVISIBLE);
                 selectText1.setVisibility(View.INVISIBLE);
@@ -321,7 +323,7 @@ public class MakeStoryActivity extends AppCompatActivity {
 
                 // recognizedText가 null이거나 빈 문자열일 경우 처리
                 if (!TextUtils.isEmpty(selectedChoice)) {
-                    nextStory.setVisibility(View.INVISIBLE);
+                    nextTextView.setVisibility(View.INVISIBLE);
                     selectImage1.setVisibility(View.INVISIBLE);
                     selectImage2.setVisibility(View.INVISIBLE);
                     selectText1.setVisibility(View.INVISIBLE);
@@ -386,6 +388,8 @@ public class MakeStoryActivity extends AppCompatActivity {
                     intent.putExtra("selectedTheme", finalSelectedTheme);
                     intent.putStringArrayListExtra("selectedCharacters", selectedCharacters);
                     intent.putStringArrayListExtra("story", pageContents);
+                    intent.putExtra("imageFile", fileName);      // 이미지 경로
+
                     saveStory(); // 내용 저장
                     startActivity(intent);
                 }
@@ -583,6 +587,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                 final int delay = 60;
                 final int length = storyText.length();
                 storyTextView.setText("");
+                storyTextView.scrollTo(0, 0);
 
                 for (int i = 0; i <= length; i++) {
                     final int index = i;
@@ -597,6 +602,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                                 if (isImageLoaded && num <= 5) { //5장 이하일 때
                                     makeStory.generateChoices(num); // 이미지가 로드된 후에 선택지 생성
                                 }
+                                if(num == 1) nextTextView.setVisibility(View.VISIBLE);
                                 if(num == 6) isTextLoaded = true;
                             }
                         }
@@ -615,6 +621,8 @@ public class MakeStoryActivity extends AppCompatActivity {
                             if (isImageLoaded && num <= 5 && !choicesVisible) {
                                 makeStory.generateChoices(num);
                             }
+
+                            if(num == 1) nextTextView.setVisibility(View.VISIBLE);
                             if(num == 6) isTextLoaded = true;
                         }
                         // false를 반환하여 기본 스크롤 동작을 허용
@@ -648,7 +656,6 @@ public class MakeStoryActivity extends AppCompatActivity {
         } else {
             showToast("선택지가 부족합니다.");
         }
-        nextStory.setVisibility(View.VISIBLE);
         selectImage1.setVisibility(View.VISIBLE);
         selectImage2.setVisibility(View.VISIBLE);
         selectText1.setVisibility(View.VISIBLE);
@@ -801,14 +808,14 @@ public class MakeStoryActivity extends AppCompatActivity {
             }
 
             int index = themeCount + 1;
-            String fileName = user.getUid() + "_" + finalSelectedTheme + "_" + index + ".txt";
+            storyFileName = user.getUid() + "_" + finalSelectedTheme + "_" + index + ".txt";
 
             // 파일 저장
             try {
-                FileOutputStream fos = openFileOutput(fileName, MODE_PRIVATE);
+                FileOutputStream fos = openFileOutput(storyFileName, MODE_PRIVATE);
                 fos.write(fileContent.toString().getBytes("UTF-8"));  // 한글 인코딩을 위해 UTF-8 사용
                 fos.close();
-                uploadFile(fileName);
+                uploadFile(storyFileName);
             } catch (IOException e) {
                 showToast("파일 저장 실패: " + e.getMessage());
             }

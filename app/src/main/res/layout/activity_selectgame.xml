@@ -101,9 +101,8 @@
         android:id="@+id/ib_selectBingo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#0000"
         android:contentDescription="빙고하기 버튼"
-        android:src="@drawable/ib_selectgame_bingo"
+        android:background="@drawable/ib_selectgame_bingo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -116,7 +115,7 @@
         android:layout_width="200dp"
         android:layout_height="200dp"
         android:layout_marginLeft="380dp"
-        android:layout_marginTop="430dp"
+        android:layout_marginTop="460dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
@@ -124,9 +123,8 @@
         android:id="@+id/ib_selectPuzzle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#0000"
         android:contentDescription="퍼즐하기 버튼"
-        android:src="@drawable/ib_selectgame_puzzle"
+        android:background="@drawable/ib_selectgame_puzzle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -139,7 +137,7 @@
         android:layout_width="220dp"
         android:layout_height="220dp"
         android:layout_marginLeft="930dp"
-        android:layout_marginTop="400dp"
+        android:layout_marginTop="430dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
