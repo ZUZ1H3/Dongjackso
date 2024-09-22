@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -110,7 +111,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         // AI랑 쓰기 모드
         bookmark_AI.setOnClickListener(view -> {
             sound();
-            setButtonVisibility(View.INVISIBLE, View.VISIBLE,  View.INVISIBLE);
+            setButtonVisibility(View.INVISIBLE, View.VISIBLE, View.INVISIBLE);
             scriptTxt.setVisibility(View.VISIBLE); // AI가 생성한 text 보이기
             story_txt.setVisibility(View.VISIBLE); // 동화 작성 text 보이기
 
@@ -145,8 +146,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
                         String title = editTitle.getText().toString().trim();
                         if (title.isEmpty()) {
                             Toast.makeText(this, "제목을 입력하세요.", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
+                        } else {
                             mergeAndDelete(title); // 파일 병합
                             updateImageName(title); // 이미지 파일명 수정
                             Intent intent = new Intent(this, MakeBookcoverActivity.class);
@@ -173,7 +173,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         // 키워드 가지고 AI가 동화 생성하기 버튼
         create.setOnClickListener(view -> {
             sound();
-            if (!selectedKeywords.isEmpty()) {
+            if (!selectedKeywords.isEmpty() || (selectedKeywords.isEmpty() && !(story_txt.equals("")))) {
                 requestStoryFromGemini(selectedKeywords);
             } else {
                 Toast.makeText(MakeStoryAloneActivity.this, "키워드를 선택해주세요.", Toast.LENGTH_SHORT).show();
@@ -205,7 +205,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         // 이전 장 버튼
         before.setOnClickListener(v -> {
             sound();
-            if(num == 1) Toast.makeText(this, "첫번째 장입니다.", Toast.LENGTH_SHORT).show();
+            if (num == 1) Toast.makeText(this, "첫번째 장입니다.", Toast.LENGTH_SHORT).show();
             else {
                 saveTxt(num);
                 num--;
@@ -278,7 +278,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
     }
 
     // 모드마다 아이콘 VISIBLE 설정
-    private void setButtonVisibility(int writeVisibility, int aiVisibility,  int micVisibility) {
+    private void setButtonVisibility(int writeVisibility, int aiVisibility, int micVisibility) {
         // Write 모드
         story_txt.setVisibility(writeVisibility);
         touch.setVisibility(writeVisibility);
@@ -306,17 +306,28 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onBeginningOfSpeech() { }
+            public void onBeginningOfSpeech() {
+            }
+
             @Override
-            public void onRmsChanged(float rmsdB) { }
+            public void onRmsChanged(float rmsdB) {
+            }
+
             @Override
-            public void onBufferReceived(byte[] buffer) { }
+            public void onBufferReceived(byte[] buffer) {
+            }
+
             @Override
-            public void onEndOfSpeech() { }
+            public void onEndOfSpeech() {
+            }
+
             @Override
-            public void onPartialResults(Bundle partialResults) { }
+            public void onPartialResults(Bundle partialResults) {
+            }
+
             @Override
-            public void onEvent(int eventType, Bundle params) { }
+            public void onEvent(int eventType, Bundle params) {
+            }
 
             @Override
             public void onError(int error) {
@@ -358,18 +369,25 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
     // 음성 인식 오류(신경 안 써도 됨)
     private String getErrorText(int errorCode) {
         switch (errorCode) {
-            case SpeechRecognizer.ERROR_AUDIO: return "오디오 에러";
-            case SpeechRecognizer.ERROR_CLIENT: return "클라이언트 에러";
-            case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS: return "퍼미션 없음";
-            case SpeechRecognizer.ERROR_NETWORK: return "네트워크 에러";
-            case SpeechRecognizer.ERROR_NO_MATCH: return "일치하는 결과 없음";
-            default: return "알 수 없는 에러";
+            case SpeechRecognizer.ERROR_AUDIO:
+                return "오디오 에러";
+            case SpeechRecognizer.ERROR_CLIENT:
+                return "클라이언트 에러";
+            case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
+                return "퍼미션 없음";
+            case SpeechRecognizer.ERROR_NETWORK:
+                return "네트워크 에러";
+            case SpeechRecognizer.ERROR_NO_MATCH:
+                return "일치하는 결과 없음";
+            default:
+                return "알 수 없는 에러";
         }
     }
 
     // AI한테 키워드 뽑아달라고 요청
     private void requestKeywordsFromGemini() {
-        String prompt = "동화를 쓰려고 하는데 키워드 6개를 추천해주세요. 등장인물 또는 동화를 쓸 만한 주제 등, 단답형으로 작성해주세요. 단어와 단어 사이에 ','로 연결해주세요. ex) 고양이, 모험, 우주, 고래, 숲속, 토끼'";
+        String prompt = "동화를 쓰려고 하는데 키워드 7개를 추천해주세요. 등장인물 또는 동화를 쓸 만한 주제 등, 단답형으로 작성해주세요. " +
+                "단어와 단어 사이에 ','로 연결해주세요. ex) 고양이, 모험, 우주, 고래, 숲속, 토끼, 목장, 꽃다발'";
         gemini.generateText(prompt, new Gemini.Callback() {
             @Override
             public void onSuccess(String text) {
@@ -428,12 +446,17 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         String existingText = story_txt.getText().toString();
         String prompt;
 
-        if (!existingText.isEmpty()) {
-            // 기존 텍스트가 있으면 그 텍스트와 키워드를 합쳐서 동화 생성
-            prompt = existingText + " 이어서 " + String.join(", ", selectedKeywords) + " 키워드를 활용하여 2문장의 이야기를 이어서 만들어주세요.";
-        } else {
-            // 기존 텍스트가 없으면 키워드만 가지고 이야기 생성
-            prompt = String.join(", ", selectedKeywords) + " 키워드를 가지고 동화 도입부 한 줄을 생성해주세요.";
+        if (!existingText.isEmpty() && !selectedKeywords.isEmpty()) { // 기존 텍스트 o 키워드 o
+            prompt = "현재 스토리 : " + existingText +
+                    " \n키워드 : " + String.join(", ", selectedKeywords) +
+                    " \n키워드를 활용하여 현재 스토리에 이어지도록 1문장을 생성해주세요.";
+        }
+        else if(!existingText.isEmpty() && selectedKeywords.isEmpty()){// 기존 텍스트 o 키워드 X
+            prompt = "현재 스토리 : " + existingText  +
+                    " \n 현재 스토리에 이어지도록 1문장을 생성해주세요";
+        }else { // 기존 텍스트 x
+            prompt = "키워드 : " + String.join(", ", selectedKeywords) +
+                    " \n 이 키워드를 가지고 동화 도입부 1~2문장 정도를 생성해주세요.";
         }
 
         // AI로부터 텍스트 생성 요청
@@ -441,9 +464,10 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             @Override
             public void onSuccess(String text) {
                 runOnUiThread(() -> {
-                    scriptTxt.setVisibility(View.VISIBLE);
                     // 새로운 이야기를 scriptTxt에 추가
                     scriptTxt.setText(text);
+                    scriptTxt.setMovementMethod(new ScrollingMovementMethod()); //스크롤 가능하도록
+
                 });
             }
 
@@ -475,7 +499,8 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
                 fileContent.append(line).append("\n");
             }
             fis.close();
-        } catch (IOException e) { }
+        } catch (IOException e) {
+        }
 
         // 기존 내용과 비교해 동일하면 저장하지 않음
         if (fileContent.toString().trim().equals(finalText.trim())) {
@@ -515,7 +540,8 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             uploadTask.addOnSuccessListener(taskSnapshot -> {
                 Toast.makeText(this, "업로드 성공", Toast.LENGTH_SHORT).show();
             });
-        } catch (IOException e) { }
+        } catch (IOException e) {
+        }
     }
 
     // 텍스트 파일 로드

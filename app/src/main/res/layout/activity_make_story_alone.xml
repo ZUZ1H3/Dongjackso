@@ -184,7 +184,7 @@
 
         <com.example.holymoly.StrokeText
             android:id="@+id/tv_howabout"
-            android:layout_width="wrap_content"
+            android:layout_width="340dp"
             android:layout_height="wrap_content"
             android:fontFamily="@font/ssurround"
             android:gravity="center"
@@ -244,7 +244,7 @@
 
         <com.google.android.flexbox.FlexboxLayout
             android:id="@+id/fl_keywords"
-            android:layout_width="415dp"
+            android:layout_width="430dp"
             android:layout_height="111dp"
             android:orientation="horizontal"
             android:visibility="visible"
@@ -252,10 +252,10 @@
             app:flexWrap="wrap"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.21"
+            app:layout_constraintHorizontal_bias="0.202"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.38"/>
+            app:layout_constraintVertical_bias="0.377" />
 
         <ImageButton
             android:id="@+id/ib_create"
