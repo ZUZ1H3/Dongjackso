@@ -163,14 +163,6 @@
             android:layout_height="match_parent"
             android:columnCount="3"
             android:orientation="horizontal" >
-
-<!--            <ImageButton
-                android:id="@+id/iv_add_book"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_mypage_add"
-                android:layout_marginEnd="30dp"
-                android:contentDescription="책 추가" />-->
         </GridLayout>
     </ScrollView>
 
@@ -182,7 +174,7 @@
         android:fontFamily="@font/ssurround"
         android:textColor="@color/white"
         app:textStroke="true"
-        app:textStrokeColor="#6B9FA3"
+        app:textStrokeColor="#639699"
         app:textStrokeWidth="8"
         android:gravity="center"
         android:text="김민서"
@@ -201,7 +193,7 @@
         android:fontFamily="@font/ssurround"
         android:textColor="@color/white"
         app:textStroke="true"
-        app:textStrokeColor="#6B9FA3"
+        app:textStrokeColor="#639699"
         app:textStrokeWidth="8"
         android:gravity="center"
         android:text="꼬마 작가"
@@ -232,7 +224,7 @@
         android:textColor="@color/white"
         android:textSize="20sp"
         app:textStroke="true"
-        app:textStrokeColor="#6B9FA3"
+        app:textStrokeColor="#639699"
         app:textStrokeWidth="8"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -262,7 +254,7 @@
         android:textColor="@color/white"
         android:textSize="20sp"
         app:textStroke="true"
-        app:textStrokeColor="#6B9FA3"
+        app:textStrokeColor="#639699"
         app:textStrokeWidth="8"
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"

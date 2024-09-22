@@ -96,6 +96,7 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
         initPolly(); // Amazon Polly 초기화
         // 이전 액티비티에서 imgName 가져오기
         imgName = getIntent().getStringExtra("imgName");
+        Toast.makeText(this, imgName, Toast.LENGTH_SHORT).show();
 
         // 이미지 및 텍스트 로드
         if(imgName.contains("개인")) {
@@ -172,9 +173,10 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
         String[] parts = imgName.split("_");
         String uid = parts[0];
         String theme = parts[1];
+        String index = parts[2];
         String title = parts[3].replace(".png", "");
 
-        String fileName = uid + "_" + title + "_" + num + ".png";
+        String fileName = uid + "_" + index + "_" + title + "_" + num + ".png";
 
         StorageReference aloneRef = storageRef.child("background/" + theme + "/" + fileName);
 
@@ -244,9 +246,9 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
         String uid = parts[0];
         String theme = parts[1];
         String index = parts[2];
-        String title = parts[3].replace(".png", "");
+        String title = parts[3].replace(".png", ".txt");
 
-        return uid + "_" + theme + "_" + index + "_" + title + ".txt";
+        return uid + "_" + theme + "_" + index + "_" + title;
     }
     // 전체 텍스트를 페이지 + 숫자 별로 분리
     private void bookTextContent(String textContent) {

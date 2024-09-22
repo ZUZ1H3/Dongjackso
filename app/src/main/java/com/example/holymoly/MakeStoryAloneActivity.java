@@ -45,7 +45,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MakeStoryAloneActivity extends AppCompatActivity {
     private ConstraintLayout aiMode;
@@ -73,11 +75,12 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference backgroundRef = storage.getReference().child("background/개인");
     private StorageReference storiesRef = storage.getReference().child("stories");
-    String uid = user.getUid();
+    private String uid = user.getUid();
 
     private long backPressedTime = 0;
     private int num = 1;
     private String title = "none";
+    private String mergedFileName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +136,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             sound();
             scriptTxt.setVisibility(View.INVISIBLE); // AI가 생성한 text 숨김
             story_txt.setVisibility(View.INVISIBLE); // 동화 작성 text 보이기
+            saveTxt(num);
 
             LayoutInflater inflater = getLayoutInflater();
             View dialogView = inflater.inflate(R.layout.dialog_title, null);
@@ -594,17 +598,26 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         backgroundRef.listAll().addOnSuccessListener(listResult -> {
             List<StorageReference> items = listResult.getItems();
             List<Task<Void>> tasks = new ArrayList<>(); // 삭제할 파일 리스트
-
+            Set<String> uniqueValues = new HashSet<>(); // 중복 제거
+            int index = 1;
             for (StorageReference item : items) {
                 String img = item.getName();
 
+                if (img.startsWith(user.getUid()) && img.split("_").length == 4 ) {
+                    String value = img.split("_")[2];
+
+                    if (!uniqueValues.contains(value)) {
+                        uniqueValues.add(value);
+                        index++;
+                    }
+                }
                 // 저장된 파일 명 : uid_제목_번호.png
                 if (img.startsWith(uid + "_" + title)) {
                     String[] parts = img.split("_");
                     String num = parts[2]; // 번호 추출
 
-                    // 저장될 새 파일 명 : uid_새 제목_번호.png
-                    String newFileName = uid + "_" + newTitle + "_" + num;
+                    // 저장될 새 파일 명 : uid_번호_새 제목_순서.png
+                    String newFileName = uid + "_" + index + "_" + newTitle + "_" + num;
                     StorageReference newFileRef = backgroundRef.child(newFileName);
 
                     item.getBytes(Long.MAX_VALUE).addOnSuccessListener(bytes -> {
@@ -643,7 +656,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             }
 
             // 파일을 저장하는 경로 생성
-            String mergedFileName = uid + "_개인_" + index + "_" + title + ".txt";
+            mergedFileName = uid + "_개인_" + index + "_" + title + ".txt";
             StorageReference mergedFileRef = storiesRef.child(mergedFileName);
 
             // 모든 파일을 읽고 병합

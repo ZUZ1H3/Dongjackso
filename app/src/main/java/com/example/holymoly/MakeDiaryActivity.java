@@ -3,6 +3,7 @@ package com.example.holymoly;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
@@ -283,16 +284,22 @@ public class MakeDiaryActivity extends AppCompatActivity {
         weatherRef.get().addOnSuccessListener(document -> {
             if (document.exists()) {
                 int savedId = document.getLong("selectedId").intValue();
+                Toast.makeText(this, String.valueOf(savedId), Toast.LENGTH_SHORT).show();
                 RadioButton savedButton = findViewById(savedId);
                 if (savedButton != null) {
                     savedButton.setChecked(true);
                     // 저장된 ID와 현재 선택된 ID 비교
-                    int checkedId = radioGroup.getCheckedRadioButtonId();
-                    if (savedId != checkedId) {
-                        isChangeWeather = true;
-                    }
+                    new Handler().post(() -> {
+                        int checkedId = radioGroup.getCheckedRadioButtonId();
+                        if (savedId != checkedId) {
+                            isChangeWeather = true;
+                        }
+                    });
+
                 }
             }
+        }).addOnFailureListener(e -> {
+            Toast.makeText(this, "로드 실패",Toast.LENGTH_SHORT).show();
         });
     }
 

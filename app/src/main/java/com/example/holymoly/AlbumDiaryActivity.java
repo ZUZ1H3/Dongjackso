@@ -176,6 +176,7 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
 
             boolean hasTodayDiary = false;
             boolean hasTomorrowDiary = false;
+            boolean isEmpty = rightTV.getText().toString().trim().isEmpty();
 
             // filteredDiaries에서 오늘 날짜와 내일 날짜가 있는지 확인
             for (Diary diary : filteredDiaries) {
@@ -187,9 +188,9 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
                 }
             }
 
-            if (!hasTodayDiary) { // 오늘 일기가 작성되지 않은 경우
+            if (!hasTodayDiary && isEmpty) { // 오늘 일기가 작성되지 않은 경우
                 Toast.makeText(this, "오늘 일기를 작성하세요.", Toast.LENGTH_SHORT).show();
-            } else if (hasTodayDiary && !hasTomorrowDiary) {
+            } else if (hasTodayDiary && !hasTomorrowDiary && isEmpty) {
                 // 오늘 일기가 작성된 경우, 내일 일기가 없는 경우
                 Toast.makeText(this, "내일 일기를 작성하세요.", Toast.LENGTH_SHORT).show();
             }
