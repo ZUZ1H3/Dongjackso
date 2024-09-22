@@ -298,7 +298,7 @@ public class MakeBookcoverActivity extends AppCompatActivity {
             for (StorageReference item : listResult.getItems()) {
                 String fileName = item.getName();
 
-                if (fileName.startsWith(user.getUid()) && fileName.contains("none"))
+                if (fileName.startsWith(user.getUid()) && fileName.contains("개인"))
                     aloneIndex++;
             }
 

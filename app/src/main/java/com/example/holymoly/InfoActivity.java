@@ -31,8 +31,6 @@ import java.util.List;
 import java.util.Map;
 
 public class InfoActivity extends AppCompatActivity implements View.OnClickListener {
-    private static final String TAG = "InfoActivity"; // 로그 태그 추가
-
     private EditText name, age;  // 이름, 나이
     private ImageButton go; // 남자, 여자, ok 버튼
     private ImageView profile;
@@ -72,7 +70,7 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
         user = mAuth.getCurrentUser();  // 현재 접속한 사용자
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
-        characterRef = storageRef.child("characters/"); // Storage의 characters 경로
+        characterRef = storageRef.child("characters/" + user.getUid() + ".png");
 
         btnBoy.setOnClickListener(this);
         btnGirl.setOnClickListener(this);

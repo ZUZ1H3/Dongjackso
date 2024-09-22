@@ -84,6 +84,8 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <!-- 배너 -->
+
+        <!-- 책 이미지, 하단 북마크 및 표지 -->
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -92,7 +94,6 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- 책 이미지, 하단 북마크 및 표지 -->
         <ImageView
             android:id="@+id/book"
             android:layout_width="wrap_content"

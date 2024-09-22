@@ -483,27 +483,39 @@ public class RegistrationActivity extends AppCompatActivity {
     private Bitmap createBitmap() {
         // 캐릭터 구성 요소마다 하나의 Bitmap 이미지로 구분
         ivFace.setDrawingCacheEnabled(true);
-        Bitmap faceBitmap = Bitmap.createBitmap(ivFace.getDrawingCache());
+        Bitmap faceBitmap = (ivFace.getDrawingCache() != null)
+                ? Bitmap.createBitmap(ivFace.getDrawingCache())
+                : Bitmap.createBitmap(328, 239, Bitmap.Config.ARGB_8888); // 선택 안 하면 기본 빈 비트맵
         ivFace.setDrawingCacheEnabled(false);
 
         ivEyesColor.setDrawingCacheEnabled(true);
-        Bitmap eyesBitmap = Bitmap.createBitmap(ivEyesColor.getDrawingCache());
+        Bitmap eyesBitmap = (ivEyesColor.getDrawingCache() != null)
+                ? Bitmap.createBitmap(ivEyesColor.getDrawingCache())
+                : Bitmap.createBitmap(126, 40, Bitmap.Config.ARGB_8888);
         ivEyesColor.setDrawingCacheEnabled(false);
 
         ivClothes.setDrawingCacheEnabled(true);
-        Bitmap clothesBitmap = Bitmap.createBitmap(ivClothes.getDrawingCache());
+        Bitmap clothesBitmap = (ivClothes.getDrawingCache() != null)
+                ? Bitmap.createBitmap(ivClothes.getDrawingCache())
+                : Bitmap.createBitmap(276, 308, Bitmap.Config.ARGB_8888);
         ivClothes.setDrawingCacheEnabled(false);
 
         ivHair.setDrawingCacheEnabled(true);
-        Bitmap hairBitmap = Bitmap.createBitmap(ivHair.getDrawingCache());
+        Bitmap hairBitmap = (ivHair.getDrawingCache() != null)
+                ? Bitmap.createBitmap(ivHair.getDrawingCache())
+                : Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888);
         ivHair.setDrawingCacheEnabled(false);
 
         ivAccessoryHead.setDrawingCacheEnabled(true);
-        Bitmap headAccBitmap = Bitmap.createBitmap(ivAccessoryHead.getDrawingCache());
+        Bitmap headAccBitmap = (ivAccessoryHead.getDrawingCache() != null)
+                ? Bitmap.createBitmap(ivAccessoryHead.getDrawingCache())
+                : Bitmap.createBitmap(327, 380, Bitmap.Config.ARGB_8888);
         ivAccessoryHead.setDrawingCacheEnabled(false);
 
         ivAccessoryBack.setDrawingCacheEnabled(true);
-        Bitmap backAccBitmap = Bitmap.createBitmap(ivAccessoryBack.getDrawingCache());
+        Bitmap backAccBitmap = (ivAccessoryBack.getDrawingCache() != null)
+                ? Bitmap.createBitmap(ivAccessoryBack.getDrawingCache())
+                : Bitmap.createBitmap(320, 188, Bitmap.Config.ARGB_8888);
         ivAccessoryBack.setDrawingCacheEnabled(false);
 
         // 구성 요소들 사이즈 맞추기

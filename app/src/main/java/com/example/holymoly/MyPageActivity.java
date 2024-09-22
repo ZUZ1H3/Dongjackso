@@ -15,6 +15,7 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -80,6 +82,7 @@ public class MyPageActivity extends AppCompatActivity {
     private ArrayList<String> urlList = new ArrayList<>();
     private ArrayList<String> likesList = new ArrayList<>();
     private Set<String> uploadedImageUrls = new HashSet<>(); // 다이얼로그 중복 확인용
+    private UserViewModel userViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +103,8 @@ public class MyPageActivity extends AppCompatActivity {
         loves = findViewById(R.id.sv_loves);
         gl_book = findViewById(R.id.gl_books);
         gl_like = findViewById(R.id.gl_loves);
+        userViewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        userViewModel.loadInfo(uid);
 
         // 사용자 정보 로드
         loadUserData();
@@ -160,16 +165,14 @@ public class MyPageActivity extends AppCompatActivity {
                     });
         });
 
-        // 사용자 이름, 작가 호칭 불러오기
-        DocumentReference user = db.collection("users").document(uid);
-        user.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && task.getResult() != null) {
-                String userName = task.getResult().getString("name");
-                String userNickname = task.getResult().getString("nickname");
+        userViewModel.getInfoLiveData().observe(this, info -> {
+            name.setText(info.first);      // 이름
+            nickname.setText(info.second); // 작가 호칭
 
-                name.setText(userName); // 이름 TextView에 설정
-                nickname.setText(userNickname); // 호칭 TextView에 설정
-            }
+            if(info.first.length() == 2) name.setPadding(120, name.getPaddingTop(), name.getPaddingEnd(), name.getPaddingBottom());
+            else if(info.first.length() == 3) name.setPadding(80, name.getPaddingTop(), name.getPaddingEnd(), name.getPaddingBottom());
+            else if(info.first.length() == 4) name.setPadding(40, name.getPaddingTop(), name.getPaddingEnd(), name.getPaddingBottom());
+            if(info.second.equals("꼬마 작가")) nickname.setPadding(nickname.getPaddingLeft(), nickname.getPaddingTop(), 40, nickname.getPaddingBottom());
         });
     }
 
@@ -244,7 +247,10 @@ public class MyPageActivity extends AppCompatActivity {
                            });
                }
            }
-            builder.setPositiveButton("완료", (dialog, which) -> dialog.dismiss());
+            builder.setPositiveButton("완료", (dialog, which) -> {
+                recreate();
+                dialog.dismiss();
+            });
             // 다이얼로그 생성 및 보여줌
             AlertDialog dialog = builder.create();
             dialog.show();
@@ -372,9 +378,7 @@ public class MyPageActivity extends AppCompatActivity {
                     // 이미지 삭제 후 재실행
                     userDoc.collection("filename").document(docId).update("upload", false)
                             .addOnSuccessListener(aVoid -> {
-                               Intent intent = getIntent();
-                               finish();
-                               startActivity(intent);
+                                recreate();
                             });
                 })
                 .setNegativeButton("아니요", (dialog, which) -> {

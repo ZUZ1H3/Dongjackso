@@ -95,7 +95,9 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
         Glide.with(this).clear(spot3);
         Glide.with(this).clear(spot4);
 
-        loadCharacter(uid);
+        userViewModel.getNicknameLiveData().observe(this, nickname -> {
+            loadCharacter(nickname);
+        });
     }
 
     // 효과음
