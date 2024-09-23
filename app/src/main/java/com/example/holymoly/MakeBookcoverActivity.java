@@ -487,8 +487,8 @@ public class MakeBookcoverActivity extends AppCompatActivity {
     }
 
     public void keyword(String combinedStory) {
-        String prompt = "동화 스토리: "+ combinedStory + "\n이 동화에서, 등장인물과 배경 등의 중요 키워드를 뽑아주세요. " +
-                "단답형으로 대답하시고, 단어와 단어 사이에는 ', '로 이어주세요. 그리고 영어로 번역하여 주세요. ex) rabbit, sea";
+        String prompt = "동화 스토리: "+ combinedStory + "\n이 동화에서, 등장인물과 배경 등의 중요 키워드를 뽑아 영어단어로 알려주세요. " +
+                "단답형으로 대답하시고, 단어와 단어 사이에는 ', '로 이어주세요. ex) rabbit, sea, castle";
         gemini.generateText(prompt, new Gemini.Callback() {
             @Override
             public void onSuccess(String text) {
