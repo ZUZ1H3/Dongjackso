@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
@@ -499,9 +501,11 @@ public class AchieveActivity extends AppCompatActivity {
 
         if (currentCount >= trophyGoals[currentIndex]) {
             percentageTextView.setText("보상 받기");
+            percentageTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
         } else {
             int percentage = (currentCount * 100) / trophyGoals[currentIndex];
             percentageTextView.setText(percentage + "%");
+            percentageTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25);
         }
 
         if(thema.equals("빙고")) {
@@ -514,6 +518,10 @@ public class AchieveActivity extends AppCompatActivity {
             String goalText = String.format("%s 동화 %d개 만들기", thema, trophyGoals[currentIndex]);
             goalTextView.setText(goalText);
         }
+    }
+
+    public int convertDpToPx(int dp) {
+        return (int) (dp * getResources().getDisplayMetrics().density);
     }
 
     public void onRewardButtonClicked(String thema) {
