@@ -19,7 +19,7 @@ import java.util.Set;
 public class WordGameReadyActivity extends AppCompatActivity {
 
     private EditText[] editTexts;
-    private ImageButton nextBtn, AI;
+    private ImageButton nextBtn, AI, demo;
     private TextView AITextView, themeTextView;
     private Gemini gemini;
 
@@ -51,6 +51,7 @@ public class WordGameReadyActivity extends AppCompatActivity {
         themeTextView = findViewById(R.id.theme);
         gemini = new Gemini();
         AITextView.setMovementMethod(new ScrollingMovementMethod()); //스크롤 가능하도록
+        demo = findViewById(R.id.ib_demo);
 
         String theme = getIntent().getStringExtra("Theme");
 
@@ -97,6 +98,17 @@ public class WordGameReadyActivity extends AppCompatActivity {
                 }
             }
         });
+
+        demo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(WordGameReadyActivity.this, WordGameActivity.class);
+                intent.putExtra("words", new String[]{"word1", "word2"}); // 예시 단어 배열로 변경
+                intent.putExtra("theme", "과일");
+                startActivity(intent);
+            }
+        });
+
     }
 
 
