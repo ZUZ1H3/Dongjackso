@@ -583,6 +583,10 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             story_txt.setText(content);  // 텍스트뷰에 로드한 내용을 설정
             story_txt.setSelection(content.length());  // 커서를 텍스트 끝으로 이동
             story_txt.scrollTo(0, 0);  // 스크롤을 맨 위로 초기화
+        }).addOnFailureListener(exception -> {
+            // 파일 로드 실패 시 기본 텍스트 설정
+            story_txt.setText("");
+            Log.e("load", "텍스트 불러오기 실패");
         });
     }
 
@@ -597,14 +601,19 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             for (StorageReference item : items) {
                 String img = item.getName();
 
-                // 저장된 파일 명 : uid_개인_제목_번호.png
+                // 저장된 파일 명 : uid_개인_none_번호.png
                 if (img.startsWith(uid + "_" + title + "_" + index)) {
                     item.getDownloadUrl().addOnSuccessListener(uri -> {
                         Glide.with(this).load(uri).into(touch);
+                    }).addOnFailureListener(exception -> {
+                        // URL 로드 실패 시 기본 이미지 설정
+                        touch.setImageResource(R.drawable.ic_touch2);
+                        Log.e("load", "이미지 불러오기 실패");
                     });
                     imageFound = true; // 이미지가 있으면 true로 설정
                     break;
                 }
+                else return;
             }
 
             if (!imageFound) { // 이미지가 없으면

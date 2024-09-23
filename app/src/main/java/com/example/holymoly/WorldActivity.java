@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.widget.EditText;
@@ -82,6 +83,7 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
     private List<Pair<String, Integer>> likesList = new ArrayList<>();
     private boolean[] isCoverSet = new boolean[8]; // 기본값은 false
     private boolean isBestMode = true;
+    private String selectedTheme = "전체";
 
     /* 페이지 */
     private List<TextView> pageText;
@@ -107,7 +109,18 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             final int index = i;
             pageText.get(i).setOnClickListener(v -> {
                 int clicked = index + 1;
-                updatePage(clicked);
+
+                if(clicked != currentPage && isBestMode) {
+                    bestImages(selectedTheme, () -> {
+                        updatePage(clicked); // 클릭된 페이지로 이동
+                        currentPage = clicked; // 현재 페이지 업데이트
+                    });
+                } else if(clicked != currentPage && !isBestMode) {
+                    latestImages(selectedTheme, () -> {
+                        updatePage(clicked); // 클릭된 페이지로 이동
+                        currentPage = clicked; // 현재 페이지 업데이트
+                    });
+                }
             });
         }
 
@@ -276,11 +289,23 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
                 currentPage--;
                 updatePage(currentPage);
             }
+            if(currentPage == 1) {
+                Toast.makeText(this, "첫 번째 페이지입니다", Toast.LENGTH_SHORT).show();
+                if(isBestMode) {
+                    bestImages(selectedTheme, () -> updatePage(1) );
+                } else {
+                    latestImages(selectedTheme, () -> updatePage(1) );
+                }
+            }
+
         }
         else if(v.getId() == R.id.mini_nextPage) {
             if(currentPage < totalPages) {
                 currentPage++;
                 updatePage(currentPage);
+            }
+            else if(currentPage == totalPages) {
+                Toast.makeText(this, "마지막 페이지입니다", Toast.LENGTH_SHORT).show();
             }
         }
         else if(v.getId() == R.id.btn_best) {
@@ -324,6 +349,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             });
         }
         else if(v.getId() == R.id.thema_all) {
+            setSelectedTheme("전체");
+
             all.setStroke(true);
             sea.setStroke(false);
             castle.setStroke(false);
@@ -347,6 +374,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             }
         }
         else if(v.getId() == R.id.thema_sea) {
+            setSelectedTheme("바다");
+
             all.setStroke(false);
             sea.setStroke(true);
             castle.setStroke(false);
@@ -358,9 +387,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             alone.setStroke(false);
 
             // 데이터가 비어있는지 체크
-            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
-                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
-                return;  // 메서드 종료
+            if (likesList.isEmpty() && timestampList.isEmpty()) {
+                Toast.makeText(this, "바다 테마 이미지가 없습니다.", Toast.LENGTH_SHORT).show();
             }
 
             currentPage = 1;
@@ -376,6 +404,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             }
         }
         else if(v.getId() == R.id.thema_castle) {
+            setSelectedTheme("궁전");
+
             all.setStroke(false);
             sea.setStroke(false);
             castle.setStroke(true);
@@ -387,9 +417,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             alone.setStroke(false);
 
             // 데이터가 비어있는지 체크
-            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
-                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
-                return;  // 메서드 종료
+            if (likesList.isEmpty() && timestampList.isEmpty()) {
+                Toast.makeText(this, "궁전 테마 이미지가 없습니다.", Toast.LENGTH_SHORT).show();
             }
 
             currentPage = 1;
@@ -405,6 +434,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             }
         }
         else if(v.getId() == R.id.thema_forest) {
+            setSelectedTheme("숲");
+
             all.setStroke(false);
             sea.setStroke(false);
             castle.setStroke(false);
@@ -416,9 +447,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             alone.setStroke(false);
 
             // 데이터가 비어있는지 체크
-            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
-                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
-                return;  // 메서드 종료
+            if (likesList.isEmpty() && timestampList.isEmpty()) {
+                Toast.makeText(this, "숲 이미지가 없습니다.", Toast.LENGTH_SHORT).show();
             }
 
             currentPage = 1;
@@ -434,6 +464,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             }
         }
         else if(v.getId() == R.id.thema_village) {
+            setSelectedTheme("마을");
+
             all.setStroke(false);
             sea.setStroke(false);
             castle.setStroke(false);
@@ -445,9 +477,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             alone.setStroke(false);
 
             // 데이터가 비어있는지 체크
-            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
-                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
-                return;  // 메서드 종료
+            if (likesList.isEmpty() && timestampList.isEmpty()) {
+                Toast.makeText(this, "마을 이미지가 없습니다.", Toast.LENGTH_SHORT).show();
             }
 
             currentPage = 1;
@@ -463,6 +494,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             }
         }
         else if(v.getId() == R.id.thema_space) {
+            setSelectedTheme("우주");
+
             all.setStroke(false);
             sea.setStroke(false);
             castle.setStroke(false);
@@ -474,9 +507,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             alone.setStroke(false);
 
             // 데이터가 비어있는지 체크
-            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
-                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
-                return;  // 메서드 종료
+            if (likesList.isEmpty() && timestampList.isEmpty()) {
+                Toast.makeText(this, "우주 이미지가 없습니다.", Toast.LENGTH_SHORT).show();
             }
 
             currentPage = 1;
@@ -492,6 +524,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             }
         }
         else if(v.getId() == R.id.thema_desert) {
+            setSelectedTheme("사막");
+
             all.setStroke(false);
             sea.setStroke(false);
             castle.setStroke(false);
@@ -503,9 +537,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             alone.setStroke(false);
 
             // 데이터가 비어있는지 체크
-            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
-                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
-                return;  // 메서드 종료
+            if (likesList.isEmpty() && timestampList.isEmpty()) {
+                Toast.makeText(this, "사막 이미지가 없습니다.", Toast.LENGTH_SHORT).show();
             }
 
             currentPage = 1;
@@ -521,6 +554,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             }
         }
         else if(v.getId() == R.id.thema_custom) {
+            setSelectedTheme("커스텀");
+
             all.setStroke(false);
             sea.setStroke(false);
             castle.setStroke(false);
@@ -532,9 +567,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             alone.setStroke(false);
 
             // 데이터가 비어있는지 체크
-            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
-                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
-                return;  // 메서드 종료
+            if (likesList.isEmpty() && timestampList.isEmpty()) {
+                Toast.makeText(this, "커스텀 이미지가 없습니다.", Toast.LENGTH_SHORT).show();
             }
 
             currentPage = 1;
@@ -550,6 +584,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             }
         }
         else if(v.getId() == R.id.thema_alone) {
+            setSelectedTheme("개인");
+
             all.setStroke(false);
             sea.setStroke(false);
             castle.setStroke(false);
@@ -561,9 +597,8 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             alone.setStroke(true);
 
             // 데이터가 비어있는지 체크
-            if (likesList == null || timestampList == null || likesList.isEmpty() || timestampList.isEmpty()) {
-                Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
-                return;  // 메서드 종료
+            if (likesList.isEmpty() && timestampList.isEmpty()) {
+                Toast.makeText(this, "개인 이미지가 없습니다.", Toast.LENGTH_SHORT).show();
             }
 
             currentPage = 1;
@@ -606,6 +641,11 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
             });
         }
         Top3Images();
+    }
+
+    // 테마 변경 시 선택된 테마 업데이트
+    private void setSelectedTheme(String theme) {
+        selectedTheme = theme;
     }
 
     // 검색어와 제목이 일치하는 이미지 찾음
@@ -1014,10 +1054,18 @@ public class WorldActivity extends AppCompatActivity implements View.OnClickList
         if(isBestMode) totalPages = (likesList.size() + IMAGES_PER_PAGE - 1) / IMAGES_PER_PAGE;
         else totalPages = (timestampList.size() + IMAGES_PER_PAGE - 1) / IMAGES_PER_PAGE;
 
-        if (selected > totalPages) {
-            Toast.makeText(this, "마지막 페이지입니다", Toast.LENGTH_SHORT).show();
+        // 데이터가 비어있는 경우
+        if (totalPages == 0) {
+            Toast.makeText(this, "이미지가 없습니다.", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        // 페이지 번호 유효성 검사
+        if (selected > totalPages || selected < 1) {
+            Toast.makeText(this, "페이지가 유효하지 않습니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         int count = pageText.size();
         // 현재 페이지 번호가 중앙에 오도록
         int startPage = selected - (count / 2);

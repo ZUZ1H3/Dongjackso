@@ -96,7 +96,6 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
         initPolly(); // Amazon Polly 초기화
         // 이전 액티비티에서 imgName 가져오기
         imgName = getIntent().getStringExtra("imgName");
-        Toast.makeText(this, imgName, Toast.LENGTH_SHORT).show();
 
         // 이미지 및 텍스트 로드
         if(imgName.contains("개인")) {
