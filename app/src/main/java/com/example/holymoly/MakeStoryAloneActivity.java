@@ -136,6 +136,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         // 완성 후 저장 모드
         bookmark_OK.setOnClickListener(view -> {
             sound();
+            saveStory(num);
             StringBuilder combinedStory = new StringBuilder(); // 결합된 스토리
             for (String story : storyList) {
                 combinedStory.append(story).append("\n");
@@ -145,6 +146,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
 
             scriptTxt.setVisibility(View.INVISIBLE); // AI가 생성한 text 숨김
             story_txt.setVisibility(View.INVISIBLE); // 동화 작성 text 보이기
+
             saveTxt(num);
 
             LayoutInflater inflater = getLayoutInflater();
@@ -221,6 +223,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             sound();
             if (num == 1) Toast.makeText(this, "첫번째 장입니다.", Toast.LENGTH_SHORT).show();
             else {
+                saveStory(num);
                 saveTxt(num);
                 num--;
                 pageNumber.setText(String.valueOf(num)); // 페이지 번호 감소
@@ -232,6 +235,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         // 이후 장 버튼
         next.setOnClickListener(v -> {
             sound();
+            saveStory(num);
             saveTxt(num);
             num++;
             pageNumber.setText(String.valueOf(num)); // 페이지 번호 증가
@@ -488,6 +492,15 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         });
     }
 
+    private void saveStory(int index){
+        String currentText = story_txt.getText().toString(); // 현재 텍스트 갖고 옴
+        // storyList에 현재 텍스트 저장
+        if (index >= storyList.size()) {
+            storyList.add(currentText); // 새로운 페이지 추가
+        } else {
+            storyList.set(index, currentText); // 기존 페이지 수정
+        }
+    }
     // 매 페이지마다 글 저장
     private void saveTxt(int index) {
         String fileName = uid + "_개인_" + title + "_" + index + ".txt";
@@ -498,13 +511,6 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
 
         // 저장할 텍스트에 페이지 번호 추가
         String finalText = "페이지 " + index + "\n" + currentText;
-
-        // storyList에 현재 텍스트 저장
-        if (index >= storyList.size()) {
-            storyList.add(currentText); // 새로운 페이지 추가
-        } else {
-            storyList.set(index, currentText); // 기존 페이지 수정
-        }
 
         // 기존 파일 내용 읽기
         StringBuilder fileContent = new StringBuilder();
