@@ -22,7 +22,7 @@
         android:text=""
         android:textAlignment="center"
         android:textColor="@color/white"
-        android:textSize="40sp"
+        android:textSize="36sp"
         app:textStroke="true"
         app:textStrokeColor="#639699"
         app:textStrokeWidth="16"/>
