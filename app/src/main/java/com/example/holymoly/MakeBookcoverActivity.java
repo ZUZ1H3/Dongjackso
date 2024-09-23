@@ -63,6 +63,8 @@ public class MakeBookcoverActivity extends AppCompatActivity {
     private SharedPreferences pref;
     private boolean isSoundOn;
 
+    private String combinedStory;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,7 +87,7 @@ public class MakeBookcoverActivity extends AppCompatActivity {
         selectedCharacters = intent.getStringArrayListExtra("selectedCharacters");
         from = intent.getStringExtra("from");
         aloneTitle = intent.getStringExtra("title");
-
+        combinedStory = intent.getStringExtra("combinedStory");
         drawView = findViewById(R.id.drawing);
         penSeekBar = findViewById(R.id.pen_seekbar);
         pen = findViewById(R.id.ib_pen);
@@ -112,7 +114,11 @@ public class MakeBookcoverActivity extends AppCompatActivity {
         });
         AI.setOnClickListener(v -> {
             sound();
-            generateImageFromThemeAndCharacters(selectedTheme, selectedCharacters);
+            if(from.equals("AI")) {
+                generateImageFromThemeAndCharacters(selectedTheme, selectedCharacters);
+            } else if (from.equals("개인")) {
+                keyword(combinedStory);
+            }
         });
         stop.setOnClickListener(v -> handleBackPress());
         remove.setOnClickListener(v -> {
@@ -478,5 +484,22 @@ public class MakeBookcoverActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SoundService.class);
         if (isSoundOn) startService(intent); // 효과음 on
         else stopService(intent);            // 효과음 off
+    }
+
+    public void keyword(String combinedStory) {
+        String prompt = "동화 스토리: "+ combinedStory + "\n이 동화에서, 등장인물과 배경 등의 중요 키워드를 뽑아주세요. " +
+                "단답형으로 대답하시고, 단어와 단어 사이에는 ', '로 이어주세요. 그리고 영어로 번역하여 주세요. ex) rabbit, sea";
+        gemini.generateText(prompt, new Gemini.Callback() {
+            @Override
+            public void onSuccess(String text) {
+                String prompt = "Dreamy, fairytale, cute, smooth, fancy, twinkle, super bright, cartoon style. " + text;
+                generateImage(prompt);
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                Toast.makeText(MakeBookcoverActivity.this, "(개인)이미지 생성 실패: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

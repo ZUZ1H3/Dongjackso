@@ -13,6 +13,7 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -53,12 +54,11 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
     private ConstraintLayout aiMode;
     private Gemini gemini;
     private SpeechRecognizer mRecognizer;
-    private Typeface typeface;
     private StringBuilder recognizedText = new StringBuilder();
 
-    private ImageView Mic, alertIc, scriptBg, touch;
+    private ImageView Mic,  touch;
     private ImageButton before, next, stop, again, create, apply;
-    private TextView howabout, alertTxt, scriptTxt, pageNumber;
+    private TextView scriptTxt, pageNumber;
     private RadioButton bookmark_AI, bookmark_Mic, bookmark_OK, bookmark_write;
     private EditText story_txt;
     private FlexboxLayout keywordsLayout;
@@ -81,6 +81,8 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
     private int num = 1;
     private String title = "none";
     private String mergedFileName;
+
+    private ArrayList<String> storyList = new ArrayList<>(); // 스토리 담을 동적 배열
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +136,13 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         // 완성 후 저장 모드
         bookmark_OK.setOnClickListener(view -> {
             sound();
+            StringBuilder combinedStory = new StringBuilder(); // 결합된 스토리
+            for (String story : storyList) {
+                combinedStory.append(story).append("\n");
+            }
+            Log.d("combinedStory", "스토리: " + combinedStory); //스토리 확인용
+
+
             scriptTxt.setVisibility(View.INVISIBLE); // AI가 생성한 text 숨김
             story_txt.setVisibility(View.INVISIBLE); // 동화 작성 text 보이기
             saveTxt(num);
@@ -156,6 +165,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
                             Intent intent = new Intent(this, MakeBookcoverActivity.class);
                             intent.putExtra("from", "개인");
                             intent.putExtra("title", title);
+                            intent.putExtra("combinedStory", combinedStory.toString().trim());
                             startActivity(intent);
                             finish();
                         }
@@ -261,10 +271,6 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         again = findViewById(R.id.ib_again);
         create = findViewById(R.id.ib_create);
         story_txt = findViewById(R.id.et_story_txt);
-        howabout = findViewById(R.id.tv_howabout);
-        alertIc = findViewById(R.id.iv_alert);
-        alertTxt = findViewById(R.id.tv_alert);
-        scriptBg = findViewById(R.id.iv_create_back);
         scriptTxt = findViewById(R.id.tv_create_txt);
         pageNumber = findViewById(R.id.pageNumber);
         keywordsLayout = findViewById(R.id.fl_keywords);
@@ -492,6 +498,13 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
 
         // 저장할 텍스트에 페이지 번호 추가
         String finalText = "페이지 " + index + "\n" + currentText;
+
+        // storyList에 현재 텍스트 저장
+        if (index >= storyList.size()) {
+            storyList.add(currentText); // 새로운 페이지 추가
+        } else {
+            storyList.set(index, currentText); // 기존 페이지 수정
+        }
 
         // 기존 파일 내용 읽기
         StringBuilder fileContent = new StringBuilder();
