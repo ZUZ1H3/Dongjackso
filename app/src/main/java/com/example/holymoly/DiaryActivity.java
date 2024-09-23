@@ -159,13 +159,35 @@ public class DiaryActivity extends AppCompatActivity {
 
         miniArrow.setOnClickListener(v -> {
             sound();
-            handleMakeDiaryButtonClick();
+            if (hasWho && hasHow && hasMood && hasWhat && hasWhen && hasWhere && hasWhy) {
+                handleMakeDiaryButtonClick();
+            } else {
+                setAllFlagsTrue();
+                setAllTextColorWhite();
+            }
         });
 
         miniMic.setOnClickListener(v -> {
             sound();
             startVoiceRecognition();
         });
+    }
+
+    //데모 버전 버튼 클릭시
+    private void setAllFlagsTrue() {
+        hasWho = hasHow = hasMood = hasWhat = hasWhen = hasWhere = hasWhy = true;
+    }
+
+    //데모 버전 버튼 클릭시
+    private void setAllTextColorWhite() {
+        int white = Color.WHITE;
+        who.setTextColor(white);
+        how.setTextColor(white);
+        mood.setTextColor(white);
+        what.setTextColor(white);
+        when.setTextColor(white);
+        where.setTextColor(white);
+        why.setTextColor(white);
     }
 
     private void fetchUserName() {
@@ -219,7 +241,7 @@ public class DiaryActivity extends AppCompatActivity {
         sound();
         Intent intent = new Intent(DiaryActivity.this, MakeDiaryActivity.class);
         intent.putExtra("story", story); // 스토리를 전달
-        intent.putExtra("name", name); // 스토리를 전달
+        intent.putExtra("name", name);
         startActivity(intent);
     }
 

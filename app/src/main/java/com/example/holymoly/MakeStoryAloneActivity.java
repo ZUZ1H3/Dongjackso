@@ -401,7 +401,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
     // AI한테 키워드 뽑아달라고 요청
     private void requestKeywordsFromGemini() {
         String prompt = "동화를 쓰려고 하는데 키워드 7개를 추천해주세요. 등장인물 또는 동화를 쓸 만한 주제 등, 단답형으로 작성해주세요. " +
-                "단어와 단어 사이에 ','로 연결해주세요. ex) 고양이, 모험, 우주, 고래, 숲속, 토끼, 목장, 꽃다발'";
+                "단어와 단어는 ','로 연결해주세요. ex) 고양이, 모험, 우주, 고래, 숲속, 토끼, 목장, 꽃다발'";
         gemini.generateText(prompt, new Gemini.Callback() {
             @Override
             public void onSuccess(String text) {
