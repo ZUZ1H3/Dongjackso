@@ -369,6 +369,7 @@
         android:layout_width="700dp"
         android:layout_height="475dp"
         android:orientation="vertical"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.883"
@@ -503,7 +504,6 @@
         android:layout_height="475dp"
         android:gravity="center"
         android:orientation="vertical"
-        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.883"
@@ -525,10 +525,19 @@
                 android:orientation="horizontal">
 
                 <RadioButton
-                    android:id="@+id/rb_accessory_head_bee"
+                    android:id="@+id/rb_accessory_head_null"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/rb_accessory_head_null"
+                    android:button="@null" />
+
+                <RadioButton
+                    android:id="@+id/rb_accessory_head_bee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="65dp"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/rb_accessory_head_bee"
                     android:button="@null" />
@@ -611,6 +620,14 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="20dp"
                 android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rb_accessory_back_null"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/rb_accessory_back_null"
+                    android:button="@null" />
 
                 <RadioButton
                     android:id="@+id/rb_accessory_back_bee"

@@ -193,6 +193,8 @@ public class RegistrationActivity extends AppCompatActivity {
                     ivAccessoryHead.setImageResource(R.drawable.iv_accessory_head_hat);
                 } else if (checkedId == R.id.rb_accessory_head_marin) {
                     ivAccessoryHead.setImageResource(R.drawable.iv_accessory_head_marin);
+                } else if (checkedId == R.id.rb_accessory_head_null) {
+                    ivAccessoryHead.setImageResource(0);
                 }
 
                 saveSelection(KEY_ACCESSORY_HEAD, checkedId);
@@ -215,6 +217,8 @@ public class RegistrationActivity extends AppCompatActivity {
                     ivAccessoryBack.setImageResource(R.drawable.iv_accessory_back_cat);
                 } else if (checkedId == R.id.rb_accessory_back_wing) {
                     ivAccessoryBack.setImageResource(R.drawable.iv_accessory_back_wing);
+                } else if (checkedId == R.id.rb_accessory_back_null) {
+                    ivAccessoryBack.setImageResource(0);
                 }
 
                 saveSelection(KEY_ACCESSORY_BACK, checkedId);
