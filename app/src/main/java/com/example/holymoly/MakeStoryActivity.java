@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -417,75 +418,134 @@ public class MakeStoryActivity extends AppCompatActivity {
 
         List<Rect> placedBubbles = new ArrayList<>(); // 생성된 버블의 위치를 저장
 
-        for (int i = 0; i < 10; i++) {
-            FrameLayout bubbleLayout = new FrameLayout(this);
-            ImageView bubble = new ImageView(this);
-            bubble.setImageResource(R.drawable.ic_bubble);
+        if (new Random().nextBoolean()) {
 
-            // 커스텀 폰트를 불러오기
-            Typeface customFont = ResourcesCompat.getFont(this, R.font.meetme);
+            for (int i = 0; i < 10; i++) {
+                FrameLayout bubbleLayout = new FrameLayout(this);
+                ImageView bubble = new ImageView(this);
+                bubble.setImageResource(R.drawable.ic_bubble);
 
-            FrameLayout.LayoutParams bubbleParams = new FrameLayout.LayoutParams(bubbleSize, bubbleSize);
+                // 커스텀 폰트를 불러오기
+                Typeface customFont = ResourcesCompat.getFont(this, R.font.meetme);
 
-            TextView bubbleNumber = new TextView(this);
-            bubbleNumber.setText(String.valueOf(i + 1));
-            bubbleNumber.setTextColor(Color.WHITE);
-            bubbleNumber.setTextSize(70);
-            bubbleNumber.setGravity(Gravity.CENTER);
+                FrameLayout.LayoutParams bubbleParams = new FrameLayout.LayoutParams(bubbleSize, bubbleSize);
 
-            // 커스텀 폰트를 적용하는 부분
-            bubbleNumber.setTypeface(customFont);
+                TextView bubbleNumber = new TextView(this);
+                bubbleNumber.setText(String.valueOf(i + 1));
+                bubbleNumber.setTextColor(Color.WHITE);
+                bubbleNumber.setTextSize(70);
+                bubbleNumber.setGravity(Gravity.CENTER);
 
-            FrameLayout.LayoutParams textParams = new FrameLayout.LayoutParams(
+                // 커스텀 폰트를 적용하는 부분
+                bubbleNumber.setTypeface(customFont);
+
+                FrameLayout.LayoutParams textParams = new FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.WRAP_CONTENT,
+                        FrameLayout.LayoutParams.WRAP_CONTENT
+                );
+                textParams.gravity = Gravity.CENTER;
+
+                int x, y;
+                Rect newBubbleRect;
+                int attempts = 0;
+
+                // 겹치지 않는 좌표를 찾을 때까지 시도
+                do {
+                    x = new Random().nextInt(layoutWidth - bubbleSize - spacing);
+                    y = new Random().nextInt((int) (layoutHeight * 0.75) - bubbleSize - spacing); // 60%까지만
+
+                    newBubbleRect = new Rect(x, y, x + bubbleSize + spacing, y + bubbleSize + spacing);
+                    attempts++;
+
+                    if (attempts > 100) {
+                        break; // 너무 많은 시도를 하면 무한 루프 방지
+                    }
+                } while (!isNonOverlapping(newBubbleRect, placedBubbles));
+
+                if (attempts > 100) {
+                    continue; // 좌표 찾기를 포기하고 넘어감
+                }
+
+                bubbleLayout.setX(x);
+                bubbleLayout.setY(y);
+
+                bubbleLayout.addView(bubble, bubbleParams);
+                bubbleLayout.addView(bubbleNumber, textParams);
+                constraintLayout.addView(bubbleLayout);
+
+                // 클릭 리스너 추가
+                bubbleLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        int number = Integer.parseInt(bubbleNumber.getText().toString());
+                        if (number == currentBubbleNumber[0]) {
+                            // 클릭한 숫자가 맞으면 해당 버블을 제거하고 다음 숫자로 증가
+                            sound();
+                            constraintLayout.removeView(bubbleLayout);
+                            currentBubbleNumber[0]++; // 다음 숫자로 증가
+                        }
+                    }
+                });
+
+                // 생성된 버블의 위치 저장
+                placedBubbles.add(newBubbleRect);
+            }
+        }
+        else {
+            // robot, bee, picnic 중 하나를 랜덤하게 선택
+            int[] imageResources = {R.drawable.iv_loading_robbot, R.drawable.iv_loading_bee, R.drawable.iv_loading_picnic};
+            int randomImage = imageResources[new Random().nextInt(imageResources.length)];
+
+            ImageView randomImageView = new ImageView(this);
+            randomImageView.setImageResource(randomImage);
+
+            // 원본 크기로 설정
+            FrameLayout.LayoutParams imageParams = new FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.WRAP_CONTENT,
                     FrameLayout.LayoutParams.WRAP_CONTENT
             );
-            textParams.gravity = Gravity.CENTER;
 
-            int x, y;
-            Rect newBubbleRect;
-            int attempts = 0;
+            // x=20, y=55로 좌표 설정
+            randomImageView.setX(20);
+            randomImageView.setY(55);
 
-            // 겹치지 않는 좌표를 찾을 때까지 시도
-            do {
-                x = new Random().nextInt(layoutWidth - bubbleSize - spacing);
-                y = new Random().nextInt((int) (layoutHeight * 0.75) - bubbleSize - spacing); // 60%까지만
+            constraintLayout.addView(randomImageView, imageParams);
 
-                newBubbleRect = new Rect(x, y, x + bubbleSize + spacing, y + bubbleSize + spacing);
-                attempts++;
+            // TextView 설정
+            TextView randomTextView = new TextView(this);
+            randomTextView.setTextColor(Color.WHITE);
+            randomTextView.setTextSize(48);
+            randomTextView.setGravity(Gravity.CENTER);
 
-                if (attempts > 100) {
-                    break; // 너무 많은 시도를 하면 무한 루프 방지
-                }
-            } while (!isNonOverlapping(newBubbleRect, placedBubbles));
+            // 커스텀 폰트를 불러오기 (res/font 폴더에서)
+            Typeface customFont = ResourcesCompat.getFont(this, R.font.ssurround);
+            randomTextView.setTypeface(customFont);  // 커스텀 폰트 적용
 
-            if (attempts > 100) {
-                continue; // 좌표 찾기를 포기하고 넘어감
+            if (randomImage == R.drawable.iv_loading_robbot) {
+                randomTextView.setText("제 이름은\n코코라고 해요!"); // robot일 때는 고정된 텍스트
+
+                // TextView 좌표 설정
+                randomTextView.setX(1520);
+                randomTextView.setY(520);
+            } else {
+                // bee, picnic일 때는 랜덤 텍스트
+                String[] textOptions = {
+                        "동화 제작 배경과\n캐릭터 화면에서\n+버튼을 누르면\n원하는 배경과\n캐릭터를 만들 수 있어요!",
+                        "동화 표지를 만들 때\n오른쪽 위\n로봇 버튼을 누르면\nAI가 표지를 그려줘요!",
+                        "게임랜드에 오면\n코코와 함께\n빙고와 퍼즐을\n할 수 있어요!"
+                };
+                String randomText = textOptions[new Random().nextInt(textOptions.length)];
+                randomTextView.setText(randomText);
+
+                // TextView 좌표 설정
+                randomTextView.setX(1400);
+                randomTextView.setY(450);
             }
 
-            bubbleLayout.setX(x);
-            bubbleLayout.setY(y);
-
-            bubbleLayout.addView(bubble, bubbleParams);
-            bubbleLayout.addView(bubbleNumber, textParams);
-            constraintLayout.addView(bubbleLayout);
-
-            // 클릭 리스너 추가
-            bubbleLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int number = Integer.parseInt(bubbleNumber.getText().toString());
-                    if (number == currentBubbleNumber[0]) {
-                        // 클릭한 숫자가 맞으면 해당 버블을 제거하고 다음 숫자로 증가
-                        sound();
-                        constraintLayout.removeView(bubbleLayout);
-                        currentBubbleNumber[0]++; // 다음 숫자로 증가
-                    }
-                }
-            });
-
-            // 생성된 버블의 위치 저장
-            placedBubbles.add(newBubbleRect);
+            constraintLayout.addView(randomTextView, new FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+            ));
         }
     }
 
