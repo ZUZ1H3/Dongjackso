@@ -57,8 +57,6 @@ import java.util.Locale;
 import java.util.Random;
 
 public class MakeStoryActivity extends AppCompatActivity {
-    private LinearLayout loadingLayout;
-    private ConstraintLayout constraintLayout;
     private ProgressBar progressBar;
     TextView progresstextView;
     private ImageView character;
@@ -96,6 +94,8 @@ public class MakeStoryActivity extends AppCompatActivity {
     private StorageReference storageRef = storage.getReference();
 
     /* 효과음 */
+    private LinearLayout loadingLayout;
+    private ConstraintLayout constraintLayout;
     private SharedPreferences pref;
     private boolean isSoundOn;
 
@@ -412,8 +412,8 @@ public class MakeStoryActivity extends AppCompatActivity {
         int layoutWidth = constraintLayout.getWidth();
         int layoutHeight = constraintLayout.getHeight();
 
-        int bubbleSize = (int) (140 * getResources().getDisplayMetrics().density); // 버블 크기를 140dp로 설정
-        int spacing = bubbleSize / 4; // 추가 간격을 더 넓게 설정
+        int bubbleSize = (int) (130 * getResources().getDisplayMetrics().density); // 버블 크기를 140dp로 설정
+        int spacing = bubbleSize / 6; // 추가 간격을 더 넓게 설정
 
         List<Rect> placedBubbles = new ArrayList<>(); // 생성된 버블의 위치를 저장
 
