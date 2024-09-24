@@ -94,43 +94,43 @@
         android:textSize="36dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.185"
+        app:layout_constraintHorizontal_bias="0.183"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.395" />
+        app:layout_constraintVertical_bias="0.386" />
 
     <TextView
         android:id="@+id/alphabet"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:gravity="center"
         android:fontFamily="@font/bitbit"
-        android:text="스포츠"
+        android:gravity="center"
+        android:text="색깔"
         android:textColor="#ffffff"
         android:textSize="36dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.74"
+        app:layout_constraintHorizontal_bias="0.739"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.854" />
+        app:layout_constraintVertical_bias="0.864" />
 
     <TextView
         android:id="@+id/number"
-        android:layout_width="150dp"
+        android:layout_width="wrap_content"
         android:layout_height="150dp"
         android:layout_marginTop="53dp"
         android:fontFamily="@font/bitbit"
         android:gravity="center"
-        android:text="지역"
+        android:text="동화 캐릭터"
         android:textColor="#ffffff"
-        android:textSize="36dp"
+        android:textSize="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.807"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.319" />
+        app:layout_constraintVertical_bias="0.314" />
 
     <TextView
         android:id="@+id/marine"

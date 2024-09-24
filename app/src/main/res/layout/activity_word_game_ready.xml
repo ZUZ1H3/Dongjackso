@@ -10,10 +10,11 @@
 
     <TextView
         android:id="@+id/theme"
-        android:layout_width="wrap_content"
+        android:layout_width="550dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="53dp"
         android:fontFamily="@font/bitbit"
+        android:gravity="center"
         android:text="제시어 : 과일"
         android:textColor="#ffffff"
         android:textSize="48dp"
@@ -23,20 +24,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-    <TextView
-        android:id="@+id/hint"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="130dp"
-        android:fontFamily="@font/bitbit"
-        android:text=""
-        android:textColor="#dddddd"
-        android:textSize="22dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -268,7 +255,7 @@
             android:gravity="center"
             android:text=""
             android:textColor="#ffffff"
-            android:textSize="36dp"
+            android:textSize="30dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -281,7 +268,7 @@
             android:gravity="center"
             android:text=""
             android:textColor="#ffffff"
-            android:textSize="36dp"
+            android:textSize="30dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -294,7 +281,7 @@
             android:gravity="center"
             android:text=""
             android:textColor="#ffffff"
-            android:textSize="36dp"
+            android:textSize="30dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -307,7 +294,7 @@
             android:gravity="center"
             android:text=""
             android:textColor="#ffffff"
-            android:textSize="36dp"
+            android:textSize="30dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -320,7 +307,7 @@
             android:gravity="center"
             android:text=""
             android:textColor="#ffffff"
-            android:textSize="36dp"
+            android:textSize="30dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -333,7 +320,7 @@
             android:gravity="center"
             android:text=""
             android:textColor="#ffffff"
-            android:textSize="36dp"
+            android:textSize="30dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -346,7 +333,7 @@
             android:gravity="center"
             android:text=""
             android:textColor="#ffffff"
-            android:textSize="36dp"
+            android:textSize="30dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -359,7 +346,7 @@
             android:gravity="center"
             android:text=""
             android:textColor="#ffffff"
-            android:textSize="36dp"
+            android:textSize="30dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -372,7 +359,7 @@
             android:gravity="center"
             android:text=""
             android:textColor="#ffffff"
-            android:textSize="36dp"
+            android:textSize="30dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -385,7 +372,7 @@
             android:gravity="center"
             android:text=""
             android:textColor="#ffffff"
-            android:textSize="36dp"
+            android:textSize="30dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -398,7 +385,7 @@
             android:gravity="center"
             android:text=""
             android:textColor="#ffffff"
-            android:textSize="36dp"
+            android:textSize="30dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -411,7 +398,7 @@
             android:gravity="center"
             android:text=""
             android:textColor="#ffffff"
-            android:textSize="36dp"
+            android:textSize="30dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -424,7 +411,7 @@
             android:gravity="center"
             android:text=""
             android:textColor="#ffffff"
-            android:textSize="36dp"
+            android:textSize="30dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -437,7 +424,7 @@
             android:gravity="center"
             android:text=""
             android:textColor="#ffffff"
-            android:textSize="36dp"
+            android:textSize="30dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -450,7 +437,7 @@
             android:gravity="center"
             android:text=""
             android:textColor="#ffffff"
-            android:textSize="36dp"
+            android:textSize="30dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -463,7 +450,7 @@
             android:gravity="center"
             android:text=""
             android:textColor="#ffffff"
-            android:textSize="36dp"
+            android:textSize="30dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
