@@ -38,7 +38,7 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class MakeDrowDiaryActivity extends AppCompatActivity {
     private CustomView drawView;
-    private ImageButton selectedColorButton, undo, remove, rainbow, paint, ok;
+    private ImageButton selectedColorButton, undo, remove, rainbow, paint, ok, erase;
     private Map<ImageButton, Integer> colorButtonMap = new HashMap<>();
     private Map<ImageButton, Integer> colorCheckMap = new HashMap<>();
     private Map<Integer, String> colorCodeMap = new HashMap<>();
@@ -70,6 +70,7 @@ public class MakeDrowDiaryActivity extends AppCompatActivity {
         ok = findViewById(R.id.ib_ok);
         penSeekBar = findViewById(R.id.pen_seekbar);
         paint = findViewById(R.id.ib_paint);
+        erase = findViewById(R.id.ib_erase);
         pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
     }
 
@@ -109,12 +110,12 @@ public class MakeDrowDiaryActivity extends AppCompatActivity {
 
     // 색상 버튼 설정
     private void setupColorButtons() {
-        int[] colorButtonIds = {R.id.red, R.id.orange, R.id.yellow, R.id.green, R.id.blue, R.id.purple, R.id.rainbow};
-        String[] colorCodes = {"#E86767", "#FCBF5B", "#FFE62A", "#53C856", "#6295DB", "#8577CB", "#FFFFFF"};
+        int[] colorButtonIds = {R.id.red, R.id.orange, R.id.yellow, R.id.green, R.id.blue, R.id.purple, R.id.rainbow, R.id.ib_erase};
+        String[] colorCodes = {"#E86767", "#FCBF5B", "#FFE62A", "#53C856", "#6295DB", "#8577CB", "#FFFFFF", "#FFFFFF"};
         int[] colorImages = {R.drawable.color_red2, R.drawable.color_orange2, R.drawable.color_yellow2,
-                R.drawable.color_green2, R.drawable.color_blue2, R.drawable.color_purple2, R.drawable.color_rainbow2};
+                R.drawable.color_green2, R.drawable.color_blue2, R.drawable.color_purple2, R.drawable.color_rainbow2, R.drawable.ic_erase};
         int[] colorCheckedImages = {R.drawable.color_red3, R.drawable.color_orange3, R.drawable.color_yellow3,
-                R.drawable.color_green3, R.drawable.color_blue3, R.drawable.color_purple3, R.drawable.color_rainbow3};
+                R.drawable.color_green3, R.drawable.color_blue3, R.drawable.color_purple3, R.drawable.color_rainbow3, R.drawable.ic_erase_check};
 
         for (int i = 0; i < colorButtonIds.length; i++) {
             ImageButton button = findViewById(colorButtonIds[i]);

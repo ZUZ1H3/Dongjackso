@@ -39,7 +39,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.033" />
 
-
     <ImageButton
         android:id="@+id/ib_paint"
         android:layout_width="wrap_content"
@@ -48,10 +47,23 @@
         android:src="@drawable/ic_paint"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.893"
+        app:layout_constraintHorizontal_bias="0.921"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.545" />
+        app:layout_constraintVertical_bias="0.318" />
+
+    <ImageButton
+        android:id="@+id/ib_erase"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/ic_erase"
+        android:button="@android:color/transparent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.915"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.532" />
 
     <ImageButton
         android:id="@+id/ib_back"
@@ -196,19 +208,20 @@
 
     <SeekBar
         android:id="@+id/pen_seekbar"
-        android:layout_width="167dp"
+        android:layout_width="400dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="50dp"
         android:max="7"
         android:progress="0"
-        android:progressDrawable="@drawable/seekbar"
+        android:progressDrawable="@drawable/seekbar2"
+        android:rotation="270"
         android:splitTrack="false"
-        android:thumb="@drawable/seekbar_thumb"
+        android:thumb="@drawable/seekbar_thumb2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.879"
+        app:layout_constraintHorizontal_bias="0.886"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.387" />
+        app:layout_constraintVertical_bias="0.535" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
