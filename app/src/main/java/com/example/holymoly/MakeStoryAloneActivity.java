@@ -56,7 +56,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
     private SpeechRecognizer mRecognizer;
     private StringBuilder recognizedText = new StringBuilder();
 
-    private ImageView Mic,  touch;
+    private ImageView Mic, touch;
     private ImageButton before, next, stop, again, create, apply;
     private TextView scriptTxt, pageNumber;
     private RadioButton bookmark_AI, bookmark_Mic, bookmark_OK, bookmark_write;
@@ -90,7 +90,6 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_make_story_alone);
         pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
-
         gemini = new Gemini();
 
         initializeUI();
@@ -215,6 +214,8 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
         // 음성 인식 시작 버튼
         Mic.setOnClickListener(v -> {
             sound();
+            // 음성 인식 중일 때 마이크 이미지 변경
+            Mic.setImageResource(R.drawable.ic_story_alone_mic2);
             startVoiceRecognition();
         });
 
@@ -317,6 +318,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             @Override
             public void onReadyForSpeech(Bundle params) {
                 Toast.makeText(getApplicationContext(), "음성인식을 시작합니다.", Toast.LENGTH_SHORT).show();
+                Mic.setImageResource(R.drawable.ic_story_alone_mic2); // 음성 인식이 시작되면 마이크 이미지 변경
             }
 
             @Override
@@ -333,6 +335,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
 
             @Override
             public void onEndOfSpeech() {
+                Mic.setImageResource(R.drawable.ic_story_alone_mic); // 음성 인식이 끝나면 마이크 이미지를 원래대로 변경
             }
 
             @Override
@@ -347,6 +350,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             public void onError(int error) {
                 String message = "에러 발생: " + getErrorText(error);
                 Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+                Mic.setImageResource(R.drawable.ic_story_alone_mic); // 에러가 발생하면 마이크 이미지를 원래대로 변경
             }
 
             @Override
@@ -359,16 +363,15 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
                     // 이전에 저장된 텍스트를 지우지 않고 음성 인식된 텍스트만 추가
                     story_txt.append(recognizedText.toString());
                 }
+                Mic.setImageResource(R.drawable.ic_story_alone_mic); // 음성 인식이 완료되면 마이크 이미지를 원래대로 변경
             }
         });
-
         Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
         intent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, getPackageName());
         intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, "ko-KR");
 
         mRecognizer.startListening(intent); // 음성 인식 시작
     }
-
 
     // 음성 인식 멈춤
     private void stopVoiceRecognition() {
@@ -377,6 +380,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             mRecognizer.destroy(); // 리소스 해제
             mRecognizer = null; // 인스턴스 초기화
             story_txt.setText(recognizedText.toString()); // 인식된 텍스트 화면에 표시
+            Mic.setImageResource(R.drawable.ic_story_alone_mic); // 음성 인식을 중지할 때도 이미지 변경
         }
     }
 
@@ -481,10 +485,8 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
                     // 새로운 이야기를 scriptTxt에 추가
                     scriptTxt.setText(text);
                     scriptTxt.setMovementMethod(new ScrollingMovementMethod()); //스크롤 가능하도록
-
                 });
             }
-
             @Override
             public void onFailure(Throwable t) {
                 runOnUiThread(() -> Toast.makeText(MakeStoryAloneActivity.this, "동화 생성 실패: " + t.getMessage(), Toast.LENGTH_SHORT).show());
@@ -501,6 +503,7 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             storyList.set(index, currentText); // 기존 페이지 수정
         }
     }
+
     // 매 페이지마다 글 저장
     private void saveTxt(int index) {
         String fileName = uid + "_개인_" + title + "_" + index + ".txt";

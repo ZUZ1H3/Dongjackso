@@ -9,34 +9,49 @@ public class MusicService extends Service {
     private MediaPlayer mediaPlayer;
 
     public MusicService() { }
+
     @Override
     public void onCreate() {
         super.onCreate();
-        // 음악 파일 설정
-        mediaPlayer = MediaPlayer.create(this, R.raw.bgm_sea);
+        // 초기 배경음악 설정 (필요에 따라 수정 가능)
+        mediaPlayer = MediaPlayer.create(this, R.raw.ocean_theme_music);
         mediaPlayer.setLooping(true); // 반복 재생
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        // 음악 재생 시작
-        mediaPlayer.start();
+        String action = intent.getAction();
+        if ("CHANGE_MUSIC".equals(action)) {
+            // 인텐트에서 전달된 리소스 ID로 음악을 변경
+            int musicResId = intent.getIntExtra("MUSIC_RES_ID", R.raw.ocean_theme_music);
+            changeMusic(musicResId);
+        } else {
+            mediaPlayer.start(); // 음악 재생
+        }
 
-        // 서비스가 중단되었을 때 재시작하지 않도록 설정
         return START_NOT_STICKY;
+    }
+
+    // 새로운 배경음악으로 변경하는 메서드
+    private void changeMusic(int musicResId) {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.reset();
+            mediaPlayer.release();
+        }
+
+        mediaPlayer = MediaPlayer.create(this, musicResId);
+        mediaPlayer.setLooping(true);
+        mediaPlayer.start();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // 서비스가 종료될 때 MediaPlayer 자원을 해제
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.release();
         }
-        // 서비스가 더 이상 필요하지 않으면 종료
-        Intent intent = new Intent(this, MusicService.class);
-        stopService(intent);
     }
 
     @Override

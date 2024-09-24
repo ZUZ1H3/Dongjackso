@@ -8,6 +8,7 @@ import android.media.AudioTrack;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -97,6 +98,14 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
         // 이전 액티비티에서 imgName 가져오기
         imgName = getIntent().getStringExtra("imgName");
 
+        // 테마 추출
+        String[] parts = imgName.split("_");
+        String theme = parts[1];  // imgName에서 테마 추출
+        Log.d("Theme", "추출된 테마: " + theme);
+
+        // 테마에 따라 배경음악 재생
+        playBackgroundMusic(theme);
+
         // 이미지 및 텍스트 로드
         if(imgName.contains("개인")) {
             backgroundImageView.setVisibility(View.INVISIBLE);
@@ -137,6 +146,10 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
                 backPressedTime = System.currentTimeMillis();
                 Toast.makeText(this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
             } else {
+                Intent musicIntent = new Intent(this, MusicService.class);
+                musicIntent.setAction("CHANGE_MUSIC");
+                musicIntent.putExtra("MUSIC_RES_ID", R.raw.ocean_theme_music);
+                startService(musicIntent); // 배경음악 기본으로 변경
                 finish(); // 액티비티 종료
             }
         }
@@ -195,6 +208,7 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
             Toast.makeText(this, "첫 번째 페이지입니다.", Toast.LENGTH_SHORT).show();
         }
     }
+
     // 다음 페이지로 이동
     private void nextPage() {
         if (currentPage < pageContents.size()) {
@@ -205,6 +219,7 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
             Toast.makeText(this, "마지막 페이지입니다.", Toast.LENGTH_SHORT).show();
         }
     }
+
     // Storage에서 텍스트 로드
     private void loadText(String imgName) {
         if(imgName.contains("개인")) {
@@ -229,6 +244,7 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
             });
         }
     }
+
     // AI와 함께 imgName으로 파일명을 txt 파일로 변환
     private String compareFiles(String imgName) {
         String[] parts = imgName.split("_");
@@ -249,6 +265,7 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
 
         return uid + "_" + theme + "_" + index + "_" + title;
     }
+
     // 전체 텍스트를 페이지 + 숫자 별로 분리
     private void bookTextContent(String textContent) {
         String[] pages = textContent.split("(?=페이지 \\d+)");
@@ -258,6 +275,7 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
             if (!cleanedPage.isEmpty()) pageContents.add(cleanedPage); // 빈 페이지 제거
         }
     }
+
     // 페이지 보여주기
     private void showPage(int num) {
         if (num > 0 && num <= pageContents.size()) {
@@ -311,6 +329,7 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
         );
         pollyClient = new AmazonPollyPresigningClient(credentialsProvider);
     }
+
     // 텍스트를 음성으로 변환
     public void synthesizeSpeech(String text) {
         SynthesizeSpeechRequest synthReq = new SynthesizeSpeechRequest()
@@ -369,7 +388,6 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
             play.setVisibility(View.VISIBLE);     // play 버튼 보이기
             resume.setVisibility(View.INVISIBLE); // resume 버튼 숨기기
         });
-
         stream.close();
     }
 
@@ -383,6 +401,41 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
             audioTrack.release();
             audioTrack = null;
         }
+    }
+
+    private void playBackgroundMusic(String theme) {
+        // 테마에 따라 음악 리소스 ID 설정
+        int musicResId = R.raw.ocean_theme_music; // 기본값
+
+        switch (theme.toLowerCase()) {
+            case "숲":
+                musicResId = R.raw.forest_theme_music;
+                break;
+            case "바다":
+                musicResId = R.raw.ocean_theme_music;
+                break;
+            case "사막":
+                musicResId = R.raw.desert_theme_music;
+                break;
+            case "우주":
+                musicResId = R.raw.space_theme_music;
+                break;
+            case "궁전":
+                musicResId = R.raw.castle_theme_music;
+                break;
+            case "마을":
+                musicResId = R.raw.village_theme_music;
+                break;
+            default:
+                musicResId = R.raw.ocean_theme_music;
+                break;
+        }
+
+        // MusicService에 음악 변경 요청
+        Intent intent = new Intent(this, MusicService.class);
+        intent.setAction("CHANGE_MUSIC");
+        intent.putExtra("MUSIC_RES_ID", musicResId);
+        startService(intent);
     }
 
     // 효과음
