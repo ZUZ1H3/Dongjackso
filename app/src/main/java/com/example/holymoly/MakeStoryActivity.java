@@ -572,13 +572,13 @@ public class MakeStoryActivity extends AppCompatActivity {
         makeStory.translateTheme(selectedTheme, new TranslationCallback() {
             @Override
             public void onSuccess(String translatedTheme) { //테마 번역에 성공하면
+                playBackgroundMusic(translatedTheme);
                 //선택한 캐릭터들 번역
                 makeStory.translateCharacters(selectedCharacters, new TranslationCallback() {
                     public void onSuccess(String translatedCharacters) { //캐릭터 번역 성공하면, 프롬프트 생성
                         String prompt = "Dreamy, fairytale, cute, smooth, fancy, twinkle, super bright, cartoon style. " + translatedCharacters + " are together. the background of a " + translatedTheme;
                         generateBackgroundImage(prompt, storyText); //이미지 생성
                     }
-
                     @Override
                     public void onFailure(Throwable t) {
                         showToast("캐릭터 번역 실패: " + t.getMessage());
@@ -932,6 +932,42 @@ public class MakeStoryActivity extends AppCompatActivity {
         } catch (IOException e) {
             showToast("파일 읽기 실패: " + e.getMessage());
         }
+    }
+
+    private void playBackgroundMusic(String theme) {
+        // 테마에 따라 음악 리소스 ID 설정
+        int musicResId = R.raw.ocean_theme_music; // 기본값
+
+        switch (theme.toLowerCase()) {
+            case "forest":
+                musicResId = R.raw.forest_theme_music;
+                break;
+            case "ocean":
+                musicResId = R.raw.ocean_theme_music;
+                break;
+            case "desert":
+                musicResId = R.raw.desert_theme_music;
+                break;
+            case "space":
+                musicResId = R.raw.space_theme_music;
+                break;
+            case "palace":
+                musicResId = R.raw.castle_theme_music;
+                break;
+            case "village":
+                musicResId = R.raw.village_theme_music;
+                break;
+            default:
+                // 기본값 사용
+                musicResId = R.raw.ocean_theme_music;
+                break;
+        }
+
+        // MusicService에 음악 변경 요청
+        Intent intent = new Intent(this, MusicService.class);
+        intent.setAction("CHANGE_MUSIC");
+        intent.putExtra("MUSIC_RES_ID", musicResId);
+        startService(intent);
     }
 
     // 효과음

@@ -346,6 +346,10 @@ public class MakeBookcoverActivity extends AppCompatActivity {
                             .set(fileData)
                             .addOnSuccessListener(documentReference -> {
                                 Toast.makeText(this, "이미지 업로드 성공", Toast.LENGTH_SHORT).show();
+                                Intent musicIntent = new Intent(this, MusicService.class);
+                                musicIntent.setAction("CHANGE_MUSIC");
+                                musicIntent.putExtra("MUSIC_RES_ID", R.raw.ocean_theme_music);
+                                startService(musicIntent); // 배경음악 기본으로 변경
                                 Intent intent = new Intent(this, AlbumActivity.class);
                                 intent.putExtra("booktitle", bookTitle);
                                 startActivity(intent);
