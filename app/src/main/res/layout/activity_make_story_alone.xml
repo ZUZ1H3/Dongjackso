@@ -184,7 +184,7 @@
 
         <com.example.holymoly.StrokeText
             android:id="@+id/tv_howabout"
-            android:layout_width="340dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/ssurround"
             android:gravity="center"
