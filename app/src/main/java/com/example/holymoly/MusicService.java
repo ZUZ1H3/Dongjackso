@@ -52,6 +52,9 @@ public class MusicService extends Service {
             mediaPlayer.stop();
             mediaPlayer.release();
         }
+        // 서비스가 더 이상 필요하지 않으면 종료
+        Intent intent = new Intent(this, MusicService.class);
+        stopService(intent);
     }
 
     @Override

@@ -61,12 +61,13 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
 
     /* 효과음 */
     private SharedPreferences pref;
-    private boolean isSoundOn;
-    
+    private boolean isSoundOn, isBgmOn;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album);
         pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
+        isBgmOn = pref.getBoolean("on&off", true);
 
         name = findViewById(R.id.mini_name);
         nickname = findViewById(R.id.mini_nickname);

@@ -96,8 +96,7 @@ public class StartPuzzleActivity extends AppCompatActivity implements View.OnCli
             if (System.currentTimeMillis() - backPressedTime >= 2000) {
                 backPressedTime = System.currentTimeMillis();
                 Toast.makeText(this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
-                finish();
-            }
+            } finish();
         }
         else if (v.getId() == R.id.ib_hint) {
             // hint 클릭시 이미지 보임
