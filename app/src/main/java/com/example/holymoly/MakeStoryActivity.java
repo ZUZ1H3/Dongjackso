@@ -65,10 +65,10 @@ public class MakeStoryActivity extends AppCompatActivity {
     private float characterPosition = 0f;  // 캐릭터의 X축 위치를 저장할 변수
     private final int progressBarUpdateInterval = 200;  // ProgressBar 업데이트 주기 (ms)
     private final int characterMoveInterval = 7;      // 캐릭터 이동 주기 (ms)
-    private final float screenLimit = 900f;            // 화면의 최대 X 좌표
+    private final float screenLimit = 1050f;            // 화면의 최대 X 좌표
     private final float initialPosition = 0f;          // 캐릭터의 초기 위치
     private boolean isImageLoaded = false; // 이미지 로드 상태를 추적하는 변수
-    private TextView nextTextView, storyTextView, pageTextView, selectText1, selectText2, selectMic3;
+    private TextView nextTextView, storyTextView, pageTextView, selectText1, selectText2, selectMic3, makeBookcoverTextView;
     private ImageButton stopMakingBtn, nextBtn, retryBtn;
     private ImageView backgroundImageView, selectImage1, selectImage2, selectMic1, selectMic2, background;
     private String selectedTheme;
@@ -114,6 +114,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         nextTextView = findViewById(R.id.nextTextView);
         storyTextView = findViewById(R.id.tv_pageText);
         pageTextView = findViewById(R.id.tv_page);
+        makeBookcoverTextView = findViewById(R.id.makeBookcoverTextView);
         backgroundImageView = findViewById(R.id.background_image_view);
         selectText1 = findViewById(R.id.tv_select1);
         selectText2 = findViewById(R.id.tv_select2);
@@ -222,7 +223,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                     handler.post(new Runnable() {
                         public void run() {
                             // 캐릭터의 X축 이동
-                            characterPosition += 0.6f; // 원하는 이동 속도
+                            characterPosition += 0.5f; // 원하는 이동 속도
 
                             // 캐릭터가 화면의 최대 X 좌표를 넘으면 초기 위치로 이동
                             if (characterPosition > screenLimit) {
@@ -263,7 +264,11 @@ public class MakeStoryActivity extends AppCompatActivity {
                     }
                     ++num;
                 }
-                if (num > 5) nextBtn.setVisibility(View.VISIBLE);
+                if (num > 5) {
+                    nextBtn.setVisibility(View.VISIBLE);
+                    makeBookcoverTextView.setVisibility(View.VISIBLE);
+                }
+
 
             }
         });
@@ -295,7 +300,10 @@ public class MakeStoryActivity extends AppCompatActivity {
                     }
                     ++num;
                 }
-                if (num > 5) nextBtn.setVisibility(View.VISIBLE);
+                if (num > 5) {
+                    nextBtn.setVisibility(View.VISIBLE);
+                    makeBookcoverTextView.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -345,7 +353,10 @@ public class MakeStoryActivity extends AppCompatActivity {
                         ++num;
                     }
                     // num이 5보다 클 때 nextBtn 표시
-                    if (num > 5) nextBtn.setVisibility(View.VISIBLE);
+                    if (num > 5) {
+                        nextBtn.setVisibility(View.VISIBLE);
+                        makeBookcoverTextView.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     // recognizedText가 비어 있으면 음성 인식 재시작
                     Intent intent = new Intent(MakeStoryActivity.this, VoiceActivity.class);
@@ -393,12 +404,10 @@ public class MakeStoryActivity extends AppCompatActivity {
 
                     saveStory(); // 내용 저장
                     startActivity(intent);
-                }
-                else if(!isTextLoaded) {
+                } else if (!isTextLoaded) {
                     showToast("이야기가 진행 중입니다.");
                     return;
-                }
-                else {
+                } else {
                     showToast("이미지가 로드되지 않았습니다.");
                 }
                 finish();
@@ -490,8 +499,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                 // 생성된 버블의 위치 저장
                 placedBubbles.add(newBubbleRect);
             }
-        }
-        else {
+        } else {
             // robot, bee, picnic 중 하나를 랜덤하게 선택
             int[] imageResources = {R.drawable.iv_loading_robbot, R.drawable.iv_loading_bee, R.drawable.iv_loading_picnic};
             int randomImage = imageResources[new Random().nextInt(imageResources.length)];
@@ -661,9 +669,12 @@ public class MakeStoryActivity extends AppCompatActivity {
                             if (index == length) { //텍스트가 전부 표시되면
                                 if (isImageLoaded && num <= 5) { //5장 이하일 때
                                     makeStory.generateChoices(num); // 이미지가 로드된 후에 선택지 생성
+                                } else {
+                                    nextBtn.setVisibility(View.VISIBLE);
+                                    makeBookcoverTextView.setVisibility(View.VISIBLE);
                                 }
-                                if(num == 1) nextTextView.setVisibility(View.VISIBLE);
-                                if(num == 6) isTextLoaded = true;
+                                if (num == 1) nextTextView.setVisibility(View.VISIBLE);
+                                if (num == 6) isTextLoaded = true;
                             }
                         }
                     }, delay * i);
@@ -682,8 +693,8 @@ public class MakeStoryActivity extends AppCompatActivity {
                                 makeStory.generateChoices(num);
                             }
 
-                            if(num == 1) nextTextView.setVisibility(View.VISIBLE);
-                            if(num == 6) isTextLoaded = true;
+                            if (num == 1) nextTextView.setVisibility(View.VISIBLE);
+                            if (num == 6) isTextLoaded = true;
                         }
                         // false를 반환하여 기본 스크롤 동작을 허용
                         return false;
