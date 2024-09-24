@@ -212,7 +212,7 @@
 
     <com.example.holymoly.StrokeText
         android:id="@+id/st_count_love"
-        android:layout_width="40dp"
+        android:layout_width="60dp"
         android:layout_height="35dp"
         android:fontFamily="@font/ssurround"
         android:textColor="@color/white"
@@ -223,7 +223,7 @@
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.951"
+        app:layout_constraintHorizontal_bias="0.964"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.195" />
@@ -242,7 +242,7 @@
 
     <com.example.holymoly.StrokeText
         android:id="@+id/st_count_book"
-        android:layout_width="40dp"
+        android:layout_width="60dp"
         android:layout_height="35dp"
         android:fontFamily="@font/ssurround"
         android:textColor="@color/white"
@@ -253,7 +253,7 @@
         android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.951"
+        app:layout_constraintHorizontal_bias="0.964"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.245" />
