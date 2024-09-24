@@ -310,17 +310,16 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
     private void loadWeather(String date, ImageView weather) {
         DocumentReference weatherRef = db.collection("weather").document(uid).collection("dates").document(date);
 
-        weatherRef.get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
-                        if (document.exists()) {
-                            int selectedId = document.getLong("selectedId").intValue();
-                            // 날씨 아이콘 설정
-                            setWeatherIcon(selectedId, weather);
-                        }
-                    }
-                });
+        weatherRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    int selectedId = document.getLong("selectedId").intValue();
+                    // 날씨 아이콘 설정
+                    setWeatherIcon(selectedId, weather);
+                }
+            }
+        });
     }
 
     // Diary 클래스 정의

@@ -285,7 +285,6 @@ public class MakeDiaryActivity extends AppCompatActivity {
         weatherRef.get().addOnSuccessListener(document -> {
             if (document.exists()) {
                 int savedId = document.getLong("selectedId").intValue();
-                Toast.makeText(this, String.valueOf(savedId), Toast.LENGTH_SHORT).show();
                 RadioButton savedButton = findViewById(savedId);
                 if (savedButton != null) {
                     savedButton.setChecked(true);
