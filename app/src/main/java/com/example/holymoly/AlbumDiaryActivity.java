@@ -171,7 +171,7 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
             finish();
         }
         else if (v.getId() == R.id.rightImage) { // 오른쪽 이미지
-/*            // 오늘 날짜 구하기
+            // 오늘 날짜 구하기
             String todayDate = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date());
 
             boolean hasTodayDiary = false;
@@ -194,13 +194,14 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
                 // 오늘 일기가 작성된 경우, 내일 일기가 없는 경우
                 Toast.makeText(this, "내일 일기를 작성하세요.", Toast.LENGTH_SHORT).show();
             }
-            else {*/
+            else {
                 // yyyyMMdd 형식의 날짜 가져오기
                 String date = filteredDiaries.get(currentIndex + 1).getDate();
                 Intent intent = new Intent(this, MakeDiaryActivity.class);
                 intent.putExtra("date", date);
                 startActivity(intent);
                 finish();
+            }
 
         }
         else if (v.getId() == R.id.calendar) { // 달력 클릭 시 월 변경
