@@ -78,12 +78,13 @@ public class VoiceActivity extends AppCompatActivity {
         // 이미지 누르면 음성 인식 시작
         micImage.setOnClickListener(v -> {
             sound();
-
             if (Build.VERSION.SDK_INT >= 23) {
                 // 퍼미션 체크
                 ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET,
                         Manifest.permission.RECORD_AUDIO}, PERMISSION);
             }
+            // 음성 인식 중일 때 마이크 이미지 변경
+            micImage.setImageResource(R.drawable.ic_bigmic2);
 
             mRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
             mRecognizer.setRecognitionListener(listener);
@@ -116,15 +117,22 @@ public class VoiceActivity extends AppCompatActivity {
         @Override
         public void onReadyForSpeech(Bundle params) {
             Toast.makeText(getApplicationContext(), "음성인식을 시작합니다.", Toast.LENGTH_SHORT).show();
+            micImage.setImageResource(R.drawable.ic_bigmic2);  // 음성 인식이 시작되면 마이크 이미지 변경
         }
+
         @Override
         public void onBeginningOfSpeech() {}
+
         @Override
         public void onRmsChanged(float rmsdB) {}
+
         @Override
         public void onBufferReceived(byte[] buffer) {}
+
         @Override
-        public void onEndOfSpeech() {}
+        public void onEndOfSpeech() {
+            micImage.setImageResource(R.drawable.ic_bigmic);  // 음성 인식이 끝나면 마이크 이미지를 원래대로 변경
+        }
 
         @Override
         public void onError(int error) {
@@ -163,6 +171,7 @@ public class VoiceActivity extends AppCompatActivity {
                     break;
             }
             Toast.makeText(getApplicationContext(), "에러가 발생하였습니다. : " + message, Toast.LENGTH_SHORT).show();
+            micImage.setImageResource(R.drawable.ic_bigmic);  // 에러가 발생하면 마이크 이미지를 원래대로 변경
         }
 
         @Override
@@ -175,6 +184,7 @@ public class VoiceActivity extends AppCompatActivity {
                 recognizedText.append(matches.get(i)).append(" ");
             }
             scriptView.setText(recognizedText.toString());
+            micImage.setImageResource(R.drawable.ic_bigmic);  // 음성 인식이 완료되면 마이크 이미지를 원래대로 변경
         }
 
         @Override

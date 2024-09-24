@@ -2,11 +2,6 @@ package com.example.holymoly;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -14,15 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
-import java.io.ByteArrayOutputStream;
 
 public class HomeActivity extends AppCompatActivity implements UserInfoLoader {
     private ImageButton btntrophy, btnsetting, btnmaking, btnalbum, btnworld, btndiary;
@@ -48,6 +34,11 @@ public class HomeActivity extends AppCompatActivity implements UserInfoLoader {
         btnalbum = findViewById(R.id.ib_album);
         btnworld = findViewById(R.id.ib_world);
         btndiary = findViewById(R.id.ib_diaryHome);
+
+        Intent musicIntent = new Intent(this, MusicService.class);
+        musicIntent.setAction("CHANGE_MUSIC");
+        musicIntent.putExtra("MUSIC_RES_ID", R.raw.ocean_theme_music);
+        startService(musicIntent); // 홈 배경음악 설정
 
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,12 +108,21 @@ public class HomeActivity extends AppCompatActivity implements UserInfoLoader {
     public void onStart() {
         super.onStart();
         loadUserInfo(profile, name, nickname);
+        resetBackgroundMusic(); // 배경음악 초기화
     }
 
     @Override
     public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
         userInfo.loadUserInfo(profile, name, nickname);
     }
+
+    private void resetBackgroundMusic() {
+        Intent musicIntent = new Intent(this, MusicService.class);
+        musicIntent.setAction("CHANGE_MUSIC");
+        musicIntent.putExtra("MUSIC_RES_ID", R.raw.ocean_theme_music);
+        startService(musicIntent); // 홈 배경음악을 설정 (매번 HomeActivity 시작할 때)
+    }
+
     // 효과음
     public void sound() {
         isSoundOn = pref.getBoolean("on&off2", true);
