@@ -122,6 +122,8 @@ public class AchieveActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 sound();
+                Intent intent = new Intent(AchieveActivity.this, TrophyActivity.class);
+                startActivity(intent);
                 finish();
             }
         });

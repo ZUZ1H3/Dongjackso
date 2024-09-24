@@ -146,23 +146,11 @@ public class InfoActivity extends AppCompatActivity implements View.OnClickListe
 
     // 이미지 가져오기
     private void loadImage() {
-        characterRef.listAll().addOnSuccessListener(listResult -> {
-            List<StorageReference> items = listResult.getItems();
-            for (StorageReference item : items) {
-                String img = item.getName();
-                // 파일 이름이 현재 사용자의 ID로 시작하는 경우
-                if (img.startsWith(user.getUid())) {
-                    final long MEGABYTE = 1024 * 1024; // 1MB
-                    item.getBytes(MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                        @Override
-                        public void onSuccess(byte[] bytes) {
-                            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                            Bitmap cBitmap = cropImage(bitmap);
-                            profile.setImageBitmap(cBitmap);
-                        }
-                    });
-                }
-            }
+        final long MEGABYTE = 1024 * 1024; // 1MB
+        characterRef.getBytes(MEGABYTE).addOnSuccessListener(bytes -> {
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            Bitmap cBitmap = cropImage(bitmap);
+            profile.setImageBitmap(cBitmap);
         });
     }
 

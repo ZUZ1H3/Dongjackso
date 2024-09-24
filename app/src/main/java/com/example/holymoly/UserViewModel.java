@@ -8,7 +8,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.StorageReference;
 
 public class UserViewModel extends AndroidViewModel {
     private final FirebaseFirestore db;
@@ -40,7 +39,6 @@ public class UserViewModel extends AndroidViewModel {
                 .addOnSuccessListener(task -> {
                     String nickname = task.getString("nickname");
                     nicknameLiveData.setValue(nickname);
-
                 });
     }
 

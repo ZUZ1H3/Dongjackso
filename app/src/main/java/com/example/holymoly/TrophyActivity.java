@@ -3,6 +3,7 @@ package com.example.holymoly;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -13,11 +14,17 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TrophyActivity extends AppCompatActivity implements View.OnClickListener{
     /* firebase 초기화 */
@@ -60,15 +67,14 @@ public class TrophyActivity extends AppCompatActivity implements View.OnClickLis
         stopMaking.setOnClickListener(this);
         trophy.setOnClickListener(this);
 
-        userViewModel.getNicknameLiveData().observe(this, nickname -> {
-            loadCharacter(nickname);
-        });
+        loadChangeImage();
     }
     public void onClick(View v) {
         sound();
         if(v.getId() == R.id.ib_bigtrophy) {
             Intent intent = new Intent(this, AchieveActivity.class);
             startActivity(intent);
+            finish();
         }
         else if(v.getId() == R.id.ib_stopMaking) finish();
     }

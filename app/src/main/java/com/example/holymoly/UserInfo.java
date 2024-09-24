@@ -23,7 +23,7 @@ public class UserInfo implements UserInfoLoader {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef = storage.getReference();
-    StorageReference characterRef = storageRef.child("characters/" + user.getUid() + ".png");
+    private StorageReference characterRef = storageRef.child("characters/" + user.getUid() + ".png");
 
     // Firestore에서 사용자 정보 가져오기
     @Override

@@ -213,7 +213,6 @@ public class JoinActivity extends AppCompatActivity {
         public Integer age;
         public String gender;
         public String nickname = "꼬마 작가";
-        public Integer trophy = 0;
 
         public User() {
             // 기본 생성자 필요

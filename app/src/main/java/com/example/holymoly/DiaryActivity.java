@@ -144,6 +144,7 @@ public class DiaryActivity extends AppCompatActivity {
 
         stopMakingBtn.setOnClickListener(v -> {
             sound();
+            finish();
             handleBackPress();
         });
 
@@ -154,6 +155,7 @@ public class DiaryActivity extends AppCompatActivity {
 
         makeDiaryButton.setOnClickListener(v -> {
             sound();
+            finish();
             handleMakeDiaryButtonClick();
         });
 
@@ -161,6 +163,7 @@ public class DiaryActivity extends AppCompatActivity {
             sound();
             if (hasWho && hasHow && hasMood && hasWhat && hasWhen && hasWhere && hasWhy) {
                 handleMakeDiaryButtonClick();
+                finish();
             } else {
                 setAllFlagsTrue();
                 setAllTextColorWhite();
