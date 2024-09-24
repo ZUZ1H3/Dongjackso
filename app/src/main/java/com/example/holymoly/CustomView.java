@@ -19,7 +19,6 @@ public class CustomView extends View {
     private int currentColor = Color.BLACK; // 기본 색상
     private Stack<DrawCommand> paths = new Stack<>(); // 모든 경로를 저장하는 스택
     private Stack<DrawCommand> undonePaths = new Stack<>(); // 지운 경로를 저장하는 스택
-    private String bookTitle = "";
     public CustomView(Context context, AttributeSet attrs) {
         super(context, attrs);
         paint = new Paint();
@@ -92,17 +91,25 @@ public class CustomView extends View {
     }
 
     private void redraw() {
-        drawCanvas.drawColor(Color.TRANSPARENT, android.graphics.PorterDuff.Mode.CLEAR); // Clear the canvas
+        drawCanvas.drawColor(Color.TRANSPARENT, android.graphics.PorterDuff.Mode.CLEAR); // 캔버스를 지움
+
+        // 저장된 모든 경로를 다시 그림
         for (DrawCommand command : paths) {
             if (command.isFillCommand) {
                 drawCanvas.drawColor(command.color);
             } else {
+                // 이전 경로의 색상과 굵기를 일시적으로 설정하여 그리기
                 paint.setColor(command.color);
                 paint.setStrokeWidth(command.width);
-                drawCanvas.drawPath(command.path, paint); // Draw path
+                drawCanvas.drawPath(command.path, paint); // 경로 다시 그리기
             }
         }
-        invalidate();
+
+        // 현재 설정된 색상과 굵기는 그대로 유지
+        paint.setColor(currentColor);
+        paint.setStrokeWidth(penWidth);
+
+        invalidate(); // 뷰를 다시 그려서 화면 갱신
     }
 
     private class DrawCommand {
@@ -119,14 +126,12 @@ public class CustomView extends View {
         }
     }
 
-
     public void fillCanvas(String color) {
         int fillColor = Color.parseColor(color);
         drawCanvas.drawColor(fillColor);
         paths.push(new DrawCommand(new Path(), fillColor, 0, true)); // 채운 색상만 저장
         invalidate();
     }
-
 
     public void drawBitmapOnCanvas(Bitmap bitmap) {
         if (bitmap != null) {
