@@ -10,7 +10,10 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
@@ -39,6 +42,7 @@ public class MakeBookcoverActivity extends AppCompatActivity {
     private CustomView drawView;
     private ImageButton pen, erase, undo, rainbow, paint, remove, ok, AI, stop;
     private ImageButton selectedColorButton, selectedToolButton;
+    private ImageView loading;
     private Map<ImageButton, Integer> colorButtonMap = new HashMap<>();
     private Map<ImageButton, Integer> colorCheckMap = new HashMap<>();
     private Map<Integer, String> colorCodeMap = new HashMap<>();
@@ -65,11 +69,15 @@ public class MakeBookcoverActivity extends AppCompatActivity {
 
     private String combinedStory;
 
+    private Animation rotateAnimation; // rotateAnimation을 필드로 선언
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_bookcover);
         pref = getSharedPreferences("music", MODE_PRIVATE);
+        rotateAnimation = AnimationUtils.loadAnimation(this, R.anim.rotate);
 
         initializeFields();
         setupButtons();
@@ -99,6 +107,8 @@ public class MakeBookcoverActivity extends AppCompatActivity {
         AI = findViewById(R.id.ib_AI);
         paint = findViewById(R.id.ib_paint);
         stop = findViewById(R.id.ib_stopMaking);
+        loading = findViewById(R.id.ib_loading);
+
     }
 
     private void setupButtons() {
@@ -114,6 +124,8 @@ public class MakeBookcoverActivity extends AppCompatActivity {
         });
         AI.setOnClickListener(v -> {
             sound();
+            loading.setVisibility(View.VISIBLE); // 로딩 이미지 표시
+            loading.startAnimation(rotateAnimation);
             if(from.equals("AI")) {
                 generateImageFromThemeAndCharacters(selectedTheme, selectedCharacters);
             } else if (from.equals("개인")) {
@@ -391,12 +403,17 @@ public class MakeBookcoverActivity extends AppCompatActivity {
         protected void onPostExecute(Bitmap result) {
             if (result != null) {
                 drawView.drawBitmapOnCanvas(result);
+                loading.clearAnimation();  // 애니메이션 중지
+                loading.setVisibility(View.GONE);
+
             } else {
                 Toast.makeText(MakeBookcoverActivity.this, "이미지 로드 실패", Toast.LENGTH_SHORT).show();
+                loading.clearAnimation();  // 애니메이션 중지
+                loading.setVisibility(View.GONE);
+
             }
         }
     }
-
 
     // URL에서 Bitmap 객체를 생성하는 메서드
     private Bitmap getBitmapFromURL(String src) {
