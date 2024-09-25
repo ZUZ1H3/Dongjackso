@@ -96,6 +96,7 @@ public class MaketitleActivity extends AppCompatActivity {
                 intent.putStringArrayListExtra("selectedCharacters", selectedCharacters);
                 startActivity(intent);
                 finish();
+                nextBtn.setOnClickListener(null);
             }
         });
 

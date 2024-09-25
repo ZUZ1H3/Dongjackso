@@ -61,7 +61,6 @@ public class ReadBookActivity extends AppCompatActivity implements View.OnClickL
     private static final String COGNITO_POOL_ID = BuildConfig.POLLY_API_KEY;
     private Regions MY_REGION = Regions.AP_NORTHEAST_2; // 리전 설정
     private AmazonPolly pollyClient;
-
     private AudioTrack audioTrack;      // audioTrack 변수
     private InputStream audioStream;    // 음성 스트림 저장
 

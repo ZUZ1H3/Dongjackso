@@ -121,6 +121,7 @@ public class MakeBookcoverActivity extends AppCompatActivity {
         ok.setOnClickListener(v -> {
             sound();
             uploadImage();
+            ok.setOnClickListener(null); // 클릭 리스너 제거
         });
         AI.setOnClickListener(v -> {
             sound();
@@ -390,6 +391,8 @@ public class MakeBookcoverActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Toast.makeText(MakeBookcoverActivity.this, "이미지 생성 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        loading.clearAnimation();  // 애니메이션 중지
+                        loading.setVisibility(View.GONE);
                     }
                 });
             }
