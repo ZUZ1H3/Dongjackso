@@ -635,8 +635,18 @@ public class MakeStoryActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.e("KarloAPI", "이미지 요청 실패: " + e.getMessage());
-                        showToast("이미지 요청 실패: " + e.getMessage());
+                        backgroundImageView.setImageResource(R.drawable.bg_demo);
+                        isImageLoaded = true;
+                        storyTextView.setVisibility(View.VISIBLE);
+                        retryBtn.setVisibility(View.VISIBLE);
+                        stopMakingBtn.setVisibility(View.VISIBLE);
+                        background.setVisibility(View.VISIBLE);
+                        //loadingLayout.setVisibility(View.INVISIBLE);
+                        constraintLayout.setVisibility(View.INVISIBLE);
+                        displayStoryText(storyText); //동화 출력
+
+                        // 비트맵을 ByteArray로 변환하여 인텐트에 저장
+                        showToast("이미지 요청: " + e.getMessage());
                     }
                 });
             }
