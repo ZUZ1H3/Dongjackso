@@ -105,7 +105,8 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
                         if (filterDiariesByMonth(previousMonth)) {
                             month = previousMonth;
                             calendar.setText(month + "월");
-                            currentIndex = filteredDiaries.size() - 2; // 마지막 페이지로 설정
+                            // 홀수 월인 경우 마지막 두 페이지를 표시
+                            currentIndex = (month == 7 || month == 8) ? filteredDiaries.size() - (filteredDiaries.size() % 2 == 0 ? 2 : 1) : filteredDiaries.size() - (filteredDiaries.size() % 2 == 0 ? 2 : 1);
                             displayImages();
                         } else {
                             Toast.makeText(this, "일기가 없습니다.", Toast.LENGTH_SHORT).show();
@@ -123,7 +124,8 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
                     if (filterDiariesByMonth(previousMonth)) {
                         month = previousMonth;
                         calendar.setText(month + "월");
-                        currentIndex = filteredDiaries.size() - 2; // 마지막 페이지로 설정
+                        // 홀수 월인 경우 마지막 두 페이지를 표시
+                        currentIndex = (month == 7 || month == 8) ? filteredDiaries.size() - (filteredDiaries.size() % 2 == 0 ? 2 : 1) : filteredDiaries.size() - (filteredDiaries.size() % 2 == 0 ? 2 : 1);
                         displayImages();
                     } else {
                         Toast.makeText(this, "첫 번째 페이지입니다.", Toast.LENGTH_SHORT).show();
@@ -132,8 +134,7 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
                     Toast.makeText(this, "첫 번째 페이지입니다.", Toast.LENGTH_SHORT).show();
                 }
             }
-        }
-        else if (v.getId() == R.id.nextPage) { // 다음 페이지로 이동
+        } else if (v.getId() == R.id.nextPage) { // 다음 페이지로 이동
             if (currentIndex + 2 < filteredDiaries.size()) {
                 currentIndex += 2;
                 displayImages();
@@ -144,7 +145,8 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
                     if (filterDiariesByMonth(nextMonth)) {
                         month = nextMonth;
                         calendar.setText(month + "월");
-                        currentIndex = 0; // 첫 페이지로 설정
+                        // 홀수 월인 경우 첫 두 페이지를 표시
+                        currentIndex = (month == 7 || month == 8) ? 0 : 0;
                         displayImages();
                     } else {
                         Toast.makeText(this, "마지막 페이지입니다.", Toast.LENGTH_SHORT).show();
@@ -167,8 +169,8 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
             String date = filteredDiaries.get(currentIndex).getDate();
             Intent intent = new Intent(this, MakeDiaryActivity.class);
             intent.putExtra("date", date);
+            intent.putExtra("album", true);
             startActivity(intent);
-            finish();
         }
         else if (v.getId() == R.id.rightImage) { // 오른쪽 이미지
             // 오늘 날짜 구하기
@@ -181,6 +183,7 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
             // filteredDiaries에서 오늘 날짜와 내일 날짜가 있는지 확인
             for (Diary diary : filteredDiaries) {
                 String diaryDate = diary.getDate();
+
                 if (todayDate.equals(diaryDate)) {
                     hasTodayDiary = true;
                 } else if (todayDate.equals(new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date(System.currentTimeMillis() + 86400000)))) { // 내일 날짜 계산
@@ -190,7 +193,8 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
 
             if (!hasTodayDiary && isEmpty) { // 오늘 일기가 작성되지 않은 경우
                 Toast.makeText(this, "오늘 일기를 작성하세요.", Toast.LENGTH_SHORT).show();
-            } else if (hasTodayDiary && !hasTomorrowDiary && isEmpty) {
+            }
+            else if (hasTodayDiary && !hasTomorrowDiary && isEmpty) {
                 // 오늘 일기가 작성된 경우, 내일 일기가 없는 경우
                 Toast.makeText(this, "내일 일기를 작성하세요.", Toast.LENGTH_SHORT).show();
             }
@@ -199,10 +203,9 @@ public class AlbumDiaryActivity extends AppCompatActivity implements View.OnClic
                 String date = filteredDiaries.get(currentIndex + 1).getDate();
                 Intent intent = new Intent(this, MakeDiaryActivity.class);
                 intent.putExtra("date", date);
+                intent.putExtra("album", true);
                 startActivity(intent);
-                finish();
             }
-
         }
         else if (v.getId() == R.id.calendar) { // 달력 클릭 시 월 변경
             showMonthPickerDialog();

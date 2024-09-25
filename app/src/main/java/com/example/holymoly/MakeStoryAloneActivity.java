@@ -610,13 +610,12 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
                         Glide.with(this).load(uri).into(touch);
                     }).addOnFailureListener(exception -> {
                         // URL 로드 실패 시 기본 이미지 설정
-                        touch.setImageResource(R.drawable.ic_touch2);
+                        //touch.setImageResource(R.drawable.ic_touch2);
                         Log.e("load", "이미지 불러오기 실패");
                     });
                     imageFound = true; // 이미지가 있으면 true로 설정
                     break;
                 }
-                else return;
             }
 
             if (!imageFound) { // 이미지가 없으면

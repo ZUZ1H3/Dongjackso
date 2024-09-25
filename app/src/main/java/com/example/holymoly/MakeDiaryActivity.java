@@ -78,6 +78,7 @@ public class MakeDiaryActivity extends AppCompatActivity {
         String currentDate2 = getCurrentDate2(); // YYYYMMDD 버전
         String date = getIntent().getStringExtra("date");
         String from = intent.getStringExtra("from");
+        boolean isFrom = intent.getBooleanExtra("album", true);
 
         day.setText(currentDate);
 
@@ -135,10 +136,12 @@ public class MakeDiaryActivity extends AppCompatActivity {
                                 saveWeather(getCurrentDate2(), checkedId);
                             }
                         }
-
-                        Intent intent = new Intent(MakeDiaryActivity.this, AlbumDiaryActivity.class);
-                        startActivity(intent);
-                        finish(); // 2초 이내에 다시 누르면 종료
+                        if(isFrom) {
+                            finish(); // 2초 이내에 다시 누르면 종료
+                        } else {
+                            Intent intent = new Intent(MakeDiaryActivity.this, AlbumDiaryActivity.class);
+                            startActivity(intent);
+                        }
                     }
                 }
             }
