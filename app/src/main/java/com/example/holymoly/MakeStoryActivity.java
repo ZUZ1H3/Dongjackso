@@ -177,7 +177,7 @@ public class MakeStoryActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // ic_bubble.png 이미지를 10개 추가
-                generateBubbles(); // 이전의 addRandomBubbles를 generateBubbles로 변경
+                generateLoading(); // 이전의 addRandomBubbles를 generateBubbles로 변경
             }
         });
 
@@ -254,13 +254,14 @@ public class MakeStoryActivity extends AppCompatActivity {
                 selectMic3.setVisibility(View.INVISIBLE);
 
                 String selectedChoice = selectText1.getText().toString(); // 선택지1 가져오기
-                AIComent(selectedChoice);
                 if (num < 6) {
                     // 현재 페이지 내용, 선택지 저장
                     pageContents.set(num - 1, storyTextView.getText().toString() + selectedChoice);
 
                     if (num < 5) {
                         makeStory.generateNextStoryPart(selectedChoice, num);
+                        AIComent(selectedChoice);
+
                     } else if (num == 5) {
                         makeStory.generateEndStoryPart(selectedChoice);
                     }
@@ -288,13 +289,13 @@ public class MakeStoryActivity extends AppCompatActivity {
                 selectMic3.setVisibility(View.INVISIBLE);
 
                 String selectedChoice = selectText2.getText().toString(); // 선택지2 가져오기
-                AIComent(selectedChoice);
                 if (num < 6) {
                     // 현재 페이지 내용, 선택지 저장
                     pageContents.set(num - 1, storyTextView.getText().toString() + selectedChoice);
-
                     if (num < 5) {
                         makeStory.generateNextStoryPart(selectedChoice, num);
+                        AIComent(selectedChoice);
+
                     } else if (num == 5) {
                         makeStory.generateEndStoryPart(selectedChoice);
                     }
@@ -464,8 +465,8 @@ public class MakeStoryActivity extends AppCompatActivity {
             }
         });
     }*/
-    //bubble생성
-    private void generateBubbles() {
+
+    private void generateBubbles(){
         final int[] currentBubbleNumber = {1};
         int layoutWidth = constraintLayout.getWidth();
         int layoutHeight = constraintLayout.getHeight();
@@ -474,79 +475,88 @@ public class MakeStoryActivity extends AppCompatActivity {
         int spacing = bubbleSize / 6; // 추가 간격을 더 넓게 설정
 
         List<Rect> placedBubbles = new ArrayList<>(); // 생성된 버블의 위치를 저장
+        for (int i = 0; i < 10; i++) {
+            FrameLayout bubbleLayout = new FrameLayout(this);
+            ImageView bubble = new ImageView(this);
+            bubble.setImageResource(R.drawable.ic_bubble);
 
-        if (new Random().nextBoolean()) {
+            // 커스텀 폰트를 불러오기
+            Typeface customFont = ResourcesCompat.getFont(this, R.font.meetme);
 
-            for (int i = 0; i < 10; i++) {
-                FrameLayout bubbleLayout = new FrameLayout(this);
-                ImageView bubble = new ImageView(this);
-                bubble.setImageResource(R.drawable.ic_bubble);
+            FrameLayout.LayoutParams bubbleParams = new FrameLayout.LayoutParams(bubbleSize, bubbleSize);
 
-                // 커스텀 폰트를 불러오기
-                Typeface customFont = ResourcesCompat.getFont(this, R.font.meetme);
+            TextView bubbleNumber = new TextView(this);
+            bubbleNumber.setText(String.valueOf(i + 1));
+            bubbleNumber.setTextColor(Color.WHITE);
+            bubbleNumber.setTextSize(70);
+            bubbleNumber.setGravity(Gravity.CENTER);
 
-                FrameLayout.LayoutParams bubbleParams = new FrameLayout.LayoutParams(bubbleSize, bubbleSize);
+            // 커스텀 폰트를 적용하는 부분
+            bubbleNumber.setTypeface(customFont);
 
-                TextView bubbleNumber = new TextView(this);
-                bubbleNumber.setText(String.valueOf(i + 1));
-                bubbleNumber.setTextColor(Color.WHITE);
-                bubbleNumber.setTextSize(70);
-                bubbleNumber.setGravity(Gravity.CENTER);
+            FrameLayout.LayoutParams textParams = new FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+            );
+            textParams.gravity = Gravity.CENTER;
 
-                // 커스텀 폰트를 적용하는 부분
-                bubbleNumber.setTypeface(customFont);
+            int x, y;
+            Rect newBubbleRect;
+            int attempts = 0;
 
-                FrameLayout.LayoutParams textParams = new FrameLayout.LayoutParams(
-                        FrameLayout.LayoutParams.WRAP_CONTENT,
-                        FrameLayout.LayoutParams.WRAP_CONTENT
-                );
-                textParams.gravity = Gravity.CENTER;
+            // 겹치지 않는 좌표를 찾을 때까지 시도
+            do {
+                x = new Random().nextInt(layoutWidth - bubbleSize - spacing);
+                y = new Random().nextInt((int) (layoutHeight * 0.75) - bubbleSize - spacing); // 60%까지만
 
-                int x, y;
-                Rect newBubbleRect;
-                int attempts = 0;
-
-                // 겹치지 않는 좌표를 찾을 때까지 시도
-                do {
-                    x = new Random().nextInt(layoutWidth - bubbleSize - spacing);
-                    y = new Random().nextInt((int) (layoutHeight * 0.75) - bubbleSize - spacing); // 60%까지만
-
-                    newBubbleRect = new Rect(x, y, x + bubbleSize + spacing, y + bubbleSize + spacing);
-                    attempts++;
-
-                    if (attempts > 100) {
-                        break; // 너무 많은 시도를 하면 무한 루프 방지
-                    }
-                } while (!isNonOverlapping(newBubbleRect, placedBubbles));
+                newBubbleRect = new Rect(x, y, x + bubbleSize + spacing, y + bubbleSize + spacing);
+                attempts++;
 
                 if (attempts > 100) {
-                    continue; // 좌표 찾기를 포기하고 넘어감
+                    break; // 너무 많은 시도를 하면 무한 루프 방지
                 }
+            } while (!isNonOverlapping(newBubbleRect, placedBubbles));
 
-                bubbleLayout.setX(x);
-                bubbleLayout.setY(y);
+            if (attempts > 100) {
+                continue; // 좌표 찾기를 포기하고 넘어감
+            }
 
-                bubbleLayout.addView(bubble, bubbleParams);
-                bubbleLayout.addView(bubbleNumber, textParams);
-                constraintLayout.addView(bubbleLayout);
+            bubbleLayout.setX(x);
+            bubbleLayout.setY(y);
 
-                // 클릭 리스너 추가
-                bubbleLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int number = Integer.parseInt(bubbleNumber.getText().toString());
-                        if (number == currentBubbleNumber[0]) {
-                            // 클릭한 숫자가 맞으면 해당 버블을 제거하고 다음 숫자로 증가
-                            sound();
-                            constraintLayout.removeView(bubbleLayout);
-                            currentBubbleNumber[0]++; // 다음 숫자로 증가
+            bubbleLayout.addView(bubble, bubbleParams);
+            bubbleLayout.addView(bubbleNumber, textParams);
+            constraintLayout.addView(bubbleLayout);
+
+            bubbleLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int number = Integer.parseInt(bubbleNumber.getText().toString());
+                    if (number == currentBubbleNumber[0]) {
+                        sound();
+                        constraintLayout.removeView(bubbleLayout);
+                        currentBubbleNumber[0]++; // 다음 숫자로 증가
+
+                        // 모든 버블이 클릭되었을 때
+                        if (currentBubbleNumber[0] > 10) {
+                            // 새로운 버블을 생성
+                            currentBubbleNumber[0] = 1; // 숫자 리셋
+                            generateBubbles(); // 새로운 버블 생성
                         }
                     }
-                });
+                }
+            });
 
-                // 생성된 버블의 위치 저장
-                placedBubbles.add(newBubbleRect);
-            }
+
+            // 생성된 버블의 위치 저장
+            placedBubbles.add(newBubbleRect);
+        }
+    }
+
+    //bubble생성
+    private void generateLoading() {
+        if (new Random().nextBoolean()) {
+            generateBubbles();
         } else {
             // robot, bee, picnic 중 하나를 랜덤하게 선택
             int[] imageResources = {R.drawable.iv_loading_robbot, R.drawable.iv_loading_bee, R.drawable.iv_loading_picnic};
@@ -749,6 +759,8 @@ public class MakeStoryActivity extends AppCompatActivity {
                             // 터치 시 핸들러의 모든 작업 취소하고 전체 텍스트 표시
                             handler.removeCallbacksAndMessages(null);
                             storyTextView.setText(storyText);
+                            AITextView.setVisibility(View.GONE);
+                            AIImage.setVisibility(View.GONE);
                             textFullyDisplayed[0] = true; // 전체 텍스트 표시 상태로 플래그 설정
                             if (isImageLoaded && num <= 5 && !choicesVisible) {
                                 makeStory.generateChoices(num);
