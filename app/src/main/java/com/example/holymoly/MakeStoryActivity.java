@@ -348,6 +348,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                         pageContents.set(num - 1, storyTextView.getText().toString() + selectedChoice);
                         if (num < 5) {
                             makeStory.generateNextStoryPart(selectedChoice, num);
+                            AIComent(selectedChoice);
                         } else if (num == 5) {
                             makeStory.generateEndStoryPart(selectedChoice);
                         }
