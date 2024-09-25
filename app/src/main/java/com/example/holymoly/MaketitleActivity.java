@@ -94,6 +94,9 @@ public class MaketitleActivity extends AppCompatActivity {
                 intent.putExtra("selectedTheme", selectedTheme); // 작업이 완료되었을 때 MakeBookcoverActivity로 이동
                 intent.putExtra("from", "AI"); // 작업이 완료되었을 때 MakeBookcoverActivity로 이동
                 intent.putStringArrayListExtra("selectedCharacters", selectedCharacters);
+                intent.putExtra("imageFile", imageFile);
+                intent.putExtra("storyFile", storyFile);
+
                 startActivity(intent);
                 finish();
                 nextBtn.setOnClickListener(null);
@@ -111,7 +114,6 @@ public class MaketitleActivity extends AppCompatActivity {
                         finish();
                     });
                 });
-
             }
         });
 

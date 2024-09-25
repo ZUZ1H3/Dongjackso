@@ -62,15 +62,16 @@ public class MakeBookcoverActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference storageRef = storage.getReference();
+    private StorageReference imageRef = storage.getReference().child("background/");
+    private StorageReference storyRef = storage.getReference().child("stories/");
 
     /* 효과음 */
     private SharedPreferences pref;
     private boolean isSoundOn;
 
-    private String combinedStory;
+    private String combinedStory, storyFile, imageFile;
 
     private Animation rotateAnimation; // rotateAnimation을 필드로 선언
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +97,8 @@ public class MakeBookcoverActivity extends AppCompatActivity {
         from = intent.getStringExtra("from");
         aloneTitle = intent.getStringExtra("title");
         combinedStory = intent.getStringExtra("combinedStory");
+        storyFile = intent.getStringExtra("storyFile");
+        imageFile = intent.getStringExtra("imageFile");
         drawView = findViewById(R.id.drawing);
         penSeekBar = findViewById(R.id.pen_seekbar);
         pen = findViewById(R.id.ib_pen);
@@ -133,7 +136,11 @@ public class MakeBookcoverActivity extends AppCompatActivity {
                 keyword(combinedStory);
             }
         });
-        stop.setOnClickListener(v -> handleBackPress());
+        stop.setOnClickListener(v -> {
+            sound();
+            handleBackPress();
+            deleteFile();
+        });
         remove.setOnClickListener(v -> {
             sound();
             drawView.clearCanvas();
@@ -524,6 +531,16 @@ public class MakeBookcoverActivity extends AppCompatActivity {
             public void onFailure(Throwable t) {
                 Toast.makeText(MakeBookcoverActivity.this, "(개인)이미지 생성 실패: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
+        });
+    }
+
+    private void deleteFile() {
+        // 이미지 파일 삭제
+        imageRef.child(selectedTheme + "/" + imageFile).delete().addOnSuccessListener(aVoid -> {
+            // 스토리 파일 삭제
+            storyRef.child(storyFile).delete().addOnSuccessListener(aVoid2 -> {
+                finish();
+            });
         });
     }
 }

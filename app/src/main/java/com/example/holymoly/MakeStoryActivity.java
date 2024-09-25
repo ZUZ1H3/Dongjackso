@@ -402,8 +402,8 @@ public class MakeStoryActivity extends AppCompatActivity {
                     intent.putExtra("selectedTheme", finalSelectedTheme);
                     intent.putStringArrayListExtra("selectedCharacters", selectedCharacters);
                     intent.putStringArrayListExtra("story", pageContents);
-                    intent.putExtra("imageFile", fileName);      // 이미지 경로
-
+                    intent.putExtra("imageFile", fileName);  // 이미지 경로
+                    intent.putExtra("filePath", themePath);
                     saveStory(); // 내용 저장
                     startActivity(intent);
                 } else if (!isTextLoaded) {
