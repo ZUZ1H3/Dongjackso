@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,7 +27,7 @@ public class VoiceActivity extends AppCompatActivity {
     Gemini gemini;
     SpeechRecognizer mRecognizer;
     ImageView micImage, backgroundImageView, darkbackground;
-    TextView scriptView;
+    EditText scriptView;
     ImageButton nextBtn;
     private String selectedTheme;
     private ArrayList<String> selectedCharacters;
@@ -122,10 +123,8 @@ public class VoiceActivity extends AppCompatActivity {
 
         @Override
         public void onBeginningOfSpeech() {}
-
         @Override
         public void onRmsChanged(float rmsdB) {}
-
         @Override
         public void onBufferReceived(byte[] buffer) {}
 
@@ -189,7 +188,6 @@ public class VoiceActivity extends AppCompatActivity {
 
         @Override
         public void onPartialResults(Bundle partialResults) {}
-
         @Override
         public void onEvent(int eventType, Bundle params) {}
     };
