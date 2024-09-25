@@ -7,8 +7,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
@@ -24,6 +26,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -38,12 +41,13 @@ import yuku.ambilwarna.AmbilWarnaDialog;
 
 public class MakeDrowDiaryActivity extends AppCompatActivity {
     private CustomView drawView;
-    private ImageButton selectedColorButton, undo, remove, rainbow, paint, ok, erase;
+    private ImageButton selectedColorButton, undo, remove, rainbow, paint, ok, erase, image;
     private Map<ImageButton, Integer> colorButtonMap = new HashMap<>();
     private Map<ImageButton, Integer> colorCheckMap = new HashMap<>();
     private Map<Integer, String> colorCodeMap = new HashMap<>();
     private String selectedColorCode = "#CE6868"; // 기본 색상 코드 (검정색)
     private SeekBar penSeekBar; // 추가된 SeekBar
+    private static final int PICK_IMAGE_REQUEST = 1;
 
     /* firebase 초기화 */
     private FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -71,6 +75,7 @@ public class MakeDrowDiaryActivity extends AppCompatActivity {
         penSeekBar = findViewById(R.id.pen_seekbar);
         paint = findViewById(R.id.ib_paint);
         erase = findViewById(R.id.ib_erase);
+        image = findViewById(R.id.ib_image);
         pref = getSharedPreferences("music", MODE_PRIVATE); // 효과음 초기화
     }
 
@@ -90,6 +95,11 @@ public class MakeDrowDiaryActivity extends AppCompatActivity {
         paint.setOnClickListener(v -> {
             sound(); // 효과음 재생
             applyPaintBucket();
+        });
+
+        image.setOnClickListener(v -> {
+            sound(); // 효과음 재생
+            openGallery(); // 갤러리 열기
         });
 
         penSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -213,5 +223,28 @@ public class MakeDrowDiaryActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SoundService.class);
         if (isSoundOn) startService(intent); // 효과음 on
         else stopService(intent);            // 효과음 off
+    }
+
+    private void openGallery() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            Uri imageUri = data.getData();
+            try {
+                // 선택한 이미지를 비트맵으로 변환
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                drawView.drawBitmapOnCanvas(bitmap); // CustomView에 비트맵 그리기
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "이미지를 불러오는 데 실패했습니다.", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

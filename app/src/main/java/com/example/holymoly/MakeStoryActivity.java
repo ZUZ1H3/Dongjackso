@@ -68,9 +68,9 @@ public class MakeStoryActivity extends AppCompatActivity {
     private final float screenLimit = 1050f;            // 화면의 최대 X 좌표
     private final float initialPosition = 0f;          // 캐릭터의 초기 위치
     private boolean isImageLoaded = false; // 이미지 로드 상태를 추적하는 변수
-    private TextView nextTextView, storyTextView, pageTextView, selectText1, selectText2, selectMic3, makeBookcoverTextView;
+    private TextView nextTextView, storyTextView, pageTextView, selectText1, selectText2, selectMic3, makeBookcoverTextView, AITextView;
     private ImageButton stopMakingBtn, nextBtn, retryBtn;
-    private ImageView backgroundImageView, selectImage1, selectImage2, selectMic1, selectMic2, background;
+    private ImageView backgroundImageView, selectImage1, selectImage2, selectMic1, selectMic2, background, AIImage;
     private String selectedTheme;
     private ArrayList<String> selectedCharacters;
     private Handler handler = new Handler();
@@ -123,6 +123,8 @@ public class MakeStoryActivity extends AppCompatActivity {
         selectMic1 = findViewById(R.id.iv_mic1);
         selectMic2 = findViewById(R.id.iv_mic2);
         selectMic3 = findViewById(R.id.iv_mic3);
+        AITextView= findViewById(R.id.AIText);
+        AIImage = findViewById(R.id.Ai2);
 
         stopMakingBtn = findViewById(R.id.ib_stopMaking);
         nextBtn = findViewById(R.id.ib_nextStep);
@@ -175,7 +177,7 @@ public class MakeStoryActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // ic_bubble.png 이미지를 10개 추가
-                generateBubbles(); // 이전의 addRandomBubbles를 generateBubbles로 변경
+                generateLoading(); // 이전의 addRandomBubbles를 generateBubbles로 변경
             }
         });
 
@@ -252,13 +254,14 @@ public class MakeStoryActivity extends AppCompatActivity {
                 selectMic3.setVisibility(View.INVISIBLE);
 
                 String selectedChoice = selectText1.getText().toString(); // 선택지1 가져오기
-
                 if (num < 6) {
                     // 현재 페이지 내용, 선택지 저장
                     pageContents.set(num - 1, storyTextView.getText().toString() + selectedChoice);
 
                     if (num < 5) {
                         makeStory.generateNextStoryPart(selectedChoice, num);
+                        AIComent(selectedChoice);
+
                     } else if (num == 5) {
                         makeStory.generateEndStoryPart(selectedChoice);
                     }
@@ -268,8 +271,6 @@ public class MakeStoryActivity extends AppCompatActivity {
                     nextBtn.setVisibility(View.VISIBLE);
                     makeBookcoverTextView.setVisibility(View.VISIBLE);
                 }
-
-
             }
         });
 
@@ -288,13 +289,13 @@ public class MakeStoryActivity extends AppCompatActivity {
                 selectMic3.setVisibility(View.INVISIBLE);
 
                 String selectedChoice = selectText2.getText().toString(); // 선택지2 가져오기
-
                 if (num < 6) {
                     // 현재 페이지 내용, 선택지 저장
                     pageContents.set(num - 1, storyTextView.getText().toString() + selectedChoice);
-
                     if (num < 5) {
                         makeStory.generateNextStoryPart(selectedChoice, num);
+                        AIComent(selectedChoice);
+
                     } else if (num == 5) {
                         makeStory.generateEndStoryPart(selectedChoice);
                     }
@@ -347,6 +348,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                         pageContents.set(num - 1, storyTextView.getText().toString() + selectedChoice);
                         if (num < 5) {
                             makeStory.generateNextStoryPart(selectedChoice, num);
+                            AIComent(selectedChoice);
                         } else if (num == 5) {
                             makeStory.generateEndStoryPart(selectedChoice);
                         }
@@ -400,8 +402,8 @@ public class MakeStoryActivity extends AppCompatActivity {
                     intent.putExtra("selectedTheme", finalSelectedTheme);
                     intent.putStringArrayListExtra("selectedCharacters", selectedCharacters);
                     intent.putStringArrayListExtra("story", pageContents);
-                    intent.putExtra("imageFile", fileName);      // 이미지 경로
-
+                    intent.putExtra("imageFile", fileName);  // 이미지 경로
+                    intent.putExtra("filePath", themePath);
                     saveStory(); // 내용 저장
                     startActivity(intent);
                 } else if (!isTextLoaded) {
@@ -416,8 +418,56 @@ public class MakeStoryActivity extends AppCompatActivity {
 
     }
 
-    //bubble생성
-    private void generateBubbles() {
+    private void AIComent(String choice){
+        String prompt = "현재 동화 이야기: " + storyTextView.getText().toString() + "\n 현재 이야기에 맞게 다음 이야기를 '" + choice + "' 라고 어린이가 직접 지었습니다." +
+                "이 어린이가 직접 지은 문장에 대해 40자 이하로 긍정적이고 즐거운 피드백을 해주세요.\n" +
+                "이렇게 당신이 해준 피드백을 통해 어린이가 지은 문장이 이야기의 흐름에 어떤 영향을 미칠지 알려줌으로써," +
+                "어린이는 자신의 문장이 중요하다는 느낌을 받을 수 있습니다. 이를 통해 이야기의 재미와 몰입도를 높일 수 있습니다.\n" +
+                "ex1) \"좋은 선택이야! 이 선택이 너를 큰 모험으로 이끌 거야!\"\n" +
+                "ex2) \"그런 선택을 하다니! 이 동화 속에서 아주 중요한 역할을 하게 될 거야.\"\n" +
+                "ex3) \"엄마 여우의 용감함이 돋보이는 장면이 될 것 같아. 이 장면은 아기 여우를 위협하는 곰과 맞서 싸우는 엄마 여우의 강인함을 보여주고, 이야기에 긴장감과 감동을 더할 거야!\"";
+        gemini.generateText(prompt, new Gemini.Callback() {
+            @Override
+            public void onSuccess(String text) {
+                runOnUiThread(() -> {
+                    AITextView.setText(text.trim());
+                    AITextView.setVisibility(View.VISIBLE);
+                    AIImage.setVisibility(View.VISIBLE);
+                });
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                showToast("피드백 오류!");
+            }
+        });
+    }
+
+
+    /*private void relatedword(String recognizedText){
+        String prompt = "현재 동화 이야기: " + storyTextView + "\n 현재 이야기의 다음 이야기의 내용을 지으려고 합니다." +
+                "다음 이야기가 현재 이야기와 이어질 수 있는지, 현재 이야기와 관련되지 않은 내용을 썼는지 판별해주세요." +
+                "현재 이야기와 조금이라도, 미세하게라도 관련 있다면 yes, 관련이 아예 없다면 no 라고 단답으로 대답해주세요.\n" +
+                "다음에 이어질 내용 :" + recognizedText;
+        gemini.generateText(prompt, new Gemini.Callback() {
+            @Override
+            public void onSuccess(String text) {
+                if (text.equals("yes")){
+                    selectMic3.setText(recognizedText);
+                }else {
+                    showToast("이야기 흐름에 맞지 않는 것 같아! 다시 말해볼래?");
+                    selectMic3.setText("");
+                }
+            }
+
+            @Override
+            public void onFailure(Throwable t) {
+                showToast("판단 오류!");
+            }
+        });
+    }*/
+
+    private void generateBubbles(){
         final int[] currentBubbleNumber = {1};
         int layoutWidth = constraintLayout.getWidth();
         int layoutHeight = constraintLayout.getHeight();
@@ -426,79 +476,88 @@ public class MakeStoryActivity extends AppCompatActivity {
         int spacing = bubbleSize / 6; // 추가 간격을 더 넓게 설정
 
         List<Rect> placedBubbles = new ArrayList<>(); // 생성된 버블의 위치를 저장
+        for (int i = 0; i < 10; i++) {
+            FrameLayout bubbleLayout = new FrameLayout(this);
+            ImageView bubble = new ImageView(this);
+            bubble.setImageResource(R.drawable.ic_bubble);
 
-        if (new Random().nextBoolean()) {
+            // 커스텀 폰트를 불러오기
+            Typeface customFont = ResourcesCompat.getFont(this, R.font.meetme);
 
-            for (int i = 0; i < 10; i++) {
-                FrameLayout bubbleLayout = new FrameLayout(this);
-                ImageView bubble = new ImageView(this);
-                bubble.setImageResource(R.drawable.ic_bubble);
+            FrameLayout.LayoutParams bubbleParams = new FrameLayout.LayoutParams(bubbleSize, bubbleSize);
 
-                // 커스텀 폰트를 불러오기
-                Typeface customFont = ResourcesCompat.getFont(this, R.font.meetme);
+            TextView bubbleNumber = new TextView(this);
+            bubbleNumber.setText(String.valueOf(i + 1));
+            bubbleNumber.setTextColor(Color.WHITE);
+            bubbleNumber.setTextSize(70);
+            bubbleNumber.setGravity(Gravity.CENTER);
 
-                FrameLayout.LayoutParams bubbleParams = new FrameLayout.LayoutParams(bubbleSize, bubbleSize);
+            // 커스텀 폰트를 적용하는 부분
+            bubbleNumber.setTypeface(customFont);
 
-                TextView bubbleNumber = new TextView(this);
-                bubbleNumber.setText(String.valueOf(i + 1));
-                bubbleNumber.setTextColor(Color.WHITE);
-                bubbleNumber.setTextSize(70);
-                bubbleNumber.setGravity(Gravity.CENTER);
+            FrameLayout.LayoutParams textParams = new FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+            );
+            textParams.gravity = Gravity.CENTER;
 
-                // 커스텀 폰트를 적용하는 부분
-                bubbleNumber.setTypeface(customFont);
+            int x, y;
+            Rect newBubbleRect;
+            int attempts = 0;
 
-                FrameLayout.LayoutParams textParams = new FrameLayout.LayoutParams(
-                        FrameLayout.LayoutParams.WRAP_CONTENT,
-                        FrameLayout.LayoutParams.WRAP_CONTENT
-                );
-                textParams.gravity = Gravity.CENTER;
+            // 겹치지 않는 좌표를 찾을 때까지 시도
+            do {
+                x = new Random().nextInt(layoutWidth - bubbleSize - spacing);
+                y = new Random().nextInt((int) (layoutHeight * 0.75) - bubbleSize - spacing); // 60%까지만
 
-                int x, y;
-                Rect newBubbleRect;
-                int attempts = 0;
-
-                // 겹치지 않는 좌표를 찾을 때까지 시도
-                do {
-                    x = new Random().nextInt(layoutWidth - bubbleSize - spacing);
-                    y = new Random().nextInt((int) (layoutHeight * 0.75) - bubbleSize - spacing); // 60%까지만
-
-                    newBubbleRect = new Rect(x, y, x + bubbleSize + spacing, y + bubbleSize + spacing);
-                    attempts++;
-
-                    if (attempts > 100) {
-                        break; // 너무 많은 시도를 하면 무한 루프 방지
-                    }
-                } while (!isNonOverlapping(newBubbleRect, placedBubbles));
+                newBubbleRect = new Rect(x, y, x + bubbleSize + spacing, y + bubbleSize + spacing);
+                attempts++;
 
                 if (attempts > 100) {
-                    continue; // 좌표 찾기를 포기하고 넘어감
+                    break; // 너무 많은 시도를 하면 무한 루프 방지
                 }
+            } while (!isNonOverlapping(newBubbleRect, placedBubbles));
 
-                bubbleLayout.setX(x);
-                bubbleLayout.setY(y);
+            if (attempts > 100) {
+                continue; // 좌표 찾기를 포기하고 넘어감
+            }
 
-                bubbleLayout.addView(bubble, bubbleParams);
-                bubbleLayout.addView(bubbleNumber, textParams);
-                constraintLayout.addView(bubbleLayout);
+            bubbleLayout.setX(x);
+            bubbleLayout.setY(y);
 
-                // 클릭 리스너 추가
-                bubbleLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        int number = Integer.parseInt(bubbleNumber.getText().toString());
-                        if (number == currentBubbleNumber[0]) {
-                            // 클릭한 숫자가 맞으면 해당 버블을 제거하고 다음 숫자로 증가
-                            sound();
-                            constraintLayout.removeView(bubbleLayout);
-                            currentBubbleNumber[0]++; // 다음 숫자로 증가
+            bubbleLayout.addView(bubble, bubbleParams);
+            bubbleLayout.addView(bubbleNumber, textParams);
+            constraintLayout.addView(bubbleLayout);
+
+            bubbleLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int number = Integer.parseInt(bubbleNumber.getText().toString());
+                    if (number == currentBubbleNumber[0]) {
+                        sound();
+                        constraintLayout.removeView(bubbleLayout);
+                        currentBubbleNumber[0]++; // 다음 숫자로 증가
+
+                        // 모든 버블이 클릭되었을 때
+                        if (currentBubbleNumber[0] > 10) {
+                            // 새로운 버블을 생성
+                            currentBubbleNumber[0] = 1; // 숫자 리셋
+                            generateBubbles(); // 새로운 버블 생성
                         }
                     }
-                });
+                }
+            });
 
-                // 생성된 버블의 위치 저장
-                placedBubbles.add(newBubbleRect);
-            }
+
+            // 생성된 버블의 위치 저장
+            placedBubbles.add(newBubbleRect);
+        }
+    }
+
+    //bubble생성
+    private void generateLoading() {
+        if (new Random().nextBoolean()) {
+            generateBubbles();
         } else {
             // robot, bee, picnic 중 하나를 랜덤하게 선택
             int[] imageResources = {R.drawable.iv_loading_robbot, R.drawable.iv_loading_bee, R.drawable.iv_loading_picnic};
@@ -635,7 +694,18 @@ public class MakeStoryActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        showToast("이미지 요청 실패: " + e.getMessage());
+                        backgroundImageView.setImageResource(R.drawable.bg_demo);
+                        isImageLoaded = true;
+                        storyTextView.setVisibility(View.VISIBLE);
+                        retryBtn.setVisibility(View.VISIBLE);
+                        stopMakingBtn.setVisibility(View.VISIBLE);
+                        background.setVisibility(View.VISIBLE);
+                        //loadingLayout.setVisibility(View.INVISIBLE);
+                        constraintLayout.setVisibility(View.INVISIBLE);
+                        displayStoryText(storyText); //동화 출력
+
+                        // 비트맵을 ByteArray로 변환하여 인텐트에 저장
+                        showToast("이미지 요청: " + e.getMessage());
                     }
                 });
             }
@@ -652,7 +722,7 @@ public class MakeStoryActivity extends AppCompatActivity {
         handler.post(new Runnable() {
             @Override
             public void run() {
-                final int delay = 60;
+                final int delay = 40;
                 final int length = storyText.length();
                 storyTextView.setText("");
                 storyTextView.scrollTo(0, 0);
@@ -669,6 +739,8 @@ public class MakeStoryActivity extends AppCompatActivity {
                             if (index == length) { //텍스트가 전부 표시되면
                                 if (isImageLoaded && num <= 5) { //5장 이하일 때
                                     makeStory.generateChoices(num); // 이미지가 로드된 후에 선택지 생성
+                                    AITextView.setVisibility(View.GONE);
+                                    AIImage.setVisibility(View.GONE);
                                 } else {
                                     nextBtn.setVisibility(View.VISIBLE);
                                     makeBookcoverTextView.setVisibility(View.VISIBLE);
@@ -688,6 +760,8 @@ public class MakeStoryActivity extends AppCompatActivity {
                             // 터치 시 핸들러의 모든 작업 취소하고 전체 텍스트 표시
                             handler.removeCallbacksAndMessages(null);
                             storyTextView.setText(storyText);
+                            AITextView.setVisibility(View.GONE);
+                            AIImage.setVisibility(View.GONE);
                             textFullyDisplayed[0] = true; // 전체 텍스트 표시 상태로 플래그 설정
                             if (isImageLoaded && num <= 5 && !choicesVisible) {
                                 makeStory.generateChoices(num);
@@ -787,9 +861,10 @@ public class MakeStoryActivity extends AppCompatActivity {
         return inSampleSize;
     }
 
-    private void showToast(String message) {
-        Toast.makeText(MakeStoryActivity.this, message, Toast.LENGTH_SHORT).show();
+    private void showToast(final String message) {
+        runOnUiThread(() -> Toast.makeText(MakeStoryActivity.this, message, Toast.LENGTH_SHORT).show());
     }
+
 
     private byte[] convertBitmapToByteArray(Bitmap bitmap) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.*;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -38,7 +40,7 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
     private ImageView profile;
     private ImageButton btnhome, btntrophy, btnsetting;
     private Spinner spinnerNav;
-    private boolean isShowDialog = false;
+    private boolean isShowDialog, isScrolling = false;
 
     private UserInfo userInfo = new UserInfo();
 
@@ -53,6 +55,8 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
     private TextView tvNone, tvPush, tvMakeFirst;
     private RecyclerView recyclerView;
     private BookAdapter bookAdapter;
+    private float startX, startY; // 현재 커서 시작 위치 (x,y)
+    private final int SCROLL_THRESHOLD = 5;  // 스크롤 간주 기준 거리
 
     // 전체 이미지를 저장하는 리스트 (필터링에 사용)
     private List<String> allImageUrls, allTitles, allImgNames;
@@ -131,11 +135,12 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
         bookAdapter.setOnItemClickListener(new BookAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position, String imageUrl) {
-                if(!isShowDialog) {
-                    // 클릭 시 동작
+                // 스크롤이 아닌 상태에서 클릭
+                if(!isShowDialog && !isScrolling) {
                     String imgName = imgNames.get(position);
                     Intent intent = new Intent(AlbumActivity.this, ReadBookActivity.class);
                     intent.putExtra("imgName", imgName);
+                    Log.d("album", imgName);
                     startActivity(intent);
                 }
             }
@@ -162,6 +167,36 @@ public class AlbumActivity extends AppCompatActivity implements UserInfoLoader{
                         });
                 builder.create().show();
             }
+        });
+
+        // recyclerView 터치 리스너
+        recyclerView.setOnTouchListener((v, event) -> {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    // 터치 시작 시점의 좌표 기록
+                    startX = event.getX();
+                    startY = event.getY();
+                    isScrolling = false;  // 스크롤 상태 초기화
+                    break;
+                case MotionEvent.ACTION_MOVE:
+                    // 이동 거리 계산
+                    float diffX = Math.abs(event.getX() - startX);
+                    float diffY = Math.abs(event.getY() - startY);
+
+                    // 이동 거리가 기준치를 넘으면 스크롤로 간주
+                    if (diffX > SCROLL_THRESHOLD || diffY > SCROLL_THRESHOLD) {
+                        isScrolling = true;  // 스크롤 중
+                    } else isScrolling = false;
+                    break;
+                case MotionEvent.ACTION_UP:
+                    // 터치 종료 시점에서, 이동 거리가 기준 이하일 때만 클릭
+                    isScrolling = false;
+                    if (!isScrolling) {
+                        v.performClick();  // 클릭 동작 수행
+                    }
+                    break;
+            }
+            return false;  // 기본 터치 동작이 유지되도록 함
         });
 
         // 스피너 설정

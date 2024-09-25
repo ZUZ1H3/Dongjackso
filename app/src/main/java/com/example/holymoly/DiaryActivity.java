@@ -4,6 +4,9 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.AudioFormat;
+import android.media.AudioManager;
+import android.media.AudioTrack;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,6 +22,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.*;
 
+import com.amazonaws.auth.CognitoCachingCredentialsProvider;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.polly.AmazonPolly;
+import com.amazonaws.services.polly.AmazonPollyPresigningClient;
+import com.amazonaws.services.polly.model.OutputFormat;
+import com.amazonaws.services.polly.model.SynthesizeSpeechRequest;
+import com.amazonaws.services.polly.model.SynthesizeSpeechResult;
+import com.amazonaws.services.polly.model.VoiceId;
 import com.google.ai.client.generativeai.GenerativeModel;
 import com.google.ai.client.generativeai.java.*;
 import com.google.ai.client.generativeai.type.*;
@@ -27,6 +38,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.io.InputStream;
 import java.util.*;
 import java.util.concurrent.*;
 
@@ -56,6 +68,14 @@ public class DiaryActivity extends AppCompatActivity {
     final int PERMISSION = 1;
     private StringBuilder recognizedText = new StringBuilder();
 
+    /* Amazon Polly 초기화 */
+    private static final String COGNITO_POOL_ID = BuildConfig.POLLY_API_KEY;
+    private Regions MY_REGION = Regions.AP_NORTHEAST_2; // 리전 설정
+    private AmazonPolly pollyClient;
+    private AudioTrack audioTrack;      // audioTrack 변수
+    private InputStream audioStream;    // 음성 스트림 저장
+    private boolean isPlaying = false;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_diary);
@@ -64,6 +84,7 @@ public class DiaryActivity extends AppCompatActivity {
         initViews();
         setupClickListeners();
         fetchUserName(); // 데이터베이스에서 이름을 가져옴
+        initPolly();
 
         if (Build.VERSION.SDK_INT >= 23) {
             // 퍼미션 체크
@@ -77,7 +98,15 @@ public class DiaryActivity extends AppCompatActivity {
 
         // RecyclerView 설정
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        messageAdapter = new MessageAdapter(messageList);
+        messageAdapter = new MessageAdapter(messageList, new MessageAdapter.OnCocoClickListener() {
+            @Override
+            public void onCocoClick(Message message) {
+                if(isPlaying) stopSpeech();
+                else synthesizeSpeech(message.getText());
+
+                isPlaying = !isPlaying; // 상태 토글
+            }
+        });
         recyclerView.setAdapter(messageAdapter);
 
         //AI 대화 수위 조절
@@ -113,7 +142,6 @@ public class DiaryActivity extends AppCompatActivity {
         Content modelContent = modelContentBuilder.build();
         List<Content> history = Arrays.asList(userContent, modelContent);
         chat = modelFutures.startChat(history);
-
     }
 
     private void initViews() {
@@ -174,6 +202,7 @@ public class DiaryActivity extends AppCompatActivity {
             sound();
             startVoiceRecognition();
         });
+
     }
 
     //데모 버전 버튼 클릭시
@@ -332,7 +361,6 @@ public class DiaryActivity extends AppCompatActivity {
                 transformedMessageBuilder.append(message);
                 String transformedMessage = transformedMessageBuilder.toString();
                 sendBotMessage(transformedMessage);
-
             }
 
             @Override
@@ -427,7 +455,6 @@ public class DiaryActivity extends AppCompatActivity {
                             endConversation();
                         }
                     }
-
                 });
             }
 
@@ -527,6 +554,80 @@ public class DiaryActivity extends AppCompatActivity {
                 return "일치하는 결과 없음";
             default:
                 return "알 수 없는 에러";
+        }
+    }
+
+    // 아마존 폴리 초기화
+    private void initPolly() {
+        CognitoCachingCredentialsProvider credentialsProvider = new CognitoCachingCredentialsProvider(
+                getApplicationContext(),
+                COGNITO_POOL_ID,
+                MY_REGION
+        );
+        pollyClient = new AmazonPollyPresigningClient(credentialsProvider);
+    }
+
+    // 텍스트를 음성으로 변환
+    public void synthesizeSpeech(String text) {
+        SynthesizeSpeechRequest synthReq = new SynthesizeSpeechRequest()
+                .withText(text)
+                .withTextType("text")
+                .withVoiceId(VoiceId.Seoyeon)
+                .withOutputFormat(OutputFormat.Pcm);
+
+        new Thread(() -> {
+            try {
+                SynthesizeSpeechResult synthRes = pollyClient.synthesizeSpeech(synthReq);
+                audioStream = synthRes.getAudioStream(); // audioStream을 저장
+                playAudioStream(audioStream);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    // 음성 스트림 재생
+    private void playAudioStream(InputStream stream) throws Exception {
+        int sampleRate = 16000;
+        int bufferSize = AudioTrack.getMinBufferSize(
+                sampleRate,
+                AudioFormat.CHANNEL_OUT_MONO,
+                AudioFormat.ENCODING_PCM_16BIT
+        );
+
+        audioTrack = new AudioTrack(
+                AudioManager.STREAM_MUSIC,
+                sampleRate,
+                AudioFormat.CHANNEL_OUT_MONO,
+                AudioFormat.ENCODING_PCM_16BIT,
+                bufferSize,
+                AudioTrack.MODE_STREAM
+        );
+
+        audioTrack.play();
+
+        byte[] buffer = new byte[bufferSize];
+        int readBytes;
+
+        while ((readBytes = stream.read(buffer)) != -1) {
+            audioTrack.write(buffer, 0, readBytes);
+        }
+
+        // 음성 스트림이 끝났을 때 음성 중단
+        if (audioTrack != null) {
+            audioTrack.stop();
+            audioTrack.release();
+            audioTrack = null;
+        }
+        stream.close();
+    }
+
+    // 음성 중단
+    public void stopSpeech() {
+        if (audioTrack != null) {
+            audioTrack.stop();
+            audioTrack.release();
+            audioTrack = null;
         }
     }
 

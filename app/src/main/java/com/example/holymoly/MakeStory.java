@@ -159,7 +159,7 @@ public class MakeStory {
 
     // 선택한 테마를 영어로 번역
     public void translateTheme(String theme, TranslationCallback callback) {
-        String prompt = "Translate the following theme to English: " + theme + ". Please provide a concise, single-word or short-phrase answer.";
+        String prompt = "다음 단어를 영어로 번역하세요. 단답으로 말하세요.: " + theme;
         gemini.generateText(prompt, new Gemini.Callback() {
             @Override
             public void onSuccess(String text) {
@@ -175,7 +175,7 @@ public class MakeStory {
 
     // 선택한 캐릭터를 영어로 번역
     public void translateCharacters(ArrayList<String> characters, TranslationCallback callback) {
-        StringBuilder promptBuilder = new StringBuilder("Translate the following character names to English and prepend 'a cute ' before each noun. Separate the nouns with commas: ");
+        StringBuilder promptBuilder = new StringBuilder("다음 단어를 영어로 번역하세요. 단답으로 하시고 ', '로 구분해주세요.: ");
         for (int i = 0; i < characters.size(); i++) {
             promptBuilder.append(characters.get(i));
             if (i < characters.size() - 1) {
@@ -201,7 +201,7 @@ public class MakeStory {
         return "동화 배경: " + theme + "\n" +
                 "등장인물: " + characters + "\n" +
                 "어린이가 대상인 동화의 도입부를 작성해 주세요. 이야기는 즐겁고, 긍정적이고, 흥미롭게 시작되어야 합니다." +
-                "반드시 등장인물이 언급되어야 합니다. 3~5문장으로 작성해주세요. 한 문장이 끝나면 줄바꿈을 한번만 해주세요";
+                "반드시 등장인물이 언급되어야 합니다. 3~4문장으로 작성해주세요. 한 문장이 끝나면 줄바꿈을 한번만 해주세요";
     }
 
     private String buildChoicePrompt(int page) { //다음 이야기의 선택지 생성
@@ -219,7 +219,7 @@ public class MakeStory {
                 "현재 페이지: 전체 6장 중 현재는 " + page+1 + "장 " +
                 "다음에 이어질 내용: " + "\n" +
                 "이 이야기의 다음 문장을 작성해주세요. 현재 이야기와 자연스럽게 이어지도록 만들어주세요." +
-                "이야기는 즐겁고, 긍정적이고, 흥미롭게 시작되어야 합니다. 3~5문장으로 작성해주세요. 한 문장이 끝나면 줄바꿈을 한번만 해주세요.";
+                "이야기는 즐겁고, 긍정적이고, 흥미롭게 시작되어야 합니다. 3~4문장으로 작성해주세요. 한 문장이 끝나면 줄바꿈을 한번만 해주세요.";
     }
 
     private String buildEndStoryPrompt() {
@@ -227,6 +227,6 @@ public class MakeStory {
                 "현재 이야기: " + storySoFar + "\n" +
                 "다음에 이어질 내용: " + "\n" +
                 "다음에 이어질 내용을 참고하여, 이야기를 완결내주세요. 현재 이야기와 자연스럽게 이어지도록 만들어주세요." +
-                "이야기는 즐겁고, 긍정적이고, 교훈적이어야 합니다. 3~5문장으로 작성해주세요. 한 문장이 끝나면 줄바꿈을 한번만 해주세요.";
+                "이야기는 즐겁고, 긍정적이고, 교훈적이어야 합니다. 3~4문장으로 작성해주세요. 한 문장이 끝나면 줄바꿈을 한번만 해주세요.";
     }
 }

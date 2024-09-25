@@ -35,11 +35,6 @@ public class Home2Activity extends AppCompatActivity implements UserInfoLoader {
         btngame = findViewById(R.id.ib_game);
         btnfairy = findViewById(R.id.ib_diaryHome);
 
-        Intent musicIntent = new Intent(this, MusicService.class);
-        musicIntent.setAction("CHANGE_MUSIC");
-        musicIntent.putExtra("MUSIC_RES_ID", R.raw.ocean_theme_music);
-        startService(musicIntent); // 배경음악 설정
-
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,19 +104,11 @@ public class Home2Activity extends AppCompatActivity implements UserInfoLoader {
     public void onStart() {
         super.onStart();
         loadUserInfo(profile, name, nickname);
-        resetBackgroundMusic(); // 배경음악 초기화
     }
 
     @Override
     public void loadUserInfo(ImageView profile, TextView name, TextView nickname) {
         userInfo.loadUserInfo(profile, name, nickname);
-    }
-
-    private void resetBackgroundMusic() {
-        Intent musicIntent = new Intent(this, MusicService.class);
-        musicIntent.setAction("CHANGE_MUSIC");
-        musicIntent.putExtra("MUSIC_RES_ID", R.raw.ocean_theme_music);
-        startService(musicIntent); // 홈 배경음악을 설정 (매번 HomeActivity 시작할 때)
     }
 
     // 효과음
