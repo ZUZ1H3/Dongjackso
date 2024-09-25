@@ -188,10 +188,10 @@
 
     <com.example.holymoly.StrokeText
         android:id="@+id/makeBookcoverTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="550dp"
+        android:layout_height="150dp"
         android:layout_marginTop="140dp"
-        android:layout_marginLeft="740dp"
+        android:layout_marginLeft="695dp"
         android:gravity="center"
         android:text="동화 제작이 끝났어요!\n이제 표지를 만들러 가볼까요?"
         android:textSize="36sp"
@@ -200,7 +200,7 @@
         android:visibility="invisible"
         app:textStroke="true"
         app:textStrokeWidth="16"
-        app:textStrokeColor="@color/black"
+        app:textStrokeColor="#5CA3C3"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
