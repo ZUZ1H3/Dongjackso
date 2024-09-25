@@ -159,7 +159,7 @@ public class MakeStory {
 
     // 선택한 테마를 영어로 번역
     public void translateTheme(String theme, TranslationCallback callback) {
-        String prompt = "Translate the following theme to English: " + theme + ". Please provide a concise, single-word or short-phrase answer.";
+        String prompt = "다음 단어를 영어로 번역하세요. 단답으로 말하세요.: " + theme;
         gemini.generateText(prompt, new Gemini.Callback() {
             @Override
             public void onSuccess(String text) {
@@ -175,7 +175,7 @@ public class MakeStory {
 
     // 선택한 캐릭터를 영어로 번역
     public void translateCharacters(ArrayList<String> characters, TranslationCallback callback) {
-        StringBuilder promptBuilder = new StringBuilder("Translate the following character names to English and prepend 'a cute ' before each noun. Separate the nouns with commas: ");
+        StringBuilder promptBuilder = new StringBuilder("다음 단어를 영어로 번역하세요. 단답으로 하시고 ', '로 구분해주세요.: ");
         for (int i = 0; i < characters.size(); i++) {
             promptBuilder.append(characters.get(i));
             if (i < characters.size() - 1) {

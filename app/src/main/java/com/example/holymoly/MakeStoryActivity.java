@@ -635,6 +635,7 @@ public class MakeStoryActivity extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        Log.e("KarloAPI", "이미지 요청 실패: " + e.getMessage());
                         showToast("이미지 요청 실패: " + e.getMessage());
                     }
                 });
