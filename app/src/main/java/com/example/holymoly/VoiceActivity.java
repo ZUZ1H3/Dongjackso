@@ -92,25 +92,24 @@ public class VoiceActivity extends AppCompatActivity {
             mRecognizer.startListening(intent);
         });
 
-        // 버튼 누르면 음성 인식 끝내기
+        // edittext의 글 저장 후 다음으로 넘어감
         nextBtn.setOnClickListener(v -> {
             if (mRecognizer != null) {
                 mRecognizer.stopListening(); // 음성 인식 중지
                 mRecognizer.destroy(); // 리소스 해제
                 mRecognizer = null; // 참조 null로 설정
-
-                // 누적된 음성 인식 결과를 String 형태로 저장
-                String finalText = recognizedText.toString();
-                scriptView.setText(finalText); // 최종 텍스트 화면에 표시
-
-                // MakeStoryActivity로 인식된 텍스트를 전달하고 기존 액티비티로 이동
-                Intent makeStoryIntent = new Intent(VoiceActivity.this, MakeStoryActivity.class);
-                makeStoryIntent.putExtra("recognizedText", finalText);
-
-                // 플래그 설정: 이미 실행 중인 MakeStoryActivity가 있다면 해당 액티비티를 최상위로 가져옴
-                makeStoryIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
-                startActivity(makeStoryIntent); // MakeStoryActivity로 이동
             }
+
+            // EditText에 현재 있는 텍스트 가져오기
+            String finalText = scriptView.getText().toString();
+
+            // MakeStoryActivity로 텍스트 전달
+            Intent makeStoryIntent = new Intent(VoiceActivity.this, MakeStoryActivity.class);
+            makeStoryIntent.putExtra("recognizedText", finalText);
+
+            // 플래그 설정: 이미 실행 중인 MakeStoryActivity가 있다면 해당 액티비티를 최상위로 가져옴
+            makeStoryIntent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+            startActivity(makeStoryIntent); // MakeStoryActivity로 이동
         });
     }
 
