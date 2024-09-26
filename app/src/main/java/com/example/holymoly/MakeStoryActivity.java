@@ -547,8 +547,6 @@ public class MakeStoryActivity extends AppCompatActivity {
                     }
                 }
             });
-
-
             // 생성된 버블의 위치 저장
             placedBubbles.add(newBubbleRect);
         }
@@ -711,7 +709,6 @@ public class MakeStoryActivity extends AppCompatActivity {
             }
         });
     }
-
 
     // 텍스트 타이핑 효과 및 터치 시 전체 텍스트 표시
     public void displayStoryText(final String storyText) {

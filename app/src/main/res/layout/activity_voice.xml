@@ -60,6 +60,7 @@
         android:gravity="center"
         android:hint="마이크를 눌러 음성을 인식하세요."
         android:textColorHint="@color/white"
+        android:background="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
