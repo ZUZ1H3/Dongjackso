@@ -1,5 +1,5 @@
 ## 동화공작소 - 생성형 AI를 활용한 아동 참여형 동화 창작 앱 🌈
-제20회 한성공학경진대회 팀 HOLY MOLY 의  프로젝트입니다. <br>
+### 🏆 제20회 한성공학경진대회 금상 수상작 🏆<br>
 - **대회**: 제20회 한성공학경진대회
 - **프로젝트 명**: 동화공작소
 - **팀 명** : Holy Moly
@@ -38,9 +38,11 @@ Google Cloud Speech : 동화, 일기 제작 시 음성 인식을 통해 더욱 �
 ![image](https://github.com/user-attachments/assets/c63032d4-eabf-4de8-ae3b-8f901d7fa120)
 
 ## 🎨 Figma 구경하기
+### 개발자들이 직접 구현 및 제작했어요~
 <a href="https://www.figma.com/design/4Koc32K9nLXDxRoosE0UXA/Untitled?node-id=0-1&t=z8qKo2yH3CFQMyam-1" target="_blank">
     <img src="https://github.com/user-attachments/assets/a609ee0b-f966-4969-b358-eb08f1b3cc15" alt="image" style="width: 300px"/>
 </a>
+ 
 
 
 ## 👩‍💻 개발자
