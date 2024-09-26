@@ -322,26 +322,22 @@ public class MakeStoryAloneActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onBeginningOfSpeech() {
-            }
-
-            @Override
-            public void onRmsChanged(float rmsdB) {
-            }
-
-            @Override
-            public void onBufferReceived(byte[] buffer) {
-            }
-
-            @Override
             public void onEndOfSpeech() {
                 Mic.setImageResource(R.drawable.ic_story_alone_mic); // 음성 인식이 끝나면 마이크 이미지를 원래대로 변경
             }
 
             @Override
+            public void onBeginningOfSpeech() {
+            }
+            @Override
+            public void onRmsChanged(float rmsdB) {
+            }
+            @Override
+            public void onBufferReceived(byte[] buffer) {
+            }
+            @Override
             public void onPartialResults(Bundle partialResults) {
             }
-
             @Override
             public void onEvent(int eventType, Bundle params) {
             }
