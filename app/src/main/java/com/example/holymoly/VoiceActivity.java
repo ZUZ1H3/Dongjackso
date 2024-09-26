@@ -87,6 +87,13 @@ public class VoiceActivity extends AppCompatActivity {
             // 음성 인식 중일 때 마이크 이미지 변경
             micImage.setImageResource(R.drawable.ic_bigmic2);
 
+            recognizedText.setLength(0); // StringBuilder 초기화 (기존 음성 인식 내용 삭제)
+
+            if (mRecognizer != null) {
+                mRecognizer.destroy(); // 이전 인스턴스가 있을 경우 해제
+                mRecognizer = null; // 참조 초기화
+            }
+
             mRecognizer = SpeechRecognizer.createSpeechRecognizer(this);
             mRecognizer.setRecognitionListener(listener);
             mRecognizer.startListening(intent);
