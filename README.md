@@ -23,9 +23,11 @@
 **개발 도구** : Android Studio, Firebase, Figma
 
 ### 생성형 AI 
-Karlo : 사용자의 요청을 실시간으로 반영하여 동화 생성, AI와의 채팅을 통해 상호작용을 진행
+**Gemini** : 사용자의 요청을 실시간으로 반영하여 테마 및 등장인물 커스텀, 동화 생성, AI와 빙고게임 대결, 동화의 홍보 문구 생성, AI와의 채팅을 통한 상호작용, 대화 속 육하원칙 분석 등
 <br>
-Gemini : 스토리에 맞는 이미지를 실시간으로 생성하여, 시각적 요소를 통해 생동감 있는 이야기 완성
+**Karlo** : 스토리에 맞는 이미지를 실시간으로 생성하여 시각적 요소를 통해 생동감 있는 이야기 완성
+<br>
+**(2024년 9월 30일 Karlo 서비스 종료로 추후 Dall-E로 변경 할 예정입니다.)**
 
 ### Text to Speech
 Amazon Polly : 동화를 자연스러운 음성으로 읽어주어 사용자 경험 향상
@@ -37,8 +39,8 @@ Google Cloud Speech : 동화, 일기 제작 시 음성 인식을 통해 더욱 �
 ## 🖼️ 전시 판넬
 ![image](https://github.com/user-attachments/assets/c63032d4-eabf-4de8-ae3b-8f901d7fa120)
 
-## 🎨 Figma 구경하기
-### 개발자들이 직접 구현 및 제작했어요~
+## 🎨 figma 구경하기
+### 개발자들이 직접 디자인 했어요~
 <a href="https://www.figma.com/design/4Koc32K9nLXDxRoosE0UXA/Untitled?node-id=0-1&t=z8qKo2yH3CFQMyam-1" target="_blank">
     <img src="https://github.com/user-attachments/assets/a609ee0b-f966-4969-b358-eb08f1b3cc15" alt="image" style="width: 300px"/>
 </a>
@@ -51,7 +53,7 @@ Google Cloud Speech : 동화, 일기 제작 시 음성 인식을 통해 더욱 �
 | [김민서](https://github.com/sunmay12)| [송희](https://github.com/felizsong) | [이주현](https://github.com/hana03030) | [주지혜](https://github.com/ZUZ1H3) |
 | ------------ | ------------- | ------------- | ------------- |
 | <img src="https://github.com/user-attachments/assets/8c7339a3-7584-4b1e-bc21-2057ce3dce6f" width="160" /> |<img src="https://github.com/user-attachments/assets/e444b6bb-e99a-4b23-b7c0-970ec46ac3b0" width="190" />|<img src="https://github.com/user-attachments/assets/c67c309c-d070-48d0-b814-d45cd01ab4a5" width="214" />|<img src="https://github.com/user-attachments/assets/076aeab4-5b50-4bd8-8bb8-215aaba82ffd" width="180" />
-| <div align="center">프론트엔드</div> | <div align="center">클라우드, 백엔드</div> | <div align="center">프론트엔드</div> | <div align="center">AI, 백엔드</div> |
+| <div align="center">프론트엔드</div> | <div align="center">클라우드, 백엔드</div> | <div align="center">프론트엔드</div> | <div align="center">디자인, AI, 백엔드</div> |
 
 
 
