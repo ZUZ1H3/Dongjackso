@@ -81,17 +81,17 @@
 
     <ImageButton
         android:id="@+id/ib_image"
-        android:layout_width="45dp"
-        android:layout_height="55dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="22dp"
-        android:background="@drawable/ic_remove"
+        android:background="@drawable/ic_image"
         android:button="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.891"
+        app:layout_constraintHorizontal_bias="0.921"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.684" />
+        app:layout_constraintVertical_bias="0.718" />
 
     <ImageButton
         android:id="@+id/ib_remove"
