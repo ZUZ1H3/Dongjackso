@@ -53,7 +53,7 @@ Google Cloud Speech : 동화, 일기 제작 시 음성 인식을 통해 더욱 �
 | [김민서](https://github.com/sunmay12)| [송희](https://github.com/felizsong) | [이주현](https://github.com/hana03030) | [주지혜](https://github.com/ZUZ1H3) |
 | ------------ | ------------- | ------------- | ------------- |
 | <img src="https://github.com/user-attachments/assets/8c7339a3-7584-4b1e-bc21-2057ce3dce6f" width="160" /> |<img src="https://github.com/user-attachments/assets/e444b6bb-e99a-4b23-b7c0-970ec46ac3b0" width="190" />|<img src="https://github.com/user-attachments/assets/c67c309c-d070-48d0-b814-d45cd01ab4a5" width="214" />|<img src="https://github.com/user-attachments/assets/076aeab4-5b50-4bd8-8bb8-215aaba82ffd" width="180" />
-| <div align="center">프론트엔드</div> | <div align="center">클라우드, 백엔드</div> | <div align="center">프론트엔드</div> | <div align="center">디자인, AI, 백엔드</div> |
+| <div align="center">프론트엔드, 디자인</div> | <div align="center">클라우드, 백엔드</div> | <div align="center">프론트엔드, 디자인</div> | <div align="center">디자인, AI, 백엔드</div> |
 
 
 
